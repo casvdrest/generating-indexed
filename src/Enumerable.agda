@@ -2,17 +2,17 @@
 
 open import Agda.Builtin.Coinduction
 open import Data.List hiding (_++_; zipWith; fromMaybe)
-
 open import Relation.Nullary.Decidable
 open import Data.Bool hiding (_≟_)
 open import Data.Empty
 open import Data.Unit
 open import Data.Nat hiding (_+_)
 open import Data.Maybe hiding (zipWith; fromMaybe)
-
 open import Relation.Binary.PropositionalEquality
 
-module src.Colist where
+open import src.Generic
+
+module src.Enumerable where
 
   data Coℕ : Set where
     CoZ : Coℕ
