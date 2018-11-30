@@ -54,20 +54,47 @@ module src.Enumerable where
   iterate : ∀ {A : Set} → (A → A) → A → Colist A
   iterate f x = x ∷ ♯ iterate f (f x)
 
+  zipWith : ∀ {A B C : Set} → (A → B → C) → Colist A → Colist B → Colist C
+  zipWith f []       _        = []
+  zipWith f _        []       = []
+  zipWith f (x ∷ xs) (y ∷ ys) = f x y ∷ ♯ zipWith f (♭ xs) (♭ ys)
+
   interleave : ∀ {A : Set} → Colist A → Colist A → Colist A
   interleave [] _  = []
   interleave _  [] = []
   interleave (x ∷ xs) (y ∷ ys) = x ∷ ♯ (y ∷ ♯ interleave (♭ xs) (♭ ys))
 
+  {-# TERMINATING #-}
+  smash : ∀ {a : Set} → Colist (List a) → Colist a
+  smash [] = []
+  smash ((x ∷ xs) ∷ xss) = x ∷ ♯ smash (xs ∷ xss)
+  smash ([] ∷ xss) = smash (♭ xss)
+
+  zipCons : ∀ {a : Set} → Colist a → Colist (List a) → Colist (List a)
+  zipCons [] ys = ys
+  zipCons xs [] = (λ x → x ∷ []) <$> xs
+  zipCons (x ∷ xs) (y ∷ ys) = (x ∷ y) ∷ ♯ (zipCons (♭ xs) (♭ ys)) 
+
+  {-# TERMINATING #-}
+  stripe : ∀ {a : Set} → Colist (Colist a) →(Colist (List a))
+  stripe [] = []
+  stripe ([] ∷ xss) = stripe (♭ xss)
+  stripe ((x ∷ xs) ∷ xss) = (x ∷ []) ∷ ♯ (zipCons (♭ xs) (stripe (♭ xss)))
+
+  diagonal : ∀ {a : Set} → Colist (Colist a) → Colist a
+  diagonal = smash ∘ stripe
+
+  multiply : ∀ {a b : Set} → Colist a → Colist b → Colist (Colist (Pair a b))
+  multiply [] ys = []
+  multiply (x ∷ xs) ys = (zipWith MkPair (repeat x) ys) ∷ ♯ (multiply (♭ xs) ys)
+  
+  _×_ : ∀ {a b : Set} → Colist a → Colist b → Colist (Pair a b)
+  xs × ys = diagonal (multiply xs ys)
+
   record Enumerable (A : Set) : Set where
     field enumerate : Colist A
 
   open Enumerable ⦃...⦄ public
-
-  zipWith : ∀ {A B C : Set} → (A → B → C) → Colist A → Colist B → Colist C
-  zipWith f []       _        = []
-  zipWith f _        []       = []
-  zipWith f (x ∷ xs) (y ∷ ys) = f x y ∷ ♯ zipWith f (♭ xs) (♭ ys)
 
   inhabitants : (A : Set) ⦃ _ : Enumerable A ⦄ → Colist A
   inhabitants _ = enumerate

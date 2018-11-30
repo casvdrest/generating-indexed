@@ -43,7 +43,7 @@ module src.Isomorphism where
     isoℕ : ∀ {r : Set} → Iso ℕ ℕ'
     isoℕ {r} = MkIso (fromℕ {r}) (toℕ {r}) (isoℕ₁ {r}) (isoℕ₂ {r})
   
-  fromList : ∀ {r a : Set} → List a → List' a
+   fromList : ∀ {r a : Set} → List a → List' a
   fromList [] = μ (inl U)
   fromList {r} (x ∷ xs) = μ (inr (K x , I (fromList {r} xs)))
 
