@@ -1,5 +1,0 @@
-open import Data.Nat
-
-module src.Lambda where
-
-  
