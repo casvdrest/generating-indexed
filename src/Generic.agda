@@ -1,17 +1,18 @@
+
 {-#  OPTIONS --type-in-type #-}
 
 module src.Generic where
 
-  _∘_ : ∀ {A B C : Set} → (B → C) → (A → B) → (A → C)
+  _∘_ : ∀ {a b c : Set} → (b → c) → (a → b) → (a → c)
   g ∘ f = λ x → g (f (x))
 
-  data _⊕_ (A : Set → Set) (B : Set → Set) : Set → Set where
-    inl : ∀ {r : Set} → A r → (A ⊕ B) r
-    inr : ∀ {r : Set} → B r → (A ⊕ B) r
+  data _⊕_ (a : Set → Set) (b : Set → Set) : Set → Set where
+    inl : ∀ {r : Set} → a r → (a ⊕ b) r
+    inr : ∀ {r : Set} → b r → (a ⊕ b) r
 
-  data _⊗_ (A : Set → Set) (B : Set → Set) : Set → Set where
-    _,_ : ∀ {r : Set} → A r → B r → (A ⊗ B) r
-
+  data _⊗_ (a : Set → Set) (b : Set → Set) : Set → Set where
+    _,_ : ∀ {r : Set} → a r → b r → (a ⊗ b) r
+    
   data 𝒰 (r : Set) : Set where
     U : 𝒰 r
 
@@ -19,7 +20,7 @@ module src.Generic where
     I : r → ℐ r
 
   data 𝒦 (a : Set) (r : Set) : Set where
-    K : a → 𝒦 a r
+    K : a → 𝒦 a r 
 
   {-# NO_POSITIVITY_CHECK #-}
   data Fix (f : Set → Set) : Set where

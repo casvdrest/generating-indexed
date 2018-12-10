@@ -1,18 +1,37 @@
 {-#  OPTIONS --type-in-type #-}
 
 open import Agda.Builtin.Coinduction
-open import Data.List hiding (_++_; zipWith; fromMaybe)
+open import Data.List hiding (_++_; zipWith; fromMaybe; [_]; unfold)
 
 open import Relation.Nullary.Decidable
-open import Data.Bool hiding (_≟_)
+open import Data.Bool 
 open import Data.Empty
 open import Data.Unit
 open import Data.Nat hiding (_+_)
 open import Data.Maybe hiding (zipWith; fromMaybe)
 
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding ([_]; cong)
 
 module src.Colist where
+
+  -- Function composition
+  _∘_ : ∀ {a b c : Set} → (b → c) → (a → b) → a → c
+  (g ∘ f) x = g (f x)
+
+  -- Coproducts
+  data _⊕_ (a b : Set) : Set where
+    inl : a → a ⊕ b
+    inr : b → a ⊕ b
+
+  -- Product
+  data _⊗_ (a b : Set) : Set where
+    _,_ : a → b → a ⊗ b
+
+  fst : ∀ {a b : Set} → a ⊗ b → a
+  fst (x , _) = x
+
+  snd : ∀ {a b : Set} → a ⊗ b → b
+  snd (_ , y) = y
 
   data Coℕ : Set where
     CoZ : Coℕ
@@ -22,18 +41,15 @@ module src.Colist where
     []   : Colist A
     _∷_  : A → ∞ (Colist A) → Colist A
 
+  [_] : ∀ {a : Set} → a → Colist a
+  [ x ] = x ∷ ♯ []
+
   data Pair (a : Set) (b : Set) : Set where
     MkPair : a → b → Pair a b
 
   data Either (a : Set) (b : Set) : Set where
     Left : a → Either a b
     Right : b → Either a b
-
-  data Stream (A : Set) : Set where
-    Cons : A → ∞ (Stream A) → Stream A
-
-  inf : Coℕ
-  inf = CoS (♯ inf)
 
   comap : ∀ {A B : Set}  → (A → B) → Colist A → Colist B
   comap f [] = []
@@ -55,51 +71,33 @@ module src.Colist where
   iterate f x = x ∷ ♯ iterate f (f x)
 
   interleave : ∀ {A : Set} → Colist A → Colist A → Colist A
-  interleave [] _  = []
-  interleave _  [] = []
+  interleave [] xs  = xs
+  interleave xs  [] = xs
   interleave (x ∷ xs) (y ∷ ys) = x ∷ ♯ (y ∷ ♯ interleave (♭ xs) (♭ ys))
-
-  record Enumerable (A : Set) : Set where
-    field enumerate : Colist A
-
-  open Enumerable ⦃...⦄ public
 
   zipWith : ∀ {A B C : Set} → (A → B → C) → Colist A → Colist B → Colist C
   zipWith f []       _        = []
   zipWith f _        []       = []
   zipWith f (x ∷ xs) (y ∷ ys) = f x y ∷ ♯ zipWith f (♭ xs) (♭ ys)
 
-  inhabitants : (A : Set) ⦃ _ : Enumerable A ⦄ → Colist A
-  inhabitants _ = enumerate
+  take' : ∀ {a : Set} → ℕ → Colist a → List a
+  take' zero xs = []
+  take' (suc n) [] = []
+  take' (suc n) (x ∷ xs) = x ∷ take' n (♭ xs)
 
-  instance
-    enumBool : Colist Bool
-    enumBool = fromList' (true ∷ (false ∷ []))
+  data _∈_ {a : Set} : a → (Colist a) → Set where 
+    here  : ∀ {x : a} {xs : ∞ (Colist a)} → x ∈ (x ∷ xs)
+    there : ∀ {x y : a} {xs : ∞ (Colist a)} → x ∈ (♭ xs) → x ∈ (y ∷ xs) 
 
-  instance
-    enumℕ : Colist ℕ
-    enumℕ = iterate suc zero
+  data _∼_ {a : Set} : Colist a → Colist a → Set where
+    []∼ : [] ∼ []
+    ∷∼_  : ∀ {x : a} {xs ys : ∞ (Colist a)} → ∞ (♭ xs ∼ ♭ ys) → (x ∷ xs) ∼ (x ∷ ys)
 
-  instance
-    enum⊕ : ∀ {r : Set} → {a b : Set → Set}
-              ⦃ _ : Enumerable (a r) ⦄ ⦃ _ : Enumerable (b r) ⦄ →
-              Colist ((a ⊕ b) r)
-    enum⊕ = interleave (inl <$> enumerate) (inr <$> enumerate)
+  fromMaybe : ∀ {a : Set} → Maybe a → Colist a
+  fromMaybe (just x) = [ x ]
+  fromMaybe nothing = []
 
-  instance
-    enum⊗ : ∀ {r : Set} → {a b : Set → Set}
-              ⦃ _ : Enumerable (a r) ⦄ ⦃ _ : Enumerable (b r) ⦄ →
-              Colist ((a ⊗ b) r)
-    enum⊗ = zipWith _,_ enumerate enumerate
-
-  instance
-    enum𝒰 : ∀ {r : Set} → Colist (𝒰 r)
-    enum𝒰 = U ∷ ♯ []
-
-  instance
-    enumℐ : ∀ {r : Set} ⦃ _ : Enumerable r ⦄ → Colist (ℐ r)
-    enumℐ = I <$> enumerate
-
-  instance
-    enum𝒦 : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ {r : Set} → Colist (𝒦 a r)
-    enum𝒦 = K <$> enumerate
+  unfold :  ∀ {a b : Set} → (a → Maybe (a ⊗ b)) → a → Colist b
+  unfold next seed with next seed
+  ... | nothing          = []
+  ... | just (seed' , b) = b ∷ ♯ (unfold next seed')

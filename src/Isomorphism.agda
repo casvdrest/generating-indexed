@@ -6,44 +6,81 @@ open import Data.Maybe hiding (fromMaybe)
 
 open import src.Generic
 open import src.Enumerable
+open import src.Colist
 
 module src.Isomorphism where
 
-  data Iso (A : Set) (B : Set) : Set where
-     MkIso : (f : A → B) → (g : B → A)
-                      → (∀ {x : A} → (g ∘ f) x ≡ x)
-                      → (∀ {y : B} → (f ∘ g) y ≡ y)
-                      → Iso A B
-
-  record _≅_ (a : Set) (b : Set) : Set where
-    field iso : Iso a b
-
-  open _≅_ ⦃...⦄ public
-
-  from : ∀ {a b : Set} → Iso a b → (a → b)
-  from (MkIso f _ _ _) = f
-
-  fromℕ : ∀ {r : Set} → ℕ → ℕ'
-  fromℕ zero = μ (inl U)
-  fromℕ {r} (suc n) = μ (inr (I (fromℕ {r} n)))
-
-  toℕ : ∀ {r : Set} → ℕ' → ℕ
-  toℕ (μ (inl x)) = zero
-  toℕ {r} (μ (inr (I x))) = suc (toℕ {r} x)
-
-  isoℕ₁ : ∀ {r : Set} {n : ℕ} → toℕ {r} (fromℕ {r} n) ≡ n
-  isoℕ₁ {n = zero} = refl
-  isoℕ₁ {r} {n = suc n} = cong suc (isoℕ₁ {r})
-
-  isoℕ₂ : ∀ {r : Set} {n' : ℕ'} → fromℕ {r} (toℕ {r} n') ≡ n'
-  isoℕ₂ {n' = μ (inl U)} = refl
-  isoℕ₂ {r} {n' = μ (inr (I x))} = cong ((μ ∘ inr) ∘ I) (isoℕ₂ {r})
+  record 𝓤 (a : Set) : Set₁ where
+    field PF : Set → Set 
 
   instance
-    isoℕ : ∀ {r : Set} → Iso ℕ ℕ'
-    isoℕ {r} = MkIso (fromℕ {r}) (toℕ {r}) (isoℕ₁ {r}) (isoℕ₂ {r})
-  
-   fromList : ∀ {r a : Set} → List a → List' a
+    PFList : (a : Set) → 𝓤 (List a)
+    PFList a = record { PF = ListF a }
+
+  instance
+    PFℕ : 𝓤 ℕ
+    PFℕ = record { PF = ℕF }
+
+  ↰_ : ∀ {a : Set} → 𝓤 a → Set → Set
+  (↰_) (record { PF = ty }) = ty
+
+  data Reg (a : Set) ⦃ pf : 𝓤 a ⦄ : Set where
+     MkIso : (f : a → (↰ pf) a) → (g : (↰ pf) a → a)
+                      → (∀ {x : a} → (g ∘ f) x ≡ x)
+                      → (∀ {y : (↰ pf) a} → (f ∘ g) y ≡ y)
+                      → Reg a
+
+  record _≅ (a : Set) ⦃ _ : 𝓤 a ⦄ : Set where
+    field iso : Reg a
+    
+  open _≅ ⦃...⦄ public
+
+
+  from : ∀ {a : Set} ⦃ pf : 𝓤 a ⦄ → Reg a → ((↰ pf) a → a)
+  from (MkIso _ g _ _) = g
+
+  to : ∀ {a : Set} ⦃ pf : 𝓤 a ⦄ → Reg a → (a → (↰ pf) a)
+  to (MkIso f _ _ _) = f
+
+  fromℕ : ℕ → ℕF ℕ
+  fromℕ zero = inl U
+  fromℕ (suc n) = inr (I n)
+
+  toℕ : ℕF ℕ → ℕ
+  toℕ (inl U) = zero
+  toℕ (inr (I x)) = suc x
+
+  isoℕ₁ : ∀ {n : ℕ} → toℕ (fromℕ n) ≡ n
+  isoℕ₁ {zero} = refl
+  isoℕ₁ {suc n} = refl
+
+  isoℕ₂ : ∀ {n' : ℕF ℕ} → fromℕ (toℕ n') ≡ n'
+  isoℕ₂ {inl U} = refl
+  isoℕ₂ {inr (I x)} = refl
+
+  instance
+    isoℕ : ℕ ≅
+    isoℕ = record { iso = MkIso fromℕ toℕ isoℕ₁ isoℕ₂ }
+
+  extr : ∀ {a : Set} → ⦃ e : Enumerable a ⦄ → Colist a
+  extr ⦃ e = record { enum = xs } ⦄ = xs
+
+   -- Enumerable a ∧ a ≅ b ⇒ Enumerable 
+  instance
+    enumIso : ∀ {a : Set} ⦃ pf : 𝓤 a ⦄ ⦃ iso : a ≅ ⦄ ⦃ prf : GenericEnumerable (↰ pf) ⦄ → Enumerable a
+    enumIso {a} ⦃ pf ⦄ ⦃ iso = record { iso = val } ⦄ ⦃ prf ⦄ = record { enum = from val <$> gInhabitants (↰ pf) ? }
+
+
+  allℕ : Colist ℕ
+  allℕ with enumIso ⦃ pf = PFℕ ⦄ ⦃ iso = isoℕ ⦄
+  ... | record { enum = xs } = xs
+
+  prop : take' 2 allℕ ≡ 0 ∷ 1 ∷ []
+  prop = {!refl!}
+
+{-
+  fromList : ∀ {r a : Set} → List a → List' a
+
   fromList [] = μ (inl U)
   fromList {r} (x ∷ xs) = μ (inr (K x , I (fromList {r} xs)))
 
@@ -80,8 +117,8 @@ module src.Isomorphism where
   isoBool₂ {μ (inr U)} = refl
 
   instance
-    isoBool : Iso Bool Bool'
-    isoBool = MkIso fromBool toBool isoBool₁ isoBool₂
+    isoBool : Bool ≅ Bool'
+    isoBool = record { iso = MkIso fromBool toBool isoBool₁ isoBool₂ }
 
   fromMaybe : ∀ {a : Set} → Maybe a → Maybe' a
   fromMaybe (just x) = μ (inl (K x))
@@ -141,11 +178,25 @@ module src.Isomorphism where
 
   -- a ≅ b ⇔ b ≅ a
   instance
-    isoSym : ∀ {a b : Set} ⦃ _ : a ≅ b ⦄ → Iso b a
-    isoSym {a} {b} with (iso {a} {b})
-    ... | MkIso f g p₁ p₂ = MkIso g f p₂ p₁
+    isoSym : ∀ {a b : Set} ⦃ prf : a ≅ b ⦄ → b ≅ a
+    isoSym ⦃ prf ⦄ with prf
+    ... | record { iso = MkIso f g p₁ p₂ }  = record { iso = MkIso g f p₂ p₁ } 
 
-  -- Enumerable a ∧ a ≅ b ⇒ Enumerable b
+  -- Enumerable a ∧ a ≅ b ⇒ Enumerable 
   instance
-    enumIso : ∀ {a b : Set} ⦃ _ : Enumerable a ⦄ ⦃ _ : a ≅ b ⦄ → Colist b
-    enumIso {a} = (from (iso {a})) <$> enumerate
+    {-# TERMINATING #-}
+    enumIso : ∀ {a : Set} {f : Set → Set} ⦃ gprf : GenericEnumerable f ⦄ ⦃ prf : a ≅ (Fix f) ⦄ → Enumerable a
+    enumIso ⦃ gprf = record { gEnum = ge } ⦄ ⦃ prf = prf ⦄ with prf
+    ... | record { iso = MkIso f g _ _ } = record { enum = let r = gEnum in {!!} }
+
+  allBool : ⦃ prf : GenericEnumerable BoolF ⦄ → Colist Bool
+  allBool ⦃ prf ⦄ with enumIso ⦃ gprf = prf ⦄ ⦃ prf = isoBool ⦄
+  ... | record { enum = xs } = xs
+
+  allℕ : ∀ {r : Set} ⦃ prf : GenericEnumerable ℕF ⦄ → Colist ℕ
+  allℕ {r} ⦃ prf ⦄ with enumIso ⦃ gprf = prf ⦄ ⦃ prf = isoℕ {r} ⦄
+  ... | record { enum = xs } = xs
+
+  prop1 : take' 2 allBool ≡ false ∷ true ∷ []
+  prop1 = {!!}
+-}
