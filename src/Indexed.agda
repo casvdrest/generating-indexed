@@ -1,21 +1,26 @@
 {-# OPTIONS --type-in-type #-}
 
-open import Agda.Builtin.Coinduction
+open import Size 
 
 open import Data.Nat hiding (_≤_)
 open import Data.Fin hiding (_≤_; _+_)
-open import Data.Vec
-open import Data.List hiding (fromMaybe)
-open import Data.Maybe hiding (fromMaybe)
+open import Data.Vec hiding (map)
+open import Data.List hiding (fromMaybe; map)
+open import Data.Maybe hiding (fromMaybe; map)
+
+open import Codata.Colist
+open import Codata.Thunk hiding (map)
 
 open import src.Enumerable
-open import src.Colist
+open import src.Data
+open import src.Product
+open import src.Nonempty
 
 module src.Indexed where 
 
-  enumFin' : (n : ℕ) → Colist (Fin n)
+  enumFin' : ∀ {i : Size} → (n : ℕ) → Colist (Fin n) i
   enumFin' zero = []
-  enumFin' (suc n) = zero ∷ ♯ comap suc (enumFin' n)
+  enumFin' (suc n) = zero ∷ λ where .force → map suc (enumFin' n)
 
   instance
     enumFin : IEnumerable Fin
@@ -24,9 +29,9 @@ module src.Indexed where
   cons' : ∀ {a : Set} {n : ℕ} → a ⊗ Vec a n → Vec a (suc n)
   cons' (x , xs) = x ∷ xs
 
-  enumVec' : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → (n : ℕ) → Colist (Vec a n)
-  enumVec' zero = [] ∷ ♯ []
-  enumVec' {a} (suc n) = comap cons' (inhabitants a × enumVec'{a} n)
+  enumVec' : ∀ {a : Set} {i : Size} ⦃ _ : Enumerable a ⦄ → (n : ℕ) → Colist (Vec a n) i
+  enumVec' zero = [] ∷ λ where .force → []
+  enumVec' {a} (suc n) = map cons' (inhabitants a × enumVec'{a} n)
 
   instance
     enumVec : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → IEnumerable (Vec a)
@@ -43,26 +48,28 @@ module src.Indexed where
   yield≤ : (n m : ℕ) → n ≤ (m + n)
   yield≤ zero m = z≤n
   yield≤ (suc n) zero = n≤m (yield≤ n zero)
-  yield≤ (suc n) (suc m) = cong≤ (yield≤ (suc n) m
+  yield≤ (suc n) (suc m) = cong≤ (yield≤ (suc n) m)
 
   ≤₊_ : ℕ ⊗ ℕ → Set
   ≤₊ (n , m) = n ≤ (m + n)
 
-  foo : (t : ℕ ⊗ ℕ) → Colist (≤₊ t)
-  foo (x , y) = yield≤ x y ∷ ♯ [] 
+  foo : ∀ {i : Size} → (t : ℕ ⊗ ℕ) → Colist (≤₊ t) ∞
+  foo (x , y) = yield≤ x y ∷ λ where .force → [] 
 
   instance
     enum≤₊ : IEnumerable (≤₊_)
     enum≤₊ = record { enumI = foo }
-
-  enumIndex : ∀ {a : Set} {P : a → Set} ⦃ _ : IEnumerable P ⦄ → a → Colist (Σ a P)
-  enumIndex x = comap (sigma x) (enumI x)
+{-
+  enumIndex : ∀ {a : Set} {i : Size} {P : a → Set} ⦃ _ : IEnumerable P ⦄ → a → Colist₊ (Σ a P) i
+  enumIndex {P = P} x with inhabitants' P x
+  enumIndex {P = P} x | [] = {!!}
+  enumIndex {P = P} x | y ∷ ys = map₊ (_,_ x) (toColist₊ y (ys .force))
   
   instance
     enumΣ : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ {P : a → Set} ⦃ _ : IEnumerable P ⦄
             → Enumerable (Σ a P)
-    enumΣ {a} {P} = record { enum = diagonal (comap enumIndex enum) }
-
+    enumΣ {a} {P} = record { enum = diagonal (map enumIndex (inhabitants a)) }
+-}
   data Term : ℕ → Set where 
     Var : ∀ {n : ℕ} → Fin (suc n) → Term n
     App : ∀ {n m : ℕ} → Term n → Term m → Term (n ⊔ m)
@@ -92,11 +99,11 @@ module src.Indexed where
   instance
     enumSortedₛ : IEnumerable Sorted
     enumSortedₛ = record { enumI = λ xs → fromMaybe (sortedProofₛ xs) }
-
+{-
   -- Given some n : ℕ, yield all possible proofs of the form `n≤?`
-  n≤? : Colist (Σ (ℕ ⊗ ℕ) ≤₊_)
+  n≤? : ∀ {i : Size} → Colist (Σ (ℕ ⊗ ℕ) ≤₊_) i
   n≤? = inhabitants (Σ (ℕ ⊗ ℕ) ≤₊_)
-
+-}
 -- ==== TODO ===
 -- * fix termination issues with enumeration of pairs & lists (possibly using sized types)
 -- * Enumeration for the ≤ datatype and sorted lists

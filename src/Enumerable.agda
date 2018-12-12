@@ -1,109 +1,93 @@
-{-#  OPTIONS --type-in-type #-}
+open import Size
 
-open import Agda.Builtin.Coinduction
-open import Data.List hiding (_++_; zipWith; fromMaybe; [_]; unfold)
-open import Relation.Nullary.Decidable
-open import Data.Bool hiding (_≟_)
+open import Data.List     hiding (_++_; zipWith; fromMaybe; [_]; unfold; map)
+open import Data.Bool  
 open import Data.Empty
-open import Data.Unit hiding (_≤_)
-open import Data.Fin hiding (_≤_)
-open import Data.Vec hiding (zipWith; [_])
-open import Data.Nat hiding (_+_; _≤_)
-open import Data.Maybe hiding (zipWith; fromMaybe)
-open import Relation.Binary.PropositionalEquality hiding ([_])
+open import Data.Nat      hiding (_+_; _≤_)
+open import Data.Maybe    hiding (zipWith; fromMaybe; map)
 
-open import src.Colist
+open import Codata.Colist
+open import Codata.Thunk  hiding (map)
+
+open import src.Data
+open import src.Product
+
+open import Relation.Binary.PropositionalEquality
 
 module src.Enumerable where
 
   -- Enumerable record; the enumeration of a type is a colist with inhabitants
-  record Enumerable (a : Set) : Set where
-    field enum : Colist a
+  record Enumerable {i : Size} (a : Set) : Set where
+    field enum : Colist a i
 
   open Enumerable ⦃...⦄ public
 
-  record IEnumerable {I : Set} (a : I → Set) : Set where
-    field enumI : (i : I) → Colist (a i)
+  record IEnumerable {I : Set} {j : Size} (a : I → Set) : Set where
+    field enumI : (i : I) → Colist (a i) j
 
   open IEnumerable ⦃...⦄ public
 
   -- Can be used in favor of 'enum' for clarity
-  inhabitants : (a : Set) ⦃ _ : Enumerable a ⦄ → Colist a
+  inhabitants : ∀ {i : Size}
+                → (a : Set) ⦃ _ : Enumerable a ⦄
+                → Colist a i
   inhabitants _ = enum
 
-  inhabitants' : {a : Set} → (P : a → Set) ⦃ _ : IEnumerable P ⦄ → (x : a) → Colist (P x)
+  inhabitants' : ∀ {a : Set} {i : Size}
+                 → (P : a → Set) ⦃ _ : IEnumerable P ⦄
+                 → (x : a) → Colist (P x) i
   inhabitants' _ = enumI
-
-  {-# TERMINATING #-}
-  smash : ∀ {a : Set} → Colist (List a) → (Colist a)
-  smash [] = []
-  smash ([] ∷ xs) = smash (♭ xs)
-  smash ((x ∷ ys) ∷ xs) = x ∷ ♯ smash (ys ∷ xs)
-
-  empty : ∀ {a : Set} → Colist (List a)
-  empty = [] ∷ ♯ empty
-  
-  zipCons : ∀ {a : Set} → Colist a → Colist (List a) → Colist (List a)
-  zipCons [] ys = ys
-  zipCons xs [] = (λ x → x ∷ []) <$> xs
-  zipCons (x ∷ xs) (y ∷ ys) = (x ∷ y) ∷ ♯ (zipCons (♭ xs) (♭ ys)) 
-  
-  {-# TERMINATING #-}
-  stripe : ∀ {a : Set} → Colist (Colist a) → (Colist (List a))
-  stripe [] = []
-  stripe ([] ∷ xss) = stripe (♭ xss)
-  stripe ((x ∷ xs) ∷ xss) = (x ∷ []) ∷ ♯ (zipCons (♭ xs) (stripe (♭ xss)))
-  
-  diagonal : ∀ {a : Set} → Colist (Colist a) → Colist a
-  diagonal = smash ∘ stripe
-
-  multiply : ∀ {a b : Set} → Colist a → Colist b → Colist (Colist (a ⊗ b))
-  multiply [] ys = []
-  multiply (x ∷ xs) ys = (zipWith (_,_) (repeat x) ys) ∷ ♯ (multiply (♭ xs) ys)
-
-  -- Cartesian product of colists
-  _×_ : ∀ {a b : Set} → Colist a → Colist b → Colist (a ⊗ b)
-  xs × ys = diagonal (multiply xs ys)
-
-  -- Disjoint union of colists
-  _⊎_ : ∀ {a b : Set} → Colist a → Colist b → Colist (a ⊕ b)
-  xs ⊎ ys = interleave (inl <$> xs) (inr <$> ys)
 
   -- Enumeration of coproducts (= disjoint union)
   instance
-    enum⊕ : ∀ {a b : Set} ⦃ _ : Enumerable a ⦄ ⦃ _ : Enumerable b ⦄ → Enumerable (a ⊕ b)
+    enum⊕ : ∀ {a b : Set}
+              ⦃ _ : Enumerable a ⦄
+              ⦃ _ : Enumerable b ⦄
+            ------------------------
+            → Enumerable (a ⊕ b)
+            
     enum⊕ {a} {b} = record { enum = inhabitants a ⊎ inhabitants b }
 
   -- Enumeration of products (= cartesian product)
   instance
-    enum⊗ : ∀ {a b : Set} ⦃ _ : Enumerable a ⦄ ⦃ _ : Enumerable b ⦄ → Enumerable (a ⊗ b)
-    enum⊗ {a} {b} = record { enum = inhabitants a × inhabitants b }
+    enum⊗ : ∀ {a b : Set}
+              ⦃ _ : Enumerable a ⦄
+              ⦃ _ : Enumerable b ⦄
+            ------------------------
+            → Enumerable (a ⊗ b)
+    enum⊗ {a} {b} =
+      record {
+        enum = inhabitants a × inhabitants b }
 
   -- Enumeration of all natural numbers
   instance
     enumℕ : Enumerable ℕ
-    enumℕ = record { enum = iterate suc 0 }
-
-  data ℚ : Set where
-    Q : ℕ ⊗ ℕ → ℚ
+    enumℕ = record { enum = iterate 0 suc }
 
   -- Enumeration of all rationals
   instance
    enumℚ : Enumerable ℚ
-   enumℚ = record { enum = Q <$> ((suc <$> inhabitants ℕ) × (suc <$> inhabitants ℕ)) }
+   enumℚ =
+     record {
+       enum = map Q
+         ((map suc (inhabitants ℕ)) ×
+          (map suc (inhabitants ℕ))) }
 
   instance
     enumBool : Enumerable Bool
-    enumBool = record { enum = false ∷ ♯ [ true ] }
+    enumBool =
+      record {
+        enum = true ∷ λ where .force → false ∷ λ where .force → []}
 
-  cons : ∀ {a : Set} → Colist (a ⊗ List a) → Colist (List a)
+  cons : ∀ {a : Set} {i : Size< ∞}
+         → Colist (a ⊗ List a) i
+         → Colist (List a) i
   cons [] = []
-  cons ((x , y) ∷ xs) = (x ∷ y) ∷ ♯ cons (♭ xs)
+  cons ((x , y) ∷ xs) = (x ∷ y) ∷ λ where .force → cons (xs .force)
 
   instance
-    {-# TERMINATING #-}
     enumList : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → Enumerable (List a)
-    enumList {a} = record { enum = [] ∷ ♯ cons (inhabitants (a ⊗ List a))  }
+    enumList {a} = record { enum = {!!} }
 
 
 
