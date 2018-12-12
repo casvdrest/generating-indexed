@@ -33,6 +33,18 @@ module src.Colist where
   snd : ∀ {a b : Set} → a ⊗ b → b
   snd (_ , y) = y
 
+  curry : ∀ {a b c : Set} → (a ⊗ b → c) → a → b → c
+  curry f x y = f (x , y)
+
+  uncurry : ∀ {a b c : Set} → (a → b → c) → a ⊗ b → c
+  uncurry f (x , y) = f x y
+
+  data Σ (a : Set) (P : a → Set) : Set where
+    sigma : (x : a) → P x → Σ a P
+
+  Π : (a : Set) → (P : a → Set) → Set
+  Π a P = (x : a) → P x
+
   data Coℕ : Set where
     CoZ : Coℕ
     CoS : ∞ Coℕ → Coℕ
@@ -101,3 +113,5 @@ module src.Colist where
   unfold next seed with next seed
   ... | nothing          = []
   ... | just (seed' , b) = b ∷ ♯ (unfold next seed')
+
+  

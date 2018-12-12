@@ -39,44 +39,23 @@ module src.Enumerable where
   smash [] = []
   smash ([] ∷ xs) = smash (♭ xs)
   smash ((x ∷ ys) ∷ xs) = x ∷ ♯ smash (ys ∷ xs)
-  
 
-  catMaybe : ∀ {a : Set} → Colist (Maybe a) → (Colist a)
-  catMaybe [] = []
-  catMaybe (just x ∷ xs) = (x ∷ ♯ catMaybe (♭ xs))
-  catMaybe (nothing ∷ xs) = catMaybe (♭ xs)
+  empty : ∀ {a : Set} → Colist (List a)
+  empty = [] ∷ ♯ empty
   
-  smash' : ∀ {a : Set} → Colist (List a) → Colist a
-  smash' = catMaybe ∘ (unfold f)
-    where f : ∀ {a : Set} → Colist (List a) → Maybe (Colist (List a) ⊗ Maybe a)
-          f [] = nothing
-          f ([] ∷ xs) = just (♭ xs , nothing)
-          f ((x ∷ xs) ∷ xss) = just ((xs ∷ xss) , just x)
-
   zipCons : ∀ {a : Set} → Colist a → Colist (List a) → Colist (List a)
   zipCons [] ys = ys
   zipCons xs [] = (λ x → x ∷ []) <$> xs
   zipCons (x ∷ xs) (y ∷ ys) = (x ∷ y) ∷ ♯ (zipCons (♭ xs) (♭ ys)) 
-
+  
   {-# TERMINATING #-}
   stripe : ∀ {a : Set} → Colist (Colist a) → (Colist (List a))
   stripe [] = []
   stripe ([] ∷ xss) = stripe (♭ xss)
   stripe ((x ∷ xs) ∷ xss) = (x ∷ []) ∷ ♯ (zipCons (♭ xs) (stripe (♭ xss)))
-
+  
   diagonal : ∀ {a : Set} → Colist (Colist a) → Colist a
   diagonal = smash ∘ stripe
-
-  stripe' : ∀ {a : Set} → List (Colist a) → List a ⊗ List (Colist a)
-  stripe' [] = [] , []
-  stripe' ([] ∷ xs) with stripe' xs
-  ... | (xs' , ys') = xs' , ([] ∷ ys')
-  stripe' ((x ∷ xs) ∷ xss) with stripe' xss
-  ... | (xs' , ys') = (x ∷ xs') , (♭ xs ∷ ys')
-
-  diagonal' : ∀ {a : Set} → Colist (Colist a) → Colist a
-  diagonal' [] = []
-  diagonal' (x ∷ xs) = {!!}
 
   multiply : ∀ {a b : Set} → Colist a → Colist b → Colist (Colist (a ⊗ b))
   multiply [] ys = []
