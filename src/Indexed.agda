@@ -4,8 +4,8 @@ open import Size
 
 open import Data.Nat hiding (_≤_)
 open import Data.Fin hiding (_≤_; _+_)
-open import Data.Vec hiding (map)
-open import Data.List hiding (fromMaybe; map)
+open import Data.Vec hiding (map; [_])
+open import Data.List hiding (fromMaybe; map; [_])
 open import Data.Maybe hiding (fromMaybe; map)
 
 open import Codata.Colist
@@ -31,11 +31,27 @@ module src.Indexed where
 
   enumVec' : ∀ {a : Set} {i : Size} ⦃ _ : Enumerable a ⦄ → (n : ℕ) → Colist (Vec a n) i
   enumVec' zero = [] ∷ λ where .force → []
-  enumVec' {a} (suc n) = map cons' (inhabitants a × enumVec'{a} n)
+  enumVec' {a} (suc n) = map cons' (inhabitants a × enumVec' {a} n)
 
   instance
     enumVec : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → IEnumerable (Vec a)
     enumVec = record { enumI = enumVec' }
+
+  vecToList : ∀ {a : Set} {n : ℕ} → Vec a n → List a
+  vecToList [] = []
+  vecToList (x ∷ xs) = x ∷ vecToList xs
+
+  listN : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → Colist₊ a ∞ → ℕ → Colist₊ (List a) ∞
+  listN xs zero = [ [] ]
+  listN {a} xs (suc n) with map vecToList (inhabitants' (Vec a) (suc n))
+  listN {a} xs (suc n) | [] = [ [] ]
+  listN {a} xs (suc n) | y ∷ ys = toColist₊ y (ys .force)
+
+  instance
+    enumList : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → Enumerable (List a)
+    enumList {a} with inhabitants a
+    ... | [] = record { enum = [] ∷ λ where .force → [] }
+    ... | x ∷ xs = record { enum = diagonal (map (listN (toColist₊ x (xs .force))) (inhabitants ℕ)) }
 
   data _≤_ : ℕ → ℕ → Set where
     z≤n : ∀ {n : ℕ} → 0 ≤ n

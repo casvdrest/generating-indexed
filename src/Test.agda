@@ -7,12 +7,17 @@ module src.Test where
   open import src.Indexed
   open import src.Data
   open import src.Product
+  open import src.Nonempty
 
   open import Data.Nat
   open import Data.Bool
   open import Data.Fin
   open import Data.List
   open import Data.Vec
+  open import Data.Unit
+
+  open import Codata.Thunk
+  open import Codata.Colist
 
   enumBool_test1 : prefix 2 (inhabitants Bool) ≡ true ∷ (false ∷ [])
   enumBool_test1 = refl
@@ -24,25 +29,16 @@ module src.Test where
     ≡ 0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷
       5 ∷ 6 ∷ 7 ∷ 8 ∷ 9 ∷ [] 
   enumℕ_test2 = refl
-
-  {-
-  enumListBool_test : prefix 10 (inhabitants (List Bool))
-    ≡ [] ∷ (false ∷ []) ∷ (false ∷ false ∷ []) ∷ (true ∷ []) ∷
-       (false ∷ false ∷ false ∷ []) ∷ (true ∷ false ∷ []) ∷
-      (false ∷ true ∷ []) ∷ (true ∷ false ∷ false ∷ []) ∷
-      (false ∷ false ∷ false ∷ false ∷ []) ∷ (true ∷ true ∷ []) ∷ []
+  
+  enumListBool_test : prefix 5 (inhabitants (List Bool))
+    ≡ [] ∷ (true ∷ []) ∷ (true ∷ true ∷ []) ∷ (false ∷ []) ∷ (true ∷ true ∷ true ∷ []) ∷ []
   enumListBool_test = refl
   
-
-  enumListℕ_test : prefix 25 (inhabitants (List ℕ))
-    ≡ [] ∷ (0 ∷ []) ∷ (0 ∷ 0 ∷ []) ∷ (1 ∷ []) ∷ (0 ∷ 0 ∷ 0 ∷ []) ∷
-      (1 ∷ 0 ∷ []) ∷ (2 ∷ []) ∷ (0 ∷ 1 ∷ []) ∷ (1 ∷ 0 ∷ 0 ∷ []) ∷
-      (2 ∷ 0 ∷ []) ∷ (3 ∷ []) ∷ (0 ∷ 0 ∷ 0 ∷ 0 ∷ []) ∷ (1 ∷ 1 ∷ []) ∷
-      (2 ∷ 0 ∷ 0 ∷ []) ∷ (3 ∷ 0 ∷ []) ∷ (4 ∷ []) ∷ (0 ∷ 1 ∷ 0 ∷ []) ∷
-      (1 ∷ 0 ∷ 0 ∷ 0 ∷ []) ∷ (2 ∷ 1 ∷ []) ∷ (3 ∷ 0 ∷ 0 ∷ []) ∷ (4 ∷ 0 ∷ []) ∷
-      (5 ∷ []) ∷ (0 ∷ 2 ∷ []) ∷ (1 ∷ 1 ∷ 0 ∷ []) ∷ (2 ∷ 0 ∷ 0 ∷ 0 ∷ []) ∷ []
+  enumListℕ_test : prefix 10 (inhabitants (List ℕ))
+    ≡ [] ∷ (0 ∷ []) ∷ (0 ∷ 0 ∷ []) ∷ (1 ∷ []) ∷ (0 ∷ (0 ∷ 0 ∷ [])) ∷
+      ((1 ∷ 0 ∷ []) ∷ ((2 ∷ []) ∷ (0 ∷ (0 ∷ (0 ∷ (0 ∷ [])))) ∷
+      (1 ∷ (0 ∷ (0 ∷ []))) ∷ (0 ∷ (1 ∷ [])) ∷ []))
   enumListℕ_test = refl
-  -}
 
   enumFin_test1 : prefix 10 ((inhabitants' Fin) 0) ≡ []
   enumFin_test1 = refl
@@ -51,12 +47,20 @@ module src.Test where
     ≡ zero ∷ suc zero ∷ suc (suc zero) ∷ suc (suc (suc zero)) ∷
       suc (suc (suc (suc zero))) ∷ []
   enumFin_test2 = refl
-
-  {-
+  
   enumVec_test1 : prefix 8 ((inhabitants' (Vec Bool)) 3)
-    ≡ (true ∷ true ∷ true ∷ []) ∷ []
+    ≡ (true ∷ true  ∷ true  ∷ []) ∷ (false ∷ true  ∷ true  ∷ []) ∷
+      (true ∷ false ∷ true  ∷ []) ∷ (false ∷ false ∷ true  ∷ []) ∷
+      (true ∷ true  ∷ false ∷ []) ∷ (false ∷ true  ∷ false ∷ []) ∷
+      (true ∷ false ∷ false ∷ []) ∷ (false ∷ false ∷ false ∷ []) ∷ []
   enumVec_test1 = refl
-  -}
+  
+  --    | t f 
+  -- ---+----
+  -- tt | ↗ ↗
+  prop : prefix 10 (Codata.Colist.map (prefix₊ 10) (multiply (inhabitants Bool) (src.Nonempty.[_] tt)))
+    ≡ (true , tt ∷ []) ∷ ((false , tt) ∷ []) ∷ []
+  prop = refl
   
   --   | 0 1 2 3 4 5 
   -- --+------------

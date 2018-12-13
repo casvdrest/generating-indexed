@@ -3,6 +3,7 @@ open import Agda.Builtin.Size
 open import Codata.Thunk hiding (map)
 open import Codata.Colist
 
+open import Data.Nat
 open import Data.List hiding (_++_; concat; map; zipWith; [_]; take)
 
 module src.Nonempty where
@@ -53,6 +54,11 @@ module src.Nonempty where
 
     repeat₊ : ∀ {a : Set} {i : Size} → a → Colist₊ a i
     repeat₊ x = x ∷ λ where .force → repeat₊ x
+
+    prefix₊ : ∀ {a : Set} → ℕ → Colist₊ a ∞ → List a
+    prefix₊ zero xs = []
+    prefix₊ (suc n) [ x ] = x ∷ []
+    prefix₊ (suc n) (x ∷ xs) = x ∷ prefix₊ n (xs .force)
 
   open NonemptyList public
   open NonemptyColist public

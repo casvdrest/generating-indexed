@@ -1,3 +1,5 @@
+open import Agda.Builtin.Unit
+
 open import Size
 
 open import Data.List     hiding (_++_; zipWith; fromMaybe; [_]; unfold; map)
@@ -11,6 +13,7 @@ open import Codata.Thunk  hiding (map)
 
 open import src.Data
 open import src.Product
+open import src.Nonempty
 
 open import Relation.Binary.PropositionalEquality
 
@@ -43,7 +46,6 @@ module src.Enumerable where
     enum⊕ : ∀ {a b : Set}
               ⦃ _ : Enumerable a ⦄
               ⦃ _ : Enumerable b ⦄
-            ------------------------
             → Enumerable (a ⊕ b)
             
     enum⊕ {a} {b} = record { enum = inhabitants a ⊎ inhabitants b }
@@ -53,7 +55,6 @@ module src.Enumerable where
     enum⊗ : ∀ {a b : Set}
               ⦃ _ : Enumerable a ⦄
               ⦃ _ : Enumerable b ⦄
-            ------------------------
             → Enumerable (a ⊗ b)
     enum⊗ {a} {b} =
       record {
@@ -79,16 +80,11 @@ module src.Enumerable where
       record {
         enum = true ∷ λ where .force → false ∷ λ where .force → []}
 
-  cons : ∀ {a : Set} {i : Size< ∞}
-         → Colist (a ⊗ List a) i
-         → Colist (List a) i
-  cons [] = []
-  cons ((x , y) ∷ xs) = (x ∷ y) ∷ λ where .force → cons (xs .force)
-
   instance
-    enumList : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → Enumerable (List a)
-    enumList {a} = record { enum = {!!} }
+    enumT : Enumerable (T true)
+    enumT = record { enum = tt ∷ λ where .force → [] } 
 
-
+  
+  
 
   
