@@ -3,13 +3,19 @@
 open import Size 
 
 open import Data.Nat hiding (_≤_)
+open import Data.Nat.Properties
 open import Data.Fin hiding (_≤_; _+_)
 open import Data.Vec hiding (map; [_])
 open import Data.List hiding (fromMaybe; map; [_])
 open import Data.Maybe hiding (fromMaybe; map)
+open import Data.Empty
 
 open import Codata.Colist
 open import Codata.Thunk hiding (map)
+
+import Relation.Binary.PropositionalEquality as Eq'
+open Eq' using (_≡_; refl; cong; sym)
+open Eq'.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
 
 open import src.Enumerable
 open import src.Data
@@ -65,31 +71,11 @@ module src.Indexed where
   yield≤ zero m = z≤n
   yield≤ (suc n) zero = n≤m (yield≤ n zero)
   yield≤ (suc n) (suc m) = cong≤ (yield≤ (suc n) m)
-
-  ≤₊_ : ℕ ⊗ ℕ → Set
-  ≤₊ (n , m) = n ≤ (m + n)
-
-  foo : ∀ {i : Size} → (t : ℕ ⊗ ℕ) → Colist (≤₊ t) ∞
-  foo (x , y) = yield≤ x y ∷ λ where .force → [] 
-
-  instance
-    enum≤₊ : IEnumerable (≤₊_)
-    enum≤₊ = record { enumI = foo }
-{-
-  enumIndex : ∀ {a : Set} {i : Size} {P : a → Set} ⦃ _ : IEnumerable P ⦄ → a → Colist₊ (Σ a P) i
-  enumIndex {P = P} x with inhabitants' P x
-  enumIndex {P = P} x | [] = {!!}
-  enumIndex {P = P} x | y ∷ ys = map₊ (_,_ x) (toColist₊ y (ys .force))
   
-  instance
-    enumΣ : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ {P : a → Set} ⦃ _ : IEnumerable P ⦄
-            → Enumerable (Σ a P)
-    enumΣ {a} {P} = record { enum = diagonal (map enumIndex (inhabitants a)) }
--}
-  data Term : ℕ → Set where 
-    Var : ∀ {n : ℕ} → Fin (suc n) → Term n
-    App : ∀ {n m : ℕ} → Term n → Term m → Term (n ⊔ m)
-    Abs : ∀ {n : ℕ} → Term n → Term (suc n)
+  lt-right-subst : ∀ {n m k : ℕ} → (m ≡ k) → n ≤ m → n ≤ k
+  lt-right-subst refl prf = prf
+
+  ≤-r-eq-rewr : ∀ {n m k : ℕ} → (m ≡ k) → n ≤ m ≡ n ≤ k
 
   data Sorted : List ℕ → Set where
     nil    : Sorted []
@@ -103,6 +89,53 @@ module src.Indexed where
   ≤proof (suc n) (suc m) | just prf = just (n≤m prf)
   ≤proof (suc n) (suc m) | nothing = nothing
 
+  instance
+    enum≤ₛ : ∀ {n : ℕ} → IEnumerable (_≤_ n)
+    enum≤ₛ {n} = record { enumI = λ m → fromMaybe (≤proof n m) }
+
+  instance
+    enum≤ : ∀ {n : ℕ} → IEnumerable (_≤_ n ∘ _+_ n)
+    enum≤ {n} = record { enumI = λ m → lt-right-subst (+-comm m n) (yield≤ n m) ∷ λ where .force → []}
+
+  ≤-diff : ∀ {n m : ℕ} → n ≤ m → ℕ
+  ≤-diff {.0} {m} z≤n = m
+  ≤-diff (n≤m prf) = ≤-diff prf
+
+  ≤-diff-lemma : ∀ {n m : ℕ} {p : n ≤ m}
+                 -----------------------
+                 → m ≡ n + ≤-diff p
+  ≤-diff-lemma {p = z≤n} = refl
+  ≤-diff-lemma {p = n≤m p} = cong suc (≤-diff-lemma {p = p})
+     
+  eq-rewr : ∀ {p q : Set} → p ≡ q → p → q
+  eq-rewr refl p = p
+  
+  ≤-diff-eq : ∀ {n m : ℕ} {p : n ≤ m}
+              -----------------------------------
+              → n ≤ m ≡ (_≤_ n ∘ _+_ n) (≤-diff p)
+  ≤-diff-eq {.0} {m} {p = z≤n} =
+    begin
+      0 ≤ m
+    ≡⟨⟩
+      0 ≤ ≤-diff z≤n
+    ≡⟨⟩
+      (_≤_ 0 ∘ _+_ 0) (≤-diff z≤n)
+    ∎
+  ≤-diff-eq {n = suc n} {m = suc m} {p = n≤m p} =
+    begin
+      suc n ≤ suc m
+    ≡⟨ ≤-r-eq-rewr (≤-diff-lemma {n = suc n} {m = suc m} {p = n≤m p }) ⟩
+      suc n ≤ (suc n + ≤-diff (n≤m p))
+    ≡⟨⟩
+      (_≤_ (suc n) ∘ _+_ (suc n)) (≤-diff (n≤m p))
+    ∎
+  
+  ≤-complete : ∀ {n m : ℕ} {p : n ≤ m}
+           -----------------------------------------------------------------------------
+           → eq-rewr (≤-diff-eq {n} {m} {p}) p ∈ inhabitants' (_≤_ n ∘ _+_ n) (≤-diff p)
+  ≤-complete {p = z≤n} = {!!}
+  ≤-complete {p = n≤m p} = {!!}
+  
   sortedProofₛ : (xs : List ℕ) → Maybe (Sorted xs)
   sortedProofₛ [] = just nil
   sortedProofₛ (x ∷ []) = just single
@@ -112,17 +145,31 @@ module src.Indexed where
   sortedProofₛ (x ∷ y ∷ xss) | just prf₁ | nothing = nothing
   sortedProofₛ (x ∷ y ∷ xss) | nothing = nothing
 
+  diffList : ℕ → List ℕ → List ℕ
+  diffList n [] = []
+  diffList n (x ∷ xs) = n + x ∷ diffList (n + x) xs
+
+  extractList : ∀ {xs : List ℕ} → Sorted xs → List ℕ
+  extractList {xs} _ = xs
+
+  asSortedList : (n : ℕ) → (xs : List ℕ) → Sorted (diffList n xs)
+  asSortedList _ [] = nil
+  asSortedList _ (x ∷ []) = single
+  asSortedList n (x ∷ y ∷ xs) with yield≤ (n + x) y
+  ... | prf = step (lt-right-subst (+-comm y (n + x)) prf) (asSortedList (n + x) (y ∷ xs))
+
   instance
     enumSortedₛ : IEnumerable Sorted
     enumSortedₛ = record { enumI = λ xs → fromMaybe (sortedProofₛ xs) }
-{-
-  -- Given some n : ℕ, yield all possible proofs of the form `n≤?`
-  n≤? : ∀ {i : Size} → Colist (Σ (ℕ ⊗ ℕ) ≤₊_) i
-  n≤? = inhabitants (Σ (ℕ ⊗ ℕ) ≤₊_)
--}
+
+  instance
+    enumSorted : IEnumerable (Sorted ∘ diffList 0)
+    enumSorted = record { enumI = λ xs → asSortedList 0 xs ∷ λ where .force → [] }
+
+
 -- ==== TODO ===
--- * fix termination issues with enumeration of pairs & lists (possibly using sized types)
--- * Enumeration for the ≤ datatype and sorted lists
+-- * fix termination issues with enumeration of pairs & lists (possibly using sized types) -> Done
+-- * Enumeration for the ≤ datatype and sorted lists -> Done
 -- * Enumeration of well scoped lambda terms
 -- * Investigate the relation between various implementations of `IEnumerable ≤`, and consequently of `IEnumerable Sorted`
 -- * Q: How does the work in this thesis tie in with existing work (constrained lambda term generation (claessen et al.), FEAT, smallcheck etc...)

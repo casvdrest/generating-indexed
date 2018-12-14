@@ -64,5 +64,13 @@ module src.Data where
         → Colist a i → Colist b i → Colist (a ⊕ b) i
   xs ⊎ ys = interleave (map inl xs) (map inr ys)
 
+  data _∈_ {a : Set} {i : Size} : a → (Colist a i) → Set where
+    here : ∀ {x : a} → x ∈ (x ∷ λ where .force → [])
+    there : ∀ {x y : a} {xs : Colist a i} → y ∈ xs → y ∈ (x ∷ λ where .force → xs)
+
+  data _∈ₗ_ {a : Set} : a → List a → Set where
+    hereₗ : ∀ {x : a} {xs : List a} → x ∈ₗ (x ∷ xs)
+    thereₗ : ∀ {x y : a} {xs : List a} → y ∈ₗ xs → y ∈ₗ (x ∷ y ∷ xs) 
+
   data ℚ : Set where
     Q : ℕ ⊗ ℕ → ℚ
