@@ -7,42 +7,58 @@ open import Data.List hiding (map; fromMaybe)
 
 module src.Data where
 
-  _∘_ : ∀ {a b c : Set} → (b → c) → (a → b) → (a → c)
-  (f ∘ g) x = f (g x)
-
   module Sigma where
 
-    data Σ (a : Set) (P : a → Set) : Set where
+    data Σ {ℓ} (a : Set ℓ) (P : a → Set ℓ) : Set ℓ where
       _,_ : (x : a) → P x → Σ a P
+
+  module Pi where
+
+    Π : (a :  Set) → (a → Set) → Set
+    Π a P = (x : a) → P x
+
 
   module Product where
 
-    data _⊗_ (a b : Set) : Set where
+    data _⊗_ {ℓ} (a b : Set ℓ) : Set ℓ where
       _,_ : a → b → a ⊗ b
 
-    fst : ∀ {a b : Set} → a ⊗ b → a
+    fst : ∀ {ℓ} {a b : Set ℓ} → a ⊗ b → a
     fst (x , _) = x
 
-    snd : ∀ {a b : Set} → a ⊗ b → b
+    snd : ∀ {ℓ} {a b : Set ℓ} → a ⊗ b → b
     snd (_ , y) = y
 
   module Coproduct where
 
-    data _⊕_ (a b : Set) : Set where
+    data _⊕_ {ℓ} (a b : Set ℓ) : Set ℓ where
       inl : a → a ⊕ b
       inr : b → a ⊕ b
 
   open Sigma     public
+  open Pi        public
   open Product   public
   open Coproduct public
 
-  interleave : ∀ {a : Set} {i : Size}
-               → Colist a i → Colist a i
+  interleave : ∀ {ℓ} {a : Set ℓ} {i : Size}
+               → Colist a i → Thunk (Colist a) (↑ i)
                → Colist a i
-  interleave [] ys = ys
-  interleave xs [] = xs
-  interleave (x ∷ xs) (y ∷ ys) =
-    x ∷ λ where .force → y ∷ λ where .force → interleave (xs .force) (ys .force)
+  interleave [] ys = ys .force
+  interleave (x ∷ xs) ys = x ∷ λ where .force → interleave (ys .force) xs
+
+  wrap : ∀ {a : Set} → a → List a → List a
+  wrap x [] = x ∷ []
+  wrap x (y ∷ xs) = y ∷ wrap x xs
+
+  interleaveN : ∀ {a : Set} {i : Size} → List (Colist a i) → Colist a i
+  interleaveN [] = []
+  interleaveN ([] ∷ xs) = interleaveN xs
+  interleaveN ((y ∷ ys) ∷ xs) =
+    y ∷ λ where .force → interleaveN (wrap (ys .force) xs)
+
+  merge : ∀ {ℓ} {a : Set ℓ} → List a → List a → List a
+  merge [] ys = ys
+  merge (x ∷ xs) ys = x ∷ merge ys xs
 
   iterate : ∀ {a : Set} {i : Size} → a → (a → a) → Colist a i
   iterate x f = x ∷ λ where .force → iterate (f x) f
@@ -59,18 +75,11 @@ module src.Data where
   prefix _       []       = []
   prefix (suc n) (x ∷ xs) = x ∷ prefix n (xs .force)
 
+  
   -- Disjoint union of colists
-  _⊎_ : ∀ {a b : Set} {i : Size}
+  _⊎_ : ∀ {ℓ} {a b : Set ℓ} {i : Size}
         → Colist a i → Colist b i → Colist (a ⊕ b) i
-  xs ⊎ ys = interleave (map inl xs) (map inr ys)
-
-  data _∈_ {a : Set} {i : Size} : a → (Colist a i) → Set where
-    here : ∀ {x : a} → x ∈ (x ∷ λ where .force → [])
-    there : ∀ {x y : a} {xs : Colist a i} → y ∈ xs → y ∈ (x ∷ λ where .force → xs)
-
-  data _∈ₗ_ {a : Set} : a → List a → Set where
-    hereₗ : ∀ {x : a} {xs : List a} → x ∈ₗ (x ∷ xs)
-    thereₗ : ∀ {x y : a} {xs : List a} → y ∈ₗ xs → y ∈ₗ (x ∷ y ∷ xs) 
+  xs ⊎ ys = interleave (map inl xs) (λ where .force → map inr ys)
 
   data ℚ : Set where
     Q : ℕ ⊗ ℕ → ℚ

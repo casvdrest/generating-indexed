@@ -47,17 +47,11 @@ module src.Indexed where
   vecToList [] = []
   vecToList (x ∷ xs) = x ∷ vecToList xs
 
-  listN : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → Colist₊ a ∞ → ℕ → Colist₊ (List a) ∞
-  listN xs zero = [ [] ]
+  listN : ∀ {a : Set} {i : Size} ⦃ _ : Enumerable a ⦄ → Colist₊ a ∞ → ℕ → Thunk (Colist₊ (List a)) i
+  listN xs zero = λ where .force → [ [] ]
   listN {a} xs (suc n) with map vecToList (inhabitants' (Vec a) (suc n))
-  listN {a} xs (suc n) | [] = [ [] ]
-  listN {a} xs (suc n) | y ∷ ys = toColist₊ y (ys .force)
-
-  instance
-    enumList : ∀ {a : Set} ⦃ _ : Enumerable a ⦄ → Enumerable (List a)
-    enumList {a} with inhabitants a
-    ... | [] = record { enum = [] ∷ λ where .force → [] }
-    ... | x ∷ xs = record { enum = diagonal (map (listN (toColist₊ x (xs .force))) (inhabitants ℕ)) }
+  listN {a} xs (suc n) | [] = λ where .force → [ [] ]
+  listN {a} xs (suc n) | y ∷ ys = λ where .force → toColist₊ y (ys .force)
 
   data _≤_ : ℕ → ℕ → Set where
     z≤n : ∀ {n : ℕ} → 0 ≤ n
@@ -74,8 +68,6 @@ module src.Indexed where
   
   lt-right-subst : ∀ {n m k : ℕ} → (m ≡ k) → n ≤ m → n ≤ k
   lt-right-subst refl prf = prf
-
-  ≤-r-eq-rewr : ∀ {n m k : ℕ} → (m ≡ k) → n ≤ m ≡ n ≤ k
 
   data Sorted : List ℕ → Set where
     nil    : Sorted []
@@ -97,44 +89,11 @@ module src.Indexed where
     enum≤ : ∀ {n : ℕ} → IEnumerable (_≤_ n ∘ _+_ n)
     enum≤ {n} = record { enumI = λ m → lt-right-subst (+-comm m n) (yield≤ n m) ∷ λ where .force → []}
 
-  ≤-diff : ∀ {n m : ℕ} → n ≤ m → ℕ
-  ≤-diff {.0} {m} z≤n = m
-  ≤-diff (n≤m prf) = ≤-diff prf
-
-  ≤-diff-lemma : ∀ {n m : ℕ} {p : n ≤ m}
-                 -----------------------
-                 → m ≡ n + ≤-diff p
-  ≤-diff-lemma {p = z≤n} = refl
-  ≤-diff-lemma {p = n≤m p} = cong suc (≤-diff-lemma {p = p})
-     
-  eq-rewr : ∀ {p q : Set} → p ≡ q → p → q
-  eq-rewr refl p = p
-  
-  ≤-diff-eq : ∀ {n m : ℕ} {p : n ≤ m}
-              -----------------------------------
-              → n ≤ m ≡ (_≤_ n ∘ _+_ n) (≤-diff p)
-  ≤-diff-eq {.0} {m} {p = z≤n} =
-    begin
-      0 ≤ m
-    ≡⟨⟩
-      0 ≤ ≤-diff z≤n
-    ≡⟨⟩
-      (_≤_ 0 ∘ _+_ 0) (≤-diff z≤n)
-    ∎
-  ≤-diff-eq {n = suc n} {m = suc m} {p = n≤m p} =
-    begin
-      suc n ≤ suc m
-    ≡⟨ ≤-r-eq-rewr (≤-diff-lemma {n = suc n} {m = suc m} {p = n≤m p }) ⟩
-      suc n ≤ (suc n + ≤-diff (n≤m p))
-    ≡⟨⟩
-      (_≤_ (suc n) ∘ _+_ (suc n)) (≤-diff (n≤m p))
-    ∎
-  
-  ≤-complete : ∀ {n m : ℕ} {p : n ≤ m}
-           -----------------------------------------------------------------------------
-           → eq-rewr (≤-diff-eq {n} {m} {p}) p ∈ inhabitants' (_≤_ n ∘ _+_ n) (≤-diff p)
-  ≤-complete {p = z≤n} = {!!}
-  ≤-complete {p = n≤m p} = {!!}
+  ≤-conv : ∀ {n m : ℕ} → n ≤ m → Σ ℕ (λ k → (n ≤ (n + k)) ⊗ (m ≡ n + k) )
+  ≤-conv {zero} {m} z≤n = m , (z≤n , refl)
+  ≤-conv {suc n} {zero} ()
+  ≤-conv {suc n} {suc m} (n≤m p) with ≤-conv p
+  ≤-conv {suc n} {suc .(n + k)} (n≤m p) | k , (x , refl) = k , (n≤m x , refl)
   
   sortedProofₛ : (xs : List ℕ) → Maybe (Sorted xs)
   sortedProofₛ [] = just nil
@@ -155,7 +114,7 @@ module src.Indexed where
   asSortedList : (n : ℕ) → (xs : List ℕ) → Sorted (diffList n xs)
   asSortedList _ [] = nil
   asSortedList _ (x ∷ []) = single
-  asSortedList n (x ∷ y ∷ xs) with yield≤ (n + x) y
+  asSortedList n (x ∷ y ∷ xs) with yield≤ (n + x) y   
   ... | prf = step (lt-right-subst (+-comm y (n + x)) prf) (asSortedList (n + x) (y ∷ xs))
 
   instance
@@ -165,12 +124,4 @@ module src.Indexed where
   instance
     enumSorted : IEnumerable (Sorted ∘ diffList 0)
     enumSorted = record { enumI = λ xs → asSortedList 0 xs ∷ λ where .force → [] }
-
-
--- ==== TODO ===
--- * fix termination issues with enumeration of pairs & lists (possibly using sized types) -> Done
--- * Enumeration for the ≤ datatype and sorted lists -> Done
--- * Enumeration of well scoped lambda terms
--- * Investigate the relation between various implementations of `IEnumerable ≤`, and consequently of `IEnumerable Sorted`
--- * Q: How does the work in this thesis tie in with existing work (constrained lambda term generation (claessen et al.), FEAT, smallcheck etc...)
 
