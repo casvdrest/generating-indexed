@@ -1,7 +1,9 @@
+open import Level
+
 open import Agda.Builtin.Size
 open import Codata.Colist
 open import Codata.Thunk hiding (map)
-open import Data.Nat
+open import Data.Nat hiding (_⊔_)
 open import Data.Maybe hiding (map; fromMaybe)
 open import Data.List hiding (map; fromMaybe)
 
@@ -9,7 +11,7 @@ module src.Data where
 
   module Sigma where
 
-    data Σ {ℓ} (a : Set ℓ) (P : a → Set ℓ) : Set ℓ where
+    data Σ {ℓ₁ ℓ₂} (a : Set ℓ₁) (P : a → Set ℓ₂) : Set (ℓ₁ ⊔ ℓ₂) where
       _,_ : (x : a) → P x → Σ a P
 
   module Pi where
@@ -75,7 +77,11 @@ module src.Data where
   prefix _       []       = []
   prefix (suc n) (x ∷ xs) = x ∷ prefix n (xs .force)
 
-  
+
+  data _∈_ {ℓ} {a : Set ℓ} : a → List a → Set ℓ where
+    here : ∀ {x : a} {xs : List a} → x ∈ (x ∷ xs)
+    there : ∀ {x y : a} {xs : List a} → x ∈ xs → x ∈ (y ∷ xs)
+
   -- Disjoint union of colists
   _⊎_ : ∀ {ℓ} {a b : Set ℓ} {i : Size}
         → Colist a i → Colist b i → Colist (a ⊕ b) i
