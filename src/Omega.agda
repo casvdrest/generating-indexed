@@ -1,9 +1,11 @@
 import Level as L using (suc)
 
 open import Data.Nat
+open import Data.Nat.Properties
 open import Data.Bool using (Bool; true; false)
 open import Data.Maybe using (Maybe; just; nothing)
-open import Data.List using (List; map; [_]; concatMap; []; _∷_)
+open import Data.List using (List; map; [_]; concatMap; []; _∷_; _++_; foldr)
+open import Data.List.Categorical using (functor; applicative)
 open import Data.Product using (∃; ∃-syntax; _,_)
 
 open import Category.Functor
@@ -24,37 +26,39 @@ module src.Omega where
   ω-map f x n = map f (x n)
 
   instance
-    functor : ∀ {ℓ} → RawFunctor {ℓ} ω
-    functor = record { _<$>_ = ω-map }
+    ω-functor : ∀ {ℓ} → RawFunctor {ℓ} ω
+    ω-functor = record { _<$>_ = ω-map }
 
   ω-pure : ∀ {ℓ} {a : Set ℓ} → a → ω a
-  ω-pure x zero = []
-  ω-pure x (suc n) = [ x ]
+  ω-pure x _ = [ x ]
+  list-ap : ∀ {ℓ} {a b : Set ℓ} → List (a → b) → List a → List b
+  list-ap fs xs = concatMap (λ f → map f xs) fs
   
   ω-ap : ∀ {ℓ} {a b : Set ℓ} → ω (a → b) → ω a → ω b
-  ω-ap f x n = concatMap (λ f → map f (x n)) (f n)
+  ω-ap f x n = list-ap (f n) (x n)
 
   instance
-    applicative : ∀ {ℓ} → RawApplicative {ℓ} ω
-    applicative = record { pure = ω-pure 
-                         ; _⊛_  = ω-ap
-                         }
+    ω-applicative : ∀ {ℓ} → RawApplicative {ℓ} ω
+    ω-applicative = record { pure = ω-pure 
+                           ; _⊛_  = ω-ap
+                           }
 
   ω-bind : ∀ {ℓ} {a b : Set ℓ} → ω a → (a → ω b) → ω b
   ω-bind f g = λ n → concatMap ((λ x → x n) ∘ g) (f n)
 
   instance
-    monad : ∀ {ℓ} → RawMonad {ℓ} ω
-    monad = record { return = ω-pure
-                   ; _>>=_  = ω-bind
-                   }
+    ω-monad : ∀ {ℓ} → RawMonad {ℓ} ω
+    ω-monad = record { return = ω-pure
+                     ; _>>=_  = ω-bind
+                     }
   
   open RawFunctor ⦃...⦄ using (_<$>_)
   open RawApplicative ⦃...⦄ using (pure; _⊛_)
 
-  _<*>_ : ∀ {ℓ} {a b : Set ℓ} 
-          → ω (a → b) → ω a → ω b
-  _<*>_ = ω-ap
+  _<*>_ : ∀ {ℓ} {a b : Set ℓ} {f : Set ℓ → Set ℓ}
+            ⦃ _ : RawApplicative f ⦄
+          → f (a → b) → f a → f b
+  _<*>_ = _⊛_
 
   _∥_ : ∀ {ℓ} {a : Set ℓ} → ω a → ω a → ω a
   x ∥ y = λ n → merge (x n) (y n)
@@ -73,8 +77,8 @@ module src.Omega where
         ∥ ⦇ false ⦈
 
   maybes : ∀ {ℓ} {a : Set ℓ} → ω a → ω (Maybe a)
-  maybes a = ⦇ nothing ⦈
-           ∥ ⦇ just (κ a)  ⦈
+  maybes a = ⦇ nothing    ⦈
+           ∥ ⦇ just (κ a) ⦈
 
   nats : ω ℕ → ω ℕ
   nats μ = ⦇ zero  ⦈
@@ -91,16 +95,16 @@ module src.Omega where
   eithers a b = ⦇ inl (κ a) ⦈
               ∥ ⦇ inr (κ b) ⦈
   
-  prop1 : (fix nats) 10 ≡ 0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ 7 ∷ 8 ∷ []
+  prop1 : (fix nats) 10 ≡ 0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ 7 ∷ 8 ∷ 9 ∷ []
   prop1 = refl
 
   prop2 : bools 10 ≡ true ∷ false ∷ []
   prop2 = refl
 
-  prop3 : maybes (fix nats) 10 ≡ nothing ∷ just 0 ∷ just 1 ∷ just 2 ∷ just 3 ∷ just 4 ∷ just 5 ∷ just 6 ∷ just 7 ∷ []
+  prop3 : maybes (fix nats) 10 ≡ nothing ∷ just 0 ∷ just 1 ∷ just 2 ∷ just 3 ∷ just 4 ∷ just 5 ∷ just 6 ∷ just 7 ∷ just 8 ∷ []
   prop3 = refl
 
-  prop4 : fix (lists (fix nats)) 5  ≡ [] ∷ (0 ∷ []) ∷ (0 ∷ 0 ∷ []) ∷ (1 ∷ []) ∷ (1 ∷ 0 ∷ []) ∷ []
+  prop4 : fix (lists (fix nats)) 4 ≡ [] ∷ (0 ∷ []) ∷ (0 ∷ 0 ∷ []) ∷ (1 ∷ []) ∷ (1 ∷ 0 ∷ []) ∷ []
   prop4 = refl
   
   _↝_ : ∀ {ℓ} {a : Set ℓ} → ω a → a → Set ℓ
@@ -144,8 +148,97 @@ module src.Omega where
   merge-complete-right {xs = xs} p
     = merge-sym {xs = xs} (merge-complete-left p)
   
-  ∥-complete-left : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a} → f ↝ x → (f ∥ g) ↝ x
+  ∥-complete-left : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
+                    → f ↝ x
+                    ------------------------------------
+                    → (f ∥ g) ↝ x
   ∥-complete-left (n , p) = n , merge-complete-left p
 
-  ∥-complete-right : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a} → g ↝ x → (f ∥ g) ↝ x
+  ∥-complete-right : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
+                     → g ↝ x
+                     ------------------------------------
+                     → (f ∥ g) ↝ x
   ∥-complete-right (n , p) = n , merge-complete-right p
+
+  ∥-sound : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
+            → (f ∥ g) ↝ x
+            ------------------------------------
+            → (f ↝ x) ⊕ (g ↝ x)
+  
+
+  ++-elem-left : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a}
+              → x ∈ xs → x ∈ (xs ++ ys)
+  ++-elem-left here = here
+  ++-elem-left (there p) = there (++-elem-left p)
+
+  ++-elem-right : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a}
+                  → x ∈ ys → x ∈ (xs ++ ys)
+  ++-elem-right {xs = []} p = p
+  ++-elem-right {xs = x ∷ xs} p = there (++-elem-right p) 
+
+  map-preserves-elem : ∀ {ℓ} {a b : Set ℓ} {f : a → b}
+                         {x : a} {xs : List a}
+                       → x ∈ xs → f x ∈ map f xs
+  map-preserves-elem here = here
+  map-preserves-elem (there p) =
+    there (map-preserves-elem p)
+
+  list-ap-complete : ∀ {ℓ} {a b : Set ℓ} {f : a → b} {x : a}
+                       {fs : List (a → b)} {xs : List a} 
+                     → f ∈ fs → x ∈ xs
+                     → f x ∈ list-ap fs xs
+  list-ap-complete here p2 = ++-elem-left (map-preserves-elem p2)
+  list-ap-complete (there p1) p2 = ++-elem-right (list-ap-complete p1 p2)
+
+  postulate depth-monotone : ∀ {ℓ} {a : Set ℓ} {x : a} {f : ω a} {n m : ℕ}
+                             → n ≤ m → x ∈ f n → x ∈ f m
+
+  ap-pure-is-map : ∀ {ℓ} {a b : Set ℓ} {xs : List a} {C : a → b}
+                   → map C xs ≡ list-ap [ C ] xs
+
+  list-ap-constr : ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
+                     {xs : List a} {ys : List b} {C : a → b → c}
+                   → x ∈ xs → y ∈ ys
+                   → C x y ∈ (list-ap (list-ap [ C ] xs) ys)
+  list-ap-constr {x = x} {y = y} {xs = xs} {ys = ys} {C = C} p1 p2 =
+    list-ap-complete {f = C x} {x = y} {fs = list-ap [ C ] xs} {xs = ys}
+      (∈-rewr ap-pure-is-map (map-preserves-elem p1)) p2
+
+  ≤-rewr : ∀ {n m k : ℕ} → m ≡ k → n ≤ m → n ≤ k
+  ≤-rewr refl p = p
+
+  ≤-cong : ∀ {n m : ℕ} → n ≤ m → n ≤ suc m
+  ≤-cong z≤n = z≤n
+  ≤-cong (s≤s p) = s≤s (≤-cong p)
+
+  ≤-comm : ∀ {n m : ℕ} → n ≤ n + m → n ≤ m + n
+  ≤-comm {n = n} {m = m} p = ≤-rewr (+-comm n m) p 
+
+  ≤-sum : (n m : ℕ) → n ≤ (n + m)
+  ≤-sum n zero = ≤-reflexive (+-comm 0 n)
+  ≤-sum n (suc m) with ≤-sum n m
+  ... | p = ≤-rewr (sym (+-suc n m)) (≤-cong p) 
+
+  ⊛-complete : ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
+                 {f : ω a} {g : ω b} {C : a → b → c}
+               → f ↝ x → g ↝ y
+               -------------------------------------
+               → ⦇ C f g ⦈ ↝ C x y
+  ⊛-complete {f = f} {g = g} (n , p1) (m , p2) =
+    n + m , list-ap-constr
+      {xs = f (n + m)} {ys = g (n + m)}
+      (depth-monotone {f = f} (≤-sum n m) p1)
+      (depth-monotone {f = g} (≤-comm (≤-sum m n)) p2)
+
+  ⊛-sound-left : ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
+                   {f : ω a} {g : ω b} {C : a → b → c}
+                 → ⦇ C f g ⦈ ↝ C x y
+                 -------------------------------------
+                 → f ↝ x
+
+  ⊛-sound-right  : ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
+                     {f : ω a} {g : ω b} {C : a → b → c}
+                   → ⦇ C f g ⦈ ↝ C x y
+                   -------------------------------------
+                   → g ↝ y
+                 
