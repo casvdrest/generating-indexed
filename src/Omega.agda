@@ -13,7 +13,8 @@ open import Category.Applicative
 open import Category.Monad
 
 open import Function
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; trans; sym)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; trans; sym; cong)
+open Relation.Binary.PropositionalEquality.≡-Reasoning
 
 open import src.Data
 
@@ -174,7 +175,12 @@ module src.Omega where
   ++-elem-right : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a}
                   → x ∈ ys → x ∈ (xs ++ ys)
   ++-elem-right {xs = []} p = p
-  ++-elem-right {xs = x ∷ xs} p = there (++-elem-right p) 
+  ++-elem-right {xs = x ∷ xs} p = there (++-elem-right p)
+
+  ++-right-ident : ∀ {ℓ} {a : Set ℓ} {xs : List a}
+                   → xs ++ [] ≡ xs
+  ++-right-ident {xs = []} = refl
+  ++-right-ident {xs = x ∷ xs} = cong (_∷_ x) (++-right-ident {xs = xs})
 
   map-preserves-elem : ∀ {ℓ} {a b : Set ℓ} {f : a → b}
                          {x : a} {xs : List a}
@@ -193,9 +199,19 @@ module src.Omega where
   postulate depth-monotone : ∀ {ℓ} {a : Set ℓ} {x : a} {f : ω a} {n m : ℕ}
                              → n ≤ m → x ∈ f n → x ∈ f m
 
+  concatMap-singleton : ∀ {ℓ} {a b : Set ℓ} {x : a} {f : a → List b} → concatMap (λ y → f y) [ x ] ≡ f x
+
   ap-pure-is-map : ∀ {ℓ} {a b : Set ℓ} {xs : List a} {C : a → b}
                    → map C xs ≡ list-ap [ C ] xs
-
+  ap-pure-is-map {xs = xs} {C = C} =
+    begin
+      map C xs
+    ≡⟨ sym ++-right-ident ⟩
+      map C xs ++ foldr _++_ (map C []) []
+    ≡⟨⟩
+      concatMap (λ f → map f xs) [ C ]
+    ∎
+    
   list-ap-constr : ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
                      {xs : List a} {ys : List b} {C : a → b → c}
                    → x ∈ xs → y ∈ ys
