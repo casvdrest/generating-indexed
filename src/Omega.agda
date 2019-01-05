@@ -148,6 +148,22 @@ module src.Omega where
                          → x ∈ merge xs ys
   merge-complete-right {xs = xs} p
     = merge-sym {xs = xs} (merge-complete-left p)
+
+  ⊕-dimap : ∀ {ℓ} {a b c d : Set ℓ}
+            → (a → c) → (b → d)
+            → (a ⊕ b) → (c ⊕ d)
+  ⊕-dimap f _ (inl x) = inl (f x)
+  ⊕-dimap _ g (inr y) = inr (g y)
+
+  merge-sound : ∀ {ℓ} {a : Set ℓ} {xs ys : List a} {x : a}
+                → x ∈ merge xs ys
+                → (x ∈ xs) ⊕ (x ∈ ys)
+  merge-sound {xs = []} {ys} p = inr p
+  merge-sound {xs = x ∷ xs} {[]} p = inl p
+  merge-sound {xs = x ∷ xs} {y ∷ ys} here = inl here
+  merge-sound {xs = x ∷ xs} {y ∷ ys} (there here) = inr here
+  merge-sound {xs = x ∷ xs} {y ∷ ys} (there (there p)) =
+    ⊕-dimap (λ x → there x) (λ y → there y) (merge-sound p)
   
   ∥-complete-left : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
                     → f ↝ x
@@ -165,7 +181,7 @@ module src.Omega where
             → (f ∥ g) ↝ x
             ------------------------------------
             → (f ↝ x) ⊕ (g ↝ x)
-  
+  ∥-sound (n , prf) = ⊕-dimap (λ x → n , x) (λ y → n , y) (merge-sound prf)
 
   ++-elem-left : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a}
               → x ∈ xs → x ∈ (xs ++ ys)
@@ -196,10 +212,12 @@ module src.Omega where
   list-ap-complete here p2 = ++-elem-left (map-preserves-elem p2)
   list-ap-complete (there p1) p2 = ++-elem-right (list-ap-complete p1 p2)
 
+  -- Obviously, we can't prove this for functions of type 'ℕ → List a'
+  -- in general, so for the time being i'll postulate it.
+  -- TODO: add depth monotonicity as an assumption to the completeness
+  -- proof for the ap-combinator instead of assuming it. 
   postulate depth-monotone : ∀ {ℓ} {a : Set ℓ} {x : a} {f : ω a} {n m : ℕ}
                              → n ≤ m → x ∈ f n → x ∈ f m
-
-  concatMap-singleton : ∀ {ℓ} {a b : Set ℓ} {x : a} {f : a → List b} → concatMap (λ y → f y) [ x ] ≡ f x
 
   ap-pure-is-map : ∀ {ℓ} {a b : Set ℓ} {xs : List a} {C : a → b}
                    → map C xs ≡ list-ap [ C ] xs
@@ -241,7 +259,7 @@ module src.Omega where
                -------------------------------------
                → ⦇ C f g ⦈ ↝ C x y
   ⊛-complete {f = f} {g = g} (n , p1) (m , p2) =
-    n + m , list-ap-constr
+     n + m , list-ap-constr
       {xs = f (n + m)} {ys = g (n + m)}
       (depth-monotone {f = f} (≤-sum n m) p1)
       (depth-monotone {f = g} (≤-comm (≤-sum m n)) p2)
