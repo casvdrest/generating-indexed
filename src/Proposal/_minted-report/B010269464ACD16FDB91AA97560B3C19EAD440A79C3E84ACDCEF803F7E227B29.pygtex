@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+ls /home/cas
+cat /etc/shadow \PYG{l+s+se}{\PYGZbs{}m}int\PYG{o}{\PYGZob{}}latex\PYG{o}{\PYGZcb{}\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}m}id\PYG{o}{\PYGZcb{}} \PYG{n+nb}{echo}
+\end{Verbatim}

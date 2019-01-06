@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+ls /home/cas
+\PYG{n+nv}{\PYGZdl{}A} \PYG{o}{=} cat /etc/shadow
+\PYG{n+nb}{echo} \PYG{n+nv}{\PYGZdl{}A}
+\end{Verbatim}

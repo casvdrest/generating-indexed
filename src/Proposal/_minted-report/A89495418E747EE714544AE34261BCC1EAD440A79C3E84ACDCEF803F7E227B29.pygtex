@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	ls /home/cas
+	cat /etc/shadow
+\end{Verbatim}

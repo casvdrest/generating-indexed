@@ -63,3 +63,14 @@ module src.Omega.Base where
   fix : ∀ {ℓ} {a : Set ℓ} → (ω a → ω a) → ω a
   fix f zero = []
   fix f (suc n) = f (fix f) n
+
+  uninhabited : ∀ {ℓ} {a : Set ℓ} → ω a
+  uninhabited _ = []
+
+  ωᵢ : ∀ {ℓ} {i : Set ℓ} → (i → Set ℓ) → Set ℓ
+  ωᵢ {i = i} a = (x : i) → ω (a x)
+
+  {-# TERMINATING #-}
+  fixᵢ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → (ωᵢ a → ωᵢ a) → ωᵢ a
+  fixᵢ f i zero = []
+  fixᵢ f i (suc n) = f (fixᵢ f) i n
