@@ -52,6 +52,8 @@ module src.Omega.Base where
           → f (a → b) → f a → f b
   _<*>_ = _⊛_
 
+  infixr 2 _∥_  
+
   _∥_ : ∀ {ℓ} {a : Set ℓ} → ω a → ω a → ω a
   x ∥ y = λ n → merge (x n) (y n)
 
@@ -59,8 +61,16 @@ module src.Omega.Base where
   κ f zero = []
   κ f (suc n) = f n
 
+  fixed : ∀ {ℓ} → Set ℓ → Set ℓ
+  fixed a = a → a
+
+  infix 1 ⟪_⟫
+
+  ⟪_⟫ : ∀ {ℓ} → Set ℓ → Set ℓ
+  ⟪ a ⟫ = fixed a
+
   {-# TERMINATING #-}
-  fix : ∀ {ℓ} {a : Set ℓ} → (ω a → ω a) → ω a
+  fix : ∀ {ℓ} {a : Set ℓ} → ⟪ ω a ⟫ → ω a
   fix f zero = []
   fix f (suc n) = f (fix f) n
 
@@ -71,6 +81,19 @@ module src.Omega.Base where
   ωᵢ {i = i} a = (x : i) → ω (a x)
 
   {-# TERMINATING #-}
-  fixᵢ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → (ωᵢ a → ωᵢ a) → ωᵢ a
+  fixᵢ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → ⟪ ωᵢ a ⟫ → ωᵢ a
   fixᵢ f i zero = []
   fixᵢ f i (suc n) = f (fixᵢ f) i n
+
+  ⟨_⟩ : ∀ {ℓ} {a : Set ℓ} → ⟪ ω a ⟫ → ω a
+  ⟨_⟩ = fix
+
+  ⟨_⟩ᵢ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → ⟪ ωᵢ a ⟫ → ωᵢ a
+  ⟨_⟩ᵢ = fixᵢ
+
+  
+
+  -- TODO : deep embedding van omega
+  --        mailing list over omega monad
+  --        typed lambda calculus
+  --        refactoren met verschillende implementaties

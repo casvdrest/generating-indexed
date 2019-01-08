@@ -5,13 +5,13 @@ open import Data.Nat.Properties
 open import Data.Fin hiding (_≤_; _+_)
 open import Data.Vec hiding (map; [_])
 open import Data.Bool
-open import Data.List hiding (fromMaybe; map)
+open import Data.List hiding (fromMaybe)
 open import Data.Maybe hiding (fromMaybe; map)
 open import Data.Empty
-open import Data.Product
+open import Data.Product using (uncurry; _,_; ∃; ∃-syntax)
 
 import Relation.Binary.PropositionalEquality as Eq'
-open Eq' using (_≡_; refl; cong; sym)
+open Eq' using (_≡_; refl; cong; sym; trans)
 open Eq'.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
 
 open import src.Data
@@ -24,9 +24,9 @@ open import Category.Applicative
 
 module src.Omega.Indexed where 
 
-  open RawApplicative ⦃...⦄
+  open RawApplicative ⦃...⦄ using (_⊛_; pure)
   
-  fin : ωᵢ Fin → ωᵢ Fin
+  fin : ⟪ ωᵢ Fin ⟫
   fin _ zero    = uninhabited
   fin μ (suc n) = ⦇ zero      ⦈
                 ∥ ⦇ suc (μ n) ⦈
@@ -64,7 +64,7 @@ module src.Omega.Indexed where
   prop4 : fixᵢ ≤n+k (3 , 0) 10 ≡ [ s≤s (s≤s (s≤s z≤n)) ]
   prop4 = refl
 
-  vec : ∀ {a : Set} → ω a → ωᵢ (Vec a) → ωᵢ (Vec a)
+  vec : ∀ {a : Set} → ω a → ⟪ ωᵢ (Vec a) ⟫
   vec a μ zero    = ⦇ []          ⦈
   vec a μ (suc n) = ⦇ (κ a) ∷ (μ n) ⦈
 
@@ -73,90 +73,112 @@ module src.Omega.Indexed where
     (false ∷ true ∷ []) ∷ (false ∷ false ∷ []) ∷ []
   prop5 = refl
 
-  data Sorted : List ℕ → Set where
+  data Sorted {ℓ} : List ℕ → Set ℓ where
     nil    : Sorted []
     single : ∀ {n : ℕ} → Sorted (n ∷ [])
-    step   : ∀ {n m : ℕ} {xs : List ℕ} → n ≤ m → Sorted (m ∷ xs) → Sorted (n ∷ m ∷ xs)
+    step   : ∀ {n m : ℕ} {xs : List ℕ} → n ≤ m → Sorted {ℓ} (m ∷ xs) → Sorted {ℓ} (n ∷ m ∷ xs)
 
-  sorted : ωᵢ Sorted → ωᵢ Sorted
-  sorted μ []       = ⦇ nil    ⦈
-  sorted μ (x ∷ []) = ⦇ single ⦈
-  sorted μ (x ∷ y ∷ xs) with fixᵢ ≤m (x , y) 10
-  sorted μ (x ∷ y ∷ xs) | [] = uninhabited
-  sorted μ (x ∷ y ∷ xs) | p ∷ _ = ⦇ (step p) (μ (y ∷ xs)) ⦈
+  n≤m? : (n m : ℕ) → Maybe (n ≤ m)
+  n≤m? zero m          = just z≤n
+  n≤m? n zero          = nothing
+  n≤m? (suc n) (suc m) = Data.Maybe.map s≤s (n≤m? n m)
 
-  prop6 : fixᵢ sorted (1 ∷ 2 ∷ 3 ∷ []) 15 ≡ step (s≤s z≤n) (step (s≤s (s≤s z≤n)) single) ∷ []
+  sortedₛ : ⟪ ωᵢ Sorted ⟫
+  sortedₛ μ []      = ⦇ nil    ⦈
+  sortedₛ μ(x ∷ []) = ⦇ single ⦈
+  sortedₛ μ (x ∷ y ∷ xs) with n≤m? x y
+  sortedₛ μ (x ∷ y ∷ xs) | nothing = uninhabited
+  sortedₛ μ (x ∷ y ∷ xs) | just p = ⦇ (step p) (μ (y ∷ xs)) ⦈
+
+  prop6 : fixᵢ sortedₛ (1 ∷ 2 ∷ 3 ∷ []) 15 ≡ step (s≤s z≤n) (step (s≤s (s≤s z≤n)) single) ∷ []
   prop6 = refl
 
-  prop7 : fixᵢ sorted (3 ∷ 2 ∷ 1 ∷ []) 15 ≡ []
+  prop7 : fixᵢ sortedₛ (3 ∷ 2 ∷ 1 ∷ []) 15 ≡ []
   prop7 = refl
 
-{-
-  cong≤ : ∀ {n m : ℕ} → n ≤ m → n ≤ suc m
-  cong≤ z≤n = z≤n
-  cong≤ (n≤m prf) = n≤m (cong≤ prf)
+  bump : ℕ → List ℕ → List ℕ
+  bump n [] = []
+  bump n (x ∷ xs) = x + n ∷ bump (x + n) xs
 
-  yield≤ : (n m : ℕ) → n ≤ (m + n)
-  yield≤ zero m = z≤n
-  yield≤ (suc n) zero = n≤m (yield≤ n zero)
-  yield≤ (suc n) (suc m) = cong≤ (yield≤ (suc n) m) 
+  Sorted' : ∀ {ℓ} → List ℕ → Set ℓ
+  Sorted' = Sorted ∘ (bump 0) 
+
+  n≤k+n : (n k : ℕ) → n ≤ k + n
+  n≤k+n n zero = ≤-reflexive refl
+  n≤k+n n (suc k) = ≤-suc (n≤k+n n k)
+
+  n≤m→n+k≤m+k : ∀ {n m k : ℕ} → n ≤ m → n + k ≤ m + k
+  n≤m→n+k≤m+k {n = n} {m = m} {k = zero} p rewrite +-comm n 0 | +-comm m 0 = p
+  n≤m→n+k≤m+k {n = n} {m = m} {k = suc k} p rewrite +-suc n k | +-suc m k = s≤s (n≤m→n+k≤m+k p)
+
+  map-preserves-sorted : ∀ {ℓ} {n : ℕ} {xs : List ℕ}
+                         → Sorted {ℓ} xs
+                         → Sorted {ℓ} (map (λ x → x + n) xs)
+  map-preserves-sorted nil = nil
+  map-preserves-sorted single = single
+  map-preserves-sorted (step x prf) = step (n≤m→n+k≤m+k x) (map-preserves-sorted prf)
+
+  Sorted-eq : ∀ {ℓ} {xs ys : List ℕ} → xs ≡ ys → Sorted {ℓ} xs → Sorted {ℓ} ys
+  Sorted-eq refl sp = sp
+
+  bump-map-eq : ∀ {n m : ℕ} {xs : List ℕ} → map (λ x → x + m) (bump n xs) ≡ bump (n + m) xs
+  bump-map-eq {xs = []} = refl
+  bump-map-eq {n = n} {m = m} {xs = x ∷ xs} rewrite sym (+-assoc x n m) =
+    cong (_∷_ (x + n + m)) (bump-map-eq {n = x + n} {m = m} {xs = xs})
+
+  bump-lemma : ∀ {ℓ} {n m : ℕ} {xs : List ℕ}
+               → Sorted {ℓ} (bump n xs)
+               → Sorted {ℓ} (bump (n + m) xs)
+  bump-lemma {n = n} {m = m} {xs = xs} p  =
+    Sorted-eq bump-map-eq (map-preserves-sorted {n = m} {xs = bump n xs} p)
   
-  lt-right-subst : ∀ {n m k : ℕ} → (m ≡ k) → n ≤ m → n ≤ k
-  lt-right-subst refl prf = prf
+  sorted : ⟪ ωᵢ Sorted' ⟫
+  sorted μ []           = ⦇ nil ⦈
+  sorted μ (x ∷ [])     = ⦇ single ⦈
+  sorted μ (x ∷ y ∷ xs) rewrite +-comm x 0 =
+    ⦇ (step (n≤k+n x y) ∘ bump-lemma {n = 0}) (μ (y ∷ xs)) ⦈
 
-  data Sorted : List ℕ → Set where
-    nil    : Sorted []
-    single : ∀ {n : ℕ} → Sorted (n ∷ [])
-    step   : ∀ {n m : ℕ} {xs : List ℕ} → n ≤ m → Sorted (m ∷ xs) → Sorted (n ∷ m ∷ xs)
+  ≤-diff : ∀ {n m : ℕ} → n ≤ m → ℕ
+  ≤-diff {zero} {m} p = m
+  ≤-diff {suc n} {zero} ()
+  ≤-diff {suc n} {suc m} (s≤s p) = suc (≤-diff p)
 
-  ≤proof : (n : ℕ) → (m : ℕ) → Maybe (n ≤ m)
-  ≤proof zero m = just z≤n
-  ≤proof (suc n) zero = nothing
-  ≤proof (suc n) (suc m) with ≤proof n m
-  ≤proof (suc n) (suc m) | just prf = just (n≤m prf)
-  ≤proof (suc n) (suc m) | nothing = nothing
+  ≤-equivalence : ∀ {n m} → n ≤ m
+                  ----------------------------------------
+                  → ∃[ k ] ((n ≤ (n + k)) ⊗ (m ≡ (n + k)))
+                  
+  ≤-equivalence {zero} {m} p = m , p , refl
+  ≤-equivalence {suc n} {m = suc m} (s≤s p) with ≤-equivalence p
+  ≤-equivalence {suc n} {suc .(n + k)} (s≤s p) | k , (leq , refl) =
+    k , s≤s leq , refl
 
-  instance
-    enum≤ₛ : ∀ {n : ℕ} → IEnumerable (_≤_ n)
-    enum≤ₛ {n} = record { enumI = λ m → fromMaybe (≤proof n m) }
+  bump-eq-lemma : ∀ {x y v : ℕ} {xs ys : List ℕ}
+                  → y ∷ xs ≡ bump x (v ∷ ys)
+                  → x ∷ y ∷ xs ≡ bump 0 (x ∷ v ∷ ys)
+  bump-eq-lemma {x} refl rewrite +-comm x 0 = refl
 
-  instance
-    enum≤ : ∀ {n : ℕ} → IEnumerable (_≤_ n ∘ _+_ n)
-    enum≤ {n} = record { enumI = λ m → lt-right-subst (+-comm m n) (yield≤ n m) ∷ λ where .force → []}
+  minus-0 : ∀ {n : ℕ} → ∣ n - 0 ∣ ≡ n
+  minus-0 {zero} = refl
+  minus-0 {suc n} = refl
 
-  ≤-conv : ∀ {n m : ℕ} → n ≤ m → Σ ℕ (λ k → (n ≤ (n + k)) ⊗ (m ≡ n + k) )
-  ≤-conv {zero} {m} z≤n = m , (z≤n , refl)
-  ≤-conv {suc n} {zero} ()
-  ≤-conv {suc n} {suc m} (n≤m p) with ≤-conv p
-  ≤-conv {suc n} {suc .(n + k)} (n≤m p) | k , (x , refl) = k , (n≤m x , refl)
+  lemma-minus : ∀ {n m : ℕ} → n ≤ m → ∣ m - n ∣ + n ≡ m
+  lemma-minus {.0} {m} z≤n rewrite +-comm ∣ m - 0 ∣ 0 | minus-0 {n = m} = refl
+  lemma-minus {(suc n)} {(suc m)} (s≤s p) with lemma-minus p
+  ... | res rewrite +-suc ∣ m - n ∣ n = cong suc res
+
+  lemma-sorted-≤ : ∀ {ℓ} {n m : ℕ} {xs : List ℕ} → n ≤ m → Sorted {ℓ} (m ∷ xs) → Sorted {ℓ} (n ∷ xs)
+  lemma-sorted-≤ leq single = single
+  lemma-sorted-≤ {n = n} {m = m} leq (step x p) = step (≤-trans leq x) p
+
+  dfst : ∀ {ℓ} {a : Set ℓ} {P : a → Set ℓ} → Σ a P → a
+  dfst (x , _) = x
   
-  sortedProofₛ : (xs : List ℕ) → Maybe (Sorted xs)
-  sortedProofₛ [] = just nil
-  sortedProofₛ (x ∷ []) = just single
-  sortedProofₛ (x ∷ y ∷ xss) with ≤proof x y
-  sortedProofₛ (x ∷ y ∷ xss) | just prf₁ with sortedProofₛ (y ∷ xss) 
-  sortedProofₛ (x ∷ y ∷ xss) | just prf₁ | just prf₂ = just (step prf₁ prf₂)
-  sortedProofₛ (x ∷ y ∷ xss) | just prf₁ | nothing = nothing
-  sortedProofₛ (x ∷ y ∷ xss) | nothing = nothing
-
-  diffList : ℕ → List ℕ → List ℕ
-  diffList n [] = []
-  diffList n (x ∷ xs) = n + x ∷ diffList (n + x) xs
-
-  extractList : ∀ {xs : List ℕ} → Sorted xs → List ℕ
-  extractList {xs} _ = xs
-
-  asSortedList : (n : ℕ) → (xs : List ℕ) → Sorted (diffList n xs)
-  asSortedList _ [] = nil
-  asSortedList _ (x ∷ []) = single
-  asSortedList n (x ∷ y ∷ xs) with yield≤ (n + x) y   
-  ... | prf = step (lt-right-subst (+-comm y (n + x)) prf) (asSortedList (n + x) (y ∷ xs))
-
-  instance
-    enumSortedₛ : IEnumerable Sorted
-    enumSortedₛ = record { enumI = λ xs → fromMaybe (sortedProofₛ xs) }
-
-  instance
-    enumSorted : IEnumerable (Sorted ∘ diffList 0)
-    enumSorted = record { enumI = λ xs → asSortedList 0 xs ∷ λ where .force → [] }
+  {-
+  sorted-equivalence : ∀ {ℓ} {xs : List ℕ} → Sorted {ℓ} xs
+                       -----------------------------------------
+                       → ∃[ ys ] (Sorted' ys ⊗ (xs ≡ bump 0 ys))
+  sorted-equivalence {xs = []} nil = [] , nil , refl
+  sorted-equivalence {xs = x ∷ []} single rewrite +-comm 0 x = [ x ] , single , refl
+  sorted-equivalence {xs = x ∷ y ∷ xs} (step leq p) = {!!}
   -}
+  

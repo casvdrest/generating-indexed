@@ -57,11 +57,11 @@ module src.Omega.Properties where
   merge-complete-right {xs = xs} p
     = merge-sym {xs = xs} (merge-complete-left p)
 
-  ⊕-dimap : ∀ {ℓ} {a b c d : Set ℓ}
+  ⊕-bimap : ∀ {ℓ} {a b c d : Set ℓ}
             → (a → c) → (b → d)
             → (a ⊕ b) → (c ⊕ d)
-  ⊕-dimap f _ (inl x) = inl (f x)
-  ⊕-dimap _ g (inr y) = inr (g y)
+  ⊕-bimap f _ (inl x) = inl (f x)
+  ⊕-bimap _ g (inr y) = inr (g y)
 
   merge-sound : ∀ {ℓ} {a : Set ℓ} {xs ys : List a} {x : a}
                 → x ∈ merge xs ys
@@ -71,7 +71,7 @@ module src.Omega.Properties where
   merge-sound {xs = x ∷ xs} {y ∷ ys} here = inl here
   merge-sound {xs = x ∷ xs} {y ∷ ys} (there here) = inr here
   merge-sound {xs = x ∷ xs} {y ∷ ys} (there (there p)) =
-    ⊕-dimap (λ x → there x) (λ y → there y) (merge-sound p)
+    ⊕-bimap (λ x → there x) (λ y → there y) (merge-sound p)
   
   ∥-complete-left : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
                     → f ↝ x
@@ -89,7 +89,7 @@ module src.Omega.Properties where
             → (f ∥ g) ↝ x
             ------------------------------------
             → (f ↝ x) ⊕ (g ↝ x)
-  ∥-sound (n , prf) = ⊕-dimap (λ x → n , x) (λ y → n , y) (merge-sound prf)
+  ∥-sound (n , prf) = ⊕-bimap (λ x → n , x) (λ y → n , y) (merge-sound prf)
 
   ++-elem-left : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a}
               → x ∈ xs → x ∈ (xs ++ ys)
