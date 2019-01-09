@@ -71,9 +71,9 @@ module src.Omega.Regex where
            ∀ {r} → ε ∈ L[ r * ]
 
   regex : ⟪ ωᵢ (λ r → Σ[ s ∈ String ] s ∈ L[ r ]) ⟫
-  regex μ (`c x) = pure ([ x ] , CHAR)
+  regex μ (`c x) = ⦇ ([ x ] , CHAR) ⦈
   regex μ zero = uninhabited
-  regex μ one = pure (ε , ONE)
+  regex μ one  = ⦇ (ε , ONE) ⦈
   regex μ (r + r') = 
     (
       do left ← μ r
@@ -119,3 +119,10 @@ module src.Omega.Regex where
       ('a' ∷ 'a' ∷ 'a' ∷ [] ,       STEP CHAR (STEP CHAR (STEP CHAR STOP))) ∷
       ('a' ∷ 'a' ∷ 'a' ∷ 'a' ∷ [] , STEP CHAR (STEP CHAR (STEP CHAR (STEP CHAR STOP)))) ∷ []
   regex_test5 = refl
+
+  regex_test6 : ⟨ regex ⟩ᵢ ((`c 'a' ∙ `c 'b') *) 5
+    ≡ (ε , STOP) ∷
+      ('a' ∷ 'b' ∷ [] , STEP (SEQ CHAR CHAR) STOP) ∷
+      ('a' ∷ 'b' ∷ 'a' ∷ 'b' ∷ [] , STEP (SEQ CHAR CHAR) (STEP (SEQ CHAR CHAR) STOP)) ∷
+      ('a' ∷ 'b' ∷ 'a' ∷ 'b' ∷ 'a' ∷ 'b' ∷ [] , STEP (SEQ CHAR CHAR) (STEP (SEQ CHAR CHAR) (STEP (SEQ CHAR CHAR) STOP))) ∷ []
+  regex_test6 = refl
