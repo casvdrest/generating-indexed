@@ -124,11 +124,11 @@ module src.Omega.Lambda where
           ------------------------------------------------
           → Γ ⊢ t₁ ∙ t₂ ∶ τ
 
-    {-
+    
     LET : ∀ {t₁ t₂ α τ σ} → Γ ⊢ t₁ ∶ τ → (α ↦ τ ∷ Γ) ⊢ t₂ ∶ σ
           -----------------------------------------------------
           → Γ ⊢ let` α := t₁ in` t₂ ∶ σ
-    -}
+          
 
   Γ-match : (τ : Ty) → ⟪ ( ωᵢ λ Γ → (Σ[ α ∈ Id ] Γ [ α ↦ τ ]) ) ⟫
   Γ-match τ μ ∅ = uninhabited
@@ -143,21 +143,31 @@ module src.Omega.Lambda where
 
   λ-calculus : ⟪ ( ωᵢ λ p → Σ[ t ∈ Tm ] (snd p) ⊢ t ∶ (fst p) ) ⟫
   
-  λ-calculus μ (`ℕ , Γ') = ⦇ (Σ-bimap $_ VAR) ( ⟨ Γ-match `ℕ ⟩ᵢ Γ') ⦈ ∥ 
-    do σ ← ⟨ type ⟩
-       t₁ ← μ (σ `→ `ℕ , Γ')
-       t₂ ← μ (σ , Γ')
-       return (Σ₁ t₁ ∙ Σ₁ t₂ , APP (Σ₂ t₁) (Σ₂ t₂)) 
+  λ-calculus μ (`ℕ , Γ') = ⦇ (Σ-bimap $_ VAR) ( ⟨ Γ-match `ℕ ⟩ᵢ Γ') ⦈
+                         ∥ ( do σ ← ⟨ type ⟩
+                                t₁ ← μ (σ `→ `ℕ , Γ')
+                                t₂ ← μ (σ , Γ')
+                                return (Σ₁ t₁ ∙ Σ₁ t₂ , APP (Σ₂ t₁) (Σ₂ t₂)))
+                         ∥ ( do let α = fresh 0 Γ'
+                                σ ← ⟨ type ⟩
+                                lt ← μ (σ , Γ')
+                                bd ← μ (`ℕ , (α ↦ σ ∷ Γ'))
+                                return ((let` α := Σ₁ lt in` Σ₁ bd) , LET (Σ₂ lt) (Σ₂ bd)) )
   
-  λ-calculus μ (τ `→ τ₁ , Γ') = 
-    do let α = fresh 0 Γ'
-       t ← (μ (τ₁ , (α ↦ τ ∷ Γ')))
-       return (Λ α ⇒ Σ₁ t , ABS (Σ₂ t))
+  λ-calculus μ (τ `→ τ₁ , Γ') = ( do let α = fresh 0 Γ'
+                                     t ← (μ (τ₁ , (α ↦ τ ∷ Γ')))
+                                     return (Λ α ⇒ Σ₁ t , ABS (Σ₂ t)) )
+                              ∥ ( do let α = fresh 0 Γ'
+                                     σ ← ⟨ type ⟩
+                                     lt ← μ (σ , Γ')
+                                     bd ← μ (τ `→ τ₁ , (α ↦ σ ∷ Γ'))
+                                     return ((let` α := Σ₁ lt in` Σ₁ bd) , LET (Σ₂ lt) (Σ₂ bd)) )                        
 
-  λ-test : ⟨ λ-calculus ⟩ᵢ (`ℕ `→ `ℕ , 0 ↦ `ℕ ∷ ∅) 5 ≡
-    ((Λ 1 ⇒ $ 1) , ABS (VAR TOP)) ∷                                                     -- [n ↦ ℕ] ⊢ λ x → x : ℕ → ℕ
-    (Λ 1 ⇒ ((Λ 2 ⇒ ($ 2)) ∙ ($ 1)) , ABS (APP (ABS (VAR TOP)) (VAR TOP))) ∷             -- [n ↦ ℕ] ⊢ λ x → (λ y → y) x : ℕ → ℕ
-    ((Λ 1 ⇒ $ 0) , ABS (VAR (POP TOP))) ∷                                               -- [n ↦ ℕ] ⊢ λ x → n : ℕ → ℕ
-    ((Λ 1 ⇒ ((Λ 2 ⇒ ($ 2)) ∙ ($ 0))) , ABS (APP (ABS (VAR TOP)) (VAR (POP TOP) ))) ∷ [] -- [n ↦ ℕ] ⊢ λ x → (λ y → y) n : ℕ → ℕ
+  λ-test : ⟨ λ-calculus ⟩ᵢ (`ℕ `→ `ℕ , 0 ↦ `ℕ ∷ ∅) 4
+    ≡ (Λ 1 ⇒ $ 1 , ABS (VAR TOP)) ∷
+      (let` 1 := $ 0 in` Λ 2 ⇒ $ 2 , LET (VAR TOP) (ABS (VAR TOP))) ∷
+      (Λ 1 ⇒ let` 2 := $ 1 in` $ 2 , ABS (LET (VAR TOP) (VAR TOP))) ∷
+      (let` 1 := (let` 1 := $ 0 in` $ 1) in` Λ 2 ⇒ $ 2 , LET (LET (VAR TOP) (VAR TOP)) (ABS (VAR TOP))) ∷
+      (Λ 1 ⇒ $ 0 , ABS (VAR (POP TOP))) ∷
+      (let` 1 := (Λ 1 ⇒ $ 1) in` (Λ 2 ⇒ $ 2) , LET (ABS (VAR TOP)) (ABS (VAR TOP))) ∷ []
   λ-test = refl
-
