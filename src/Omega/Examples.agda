@@ -27,9 +27,9 @@ module src.Omega.Examples where
   nats μ = ⦇ zero  ⦈
          ∥ ⦇ suc μ ⦈
 
-  lists : ∀ {ℓ} {a : Set ℓ} → ω a → ω (List a) → ω (List a)
-  lists a μ = ⦇ [] ⦈
-            ∥ ⦇ (κ a) ∷ μ ⦈
+  list : ∀ {ℓ} {a : Set ℓ} → ω a → ⟪ ω (List a) ⟫
+  list a μ = ⦇ [] ⦈
+           ∥ ⦇ (κ a) ∷ μ ⦈
 
   pairs : ∀ {ℓ} {a b : Set ℓ} → ω a → ω b → ω (a ⊗ b)
   pairs a b = ⦇ a , b ⦈
@@ -47,5 +47,5 @@ module src.Omega.Examples where
   prop3 : maybes (fix nats) 10 ≡ nothing ∷ just 0 ∷ just 1 ∷ just 2 ∷ just 3 ∷ just 4 ∷ just 5 ∷ just 6 ∷ just 7 ∷ just 8 ∷ []
   prop3 = refl
 
-  prop4 : fix (lists (fix nats)) 4 ≡ [] ∷ (0 ∷ []) ∷ (0 ∷ 0 ∷ []) ∷ (1 ∷ []) ∷ (1 ∷ 0 ∷ []) ∷ []
+  prop4 : fix (list (fix nats)) 4 ≡ [] ∷ (0 ∷ []) ∷ (0 ∷ 0 ∷ []) ∷ (1 ∷ []) ∷ (1 ∷ 0 ∷ []) ∷ []
   prop4 = refl

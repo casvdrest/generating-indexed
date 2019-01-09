@@ -5,7 +5,6 @@ open import src.Omega.Examples
 
 open import Data.Nat hiding (_≟_)
 open import Data.List
-open import Data.String
 open import Data.Fin hiding (_≟_)
 open import Data.Product using (Σ; Σ-syntax; _,_)
 
@@ -62,9 +61,8 @@ module src.Omega.Lambda where
     `ℕ    : Ty
     _`→_  : Ty → Ty → Ty
 
-  type : ω Ty
-  type zero = []
-  type (suc n) = let rec = type n in `ℕ ∷ list-ap (list-ap [ _`→_ ] rec) rec
+  type : ⟪ ω Ty ⟫
+  type μ = ⦇ `ℕ ⦈ ∥ ⦇ μ `→ μ ⦈
 
   →-left-neq : ∀ {τ₁ τ₂ τ₃ τ₄ : Ty} → ¬ τ₁ ≡ τ₂
                --------------------------------
@@ -132,25 +130,6 @@ module src.Omega.Lambda where
           → Γ ⊢ let` α := t₁ in` t₂ ∶ σ
     -}
 
-  Σ-map : ∀ {a : Set} {P Q : a → Set}
-          → (∀ {y : a} → (P y → Q y))
-          -------------------------------------
-          → Σ[ x ∈ a ] P x → Σ[ x ∈ a ] Q x
-  Σ-map f (fst , snd) = fst , f snd
-          
-  Σ-bimap : ∀ {a b : Set} {P : a → Set} {Q : b → Set}       
-            → (f : a → b) → (∀ {y : a} → P y → Q (f y))
-            -------------------------------------------
-            → Σ[ x ∈ a ] P x → Σ[ x ∈ b ] Q x
-  Σ-bimap f g (fst , snd) = f fst , g snd
-
-  Σ₁ : ∀ {a : Set} {P : a → Set} → Σ[ x ∈ a ] P x → a
-  Σ₁ (fst , _) = fst
-
-  Σ₂ : ∀ {a : Set} {P : a → Set} → (p : Σ[ x ∈ a ] P x) → P (Σ₁ p)
-  Σ₂ (_ , snd) = snd
-
-  -- TODO: should return a list!
   Γ-match : (τ : Ty) → ⟪ ( ωᵢ λ Γ → (Σ[ α ∈ Id ] Γ [ α ↦ τ ]) ) ⟫
   Γ-match τ μ ∅ = uninhabited
   Γ-match τ μ (α ↦ σ ∷ Γ) with τ ≟ σ
@@ -165,7 +144,7 @@ module src.Omega.Lambda where
   λ-calculus : ⟪ ( ωᵢ λ p → Σ[ t ∈ Tm ] (snd p) ⊢ t ∶ (fst p) ) ⟫
   
   λ-calculus μ (`ℕ , Γ') = ⦇ (Σ-bimap $_ VAR) ( ⟨ Γ-match `ℕ ⟩ᵢ Γ') ⦈ ∥ 
-    do σ ← type
+    do σ ← ⟨ type ⟩
        t₁ ← μ (σ `→ `ℕ , Γ')
        t₂ ← μ (σ , Γ')
        return (Σ₁ t₁ ∙ Σ₁ t₂ , APP (Σ₂ t₁) (Σ₂ t₂)) 

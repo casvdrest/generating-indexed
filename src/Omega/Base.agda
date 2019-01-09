@@ -2,6 +2,7 @@ open import src.Data
 
 open import Data.Nat
 open import Data.List using (List; map; [_]; concatMap; []; _∷_)
+open import Data.Product using (Σ; Σ-syntax; _,_)
 
 open import Category.Functor
 open import Category.Applicative
@@ -90,6 +91,24 @@ module src.Omega.Base where
 
   ⟨_⟩ᵢ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → ⟪ ωᵢ a ⟫ → ωᵢ a
   ⟨_⟩ᵢ = fixᵢ
+
+  Σ-map : ∀ {a : Set} {P Q : a → Set}
+          → (∀ {y : a} → (P y → Q y))
+          -------------------------------------
+          → Σ[ x ∈ a ] P x → Σ[ x ∈ a ] Q x
+  Σ-map f (fst , snd) = fst , f snd
+          
+  Σ-bimap : ∀ {a b : Set} {P : a → Set} {Q : b → Set}       
+            → (f : a → b) → (∀ {y : a} → P y → Q (f y))
+            -------------------------------------------
+            → Σ[ x ∈ a ] P x → Σ[ x ∈ b ] Q x
+  Σ-bimap f g (fst , snd) = f fst , g snd
+
+  Σ₁ : ∀ {a : Set} {P : a → Set} → Σ[ x ∈ a ] P x → a
+  Σ₁ (fst , _) = fst
+
+  Σ₂ : ∀ {a : Set} {P : a → Set} → (p : Σ[ x ∈ a ] P x) → P (Σ₁ p)
+  Σ₂ (_ , snd) = snd
 
   
 
