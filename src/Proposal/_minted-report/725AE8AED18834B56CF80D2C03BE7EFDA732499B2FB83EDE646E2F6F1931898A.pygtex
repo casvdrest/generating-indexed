@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
-ls /home/cas
-cat /etc/shadow \PYG{l+s+se}{\PYGZbs{}e}nsuremath\PYG{o}{\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}m}athbin\PYG{o}{\PYGZob{}}❘\PYG{o}{\PYGZcb{}\PYGZcb{}} \PYG{n+nb}{echo}
-\end{Verbatim}

@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-	touch file.txt
-	cat file.txt
-\end{Verbatim}

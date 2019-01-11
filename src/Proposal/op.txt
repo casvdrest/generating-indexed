@@ -1,0 +1,4346 @@
+* 3d-graphics-examples
+    Synopsis: Examples of 3D graphics programming with OpenGL
+    Default available version: 0.0.0.2
+    Installed versions: [ Unknown ]
+    Homepage: http://darcs.wolfgang.jeltsch.info/haskell/3d-graphics-examples
+    License:  BSD3
+
+* 3dmodels
+    Synopsis: 3D model parsers
+    Default available version: 0.3.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/capsjac/3dmodels
+    License:  LGPL-3
+
+* 4Blocks
+    Synopsis: A tetris-like game (works with GHC 6.8.3 and Gtk2hs 0.9.13)
+    Default available version: 0.2
+    Installed versions: [ Unknown ]
+    Homepage: http://lambdacolyte.wordpress.com/2009/08/06/tetris-in-haskell/
+    License:  BSD3
+
+* AAI
+    Synopsis: Abstract Application Interface.
+    Default available version: 0.2.0.1
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* ABList
+    Synopsis: An alternating list of two types
+    Default available version: 0.0.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-Angle
+    Synopsis: Angles in degrees and radians.
+    Default available version: 1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-Boolean
+    Synopsis: Handle Boolean values generatically.
+    Default available version: 1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-BuildPlatform
+    Synopsis: Detect which OS you're running on.
+    Default available version: 1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-Colour
+    Synopsis: Efficient RGB colour types.
+    Default available version: 1.1.6
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-EasyRaster-GTK
+    Synopsis: GTK+ pixel plotting.
+    Default available version: 1.1.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-HalfInteger
+    Synopsis: Efficient half-integer type.
+    Default available version: 1.2.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-MiniTest
+    Synopsis: A simple test framework.
+    Default available version: 1.1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-PPM
+    Synopsis: Trivial package for writing PPM images.
+    Default available version: 1.1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-Random
+    Synopsis: A pure Haskell PRNG.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-Terminal
+    Synopsis: Trivial wrapper over ansi-terminal.
+    Default available version: 1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-VanillaArray
+    Synopsis: Immutable arrays with plain integer indicies.
+    Default available version: 1.1.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-Vector
+    Synopsis: Efficient geometric vectors and transformations.
+    Default available version: 2.3.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AC-Vector-Fancy
+    Synopsis: Fancy type-system stuff for AC-Vector
+    Default available version: 2.4.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* ACME
+    Synopsis: Essential features
+    Default available version: 0.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://alkalisoftware.net
+    License:  BSD3
+
+* ADPfusion
+    Synopsis: Efficient, high-level dynamic programming.
+    Default available version: 0.5.2.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/ADPfusion
+    License:  BSD3
+
+* ADPfusionForest
+    Synopsis: Dynamic programming on tree and forest structures
+    Default available version: 0.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/ADPfusionForest
+    License:  BSD3
+
+* ADPfusionSet
+    Synopsis: Dynamic programming for Set data structures.
+    Default available version: 0.0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/ADPfusionSet
+    License:  BSD3
+
+* AERN-Basics
+    Synopsis: foundational type classes for approximating exact real numbers
+    Default available version: 2011.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://code.google.com/p/aern/
+    License:  BSD3
+
+* AERN-Net
+    Synopsis: Compositional lazy dataflow networks for exact real number
+              computation
+    Default available version: 0.2.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www-users.aston.ac.uk/~konecnym/DISCERN
+    License:  BSD3
+
+* AERN-Real
+    Synopsis: arbitrary precision real interval arithmetic
+    Default available version: 2011.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://code.google.com/p/aern/
+    License:  BSD3
+
+* AERN-Real-Double
+    Synopsis: arbitrary precision real interval arithmetic
+    Default available version: 2011.1.0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://code.google.com/p/aern/
+    License:  BSD3
+
+* AERN-Real-Interval
+    Synopsis: arbitrary precision real interval arithmetic
+    Default available version: 2011.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://code.google.com/p/aern/
+    License:  BSD3
+
+* AERN-RnToRm
+    Synopsis: polynomial function enclosures (PFEs) approximating exact real
+              functions
+    Default available version: 0.5.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www-users.aston.ac.uk/~konecnym/DISCERN
+    License:  BSD3
+
+* AERN-RnToRm-Plot
+    Synopsis: GL plotting of polynomial function enclosures (PFEs)
+    Default available version: 0.2.0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www-users.aston.ac.uk/~konecnym/DISCERN
+    License:  BSD3
+
+* AES
+    Synopsis: Fast AES encryption/decryption for bytestrings
+    Default available version: 0.2.9
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AFSM
+    Synopsis: Arrowized functional state machines
+    Default available version: 0.1.3.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/PseudoPower/AFSM
+    License:  MIT
+
+* AGI
+    Synopsis: A library for writing AGI scripts for Asterisk
+    Default available version: 1.3
+    Installed versions: [ Not installed ]
+    Homepage: http://src.seereason.com/haskell-agi
+    License:  BSD3
+
+* ALUT
+    Synopsis: A binding for the OpenAL Utility Toolkit
+    Default available version: 2.4.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/haskell-openal/ALUT
+    License:  BSD3
+
+* AMI
+    Synopsis: Low-level bindings for Asterisk Manager Interface (AMI).
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://redmine.iportnov.ru/projects/ami
+    License:  BSD3
+
+* ANum
+    Synopsis: Num instance for Applicatives provided via the ANum newtype
+    Default available version: 0.2.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/DanBurton/ANum#readme
+    License:  BSD3
+
+* ASN1
+    Synopsis: ASN.1 support for Haskell
+    Default available version: 0.0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/asn1
+    License:  BSD3
+
+* AVar
+    Synopsis: Mutable variables with Exception handling and concurrency support.
+    Default available version: 0.0.5.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AWin32Console
+    Synopsis: A binding to a part of the ANSI escape code for the console
+    Default available version: 1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AbortT-monadstf
+    Synopsis: Monads-tf instances for the AbortT monad transformer.
+    Default available version: 1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/gcross/AbortT-transformers
+    License:  BSD3
+
+* AbortT-mtl
+    Synopsis: mtl instances for the AbortT monad transformer
+    Default available version: 1.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/gcross/AbortT-mtl
+    License:  BSD3
+
+* AbortT-transformers
+    Synopsis: A monad and monadic transformer providing "abort" functionality
+    Default available version: 1.0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/gcross/AbortT-transformers
+    License:  BSD3
+
+* ActionKid
+    Synopsis: An easy-to-use video game framework for Haskell.
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/egonSchiele/actionkid
+    License:  BSD3
+
+* Adaptive
+    Synopsis: Library for incremental computing.
+    Default available version: 0.23
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Adaptive-Blaisorblade
+    Synopsis: Library for incremental computing.
+    Default available version: 0.23
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Advgame
+    Synopsis: Lisperati's adventure game in Lisp translated to Haskell
+    Default available version: 0.1.2
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* AesonBson
+    Synopsis: Mapping between Aeson's JSON and Bson objects.
+    Default available version: 0.2.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/nh2/AesonBson
+    License:  OtherLicense
+
+* Agata
+    Synopsis: Generator-generator for QuickCheck
+    Default available version: 0.2.1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Agda
+    Synopsis: A dependently typed functional programming language and proof
+              assistant
+    Default available version: 2.5.4.2
+    Installed versions: 2.6.0
+    Homepage: http://wiki.portal.chalmers.se/agda/
+    License:  OtherLicense
+
+* Agda-executable
+    Synopsis: Command-line program for type-checking and compiling Agda programs
+    Default available version: 2.3.0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://wiki.portal.chalmers.se/agda/
+    License:  OtherLicense
+
+* AhoCorasick
+    Synopsis: Aho-Corasick string matching algorithm
+    Default available version: 0.0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/lymar/AhoCorasick
+    License:  BSD3
+
+* AlanDeniseEricLauren
+    Synopsis: Find the minimal subset/submap satisfying some property.
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/enolan/AlanDeniseEricLauren
+    License:  BSD3
+
+* AlgoRhythm
+    Synopsis: Algorithmic music composition
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/omelkonian/AlgoRhythm/
+    License:  BSD3
+
+* AlgorithmW
+    Synopsis: Example implementation of Algorithm W for Hindley-Milner type
+              inference.
+    Default available version: 0.1.1.0
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/mgrabmueller/AlgorithmW
+    License:  BSD3
+
+* AlignmentAlgorithms
+    Synopsis: Collection of alignment algorithms
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/AlignmentAlgorithms
+    License:  GPL-3
+
+* Allure
+    Synopsis: Near-future Sci-Fi roguelike and tactical squad game
+    Default available version: 0.8.3.0
+    Installed versions: [ Unknown ]
+    Homepage: http://allureofthestars.com
+    License:  OtherLicense
+
+* AndroidViewHierarchyImporter
+    Synopsis: Android view hierarchy importer
+    Default available version: 0.1.0.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* Animas
+    Synopsis: Updated version of Yampa: a library for programming hybrid
+              systems.
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/eamsden/Animas
+    License:  BSD3
+
+* Annotations
+    Synopsis: Constructing, analyzing and destructing annotated trees
+    Default available version: 0.2.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Ansi2Html
+    Synopsis: Convert ANSI Terminal Sequences to nice HTML markup
+    Default available version: 0.9
+    Installed versions: [ Unknown ]
+    Homepage: http://janzzstimmpfle.de/~jens/software/Ansi2Html/
+    License:  BSD3
+
+* ApplePush
+    Synopsis: Library for Apple Push Notification Service
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* AppleScript
+    Synopsis: Call AppleScript from Haskell, and then call back into Haskell.
+    Default available version: 0.2.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/reinerp/haskell-AppleScript
+    License:  BSD3
+
+* ApproxFun-hs
+    Synopsis: Function approximation
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/idontgetoutmuch/ApproxFun.hs
+    License:  BSD3
+
+* ArrayRef
+    Synopsis: Unboxed references, dynamic arrays and more
+    Default available version: 0.1.3.1
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/Library/ArrayRef
+    License:  BSD3
+
+* ArrowVHDL
+    Synopsis: A library to generate Netlist code from Arrow descriptions.
+    Default available version: 1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/frosch03/arrowVHDL
+    License:  PublicDomain
+
+* AspectAG
+    Synopsis: Attribute Grammars in the form of an EDSL
+    Default available version: 0.3.6.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.uu.nl/wiki/bin/view/Center/AspectAG
+    License:  LGPL
+
+* AttoBencode
+    Synopsis: Fast Bencode encoding and parsing library
+    Default available version: 0.3.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://bitbucket.org/FlorianHartwig/attobencode
+    License:  BSD3
+
+* AttoJson
+    Synopsis: Simple lightweight JSON parser, generator & manipulator based on
+              ByteString
+    Default available version: 0.5.10
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/konn/AttoJSON
+    License:  BSD3
+
+* Attrac
+    Synopsis: Visualisation of Strange Attractors in 3-Dimensions
+    Default available version: 0.1.3
+    Installed versions: [ Unknown ]
+    Homepage: http://patch-tag.com/r/rhz/StrangeAttractors
+    License:  BSD3
+
+* Aurochs
+    Synopsis: Yet another parser generator for C/C++
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* AutoForms
+    Synopsis: GUI library based upon generic programming (SYB3)
+    Default available version: 0.4.2
+    Installed versions: [ Not installed ]
+    Homepage: http://autoforms.sourceforge.net/
+    License:  LGPL
+
+* AvlTree
+    Synopsis: Balanced binary trees using the AVL algorithm.
+    Default available version: 4.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* BASIC
+    Synopsis: Embedded BASIC
+    Default available version: 0.1.5.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* BCMtools
+    Synopsis: Big Contact Map Tools
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* BNFC
+    Synopsis: A compiler front-end generator.
+    Default available version: 2.8.2
+    Installed versions: [ Not installed ]
+    Homepage: http://bnfc.digitalgrammars.com/
+    License:  GPL-2
+
+* BNFC-meta
+    Synopsis: Deriving Parsers and Quasi-Quoters from BNF Grammars
+    Default available version: 0.6
+    Installed versions: [ Not installed ]
+    License:  GPL-2
+
+* Baggins
+    Synopsis: Tools for self-assembly
+    Default available version: 1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://pageperso.lif.univ-mrs.fr/~pierre-etienne.meunier/Baggins
+    License:  GPL-3
+
+* Bang
+    Synopsis: A Drum Machine DSL for Haskell
+    Default available version: 0.1.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/5outh/Bang/
+    License:  MIT
+
+* Barracuda
+    Synopsis: An ad-hoc P2P chat program
+    Default available version: 1.0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://sep07.mroot.net/
+    License:  GPL
+
+* Befunge93
+    Synopsis: An interpreter for the Befunge-93 Programming Language
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://coder.bsimmons.name/blog/2010/05/befunge-93-interpreter-on-hackage
+    License:  BSD3
+
+* BenchmarkHistory
+    Synopsis: Benchmark functions with history
+    Default available version: 0.0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/BenchmarkHistory
+    License:  GPL-3
+
+* BerkeleyDB
+    Synopsis: Berkeley DB binding
+    Default available version: 0.8.7
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/BerkeleyDBXML
+    License:  BSD3
+
+* BerkeleyDBXML
+    Synopsis: Berkeley DB XML binding
+    Default available version: 0.7.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/BerkeleyDBXML
+    License:  BSD3
+
+* BerlekampAlgorithm
+    Synopsis: Factorization of polynomials over finite field
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* BiGUL
+    Synopsis: The Bidirectional Generic Update Language
+    Default available version: 1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.prg.nii.ac.jp/project/bigul/
+    License:  PublicDomain
+
+* BigPixel
+    Synopsis: Image editor for pixel art
+    Default available version: 1.3.0
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/mchakravarty/BigPixel
+    License:  BSD3
+
+* Binpack
+    Synopsis: Common bin-packing heuristics.
+    Default available version: 0.4.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* BioHMM
+    Synopsis: Libary for Hidden Markov Models in HMMER3 format.
+    Default available version: 1.2.0
+    Installed versions: [ Not installed ]
+    License:  GPL-3
+
+* Biobase
+    Synopsis: Base library for bioinformatics
+    Default available version: 0.3.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* BiobaseBlast
+    Synopsis: BLAST-related tools
+    Default available version: 0.2.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/BiobaseBlast
+    License:  GPL-3
+
+* BiobaseDotP
+    Synopsis: Vienna / DotBracket / ExtSS parsers
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* BiobaseEnsembl
+    Synopsis: Ensembl related datastructures and functions
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/eggzilla/BiobaseEnsembl
+    License:  GPL-3
+
+* BiobaseFR3D
+    Synopsis: Importer for FR3D resources
+    Default available version: 0.2.3.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* BiobaseFasta
+    Synopsis: streaming FASTA parser
+    Default available version: 0.2.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/BiobaseFasta
+    License:  GPL-3
+
+* BiobaseHTTP
+    Synopsis: Libary to interface with the Bioinformatics HTTP services - Entrez
+              Ensembl
+    Default available version: 1.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/eggzilla/BiobaseHTTP
+    License:  GPL-3
+
+* BiobaseHTTPTools
+    Synopsis: Tools to query Bioinformatics HTTP services e.g. Entrez, Ensembl.
+    Default available version: 1.0.0
+    Installed versions: [ Unknown ]
+    License:  GPL-3
+
+* BiobaseInfernal
+    Synopsis: Infernal data structures and tools
+    Default available version: 0.8.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/BiobaseInfernal
+    License:  GPL-3
+
+* BiobaseMAF
+    Synopsis: Multiple Alignment Format
+    Default available version: 0.5.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* BiobaseNewick
+    Synopsis: Newick file format parser.
+    Default available version: 0.0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/BiobaseNewick
+    License:  BSD3
+
+* BiobaseTrainingData
+    Synopsis: RNA folding training data
+    Default available version: 0.1.2.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* BiobaseTurner
+    Synopsis: Import Turner RNA parameters
+    Default available version: 0.3.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* BiobaseTypes
+    Synopsis: Collection of types for bioinformatics
+    Default available version: 0.1.4.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/BiobaseTypes
+    License:  BSD3
+
+* BiobaseVienna
+    Synopsis: Import Vienna energy parameters
+    Default available version: 0.3.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* BiobaseXNA
+    Synopsis: Efficient RNA/DNA/Protein Primary/Secondary Structure
+    Default available version: 0.10.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/BiobaseXNA
+    License:  GPL-3
+
+* BirdPP
+    Synopsis: A preprocessor for Bird-style Literate Haskell comments with
+              Haddock markup.
+    Default available version: 1.1
+    Installed versions: [ Unknown ]
+    License:  GPL
+
+* BitStringRandomMonad
+    Default available version: 1.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* BitSyntax
+    Synopsis: A module to aid in the (de)serialisation of binary data
+    Default available version: 0.3.2.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/joecrayne/hs-bitsyntax
+    License:  BSD3
+
+* Bitly
+    Synopsis: A library to access bit.ly URL shortener.
+    Default available version: 0.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://bitbucket.org/jetxee/hs-bitly/
+    License:  BSD3
+
+* BlastHTTP
+    Synopsis: Libary to interface with the NCBI blast REST interface
+    Default available version: 1.3.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/eggzilla/BlastHTTP
+    License:  GPL-3
+
+* Blobs
+    Synopsis: Diagram editor
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.york.ac.uk/fp/darcs/Blobs/
+    License:  LGPL
+
+* BlogLiterately
+    Synopsis: A tool for posting Haskelly articles to blogs
+    Default available version: 0.8.6.2
+    Installed versions: [ Not installed ]
+    Homepage: http://byorgey.wordpress.com/blogliterately/
+    License:  GPL-3
+
+* BlogLiterately-diagrams
+    Synopsis: Include images in blog posts with inline diagrams code
+    Default available version: 0.2.0.6
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Blogdown
+    Synopsis: A markdown-like markup language designed for blog posts
+    Default available version: 0.2.4
+    Installed versions: [ Not installed ]
+    Homepage: https://blogdown.io
+    License:  AGPL-3
+
+* BluePrintCSS
+    Synopsis: Html document layout library.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://git.ierton.ru/?p=BluePrint.git;a=summary
+    License:  BSD3
+
+* Blueprint
+    Synopsis: Preview of a new build system.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/gcross/Blueprint
+    License:  BSD3
+
+* Bookshelf
+    Synopsis: A simple document organizer with some wiki functionality
+    Default available version: 0.6
+    Installed versions: [ Unknown ]
+    Homepage: http://www.cse.chalmers.se/~emax/bookshelf/Manual.shelf.html
+    License:  GPL
+
+* Boolean
+    Synopsis: Generalized booleans and numbers
+    Default available version: 0.2.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* BoundedChan
+    Synopsis: Implementation of bounded channels.
+    Default available version: 1.0.3.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Bravo
+    Synopsis: Static text template generation library
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/Bravo
+    License:  BSD3
+
+* BufferedSocket
+    Synopsis: A socker wrapper that makes the IO of sockets much cleaner
+    Default available version: 0.2.1.0
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* Buster
+    Synopsis: Hits a set of urls periodically to bust caches
+    Default available version: 0.1.1
+    Installed versions: [ Unknown ]
+    Homepage: http://github.com/michaelxavier/Buster
+    License:  MIT
+
+* CBOR
+    Synopsis: Encode/Decode values to/from CBOR
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/orclev/CBOR
+    License:  LGPL-3
+
+* CC-delcont
+    Synopsis: Delimited continuations and dynamically scoped variables
+    Default available version: 0.2.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://code.haskell.org/~dolio/CC-delcont
+    License:  OtherLicense
+
+* CC-delcont-alt
+    Synopsis: Three new monad transformers for multi-prompt delimited control
+    Default available version: 0.1.1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CC-delcont-cxe
+    Synopsis: A monad transformers for multi-prompt delimited control
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CC-delcont-exc
+    Synopsis: A monad transformers for multi-prompt delimited control
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CC-delcont-ref
+    Synopsis: A monad transformers for multi-prompt delimited control using
+              refercence cells
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CC-delcont-ref-tf
+    Synopsis: A monad transformers for multi-prompt delimited control using
+              refercence cells
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CCA
+    Synopsis: preprocessor and library for Causal Commutative Arrows (CCA)
+    Default available version: 0.1.5.3
+    Installed versions: [ Not installed ]
+    Homepage: not available
+    License:  BSD3
+
+* CHXHtml
+    Synopsis: A W3C compliant (X)HTML generating library
+    Default available version: 0.2.0
+    Installed versions: [ Not installed ]
+    Homepage: http://fuzzpault.com/chxhtml
+    License:  BSD3
+
+* CLASE
+    Synopsis: Cursor Library for A Structured Editor
+    Default available version: 2009.2.11
+    Installed versions: [ Not installed ]
+    Homepage: http://www.zonetora.co.uk/clase/
+    License:  BSD3
+
+* CLI
+    Synopsis: CLI tools
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CMCompare
+    Synopsis: Infernal covariance model comparison
+    Default available version: 0.0.1.5
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/software/cmcompare/
+    License:  GPL-3
+
+* CMQ
+    Synopsis: cwmwl udp message queue
+    Default available version: 0.0.12
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/viloocity/cmq/
+    License:  BSD3
+
+* COrdering
+    Synopsis: An algebraic data type similar to Prelude Ordering.
+    Default available version: 2.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CPBrainfuck
+    Synopsis: A simple Brainfuck interpretter.
+    Default available version: 1.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* CPL
+    Synopsis: An interpreter of Hagino's Categorical Programming Language (CPL).
+    Default available version: 0.0.9
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/msakai/cpl
+    License:  BSD3
+
+* CSPM-CoreLanguage
+    Synopsis: Definition of a CSP core-language.
+    Default available version: 0.3.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CSPM-FiringRules
+    Synopsis: Firing rules semantic of CSPM
+    Default available version: 0.4.4.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CSPM-Frontend
+    Synopsis: A CSP-M parser compatible with FDR-2.91
+    Default available version: 0.12.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CSPM-Interpreter
+    Synopsis: An interpreter for CSPM
+    Default available version: 0.7.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CSPM-ToProlog
+    Synopsis: some modules specific for the ProB tool
+    Default available version: 0.5.5.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CSPM-cspm
+    Synopsis: cspm command line tool for analyzing CSPM specifications.
+    Default available version: 0.8.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CTRex
+    Synopsis: Open records using closed type families.
+    Default available version: 0.6
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/CTRex
+    License:  BSD3
+
+* CV
+    Synopsis: OpenCV based machine vision library
+    Default available version: 0.3.7
+    Installed versions: [ Not installed ]
+    Homepage: http://aleator.github.com/CV/
+    License:  GPL
+
+* Cabal
+    Synopsis: A framework for packaging Haskell software
+    Default available version: 2.4.1.0
+    Installed versions: 2.4.0.1
+    Homepage: http://www.haskell.org/cabal/
+    License:  BSD3
+
+* Cabal-ide-backend
+    Synopsis: A framework for packaging Haskell software
+    Default available version: 1.23.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/cabal/
+    License:  BSD3
+
+* CabalSearch
+    Synopsis: Search cabal packages by name
+    Default available version: 0.0.2
+    Installed versions: [ Unknown ]
+    Homepage: http://github.com/brinchj/cabalsearch
+    License:  BSD3
+
+* Capabilities
+    Synopsis: Separate and contain effects of IO monad.
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Icelandjack/Capabilities
+    License:  BSD3
+
+* Cardinality
+    Synopsis: Measure container capacity. Use it to safely change container.
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    License:  LGPL
+
+* CarneadesDSL
+    Synopsis: An implementation and DSL for the Carneades argumentation model.
+    Default available version: 1.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.nott.ac.uk/~bmv/CarneadesDSL/
+    License:  BSD3
+
+* CarneadesIntoDung
+    Synopsis: A translation from the Carneades argumentation model into Dung's
+              AFs.
+    Default available version: 1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.nott.ac.uk/~bmv/CarneadesIntoDung/
+    License:  BSD3
+
+* Cartesian
+    Synopsis: Coordinate systems
+    Default available version: 0.6.0.0
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* Cascade
+    Synopsis: Playing with reified categorical composition
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/rampion/Cascade
+    License:  PublicDomain
+
+* Cassava
+    Synopsis: A CSV parsing and encoding library
+    Default available version: 0.5.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tfausak/cassava
+    License:  BSD3
+
+* Catana
+    Synopsis: A monad for complex manipulation of a stream.
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* ChannelT
+    Synopsis: Generalized stream processors
+    Default available version: 0.0.0.7
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/pthariensflame/ChannelT
+    License:  BSD3
+
+* Chart
+    Synopsis: A library for generating 2D Charts and Plots
+    Default available version: 1.9
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/timbod7/haskell-chart/wiki
+    License:  BSD3
+
+* Chart-cairo
+    Synopsis: Cairo backend for Charts.
+    Default available version: 1.9
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/timbod7/haskell-chart/wiki
+    License:  BSD3
+
+* Chart-diagrams
+    Synopsis: Diagrams backend for Charts.
+    Default available version: 1.9
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/timbod7/haskell-chart/wiki
+    License:  BSD3
+
+* Chart-gtk
+    Synopsis: Utility functions for using the chart library with GTK
+    Default available version: 1.9
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/timbod7/haskell-chart/wiki
+    License:  BSD3
+
+* Chart-simple
+    Synopsis: A wrapper for the chart library to assist with basic plots
+              (Deprecated - use the Easy module instead)
+    Default available version: 1.3.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/timbod7/haskell-chart/wiki
+    License:  BSD3
+
+* ChasingBottoms
+    Synopsis: For testing partial and infinite values.
+    Default available version: 1.3.1.5
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* CheatSheet
+    Synopsis: A Haskell cheat sheet in PDF and literate formats.
+    Default available version: 2.9
+    Installed versions: [ Unknown ]
+    Homepage: http://cheatsheet.codeslower.com
+    License:  BSD3
+
+* Checked
+    Synopsis: Inbuilt checking for ultra reliable computing
+    Default available version: 0.0.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Chitra
+    Synopsis: A platform independent mechanism to render graphics using vnc.
+    Default available version: 0.2.2
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/ckkashyap/Chitra
+    License:  BSD3
+
+* ChristmasTree
+    Synopsis: Alternative approach of 'read' that composes grammars instead of
+              parsers.
+    Default available version: 0.2.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.uu.nl/wiki/bin/view/Center/TTTAS
+    License:  LGPL
+
+* CirruParser
+    Synopsis: Cirru Parser in Haskell
+    Default available version: 0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Cirru/parser.hs
+    License:  MIT
+
+* Clash-Royale-Hack-Cheats
+    Synopsis: spam
+    Default available version: 1.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* ClassLaws
+    Synopsis: Stating and checking laws for type class methods
+    Default available version: 0.3.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://wiki.portal.chalmers.se/cse/pmwiki.php/FP/ClassLaws
+    License:  BSD3
+
+* ClassyPrelude
+    Synopsis: Prelude replacement using classes instead of concrete types where
+              reasonable
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Clean
+    Synopsis: A light, clean and powerful utility library
+    Default available version: 0.6
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Clipboard
+    Synopsis: System clipboard interface.
+    Default available version: 2.3.2.0
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/Clipboard
+    License:  BSD3
+
+* ClustalParser
+    Synopsis: Libary for parsing Clustal tools output
+    Default available version: 1.2.3
+    Installed versions: [ Not installed ]
+    License:  GPL-3
+
+* Coadjute
+    Synopsis: A generic build tool
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://iki.fi/matti.niemenmaa/coadjute/
+    License:  BSD3
+
+* Codec-Compression-LZF
+    Synopsis: LZF compression bindings.
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.helsinki.fi/u/ekarttun/Codec-Compression-LZF/
+    License:  BSD3
+
+* Codec-Image-DevIL
+    Synopsis: An FFI interface to the DevIL library
+    Default available version: 0.2.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Combinatorrent
+    Synopsis: A concurrent bittorrent client
+    Default available version: 0.3.2
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* Command
+    Synopsis: A replacement for System.Exit and System.Process
+    Default available version: 0.0.7
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tonymorris/command
+    License:  BSD3
+
+* Commando
+    Synopsis: Watch some files; Rerun a command
+    Default available version: 1.0.0.4
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/sordina/Commando
+    License:  MIT
+
+* ComonadSheet
+    Synopsis: A library for expressing spreadsheet-like computations as the
+              fixed-points of comonads.
+    Default available version: 0.3.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/kwf/ComonadSheet
+    License:  BSD3
+
+* Compactable
+    Synopsis: A generalization for containers that can be stripped of Nothing
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Concurrent-Cache
+    Synopsis: A Cached variable for IO functions.
+    Default available version: 0.2.2.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* ConcurrentUtils
+    Synopsis: Concurrent utilities
+    Default available version: 0.4.5.0
+    Installed versions: [ Not installed ]
+    License:  GPL-2
+
+* Concurrential
+    Synopsis: Mix concurrent and sequential computation
+    Default available version: 0.5.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/avieth/Concurrential
+    License:  BSD3
+
+* Condor
+    Synopsis: Information retrieval library
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/klangner/Condor
+    License:  BSD3
+
+* ConfigFile
+    Synopsis: Configuration file reading & writing
+    Default available version: 1.1.4
+    Installed versions: [ Not installed ]
+    Homepage: http://software.complete.org/configfile
+    License:  BSD3
+
+* ConfigFileTH
+    Synopsis: Template haskell for reading ConfigFiles.
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    License:  LGPL
+
+* Configger
+    Synopsis: Parse config files
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* Configurable
+    Synopsis: Declare types as Configurable then specialize them all in one
+              place
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tel/Configurable
+    License:  MIT
+
+* ConsStream
+    Synopsis: Trivial re-export of Wouter Swierstra's Stream package, avoiding
+              module name clash.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: github
+    License:  BSD3
+
+* Conscript
+    Synopsis: Restart a command on STDIN activity
+    Default available version: 0.1.0.0
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/sordina/Conscript
+    License:  MIT
+
+* ConstraintKinds
+    Synopsis: Repackages standard type classes with the ConstraintKinds
+              extension
+    Default available version: 1.3.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Consumer
+    Synopsis: A monad and monad transformer for consuming streams
+    Default available version: 1.2
+    Installed versions: [ Not installed ]
+    Homepage: http://src.seereason.com/ghc6103/haskell-consumer
+    License:  BSD3
+
+* ContArrow
+    Synopsis: Control.Arrow.Transformer.Cont
+    Default available version: 0.0.5
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* ContextAlgebra
+    Synopsis: Implementation of the context algebra.
+    Default available version: 1.0.0.0
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/juergenhah/ContextAlgebra
+    License:  BSD3
+
+* Contract
+    Synopsis: Practical typed lazy contracts.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.kent.ac.uk/~oc/contracts.html
+    License:  BSD3
+
+* Control-Engine
+    Synopsis: A parallel producer/consumer engine (thread pool)
+    Default available version: 1.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/Control-Engine
+    License:  BSD3
+
+* Control-Monad-MultiPass
+    Synopsis: A Library for Writing Multi-Pass Algorithms.
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/kevinbackhouse/Control-Monad-MultiPass
+    License:  BSD3
+
+* Control-Monad-ST2
+    Synopsis: A variation on the ST monad with two type parameters.
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/kevinbackhouse/Control-Monad-ST2
+    License:  BSD3
+
+* CoreDump
+    Synopsis: A GHC plugin for printing GHC's internal Core data structures.
+    Default available version: 0.1.2.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CoreErlang
+    Synopsis: Manipulating Core Erlang source code
+    Default available version: 0.0.4
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/amtal/CoreErlang
+    License:  BSD3
+
+* CoreFoundation
+    Synopsis: Bindings to Mac OSX's CoreFoundation framework
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/reinerp/CoreFoundation
+    License:  BSD3
+
+* Coroutine
+    Synopsis: Type-safe coroutines using lightweight session types.
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* CouchDB
+    Synopsis: CouchDB interface
+    Default available version: 1.2.2
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/hsenag/haskell-couchdb/
+    License:  BSD3
+
+* Craft3e
+    Synopsis: Code for Haskell: the Craft of Functional Programming, 3rd ed.
+    Default available version: 0.1.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskellcraft.com/
+    License:  MIT
+
+* Crypto
+    Synopsis: Collects together existing Haskell cryptographic functions into a
+              package
+    Default available version: 4.2.5.1
+    Installed versions: [ Not installed ]
+    License:  OtherLicense
+
+* CurryDB
+    Synopsis: CurryDB: In-memory Key/Value Database
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DAG-Tournament
+    Synopsis: Real-Time Game Tournament Evaluator
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    License:  GPL
+
+* DAV
+    Synopsis: RFC 4918 WebDAV support
+    Default available version: 1.3.3
+    Installed versions: [ Not installed ]
+    Homepage: http://floss.scru.org/hDAV
+    License:  GPL-3
+
+* DBFunctor
+    Synopsis: DBFunctor - Functional Data Management => ETL/ELT Data Processing
+              in Haskell
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/nkarag/haskell-DBFunctor#readme
+    License:  BSD3
+
+* DBlimited
+    Synopsis: A command-line SQL interface for flat files (tdf,csv,etc.)
+    Default available version: 0.1.1
+    Installed versions: [ Unknown ]
+    Homepage: http://projects.haskell.org/DBlimited/
+    License:  BSD3
+
+* DBus
+    Synopsis: D-Bus bindings
+    Default available version: 0.5.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/alexkay/hdbus
+    License:  BSD3
+
+* DCFL
+    Synopsis: Communication Free Learning-based constraint solver
+    Default available version: 0.1.6.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Poincare/DCFL
+    License:  MIT
+
+* DMuCheck
+    Synopsis: Distributed Mutation Analysis framework for MuCheck
+    Default available version: 0.3.0.2
+    Installed versions: [ Unknown ]
+    Homepage: https://bitbucket.com/osu-testing/d-mucheck
+    License:  GPL-2
+
+* DOH
+    Synopsis: Complete API bindings for DigitalOcean API V2
+    Default available version: 0.1.4.0
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* DOM
+    Synopsis: DOM Level 2 bindings for the WebBits package.
+    Default available version: 2.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DP
+    Synopsis: Pragmatic framework for dynamic programming
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/srush/SemiRings/tree/master
+    License:  BSD3
+
+* DPM
+    Synopsis: Darcs Patch Manager
+    Default available version: 0.3.0.0
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* DPutils
+    Synopsis: utilities for DP
+    Default available version: 0.0.2.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/DPutils
+    License:  BSD3
+
+* DRBG
+    Synopsis: Deterministic random bit generator (aka RNG, PRNG) based HMACs,
+              Hashes, and Ciphers.
+    Default available version: 0.5.5
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DSA
+    Synopsis: Implementation of DSA, based on the description of FIPS 186-4
+    Default available version: 1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DSH
+    Synopsis: Database Supported Haskell
+    Default available version: 0.12.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DSTM
+    Synopsis: A framework for using STM within distributed systems
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    License:  LGPL
+
+* DTC
+    Synopsis: Data To Class transformation.
+    Default available version: 1.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Daniel-Diaz/DTC
+    License:  BSD3
+
+* Dangerous
+    Synopsis: Monads for operations that can exit early and produce warnings
+    Default available version: 0.3.2
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* Dao
+    Synopsis: Dao is meta programming language with its own built-in interpreted
+              language, designed with artificial intelligence applications in
+              mind.
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  GPL-3
+
+* DarcsHelpers
+    Synopsis: Code used by Patch-Shack that seemed sensible to open for
+              reusability
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* Data-Angle
+    Synopsis: Geometric angles
+    Default available version: 0.9
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/deadmanswitch/Data.Angle
+    License:  BSD3
+
+* Data-Hash-Consistent
+    Synopsis: Provide a simple consistent hashing mechanism
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/bradclawsie/haskell-Data.Hash.Consistent
+    License:  BSD3
+
+* Data-Rope
+    Synopsis: Ropes, an alternative to (Byte)Strings.
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* DataIndex
+    Synopsis: A package for adding index column to data files
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/yuhangwang/DataIndex#readme
+    License:  MIT
+
+* DataTreeView
+    Synopsis: A GTK widget for displaying arbitrary Data.Data.Data instances
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Deadpan-DDP
+    Synopsis: Write clients for Meteor's DDP Protocol
+    Default available version: 0.9.6.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/sordina/Deadpan-DDP
+    License:  MIT
+
+* DebugTraceHelpers
+    Synopsis: Convenience functions and instances for Debug.Trace
+    Default available version: 0.12
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* Decimal
+    Synopsis: Decimal numbers with variable precision
+    Default available version: 0.5.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/PaulJohnson/Haskell-Decimal
+    License:  BSD3
+
+* DecisionTree
+    Synopsis: A very simple implementation of decision trees for discrete
+              attributes.
+    Default available version: 0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://page.mi.fu-berlin.de/~aneumann/decisiontree.html
+    License:  LGPL
+
+* DeepArrow
+    Synopsis: Arrows for "deep application"
+    Default available version: 0.4.0
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/DeepArrow
+    License:  BSD3
+
+* DeepDarkFantasy
+    Synopsis: A DSL for creating neural network.
+    Default available version: 0.2017.8.19
+    Installed versions: [ Not installed ]
+    License:  Apache
+
+* DefendTheKing
+    Synopsis: A simple RTS game
+    Default available version: 0.3.1
+    Installed versions: [ Unknown ]
+    Homepage: http://github.com/yairchu/defend/tree
+    License:  GPL
+
+* Delta-Lambda
+    Synopsis: A demonstration interpreter for type system delta-lambda (of N.G.
+              De-bruijn)
+    Default available version: 0.3.0.0
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/listofoptions/delta-lambda
+    License:  MIT
+
+* DescriptiveKeys
+    Synopsis: A library for specifying xmonad key bindings with functionality.
+    Default available version: 0.0.4
+    Installed versions: [ Not installed ]
+    Homepage: https://bitbucket.org/dibblego/descriptive-keys/
+    License:  BSD3
+
+* Dflow
+    Synopsis: Processing Real-time event streams
+    Default available version: 0.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Diff
+    Synopsis: O(ND) diff algorithm in haskell.
+    Default available version: 0.3.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DifferenceLogic
+    Synopsis: A theory solver for conjunctions of literals in difference logic
+    Default available version: 0.1.0.4
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/dillonhuff/DifferenceLogic
+    License:  BSD3
+
+* DifferentialEvolution
+    Synopsis: Global optimization using Differential Evolution
+    Default available version: 0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://yousource.it.jyu.fi/optimization-with-haskell
+    License:  MIT
+
+* Digit
+    Synopsis: A data-type representing digits 0-9
+    Default available version: 0.0.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tonymorris/digit
+    License:  BSD3
+
+* DigitalOcean
+    Synopsis: A client library for the DigitalOcean API
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    License:  AGPL-3
+
+* DimensionalHash
+    Synopsis: An n-dimensional hash using Morton numbers.
+    Default available version: 0.1.5.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DirectSound
+    Synopsis: Partial binding to the Microsoft DirectSound API.
+    Default available version: 0.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://code.haskell.org/~bkomuves/
+    License:  BSD3
+
+* DisTract
+    Synopsis: Distributed Bug Tracking System
+    Default available version: 0.2.5
+    Installed versions: [ Not installed ]
+    Homepage: http://distract.wellquite.org/
+    License:  BSD3
+
+* DiscussionSupportSystem
+    Synopsis: Discussion support system
+    Default available version: 0.11.0.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/minamiyama1994/DiscussionSupportSystem
+    License:  GPL-3
+
+* Dish
+    Synopsis: Hash modules (currently Murmur3)
+    Default available version: 0.0.0.6
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/zcourts/Dish
+    License:  BSD3
+
+* Dist
+    Synopsis: A Haskell library for probability distributions
+    Default available version: 0.4.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/wyager/Dist
+    License:  MIT
+
+* DistanceTransform
+    Synopsis: Distance transform function.
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* DistanceUnits
+    Synopsis: A comprehensive distance library
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/gambogi/DistanceUnits
+    License:  BSD3
+
+* DnaProteinAlignment
+    Synopsis: Frameshift-aware alignment of protein sequences with DNA sequences
+    Default available version: 0.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.tbi.univie.ac.at/~choener/
+    License:  GPL-3
+
+* DocTest
+    Synopsis: Test interactive Haskell examples
+    Default available version: 0.2.0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://haskell.org/haskellwiki/DocTest
+    License:  MIT
+
+* Docs
+    Synopsis: Documentation types library.
+    Default available version: 1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://ddiaz.asofilak.es/packages/Docs.html
+    License:  BSD3
+
+* DrHylo
+    Synopsis: A tool for deriving hylomorphisms
+    Default available version: 0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.di.uminho.pt/wiki/DrHylo
+    License:  BSD3
+
+* DrIFT
+    Synopsis: Program to derive type class instances
+    Default available version: 2.4.2
+    Installed versions: [ Not installed ]
+    Homepage: http://repetae.net/computer/haskell/DrIFT/
+    License:  BSD3
+
+* DrIFT-cabalized
+    Synopsis: Program to derive type class instances
+    Default available version: 2.3.0
+    Installed versions: [ Unknown ]
+    Homepage: http://repetae.net/computer/haskell/DrIFT/
+    License:  BSD3
+
+* Dung
+    Synopsis: An implementation of the Dung argumentation frameworks.
+    Default available version: 1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.nott.ac.uk/~bmv/Dung/
+    License:  BSD3
+
+* Dust
+    Synopsis: Polymorphic protocol engine
+    Default available version: 2.3.1
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* Dust-crypto
+    Synopsis: Cryptographic operations
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* Dust-tools
+    Synopsis: Network filtering exploration tools
+    Default available version: 1.3.2
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* Dust-tools-pcap
+    Synopsis: Network filtering exploration tools that rely on pcap
+    Default available version: 1.3.1
+    Installed versions: [ Unknown ]
+    License:  GPL
+
+* DynamicTimeWarp
+    Synopsis: Dynamic time warping of sequences.
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/zombiecalypse/DynamicTimeWarp
+    License:  LGPL-3
+
+* DysFRP
+    Synopsis: dysFunctional Reactive Programming
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tilk/DysFRP
+    License:  BSD3
+
+* DysFRP-Cairo
+    Synopsis: dysFunctional Reactive Programming on Cairo
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tilk/DysFRP
+    License:  BSD3
+
+* DysFRP-Craftwerk
+    Synopsis: dysFunctional Reactive Programming on Craftwerk
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tilk/DysFRP
+    License:  BSD3
+
+* EEConfig
+    Synopsis: ExtremlyEasyConfig - Extremly Simple parser for config files
+    Default available version: 1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Earley
+    Synopsis: Parsing all context-free grammars using Earley's algorithm.
+    Default available version: 0.13.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Ebnf2ps
+    Synopsis: Peter's Syntax Diagram Drawing Tool
+    Default available version: 1.0.15
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/FranklinChen/Ebnf2ps
+    License:  BSD3
+
+* EdisonAPI
+    Synopsis: A library of efficient, purely-functional data structures (API)
+    Default available version: 1.3.1
+    Installed versions: 1.3.1
+    Homepage: http://rwd.rdockins.name/edison/home/
+    License:  MIT
+
+* EdisonCore
+    Synopsis: A library of efficient, purely-functional data structures (Core
+              Implementations)
+    Default available version: 1.3.2.1
+    Installed versions: 1.3.2.1
+    Homepage: http://rwd.rdockins.name/edison/home/
+    License:  MIT
+
+* EditTimeReport
+    Synopsis: Query language and report generator for edit logs.
+    Default available version: 1.0
+    Installed versions: [ Unknown ]
+    Homepage: http://github.com/bspaans/EditTimeReport
+    License:  GPL
+
+* Eight-Ball-Pool-Hack-Cheats
+    Synopsis: spam
+    Default available version: 1.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* EitherT
+    Synopsis: EitherT monad transformer
+    Default available version: 0.2.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Elm
+    Synopsis: The Elm language module.
+    Default available version: 0.13
+    Installed versions: [ Not installed ]
+    Homepage: http://elm-lang.org
+    License:  BSD3
+
+* Emping
+    Synopsis: derives heuristic rules from nominal data
+    Default available version: 0.6
+    Installed versions: [ Unknown ]
+    Homepage: http://www.muitovar.com
+    License:  GPL
+
+* Empty
+    Synopsis: A type class for empty containers
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Encode
+    Synopsis: Encoding character data
+    Default available version: 1.3.8
+    Installed versions: [ Not installed ]
+    Homepage: http://otakar-smrz.users.sf.net/
+    License:  GPL
+
+* EntrezHTTP
+    Synopsis: Libary to interface with the NCBI Entrez REST service.
+    Default available version: 1.0.4
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/eggzilla/EntrezHTTP
+    License:  GPL-3
+
+* Enum
+    Synopsis: Non-crashing `Enum` operations
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* EnumContainers
+    Synopsis: Simple Enum-class-based int containers
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* EnumMap
+    Synopsis: More general IntMap replacement.
+    Default available version: 0.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Eq
+    Synopsis: Render math formula in ASCII, and perform some simplifications
+    Default available version: 1.1.3
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* EqualitySolver
+    Synopsis: A theory solver for conjunctions of literals in the theory of
+              uninterpreted functions with equality
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* EsounD
+    Synopsis: Type-safe bindings to EsounD (ESD; Enlightened Sound Daemon)
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://cielonegro.org/EsounD.html
+    License:  PublicDomain
+
+* EstProgress
+    Synopsis: Methods for estimating the progress of functions
+    Default available version: 0.3.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://alkalisoftware.net
+    License:  BSD3
+
+* EtaMOO
+    Synopsis: A new implementation of the LambdaMOO server
+    Default available version: 0.3.0.0
+    Installed versions: [ Unknown ]
+    Homepage: http://verement.github.io/etamoo
+    License:  BSD3
+
+* Etage
+    Synopsis: A general data-flow framework
+    Default available version: 0.1.12
+    Installed versions: [ Not installed ]
+    Homepage: http://mitar.tnode.com
+    License:  LGPL-3
+
+* Etage-Graph
+    Synopsis: Data-flow based graph algorithms
+    Default available version: 0.1.8
+    Installed versions: [ Not installed ]
+    Homepage: http://mitar.tnode.com
+    License:  LGPL-3
+
+* Eternal10Seconds
+    Synopsis: A 2-D shooting game
+    Default available version: 0.2
+    Installed versions: [ Unknown ]
+    Homepage: http://www.kryozahiro.org/eternal10/
+    License:  BSD3
+
+* Etherbunny
+    Synopsis: A network analysis toolkit for Haskell
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://etherbunny.anytini.com/
+    License:  GPL
+
+* EuroIT
+    Synopsis: Library for using euro currency, italian language
+    Default available version: 2010.2.5
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Euterpea
+    Synopsis: Library for computer music research and education
+    Default available version: 2.0.6
+    Installed versions: [ Not installed ]
+    Homepage: http://www.euterpea.com
+    License:  BSD3
+
+* EventSocket
+    Synopsis: Interfaces with FreeSwitch Event Socket.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Extra
+    Synopsis: A grab bag of modules.
+    Default available version: 1.46.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/ddssff/haskell-extra
+    License:  BSD3
+
+* FAI
+    Synopsis: Haskell Foreign Accelerate Interface
+    Default available version: 0.1.0.20
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Qinka/HaskellFAI
+    License:  LGPL-3
+
+* FComp
+    Synopsis: Compose music
+    Default available version: 1.0.2
+    Installed versions: [ Not installed ]
+    License:  GPL-3
+
+* FM-SBLEX
+    Synopsis: A set of computational morphology tools for Swedish diachronic
+              lexicons.
+    Default available version: 3.0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://spraakbanken.gu.se/eng/research/swefn/fm-sblex
+    License:  GPL
+
+* FModExRaw
+    Synopsis: The Haskell FModEx raw API.
+    Default available version: 0.2.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/skypers/hsFModEx
+    License:  GPL-3
+
+* FPretty
+    Synopsis: Efficient simple pretty printing combinators
+    Default available version: 1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.kent.ac.uk/~oc/pretty.html
+    License:  BSD3
+
+* FTGL
+    Synopsis: Portable TrueType font rendering for OpenGL using the Freetype2
+              library
+    Default available version: 2.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FTGL-bytestring
+    Synopsis: Portable TrueType font rendering for OpenGL using the Freetype2
+              library
+    Default available version: 2.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FTPLine
+    Synopsis: A command-line FTP client.
+    Default available version: 1.4.1.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* Facebook-Password-Hacker-Online-Latest-Version
+    Synopsis: spam
+    Default available version: 1.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Facts
+    Synopsis: A collection of facts about the real world.
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FailureT
+    Synopsis: Failure Monad Transformer
+    Default available version: 15778.1
+    Installed versions: [ Not installed ]
+    License:  PublicDomain
+
+* FastPush
+    Synopsis: A monad and monad transformer for pushing things onto a stack very
+              fast.
+    Default available version: 0.1.0.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/wyager/FastPush/
+    License:  BSD3
+
+* FastxPipe
+    Synopsis: Fasta and Fastq streaming
+    Default available version: 0.2.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FenwickTree
+    Synopsis: Data structure for fast query and update of cumulative sums
+    Default available version: 0.1.2.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/mgajda/FenwickTree
+    License:  BSD3
+
+* FermatsLastMargin
+    Synopsis: Annotate ps and pdf documents
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://www.scannedinavian.com/
+    License:  GPL
+
+* FerryCore
+    Synopsis: Ferry Core Components
+    Default available version: 0.4.6.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Feval
+    Synopsis: Evaluation using F-Algebras
+    Default available version: 1.0.0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://github.com/burz/Feval
+    License:  MIT
+
+* FieldTrip
+    Synopsis: Functional 3D
+    Default available version: 0.2.7
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/FieldTrip
+    License:  BSD3
+
+* FileManip
+    Synopsis: Expressive file and directory manipulation for Haskell.
+    Default available version: 0.3.3.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FileManipCompat
+    Synopsis: Expressive file and directory manipulation for Haskell.
+    Default available version: 0.18
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FilePather
+    Synopsis: Functions on System.FilePath
+    Default available version: 0.2.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tonymorris/filepather
+    License:  BSD3
+
+* FileSystem
+    Synopsis: File system data structure and monad transformer.
+    Default available version: 1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://ddiaz.asofilak.es/packages/FileSystem
+    License:  BSD3
+
+* Files
+    Synopsis: File content extraction/rearrangement
+    Default available version: 0.1.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/yuhangwang/Files#readme
+    License:  MIT
+
+* Fin
+    Synopsis: Finite totally-ordered sets
+    Default available version: 0.2.7.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Finance-Quote-Yahoo
+    Synopsis: Obtain quote data from finance.yahoo.com
+    Default available version: 0.8.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.b7j0c.org/stuff/haskell-yquote.xhtml
+    License:  BSD3
+
+* Finance-Treasury
+    Synopsis: Obtain Treasury yield curve data
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.ecoin.net/haskell/Finance-Treasury.html
+    License:  BSD3
+
+* FindBin
+    Synopsis: Locate directory of original program
+    Default available version: 0.0.5
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/audreyt/findbin
+    License:  BSD3
+
+* FiniteMap
+    Synopsis: A finite map implementation, derived from the paper: Efficient
+              sets: a balancing act, S. Adams, Journal of functional programming
+              3(4) Oct 1993, pp553-562
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD4
+
+* FirstOrderTheory
+    Synopsis: Grammar and typeclass for first order theories
+    Default available version: 0.1.0.6
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FixedPoint-simple
+    Synopsis: Fixed point, large word, and large int numerical representations
+              (types and common class instances)
+    Default available version: 0.6.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/TomMD/FixedPoint
+    License:  BSD3
+
+* Flippi
+    Synopsis: Wiki
+    Default available version: 0.0.5
+    Installed versions: [ Unknown ]
+    Homepage: http://www.flippac.org/projects/flippi/
+    License:  BSD3
+
+* FloatingHex
+    Synopsis: Read and write hexadecimal floating point numbers
+    Default available version: 0.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Focus
+    Synopsis: Tools for focusing in on locations within numbers
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* Folly
+    Synopsis: A first order logic library in Haskell
+    Default available version: 0.2.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/dillonhuff/Folly
+    License:  BSD3
+
+* FontyFruity
+    Synopsis: A true type file format loader
+    Default available version: 0.5.3.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* ForSyDe
+    Synopsis: ForSyDe's Haskell-embedded Domain Specific Language.
+    Default available version: 3.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.ict.kth.se/forsyde/
+    License:  BSD3
+
+* ForestStructures
+    Synopsis: Tree- and forest structures
+    Default available version: 0.0.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/ForestStructures
+    License:  BSD3
+
+* Forestry
+    Synopsis: Comparison of trees and forests.
+    Default available version: 0.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/Forestry
+    License:  BSD3
+
+* ForkableT
+    Synopsis: Forkable monad transformers
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/exFalso/ForkableT/
+    License:  BSD3
+
+* FormalGrammars
+    Synopsis: (Context-free) grammars in formal language theory
+    Default available version: 0.3.1.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/FormalGrammars
+    License:  GPL-3
+
+* Fortnite-Hack-Cheats-Free-V-Bucks-Generator
+    Synopsis: spam
+    Default available version: 1.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Foster
+    Synopsis: Utilities to generate and solve puzzles
+    Default available version: 1.1.2
+    Installed versions: [ Unknown ]
+    License:  MIT
+
+* FpMLv53
+    Synopsis: A binding for the Financial Products Markup Language (v5.3)
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.fpml.org/
+    License:  LGPL
+
+* FractalArt
+    Synopsis: Generates colorful wallpapers
+    Default available version: 0.2.0.3
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/TomSmeets/FractalArt
+    License:  MIT
+
+* Fractaler
+    Default available version: 3
+    Installed versions: [ Unknown ]
+    License:  MIT
+
+* Frames
+    Synopsis: Data frames For working with tabular data files
+    Default available version: 0.6.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Frames-beam
+    Synopsis: A library for accessing Postgres tables as in-memory data
+              structures.
+    Default available version: 0.2.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/gagandeepb/Frames-beam
+    License:  BSD3
+
+* Frames-dsv
+    Synopsis: Alternative CSV parser for the Frames package
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/acowley/Frames-dsv#readme
+    License:  BSD3
+
+* Frank
+    Synopsis: An experimental programming language with typed algebraic effects
+    Default available version: 0.3
+    Installed versions: [ Unknown ]
+    Homepage: http://personal.cis.strath.ac.uk/~conor/pub/Frank/
+    License:  PublicDomain
+
+* FreeTypeGL
+    Synopsis: Loadable texture fonts for OpenGL.
+    Default available version: 0.0.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* FunGEn
+    Synopsis: A lightweight, cross-platform, OpenGL/GLUT-based game engine.
+    Default available version: 1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://joyful.com/fungen
+    License:  BSD3
+
+* Fungi
+    Synopsis: Funge-98 interpreter written in Haskell
+    Default available version: 1.0.6
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/thomaseding/fungi
+    License:  BSD3
+
+* GA
+    Synopsis: Genetic algorithm library
+    Default available version: 1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://boegel.kejo.be
+    License:  BSD3
+
+* GGg
+    Synopsis: GGg cipher
+    Default available version: 0.1.0.2
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/xnil/GGg
+    License:  MIT
+
+* GHood
+    Synopsis: A graphical viewer for Hood
+    Default available version: 0.0.7
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.kent.ac.uk/people/staff/cr3/toolbox/haskell/GHood
+    License:  BSD3
+
+* GLFW
+    Synopsis: A Haskell binding for GLFW
+    Default available version: 0.5.2.5
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/GLFW
+    License:  BSD3
+
+* GLFW-OGL
+    Synopsis: A binding for GLFW (OGL)
+    Default available version: 0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/GLFW-OGL
+    License:  BSD3
+
+* GLFW-b
+    Synopsis: Bindings to GLFW OpenGL library
+    Default available version: 3.2.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GLFW-b-demo
+    Synopsis: GLFW-b demo
+    Default available version: 1.0.6
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* GLFW-task
+    Synopsis: GLFW utility functions to use together with monad-task.
+    Default available version: 0.3.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/ninegua/GLFW-task
+    License:  BSD3
+
+* GLHUI
+    Synopsis: Open OpenGL context windows in X11 with libX11
+    Default available version: 1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GLM
+    Synopsis: Simple Gridlab-D GLM parser and utilities.
+    Default available version: 0.7.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/sordina/GLM
+    License:  MIT
+
+* GLMatrix
+    Synopsis: Utilities for working with OpenGL matrices
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/fiendfan1/GLMatrix
+    License:  GPL-3
+
+* GLURaw
+    Synopsis: A raw binding for the OpenGL graphics system
+    Default available version: 2.0.0.4
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/Opengl
+    License:  BSD3
+
+* GLUT
+    Synopsis: A binding for the OpenGL Utility Toolkit
+    Default available version: 2.7.0.14
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/Opengl
+    License:  BSD3
+
+* GLUtil
+    Synopsis: Miscellaneous OpenGL utilities.
+    Default available version: 0.10.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GPX
+    Synopsis: Parse GPX files
+    Default available version: 0.8.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tonymorris/geo-gpx
+    License:  BSD3
+
+* GPipe
+    Synopsis: Typesafe functional GPU graphics programming
+    Default available version: 2.2.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/tobbebex/GPipe-Core#readme
+    License:  MIT
+
+* GPipe-Collada
+    Synopsis: Load GPipe meshes from Collada files
+    Default available version: 0.1.4
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/GPipe
+    License:  BSD3
+
+* GPipe-Examples
+    Synopsis: Examples for the GPipes package
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    License:  GPL
+
+* GPipe-GLFW
+    Synopsis: GLFW OpenGL context creation for GPipe
+    Default available version: 1.4.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/plredmond/GPipe-GLFW
+    License:  MIT
+
+* GPipe-TextureLoad
+    Synopsis: Load GPipe textures from filesystem
+    Default available version: 1.0.4
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/GPipe
+    License:  BSD3
+
+* GTALib
+    Synopsis: A library for GTA programming
+    Default available version: 0.0.6
+    Installed versions: [ Not installed ]
+    Homepage: https://bitbucket.org/emoto/gtalib
+    License:  BSD3
+
+* Gamgine
+    Synopsis: Some kind of game library or set of utilities.
+    Default available version: 0.5.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Ganymede
+    Synopsis: An Io interpreter in Haskell.
+    Default available version: 0.0.0.5
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/BMeph/Ganymede
+    License:  BSD3
+
+* GaussQuadIntegration
+    Synopsis: Non-adaptive Gaussian quadrature for numeric integraton
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GeBoP
+    Synopsis: Several games
+    Default available version: 1.7.5
+    Installed versions: [ Unknown ]
+    Homepage: http://www.haskell.org/haskellwiki/GeBoP
+    License:  BSD3
+
+* GenI
+    Synopsis: A natural language generator (specifically, an FB-LTAG surface
+              realiser)
+    Default available version: 0.25.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://projects.haskell.org/GenI
+    License:  GPL
+
+* GenSmsPdu
+    Synopsis: Automatic SMS message generator
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* Genbank
+    Synopsis: Libary for processing the NCBI genbank format
+    Default available version: 1.0.3
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* Gene-CluEDO
+    Synopsis: Hox gene clustering
+    Default available version: 0.0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/Gene-CluEDO
+    License:  GPL-3
+
+* GeneralTicTacToe
+    Synopsis: A general TicTacToe game implementation.
+    Default available version: 0.1.0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://afonso.xyz
+    License:  MIT
+
+* GenericPretty
+    Synopsis: A generic, derivable, haskell pretty printer.
+    Default available version: 1.2.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/RazvanRanca/GenericPretty
+    License:  BSD3
+
+* GenussFold
+    Synopsis: MCFGs for Genus-1 RNA Pseudoknots
+    Default available version: 0.0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/GenussFold
+    License:  GPL-3
+
+* GeoIp
+    Synopsis: Pure bindings for the MaxMind IP database.
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    License:  OtherLicense
+
+* GeocoderOpenCage
+    Synopsis: Geocoder and Reverse Geocoding Service Wrapper
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/juergenhah/Haskell-Geocoder-OpenCage.git
+    License:  GPL
+
+* Geodetic
+    Synopsis: Geodetic calculations
+    Default available version: 0.4
+    Installed versions: [ Not installed ]
+    Homepage: http://code.google.com/p/geodetic/
+    License:  BSD3
+
+* GeomPredicates
+    Synopsis: Geometric predicates
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GeomPredicates-SSE
+    Synopsis: Geometric predicates (Intel SSE)
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Get
+    Synopsis: get stuff out of stuff
+    Default available version: 0.2018.1.10
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/MarisaKirisame/Get#readme
+    License:  BSD3
+
+* GiST
+    Synopsis: A Haskell implementation of a Generalized Search Tree (GiST)
+    Default available version: 0.0.1
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* Gifcurry
+    Synopsis: GIF creation utility.
+    Default available version: 3.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/lettier/gifcurry
+    License:  BSD3
+
+* GiveYouAHead
+    Synopsis: to auto-do somethings
+    Default available version: 0.2.2.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Qinka/GiveYouAHead/
+    License:  MIT
+
+* Glob
+    Synopsis: Globbing library
+    Default available version: 0.10.0
+    Installed versions: 0.10.0
+    Homepage: http://iki.fi/matti.niemenmaa/glob/
+    License:  BSD3
+
+* GlomeTrace
+    Synopsis: Ray Tracing Library
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/Glome
+    License:  GPL
+
+* GlomeVec
+    Synopsis: Simple 3D vector library
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/Glome
+    License:  GPL
+
+* GlomeView
+    Synopsis: SDL Frontend for Glome ray tracer
+    Default available version: 0.3
+    Installed versions: [ Unknown ]
+    Homepage: http://haskell.org/haskellwiki/Glome
+    License:  GPL
+
+* GoogleChart
+    Synopsis: Generate web-based charts using the Google Chart API
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://neugierig.org/software/darcs/browse/?r=google-chart;a=summary
+    License:  BSD3
+
+* GoogleCodeJam
+    Synopsis: A monad for flexible parsing of Google Code Jam input files with
+              automatic parallelization.
+    Default available version: 0.0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://johannesgerer.com/GoogleCodeJam
+    License:  MIT
+
+* GoogleDirections
+    Synopsis: Haskell Interface to Google Directions API
+    Default available version: 0.3.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/favilo/GoogleDirections.git
+    License:  BSD3
+
+* GoogleSB
+    Synopsis: Interface to Google Safe Browsing API
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GoogleSuggest
+    Synopsis: Interface to Google Suggest API
+    Default available version: 0.0.4
+    Installed versions: [ Not installed ]
+    License:  GPL-3
+
+* GoogleTranslate
+    Synopsis: Interface to Google Translate API
+    Default available version: 0.0.5
+    Installed versions: [ Not installed ]
+    License:  GPL-3
+
+* GotoT-transformers
+    Synopsis: A monad and monadic transformer providing "goto" functionality
+    Default available version: 1.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/gcross/GotoT-transformers
+    License:  BSD3
+
+* Grafos
+    Synopsis: Grafos Haskell
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GrammarProducts
+    Synopsis: Grammar products and higher-dimensional grammars
+    Default available version: 0.1.1.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/choener/GrammarProducts
+    License:  GPL-3
+
+* Graph500
+    Synopsis: Graph500 benchmark-related definitions and data set generator.
+    Default available version: 0.4.0
+    Installed versions: [ Not installed ]
+    License:  GPL-2
+
+* GraphHammer
+    Synopsis: GraphHammer Haskell graph analyses framework inspired by STINGER.
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    License:  GPL-2
+
+* GraphHammer-examples
+    Synopsis: Test harness for TriangleCount analysis.
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    License:  GPL-2
+
+* GraphSCC
+    Synopsis: Tarjan's algorithm for computing the strongly connected components
+              of a graph.
+    Default available version: 1.0.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Graphalyze
+    Synopsis: Graph-Theoretic Analysis library.
+    Default available version: 0.15.0.0
+    Installed versions: [ Not installed ]
+    License:  OtherLicense
+
+* Grempa
+    Synopsis: Embedded grammar DSL and LALR parser generator
+    Default available version: 0.2.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GroteTrap
+    Synopsis: Parser and selection library for expression languages.
+    Default available version: 0.5.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/GroteTrap
+    License:  BSD3
+
+* Grow
+    Synopsis: A declarative make-like interpreter.
+    Default available version: 1.1.0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://coiffier.net/projects/grow.html
+    License:  OtherLicense
+
+* GrowlNotify
+    Synopsis: Notification utility for Growl.
+    Default available version: 0.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Gtk2hsGenerics
+    Synopsis: Convenience functions to extend Gtk2hs.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* GtkGLTV
+    Synopsis: OpenGL support for Gtk-based GUIs for Tangible Values
+    Default available version: 0.2.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* GtkTV
+    Synopsis: Gtk-based GUIs for Tangible Values
+    Default available version: 0.2.0
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/GtkTV
+    License:  BSD3
+
+* GuiHaskell
+    Synopsis: A graphical REPL and development environment for Haskell
+    Default available version: 0.1.1
+    Installed versions: [ Unknown ]
+    Homepage: http://www-users.cs.york.ac.uk/~ndm/guihaskell/
+    License:  BSD3
+
+* GuiTV
+    Synopsis: GUIs for Tangible Values
+    Default available version: 0.4
+    Installed versions: [ Not installed ]
+    Homepage: http://haskell.org/haskellwiki/GuiTV
+    License:  BSD3
+
+* H
+    Synopsis: The Haskell/R mixed programming environment.
+    Default available version: 0.9.0.1
+    Installed versions: [ Unknown ]
+    Homepage: https://tweag.github.io/HaskellR
+    License:  BSD3
+
+* HABQT
+    Synopsis: Hierarchical adaptive Bayesian quantum tomography for quantum bits
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Belinsky-L-V/HABQT#readme
+    License:  BSD3
+
+* HARM
+    Synopsis: A simple ARM emulator in haskell
+    Default available version: 0.1.4
+    Installed versions: [ Not installed ]
+    Homepage: http://www.engr.uconn.edu/~jeffm/Classes/CSE240-Spring-2001/Lectures/index.html
+    License:  OtherLicense
+
+* HAppS-Data
+    Synopsis: HAppS data manipulation libraries
+    Default available version: 0.9.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HAppS-IxSet
+    Default available version: 0.9.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HAppS-Server
+    Synopsis: Web related tools and services.
+    Default available version: 0.9.3.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HAppS-State
+    Synopsis: Event-based distributed state.
+    Default available version: 0.9.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HAppS-Util
+    Synopsis: Web framework
+    Default available version: 0.9.3
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HAppSHelpers
+    Synopsis: OBSOLETE. Please use happstack-helpers
+    Default available version: 0.11
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HCL
+    Synopsis: High-level library for building command line interfaces.
+    Default available version: 1.7.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/m4dc4p/hcl/tree/master
+    License:  BSD3
+
+* HCard
+    Synopsis: A library for implementing a Deck of Cards
+    Default available version: 0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://patch-tag.com/publicrepos/HCard
+    License:  BSD3
+
+* HCodecs
+    Synopsis: A library to read, write and manipulate MIDI, WAVE, and SoundFont2
+              files.
+    Default available version: 0.5.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www-db.informatik.uni-tuebingen.de/team/giorgidze
+    License:  BSD3
+
+* HDBC
+    Synopsis: Haskell Database Connectivity
+    Default available version: 2.4.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/hdbc/hdbc
+    License:  BSD3
+
+* HDBC-mysql
+    Synopsis: MySQL driver for HDBC
+    Default available version: 0.7.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/ryantm/hdbc-mysql
+    License:  LGPL
+
+* HDBC-odbc
+    Synopsis: ODBC driver for HDBC
+    Default available version: 2.5.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/hdbc/hdbc-odbc
+    License:  BSD3
+
+* HDBC-postgresql
+    Synopsis: PostgreSQL driver for HDBC
+    Default available version: 2.3.2.6
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/hdbc/hdbc-postgresql
+    License:  BSD3
+
+* HDBC-postgresql-hstore
+    Synopsis: Manipulate data in PostgreSQL "hstore" columns.
+    Default available version: 0.0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: https://bitbucket.org/dpwiz/hdbc-postgresql-hstore
+    License:  MIT
+
+* HDBC-session
+    Synopsis: Bracketed connection for HDBC
+    Default available version: 0.1.2.0
+    Installed versions: [ Not installed ]
+    Homepage: http://khibino.github.io/haskell-relational-record/
+    License:  BSD3
+
+* HDBC-sqlite3
+    Synopsis: Sqlite v3 driver for HDBC
+    Default available version: 2.3.3.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/hdbc/hdbc-sqlite3
+    License:  BSD3
+
+* HDRUtils
+    Synopsis: Utilities for reading, manipulating, and writing HDR images
+    Default available version: 1.0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://vis.renci.org/jeff/pfs
+    License:  BSD3
+
+* HERA
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HFitUI
+    Synopsis: The library for generating a graphical interface on the web
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/iqsf/HFitUI.git
+    License:  BSD3
+
+* HFrequencyQueue
+    Synopsis: A Queue with a random (weighted) pick function
+    Default available version: 0.2.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Bellaz/HfrequencyList
+    License:  GPL-3
+
+* HFuse
+    Synopsis: HFuse is a binding for the Linux FUSE library.
+    Default available version: 0.2.5.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/m15k/hfuse
+    License:  BSD3
+
+* HGE2D
+    Synopsis: 2D game engine written in Haskell
+    Default available version: 0.1.9.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/I3ck/HGE2D
+    License:  MIT
+
+* HGL
+    Synopsis: A simple graphics library based on X11 or Win32
+    Default available version: 3.2.3.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HGamer3D
+    Synopsis: Toolset for the Haskell Game Programmer
+    Default available version: 0.9.5
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-API
+    Synopsis: Library to enable 3D game development for Haskell - API
+    Default available version: 0.1.6
+    Installed versions: [ Not installed ]
+    Homepage: http://www.althainz.de/HGamer3D.html
+    License:  OtherLicense
+
+* HGamer3D-Audio
+    Synopsis: Toolset for the Haskell Game Programmer - Audio Functionality
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-Bullet-Binding
+    Synopsis: Windows Game Engine for the Haskell Programmer - Bullet Bindings
+    Default available version: 0.2.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-CAudio-Binding
+    Synopsis: Library to enable 3D game development for Haskell - cAudio
+              Bindings
+    Default available version: 0.1.5
+    Installed versions: [ Not installed ]
+    Homepage: http://www.althainz.de/HGamer3D.html
+    License:  OtherLicense
+
+* HGamer3D-CEGUI-Binding
+    Synopsis: A Toolset for the Haskell Game Programmer - CEGUI Bindings
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-Common
+    Synopsis: Toolset for the Haskell Game Programmer - Game Engine and
+              Utilities
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-Data
+    Synopsis: Toolset for the Haskell Game Programmer - Data Definitions
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-Enet-Binding
+    Synopsis: Enet Binding for HGamer3D
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-GUI
+    Synopsis: GUI Functionality for HGamer3D
+    Default available version: 0.4.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-Graphics3D
+    Synopsis: Toolset for the Haskell Game Programmer - 3D Graphics
+              Functionality
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-InputSystem
+    Synopsis: Joystick, Mouse and Keyboard Functionality for HGamer3D
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-Network
+    Synopsis: Networking Functionality for HGamer3D
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-OIS-Binding
+    Synopsis: Library to enable 3D game development for Haskell - OIS Bindings
+    Default available version: 0.1.5
+    Installed versions: [ Not installed ]
+    Homepage: http://www.althainz.de/HGamer3D.html
+    License:  OtherLicense
+
+* HGamer3D-Ogre-Binding
+    Synopsis: Ogre Binding for HGamer3D
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-SDL2-Binding
+    Synopsis: SDL2 Binding for HGamer3D
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-SFML-Binding
+    Synopsis: SFML Binding for HGamer3D
+    Default available version: 0.5.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-WinEvent
+    Synopsis: Windowing and Event Functionality for HGamer3D
+    Default available version: 0.4.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGamer3D-Wire
+    Synopsis: Wire Functionality for HGamer3D
+    Default available version: 0.3.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www.hgamer3d.org
+    License:  OtherLicense
+
+* HGraphStorage
+    Synopsis: Graph database stored on disk
+    Default available version: 0.0.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/JPMoresmau/HGraphStorage
+    License:  BSD3
+
+* HHDL
+    Synopsis: Hardware Description Language embedded in Haskell.
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://thesz.mskhug.ru/svn/hhdl/hackage/hhdl/
+    License:  BSD3
+
+* HJScript
+    Synopsis: HJScript is a Haskell EDSL for writing JavaScript programs.
+    Default available version: 0.7.0
+    Installed versions: [ Not installed ]
+    Homepage: http://patch-tag.com/r/nibro/hjscript
+    License:  BSD3
+
+* HJVM
+    Synopsis: A library to create a Java Virtual Machine and manipulate Java
+              objects
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/JPMoresmau/HJVM
+    License:  BSD3
+
+* HJavaScript
+    Synopsis: HJavaScript is an abstract syntax for a typed subset of
+              JavaScript.
+    Default available version: 0.4.7
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HLearn-algebra
+    Synopsis: Algebraic foundation for homomorphic learning
+    Default available version: 1.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/mikeizbicki/HLearn/
+    License:  BSD3
+
+* HLearn-approximation
+    Default available version: 1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HLearn-classification
+    Default available version: 1.0.1.3
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/mikeizbicki/HLearn/
+    License:  BSD3
+
+* HLearn-datastructures
+    Default available version: 1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HLearn-distributions
+    Synopsis: Distributions for use with the HLearn library
+    Default available version: 1.1.0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/mikeizbicki/HLearn/
+    License:  BSD3
+
+* HList
+    Synopsis: Heterogeneous lists
+    Default available version: 0.5.0.0
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* HListPP
+    Synopsis: A preprocessor for HList labelable labels
+    Default available version: 0.2.1
+    Installed versions: [ Unknown ]
+    Homepage: http://code.haskell.org/~aavogt/HListPP
+    License:  BSD3
+
+* HLogger
+    Synopsis: Simple, concurrent and easy-to-use logging library
+    Default available version: 0.0.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.pontarius.org/sub-projects/hlogger/
+    License:  BSD3
+
+* HMM
+    Synopsis: A hidden markov model library
+    Default available version: 0.2.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/mikeizbicki/hmm
+    License:  BSD3
+
+* HMap
+    Synopsis: Fast heterogeneous maps and unconstrained typeable-like
+              functionality.
+    Default available version: 1.3.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/atzeus/HMap
+    License:  BSD3
+
+* HMarkov
+    Synopsis: Markov-generated sequences
+    Default available version: 1.0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/swizzard/HMarkov#readme
+    License:  BSD3
+
+* HNM
+    Synopsis: Happy Network Manager
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: http://sert.homedns.org/hs/hnm/
+    License:  BSD3
+
+* HNumeric
+    Synopsis: Haskell Numeric Library with pure functionality, R & MATLAB
+              Syntax.
+    Default available version: 0.5.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Axect/HNumeric#readme
+    License:  BSD3
+
+* HODE
+    Synopsis: Binding to libODE
+    Default available version: 2008.10.27
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HOpenCV
+    Synopsis: A binding for the OpenCV computer vision library
+    Default available version: 0.4.0.1
+    Installed versions: [ Not installed ]
+    License:  GPL-2
+
+* HPDF
+    Synopsis: Generation of PDF documents
+    Default available version: 1.4.10
+    Installed versions: [ Not installed ]
+    Homepage: http://www.alpheccar.org
+    License:  BSD3
+
+* HPath
+    Synopsis: Extract Haskell declarations by name.
+    Default available version: 0.0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/solidsnack/HPath
+    License:  BSD3
+
+* HPhone
+    Synopsis: Phone number parser and validator - This is now DEPRECATED!
+    Default available version: 0.0.1.2
+    Installed versions: [ Not installed ]
+    License:  OtherLicense
+
+* HPi
+    Synopsis: GPIO, I2C and SPI functions for the Raspberry Pi.
+    Default available version: 0.5.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/WJWH/HPi
+    License:  BSD3
+
+* HPlot
+    Synopsis: A minimal monadic PLplot interface for Haskell
+    Default available version: 0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://yakov.cc/HPlot.html
+    License:  BSD3
+
+* HPong
+    Synopsis: A simple OpenGL Pong game based on GLFW
+    Default available version: 0.1.2
+    Installed versions: [ Unknown ]
+    Homepage: http://bonsaicode.wordpress.com/2009/04/23/hpong-012/
+    License:  GPL
+
+* HROOT
+    Synopsis: Haskell binding to the ROOT data analysis framework
+    Default available version: 0.9.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ianwookim.org/HROOT
+    License:  LGPL-2.1
+
+* HROOT-core
+    Synopsis: Haskell binding to ROOT Core modules
+    Default available version: 0.9.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ianwookim.org/HROOT
+    License:  LGPL-2.1
+
+* HROOT-graf
+    Synopsis: Haskell binding to ROOT Graf modules
+    Default available version: 0.9.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ianwookim.org/HROOT
+    License:  LGPL-2.1
+
+* HROOT-hist
+    Synopsis: Haskell binding to ROOT Hist modules
+    Default available version: 0.9.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ianwookim.org/HROOT
+    License:  LGPL-2.1
+
+* HROOT-io
+    Synopsis: Haskell binding to ROOT IO modules
+    Default available version: 0.9.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ianwookim.org/HROOT
+    License:  LGPL-2.1
+
+* HROOT-math
+    Synopsis: Haskell binding to ROOT Math modules
+    Default available version: 0.9.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ianwookim.org/HROOT
+    License:  LGPL-2.1
+
+* HROOT-tree
+    Synopsis: Haskell binding to ROOT Tree modules
+    Default available version: 0.9.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ianwookim.org/HROOT
+    License:  LGPL-2.1
+
+* HRay
+    Synopsis: Haskell raytracer
+    Default available version: 1.2.3
+    Installed versions: [ Unknown ]
+    Homepage: http://boegel.kejo.be/ELIS/Haskell/HRay/
+    License:  BSD3
+
+* HSFFIG
+    Synopsis: Generate FFI import declarations from C include files
+    Default available version: 1.1.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/HSFFIG
+    License:  BSD3
+
+* HSGEP
+    Synopsis: Gene Expression Programming evolutionary algorithm in Haskell
+    Default available version: 0.1.5
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/mjsottile/hsgep/
+    License:  BSD3
+
+* HSH
+    Synopsis: Library to mix shell scripting with Haskell programs
+    Default available version: 2.1.3
+    Installed versions: [ Not installed ]
+    Homepage: http://software.complete.org/hsh
+    License:  LGPL
+
+* HSHHelpers
+    Synopsis: Convenience functions that use HSH, instances for HSH.
+    Default available version: 0.24
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* HSet
+    Synopsis: Faux heterogeneous sets
+    Default available version: 0.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HSlippyMap
+    Synopsis: OpenStreetMap Slippy Map
+    Default available version: 3.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/apeyroux/HSlippyMap
+    License:  BSD3
+
+* HSmarty
+    Synopsis: Small template engine
+    Default available version: 0.2.0.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/agrafix/HSmarty
+    License:  BSD3
+
+* HSoM
+    Synopsis: Library for computer music education
+    Default available version: 1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.euterpea.com
+    License:  BSD3
+
+* HSoundFile
+    Synopsis: Audio file reading/writing
+    Default available version: 0.2.2
+    Installed versions: [ Not installed ]
+    Homepage: http://mml.music.utexas.edu/jwlato/HSoundFile
+    License:  BSD3
+
+* HStringTemplate
+    Synopsis: StringTemplate implementation in Haskell.
+    Default available version: 0.8.7
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HStringTemplateHelpers
+    Synopsis: Convenience functions and instances for HStringTemplate
+    Default available version: 0.0.14
+    Installed versions: [ Not installed ]
+    Homepage: http://patch-tag.com/tphyahoo/r/tphyahoo/HStringTemplateHelpers
+    License:  GPL
+
+* HSvm
+    Synopsis: Haskell Bindings for libsvm
+    Default available version: 0.1.0.3.22
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HTF
+    Synopsis: The Haskell Test Framework
+    Default available version: 0.13.2.5
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/skogsbaer/HTF/
+    License:  LGPL-2.1
+
+* HTTP
+    Synopsis: A library for client-side HTTP
+    Default available version: 4000.3.12
+    Installed versions: 4000.3.12
+    Homepage: https://github.com/haskell/HTTP
+    License:  BSD3
+
+* HTTP-Simple
+    Synopsis: DEPRECATED Enable simple wrappers to Network.HTTP
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.b7j0c.org/content/haskell-http.html
+    License:  BSD3
+
+* HTab
+    Synopsis: Tableau based theorem prover for hybrid logics
+    Default available version: 1.6.3
+    Installed versions: [ Unknown ]
+    Homepage: http://www.glyc.dc.uba.ar/intohylo/htab.php
+    License:  GPL
+
+* HTicTacToe
+    Synopsis: An SDL tic-tac-toe game.
+    Default available version: 0.2
+    Installed versions: [ Unknown ]
+    Homepage: http://github.com/snkkid/HTicTacToe
+    License:  MIT
+
+* HUnit
+    Synopsis: A unit testing framework for Haskell
+    Default available version: 1.6.0.0
+    Installed versions: 1.6.0.0
+    Homepage: https://github.com/hspec/HUnit#readme
+    License:  BSD3
+
+* HUnit-Diff
+    Synopsis: Assertions for HUnit with difference reporting
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/dag/HUnit-Diff
+    License:  BSD3
+
+* HUnit-Plus
+    Synopsis: A test framework building on HUnit.
+    Default available version: 2.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/emc2/HUnit-Plus
+    License:  BSD3
+
+* HUnit-approx
+    Synopsis: Approximate equality for floating point numbers with HUnit
+    Default available version: 1.1.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/goldfirere/HUnit-approx
+    License:  BSD3
+
+* HXMPP
+    Synopsis: A (prototyped) easy to use XMPP library
+    Default available version: 0.0.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.pontarius.org/sub-projects/hxmpp/
+    License:  BSD3
+
+* HXQ
+    Synopsis: A Compiler from XQuery to Haskell
+    Default available version: 0.20.1
+    Installed versions: [ Not installed ]
+    Homepage: http://lambda.uta.edu/HXQ/
+    License:  BSD3
+
+* HaLeX
+    Synopsis: HaLeX enables modelling, manipulation and visualization of regular
+              languages
+    Default available version: 1.2.6
+    Installed versions: [ Not installed ]
+    Homepage: http://www.di.uminho.pt/~jas/Research/HaLeX/HaLeX.html
+    License:  PublicDomain
+
+* HaMinitel
+    Synopsis: An Haskell library to drive the french Minitel through a serial
+              port
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Zigazou/HaMinitel
+    License:  GPL-3
+
+* HaPy
+    Synopsis: Haskell bindings for Python
+    Default available version: 0.1.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/sakana/HaPy
+    License:  MIT
+
+* HaRe
+    Synopsis: the Haskell Refactorer.
+    Default available version: 0.8.4.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/RefactoringTools/HaRe/wiki
+    License:  BSD3
+
+* HaTeX
+    Synopsis: The Haskell LaTeX library.
+    Default available version: 3.19.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Daniel-Diaz/HaTeX/blob/master/README.md
+    License:  BSD3
+
+* HaTeX-meta
+    Synopsis: This package is deprecated. From version 3, HaTeX does not need
+              this anymore.
+    Default available version: 1.2.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* HaTeX-qq
+    Synopsis: Quasiquoters for HaTeX
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HaVSA
+    Synopsis: An implementation of the Version Space Algebra learning framework.
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HaXml
+    Synopsis: Utilities for manipulating XML documents
+    Default available version: 1.25.5
+    Installed versions: [ Not installed ]
+    Homepage: http://projects.haskell.org/HaXml/
+    License:  LGPL
+
+* Hach
+    Synopsis: Simple chat
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/dmalikov/HaCh
+    License:  MIT
+
+* HackMail
+    Synopsis: A Procmail Replacement as Haskell EDSL
+    Default available version: 0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://patch-tag.com/publicrepos/Hackmail
+    License:  BSD3
+
+* Haggressive
+    Synopsis: Aggression analysis for Tweets on Twitter
+    Default available version: 0.1.0.4
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Pold87/Haggressive
+    License:  GPL-2
+
+* HandlerSocketClient
+    Synopsis: Haskell implementation of a HandlerSocket client (API).
+    Default available version: 0.0.5
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/wuxb45/HandlerSocket-Haskell-Client
+    License:  BSD3
+
+* HandsomeSoup
+    Synopsis: Work with HTML more easily in HXT
+    Default available version: 0.4.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/egonSchiele/HandsomeSoup
+    License:  BSD3
+
+* Hangman
+    Synopsis: The classic game of Hangman.
+    Default available version: 0.1.0.2
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/lf94/Hangman
+    License:  GPL-3
+
+* HappyTree
+    Synopsis: Type Safe and End to End Decision Tree
+    Default available version: 0.2018.1.8
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/MarisaKirisame/HappyTree#readme
+    License:  BSD3
+
+* HarmTrace
+    Synopsis: Harmony Analysis and Retrieval of Music
+    Default available version: 2.2.1
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/haas/harmtrace
+    License:  GPL-3
+
+* HarmTrace-Base
+    Synopsis: Parsing and unambiguously representing musical chords.
+    Default available version: 1.6.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/chordify/HarmTrace-Base
+    License:  LGPL-3
+
+* HasBigDecimal
+    Synopsis: A library for arbitrary precision decimal numbers.
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/thma/HasBigDecimal#readme
+    License:  Apache-2.0
+
+* HasCacBDD
+    Synopsis: Haskell bindings for CacBDD
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/m4lvin/HasCacBDD
+    License:  GPL-2
+
+* HasGP
+    Synopsis: A Haskell library for inference using Gaussian processes
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cl.cam.ac.uk/~sbh11/HasGP
+    License:  GPL-3
+
+* Haschoo
+    Synopsis: Minimalist R5RS Scheme interpreter
+    Default available version: 0.1.2
+    Installed versions: [ Unknown ]
+    Homepage: http://iki.fi/matti.niemenmaa/misc-projects.html#haschoo
+    License:  BSD3
+
+* Hashell
+    Synopsis: Simple shell written in Haskell
+    Default available version: 1.0
+    Installed versions: [ Unknown ]
+    License:  GPL
+
+* HaskRel
+    Synopsis: HaskRel, Haskell as a DBMS with support for the relational algebra
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  GPL-2
+
+* HaskellForMaths
+    Synopsis: Combinatorics, group theory, commutative algebra, non-commutative
+              algebra
+    Default available version: 0.4.9
+    Installed versions: [ Not installed ]
+    Homepage: http://haskellformaths.blogspot.com/
+    License:  BSD3
+
+* HaskellLM
+    Synopsis: Pure Haskell implementation of the Levenberg-Marquardt algorithm
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* HaskellNN
+    Synopsis: High Performance Neural Network in Haskell
+    Default available version: 0.1.3
+    Installed versions: [ Not installed ]
+    License:  GPL
+
+* HaskellNet
+    Synopsis: Client support for POP3, SMTP, and IMAP
+    Default available version: 0.5.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/jtdaugherty/HaskellNet
+    License:  BSD3
+
+* HaskellNet-SSL
+    Synopsis: Helpers to connect to SSL/TLS mail servers with HaskellNet
+    Default available version: 0.3.4.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/dpwright/HaskellNet-SSL
+    License:  BSD3
+
+* HaskellTorrent
+    Synopsis: A concurrent bittorrent client
+    Default available version: 0.1.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* HaskellTutorials
+    Synopsis: Haskell Tutorials by Evgeny Ukhanov
+    Default available version: 0.0.0.1
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/mrLSD/HaskellTutorials
+    License:  MIT
+
+* Haskelloids
+    Synopsis: A reproduction of the Atari 1979 classic "Asteroids"
+    Default available version: 0.1.1
+    Installed versions: [ Unknown ]
+    Homepage: http://www.matthewhayden.co.uk
+    License:  BSD3
+
+* Hastodon
+    Synopsis: mastodon client module for Haskell
+    Default available version: 0.6.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/syucream/hastodon
+    License:  MIT
+
+* Hate
+    Synopsis: A small 2D game framework.
+    Default available version: 0.1.4.3
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/bananu7/Hate
+    License:  MIT
+
+* Hawk
+    Synopsis: Haskell Web Application Kit
+    Default available version: 0.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Hayoo
+    Synopsis: The Hayoo! search engine for Haskell API search on hackage
+    Default available version: 1.2.3
+    Installed versions: [ Unknown ]
+    Homepage: http://holumbus.fh-wedel.de
+    License:  MIT
+
+* Hclip
+    Synopsis: A small cross-platform library for reading and modifying the
+              system clipboard.
+    Default available version: 3.0.0.4
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/jetho/Hclip
+    License:  BSD3
+
+* Hedi
+    Synopsis: Line oriented editor
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HerbiePlugin
+    Synopsis: automatically improve your code's numeric stability
+    Default available version: 0.2.0.0
+    Installed versions: [ Not installed ]
+    Homepage: github.com/mikeizbicki/herbie-haskell
+    License:  BSD3
+
+* Hermes
+    Synopsis: Message-based middleware layer
+    Default available version: 0.0.4
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Hieroglyph
+    Synopsis: Purely functional 2D graphics for visualization.
+    Default available version: 3.89
+    Installed versions: [ Not installed ]
+    Homepage: http://vis.renci.org/jeff/hieroglyph
+    License:  BSD3
+
+* HiggsSet
+    Synopsis: A multi-index set with advanced query capabilites
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/lpeterse/HiggsSet
+    License:  BSD3
+
+* Hipmunk
+    Synopsis: A Haskell binding for Chipmunk.
+    Default available version: 5.2.0.17
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/meteficha/Hipmunk
+    License:  OtherLicense
+
+* Hipmunk-Utils
+    Synopsis: Useful functions for Hipmunk
+    Default available version: 0.1.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/suzumiyasmith/Hipmunk-Utils#readme
+    License:  BSD3
+
+* HipmunkPlayground
+    Synopsis: A playground for testing Hipmunk.
+    Default available version: 5.2.1.1
+    Installed versions: [ Unknown ]
+    Homepage: https://github.com/meteficha/HipmunkPlayground
+    License:  OtherLicense
+
+* Hish
+    Default available version: 0.1.2.4
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/jaiyalas/Hish
+    License:  BSD3
+
+* Histogram
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Hmpf
+    Synopsis: An MPD client designed for a Home Theatre PC
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    License:  GPL
+
+* Hoed
+    Synopsis: Lightweight algorithmic debugging.
+    Default available version: 0.5.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/MaartenFaddegon/Hoed
+    License:  BSD3
+
+* HoleyMonoid
+    Synopsis: Monoids with holes.
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/MedeaMelana/HoleyMonoid
+    License:  BSD3
+
+* Holumbus-Distribution
+    Synopsis: intra- and inter-program communication
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://holumbus.fh-wedel.de
+    License:  OtherLicense
+
+* Holumbus-MapReduce
+    Synopsis: a distributed MapReduce framework
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://holumbus.fh-wedel.de
+    License:  OtherLicense
+
+* Holumbus-Searchengine
+    Synopsis: A search and indexing engine.
+    Default available version: 1.2.3
+    Installed versions: [ Not installed ]
+    Homepage: http://holumbus.fh-wedel.de
+    License:  MIT
+
+* Holumbus-Storage
+    Synopsis: a distributed storage system
+    Default available version: 0.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://holumbus.fh-wedel.de
+    License:  OtherLicense
+
+* Homology
+    Synopsis: Compute the homology of a chain complex
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.math.ucla.edu/~damek
+    License:  GPL
+
+* HongoDB
+    Synopsis: A Simple Key Value Store
+    Default available version: 0.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HostAndPort
+    Synopsis: Parser for host and port pairs like localhost:22
+    Default available version: 0.2.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/bacher09/hostandport
+    License:  MIT
+
+* Hricket
+    Synopsis: A Cricket scoring application.
+    Default available version: 0.1
+    Installed versions: [ Unknown ]
+    Homepage: http://github.com/Raynes/Hricket
+    License:  BSD3
+
+* Hs2lib
+    Synopsis: A Library and Preprocessor that makes it easier to create shared
+              libs from Haskell programs.
+    Default available version: 0.6.3
+    Installed versions: [ Not installed ]
+    Homepage: http://blog.zhox.com/category/hs2lib/
+    License:  BSD3
+
+* HsASA
+    Synopsis: A haskell interface to Lester Ingber's adaptive simulating
+              annealing code
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://repetae.net/recent/out/HsASA.html
+    License:  BSD3
+
+* HsHTSLib
+    Synopsis: High level bindings to htslib.
+    Default available version: 1.3.2.4
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* HsHaruPDF
+    Synopsis: Haskell binding to libharu (http://libharu.sourceforge.net/)
+    Default available version: 0.0.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HsHyperEstraier
+    Synopsis: HyperEstraier binding for Haskell
+    Default available version: 0.4
+    Installed versions: [ Not installed ]
+    Homepage: http://cielonegro.org/HsHyperEstraier.html
+    License:  PublicDomain
+
+* HsJudy
+    Synopsis: Judy bindings, and some nice APIs
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.pugscode.org/
+    License:  BSD3
+
+* HsOpenSSL
+    Synopsis: Partial OpenSSL binding for Haskell
+    Default available version: 0.11.4.15
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/vshabanov/HsOpenSSL
+    License:  PublicDomain
+
+* HsOpenSSL-x509-system
+    Synopsis: Use the system's native CA certificate store with HsOpenSSL
+    Default available version: 0.1.0.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/redneb/HsOpenSSL-x509-system
+    License:  BSD3
+
+* HsParrot
+    Synopsis: Haskell integration with Parrot virtual machine
+    Default available version: 0.0.2.20150805
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HsPerl5
+    Synopsis: Haskell interface to embedded Perl 5 interpreter
+    Default available version: 0.0.6.20150815
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HsSVN
+    Synopsis: Partial Subversion (SVN) binding for Haskell
+    Default available version: 0.4.3.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/phonohawk/HsSVN
+    License:  PublicDomain
+
+* HsSyck
+    Synopsis: Fast, lightweight YAML loader and dumper
+    Default available version: 0.53
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* HsTools
+    Synopsis: Haskell helper functions
+    Default available version: 0.0.1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* HsYAML
+    Synopsis: Pure Haskell YAML 1.2 parser
+    Default available version: 0.1.1.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/hvr/HsYAML
+    License:  GPL-2
+
+* Hsed
+    Synopsis: Stream Editor in Haskell
+    Default available version: 0.2.2
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/rukav/Hsed
+    License:  BSD3
+
+* Hsmtlib
+    Synopsis: Haskell library for easy interaction with SMT-LIB 2 compliant
+              solvers.
+    Default available version: 2.8.8.8
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/MfesGA/Hsmtlib
+    License:  BSD3
+
+* HueAPI
+    Synopsis: API for controlling Philips Hue lights
+    Default available version: 0.2.7
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/sjoerdvisscher/HueAPI
+    License:  BSD3
+
+* HulkImport
+    Synopsis: Easily bulk import CSV data to SQL Server
+    Default available version: 0.1.0.3
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/tobs169/HulkImport#readme
+    License:  BSD3
+
+* Hungarian-Munkres
+    Synopsis: A Linear Sum Assignment Problem (LSAP) solver
+    Default available version: 0.1.5
+    Installed versions: [ Not installed ]
+    License:  GPL-3
+
+* Hydrogen
+    Synopsis: The library for generating a WebGL scene for the web
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/iqsf/Hydrogen.git
+    License:  BSD3
+
+* IDynamic
+    Synopsis: Indexable, serializable form of Data.Dynamic
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* IFS
+    Synopsis: Iterated Function System generation for Haskell
+    Default available version: 0.1.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.alpheccar.org
+    License:  BSD3
+
+* INblobs
+    Synopsis: Editor and interpreter for Interaction Nets
+    Default available version: 0.1.1
+    Installed versions: [ Unknown ]
+    Homepage: http://haskell.di.uminho.pt/jmvilaca/INblobs/
+    License:  LGPL
+
+* IOR
+    Synopsis: Region based resource management for the IO monad.
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* IORefCAS
+    Synopsis: Atomic compare and swap for IORefs and STRefs.
+    Default available version: 0.2.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/rrnewton/haskell-lockfree-queue/wiki
+    License:  BSD3
+
+* IOSpec
+    Synopsis: A pure specification of the IO monad.
+    Default available version: 0.3.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/lambdabot/IOSpec
+    License:  BSD3
+
+* IPv6Addr
+    Synopsis: Library to deal with IPv6 address text representations.
+    Default available version: 1.1.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/MichelBoucey/IPv6Addr
+    License:  BSD3
+
+* IPv6DB
+    Synopsis: A RESTful microService for IPv6-related data
+    Default available version: 0.3.1
+    Installed versions: [ Not installed ]
+    Homepage: http://ipv6db.cybervisible.com
+    License:  BSD3
+
+* IcoGrid
+    Synopsis: Library for generating grids of hexagons and pentagons mapped to a
+              sphere.
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: http://www.haskell.org/haskellwiki/IcoGrid
+    License:  GPL
+
+* IfElse
+    Synopsis: Anaphoric and miscellaneous useful control-flow
+    Default available version: 0.85
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* Imlib
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* ImperativeHaskell
+    Synopsis: A library for writing Imperative style haskell.
+    Default available version: 2.0.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/mmirman/ImperativeHaskell
+    License:  GPL-3
+
+* IndentParser
+    Synopsis: Combinators for parsing indentation based syntatic structures
+    Default available version: 0.2.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cse.iitk.ac.in/~ppk
+    License:  GPL
+
+* IndexedList
+    Synopsis: Length- and element-indexed lists sitting somewhere between
+              homogeneous and fully heterogeneous.
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/kwf/IndexedList
+    License:  BSD3
+
+* InfixApplicative
+    Synopsis: liftA2 for infix operators.
+    Default available version: 1.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* IntGraph
+    Synopsis: Dynamically sized graph library
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/sam-barr/IntGraph#readme
+    License:  BSD3
+
+* Interpolation
+    Synopsis: Multiline strings, interpolation and templating.
+    Default available version: 0.3.0
+    Installed versions: [ Not installed ]
+    License:  OtherLicense
+
+* Interpolation-maxs
+    Synopsis: Multiline strings, interpolation and templating.
+    Default available version: 0.3.0
+    Installed versions: [ Not installed ]
+    License:  OtherLicense
+
+* IntervalMap
+    Synopsis: Containers for intervals, with efficient search.
+    Default available version: 0.6.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://www.chr-breitkopf.de/comp/IntervalMap
+    License:  BSD3
+
+* Irc
+    Synopsis: DSL for IRC bots
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/yunxing/Irc
+    License:  GPL-2
+
+* IrrHaskell
+    Synopsis: Haskell FRP binding to the Irrlicht game engine.
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    License:  LGPL
+
+* IsNull
+    Synopsis: A typeclass to determine if a given value is null.
+    Default available version: 0.4.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/jcristovao/IsNull
+    License:  BSD3
+
+* JSON-Combinator
+    Synopsis: A combinator library on top of a generalised JSON type
+    Default available version: 0.2.8
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* JSON-Combinator-Examples
+    Synopsis: Example uses of the JSON-Combinator library.
+    Default available version: 0.0.1
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* JSONParser
+    Synopsis: Parse JSON
+    Default available version: 0.1.0.2
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* JSONb
+    Synopsis: JSON parser that uses byte strings.
+    Default available version: 1.0.8
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/solidsnack/JSONb/
+    License:  BSD3
+
+* JYU-Utils
+    Synopsis: Some utility functions for JYU projects
+    Default available version: 0.1.1.2
+    Installed versions: [ Not installed ]
+    License:  MIT
+
+* JackMiniMix
+    Synopsis: control JackMiniMix
+    Default available version: 0.1
+    Installed versions: [ Not installed ]
+    Homepage: http://www.renickbell.net/doku.php?id=jackminimix
+    License:  GPL-3
+
+* Javasf
+    Synopsis: A utility to print the SourceFile attribute of one or more Java
+              class files.
+    Default available version: 0.0.1
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* Javav
+    Synopsis: A utility to print the target version of Java class files.
+    Default available version: 0.0.4
+    Installed versions: [ Unknown ]
+    License:  BSD3
+
+* Jdh
+    Synopsis: A Json implementation for Haskell, with JavaScript Values and
+              Encoding/Decoding
+    Default available version: 0.1.0.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/brunoczim/Json-Data-for-Haskell
+    License:  MIT
+
+* JsContracts
+    Synopsis: Design-by-contract for JavaScript
+    Default available version: 0.5.3
+    Installed versions: [ Not installed ]
+    Homepage: http://www.cs.brown.edu/research/plt/
+    License:  BSD3
+
+* JsonGrammar
+    Synopsis: Combinators for bidirectional JSON parsing
+    Default available version: 1.0.5
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/MedeaMelana/JsonGrammar2
+    License:  BSD3
+
+* JuPyTer-notebook
+    Synopsis: JuPyTer notebook parser
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/mgajda/ipynb
+    License:  BSD3
+
+* JuicyPixels
+    Synopsis: Picture loading/serialization (in png, jpeg, bitmap, gif, tga,
+              tiff and radiance)
+    Default available version: 3.3.3
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/Twinside/Juicy.Pixels
+    License:  BSD3
+
+* JuicyPixels-blp
+    Synopsis: BLP format decoder/encoder over JuicyPixels library
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    Homepage: http://github.com/NCrashed/JuicyPixels-blp#readme
+    License:  BSD3
+
+* JuicyPixels-canvas
+    Synopsis: Functions for drawing lines, squares and so on pixel by pixel
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: http://eax.me/
+    License:  BSD3
+
+* JuicyPixels-extra
+    Synopsis: Efficiently scale, crop, flip images with JuicyPixels
+    Default available version: 0.4.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/mrkkrp/JuicyPixels-extra
+    License:  BSD3
+
+* JuicyPixels-repa
+    Synopsis: Convenience functions to obtain array representations of images.
+    Default available version: 0.7.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* JuicyPixels-scale-dct
+    Synopsis: Scale JuicyPixels images with DCT
+    Default available version: 0.1.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/phadej/JuicyPixels-scale-dct#readme
+    License:  BSD3
+
+* JuicyPixels-stbir
+    Synopsis: Scale JuicyPixels images with stb_image_resize
+    Default available version: 0.1.0.0
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/mtolly/JuicyPixels-stbir
+    License:  BSD3
+
+* JuicyPixels-util
+    Synopsis: Convert JuicyPixel images into RGBA format, flip, trim and so on
+    Default available version: 0.2
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/fumieval/JuicyPixels-util
+    License:  BSD3
+
+* JunkDB
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* JunkDB-driver-gdbm
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* JunkDB-driver-hashtables
+    Default available version: 0.1.1.0
+    Installed versions: [ Not installed ]
+    License:  BSD3
+
+* JustParse
+    Synopsis: A simple and comprehensive Haskell parsing library
+    Default available version: 2.1
+    Installed versions: [ Not installed ]
+    Homepage: https://github.com/grantslatton/JustParse
+    License:  PublicDomain
+
+* KMP
+    Synopsis: Knuth

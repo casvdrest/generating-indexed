@@ -1,7 +1,7 @@
 open import src.Data
 
 open import Data.Nat
-open import Data.List using (List; map; [_]; concatMap; []; _∷_)
+open import Data.List using (List; map; [_]; concatMap; []; _∷_; _++_)
 open import Data.Product using (Σ; Σ-syntax; _,_)
 
 open import Category.Functor
@@ -53,10 +53,16 @@ module src.Omega.Base where
           → f (a → b) → f a → f b
   _<*>_ = _⊛_
 
-  infixr 2 _∥_  
+  infixr 2 _∥_
+
+  uninhabited : ∀ {ℓ} {a : Set ℓ} → ω a
+  uninhabited _ = []
 
   _∥_ : ∀ {ℓ} {a : Set ℓ} → ω a → ω a → ω a
   x ∥ y = λ n → merge (x n) (y n)
+
+  choice : ∀ {ℓ} {a : Set ℓ} → List (ω a) → ω a
+  choice xs = λ n → mergeₙ (map (λ x → x n) xs )
 
   κ : ∀ {ℓ} {a : Set ℓ} → ω a → ω a
   κ f zero = []
@@ -75,11 +81,14 @@ module src.Omega.Base where
   fix f zero = []
   fix f (suc n) = f (fix f) n
 
-  uninhabited : ∀ {ℓ} {a : Set ℓ} → ω a
-  uninhabited _ = []
-
   ωᵢ : ∀ {ℓ} {i : Set ℓ} → (i → Set ℓ) → Set ℓ
   ωᵢ {i = i} a = (x : i) → ω (a x)
+
+  _∥ᵢ_ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → ωᵢ a → ωᵢ a → ωᵢ a
+  (f ∥ᵢ g) i = f i ∥ g i
+
+  choiceᵢ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → List (ωᵢ a) → ωᵢ a
+  choiceᵢ xs i = choice (map (λ x → x i) xs)
 
   {-# TERMINATING #-}
   fixᵢ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → ⟪ ωᵢ a ⟫ → ωᵢ a
@@ -111,6 +120,18 @@ module src.Omega.Base where
   Σ₂ (_ , snd) = snd
 
   
+  infix 3 〖_
+  infix 1 _〗
+  infixl 2 _⋎_
+
+  〖_ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → ⟪ ωᵢ a ⟫ → List ⟪ ωᵢ a ⟫
+  〖 x = [ x ]
+
+  _〗 : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → List ⟪ ωᵢ a ⟫ → ⟪ ωᵢ a ⟫
+  (xs 〗) μ = choiceᵢ (map (λ x → x μ) xs) 
+
+  _⋎_ : ∀ {ℓ} {i : Set ℓ} {a : i → Set ℓ} → List ⟪ ωᵢ a ⟫ → ⟪ ωᵢ a ⟫ → List ⟪ ωᵢ a ⟫
+  xs ⋎ x = x ∷ xs 
 
   -- TODO : deep embedding van omega
   --        mailing list over omega monad

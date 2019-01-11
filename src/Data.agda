@@ -1,7 +1,7 @@
 open import Level
 
 open import Agda.Builtin.Size
-open import Codata.Colist
+open import Codata.Colist hiding (_++_)
 open import Codata.Thunk hiding (map)
 open import Data.Nat hiding (_⊔_)
 open import Data.Maybe hiding (map; fromMaybe)
@@ -61,6 +61,13 @@ module src.Data where
   merge : ∀ {ℓ} {a : Set ℓ} → List a → List a → List a
   merge [] ys = ys
   merge (x ∷ xs) ys = x ∷ merge ys xs
+
+  data Listₛ (a : Set) : Set where
+   []ₛ : Listₛ a
+   _∷_ : a → Listₛ a → Listₛ a
+
+  mergeₙ : ∀ {ℓ} {a : Set ℓ} → List (List a) → List a
+  mergeₙ xs = foldr merge [] xs
 
   iterate : ∀ {a : Set} {i : Size} → a → (a → a) → Colist a i
   iterate x f = x ∷ λ where .force → iterate (f x) f
