@@ -375,13 +375,44 @@ What is/are your research questions/contributions? \cite{claessen2011quickcheck}
 What is the existing technology and literature that I'll be
 studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2011generic, norell2008dependently}
 
+\subsection{Dependently Typed Programming \& Agda}
+
+\subsubsection{Propositions as Types}
+
+\subsubsection{Codata}
+
+\subsection{Property Based Testing}
+
+\subsubsection{Existing Libraries}
+
+\subsubsection{Generating Test Data}
+
+\subsection{Generic Programming \& Type Universes}
+
+\subsubsection{Regular Datatypes}
+
+\subsubsection{Ornaments}
+
+\subsubsection{Functorial Species}
+
+\subsubsection{Indexed Functors}
+
+\subsection{Blockchain Semantics}
+
+\subsubsection{BitML}
+
+\subsubsection{UTXO \& Extended UTXO}
+
 \begin{itemize}
 
 \item
 Libraries for property based testing (QuickCheck, (Lazy) SmallCheck, QuickChick, QuickSpec)
 
 \item 
-Generic programming techniques. (indexed pattern functors, functorial species)
+Type universes (ADT's, Ornaments) \cite{ko2016programming, dagand2017essence}
+
+\item 
+Generic programming techniques. (pattern functors, indexed functors, functorial species)
 
 \item 
 Techniques to generate complex or constrained data (Generating constrained random data with uniform distribution, Generators for inductive relations)
@@ -392,6 +423,9 @@ Techniques to speed up generation of data (Memoization, FEAT)
 \item 
 Formal specification of blockchain (bitml, (extended) UTxO ledger) \cite{zahnentferner2018chimeric, zahnentferner2018abstract}
 
+\item 
+Representing potentially infinite data in Agda (Colists, coinduction, sized types)
+
 \end{itemize}
 
 Below is a bit of Agda code: 
@@ -401,10 +435,9 @@ Below is a bit of Agda code:
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{26}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{39}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{40}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{43}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{46}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{65}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{42}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{45}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{64}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Conid{Γ-match}\;\mathbin{:}\;(\Varid{τ}\;\mathbin{:}\;\Conid{Ty})\;\Varid{→}\;\Varid{⟪}\;\Varid{ωᵢ}\;(\Varid{λ}\;\Conid{Γ}\;\Varid{→}\;\Conid{Σ[}\;\Varid{α}\;\Varid{∈}\;\Conid{Id}\;\mskip1.5mu]\;\Conid{Γ}\;[\mskip1.5mu \;\Varid{α}\;\Varid{↦}\;\Varid{τ}\;\mskip1.5mu])\;\Varid{⟫}{}\<[E]%
 \\
@@ -414,32 +447,27 @@ Below is a bit of Agda code:
 \\
 \>[B]{}\Conid{Γ-match}\;\Varid{τ}\;\Varid{μ}\;(\Varid{α}\;\Varid{↦}\;\Varid{τ}\;\Varid{∷}\;\Conid{Γ})\;{}\<[26]%
 \>[26]{}\mid \;\Varid{yes}\;\Varid{refl}\;{}\<[39]%
-\>[39]{}\mathrel{=}\;{}\<[43]%
-\>[43]{}\Varid{⦇}\;{}\<[46]%
-\>[46]{}(\Varid{α}\;\Varid{,}\;\Conid{TOP})\;{}\<[65]%
-\>[65]{}\Varid{⦈}\;{}\<[E]%
+\>[39]{}\mathrel{=}\;{}\<[42]%
+\>[42]{}\Varid{⦇}\;{}\<[45]%
+\>[45]{}(\Varid{α}\;\Varid{,}\;\Conid{TOP})\;{}\<[64]%
+\>[64]{}\Varid{⦈}\;{}\<[E]%
 \\
-\>[39]{}\hsindent{1}{}\<[40]%
-\>[40]{}\Varid{∥}\;{}\<[43]%
-\>[43]{}\Varid{⦇}\;{}\<[46]%
-\>[46]{}(\Conid{Σ-map}\;\Conid{POP})\;(\Varid{μ}\;\Conid{Γ})\;{}\<[65]%
-\>[65]{}\Varid{⦈}{}\<[E]%
+\>[39]{}\Varid{∥}\;{}\<[42]%
+\>[42]{}\Varid{⦇}\;{}\<[45]%
+\>[45]{}(\Conid{Σ-map}\;\Conid{POP})\;(\Varid{μ}\;\Conid{Γ})\;{}\<[64]%
+\>[64]{}\Varid{⦈}{}\<[E]%
 \\
 \>[B]{}\Conid{Γ-match}\;\Varid{τ}\;\Varid{μ}\;(\Varid{α}\;\Varid{↦}\;\Varid{σ}\;\Varid{∷}\;\Conid{Γ})\;{}\<[26]%
 \>[26]{}\mid \;\Varid{no}\;\Varid{¬p}\;{}\<[39]%
-\>[39]{}\mathrel{=}\;{}\<[43]%
-\>[43]{}\Varid{⦇}\;{}\<[46]%
-\>[46]{}(\Conid{Σ-map}\;\Conid{POP})\;(\Varid{μ}\;\Conid{Γ})\;{}\<[65]%
-\>[65]{}\Varid{⦈}{}\<[E]%
+\>[39]{}\mathrel{=}\;{}\<[42]%
+\>[42]{}\Varid{⦇}\;{}\<[45]%
+\>[45]{}(\Conid{Σ-map}\;\Conid{POP})\;(\Varid{μ}\;\Conid{Γ})\;{}\<[64]%
+\>[64]{}\Varid{⦈}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 \hrulefill
 \caption{Definition of \textGamma-match}
 \end{figure}
-
-Consider the specification of environments: 
-
-And compare with the formalization in Agda:
 
 \begin{figure}[h] \hrulefill
 \begin{hscode}\SaveRestoreHook
@@ -491,17 +519,33 @@ And compare with the formalization in Agda:
 \ColumnHook
 \end{hscode}\resethooks
 \hrulefill
-\caption{Envirionment definition and membership}
+\caption{Envirionment definition and membership in \textit{Agda}}
 \end{figure}
 
 \begin{figure}[h] 
 \hrulefill
+
 \begin{equation*}
-TOP\frac{}{(\textalpha \mapsto \texttau : \Gamma) [\textalpha \mapsto \texttau]} 
-\quad\quad\quad POP\frac{\Gamma[\textalpha \mapsto \texttau]}{(\textbeta \mapsto \textsigma : \Gamma) [ \textalpha \mapsto \texttau ] }
+  TOP\ \frac{}{(\textalpha \mapsto \texttau : \Gamma) [\textalpha \mapsto \texttau]} 
+\quad\quad\quad 
+  POP\ \frac{\Gamma[\textalpha \mapsto \texttau]}{(\textbeta \mapsto \textsigma : \Gamma) [ \textalpha \mapsto \texttau ] }
 \end{equation*}
+
+\begin{equation*}
+  VAR\ \frac{\Gamma[\textalpha \mapsto \tau]}{\Gamma \vdash \textalpha : \tau}
+\quad\quad\quad
+  ABS\ \frac{\Gamma , \textalpha \mapsto \sigma \vdash t : \tau}{\Gamma \vdash \lambda \textalpha \rightarrow t : \sigma \rightarrow \tau}
+\end{equation*}
+
+\begin{equation*}
+  APP\ \frac{\Gamma \vdash f : \sigma \rightarrow \tau \quad \Gamma \vdash x : \sigma}{\Gamma \vdash f x : \tau}
+\quad\quad\quad 
+  LET\ \frac{\Gamma \vdash e : \sigma \quad \Gamma , \textalpha \mapsto \sigma \vdash t : \tau}
+            {\Gamma \vdash \texttt{ let } \textalpha := e \texttt{ in } t : \tau }
+\end{equation*}
+
 \hrulefill
-\caption{Envirionment semantics}
+\caption{Semantics of the \textit{Simply Typed Lambda Calculus}}
 \end{figure}
 
 

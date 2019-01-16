@@ -83,13 +83,44 @@ What is/are your research questions/contributions? \cite{claessen2011quickcheck}
 What is the existing technology and literature that I'll be
 studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2011generic, norell2008dependently}
 
+\subsection{Dependently Typed Programming \& Agda}
+
+\subsubsection{Propositions as Types}
+
+\subsubsection{Codata}
+
+\subsection{Property Based Testing}
+
+\subsubsection{Existing Libraries}
+
+\subsubsection{Generating Test Data}
+
+\subsection{Generic Programming \& Type Universes}
+
+\subsubsection{Regular Datatypes}
+
+\subsubsection{Ornaments}
+
+\subsubsection{Functorial Species}
+
+\subsubsection{Indexed Functors}
+
+\subsection{Blockchain Semantics}
+
+\subsubsection{BitML}
+
+\subsubsection{UTXO \& Extended UTXO}
+
 \begin{itemize}
 
 \item
 Libraries for property based testing (QuickCheck, (Lazy) SmallCheck, QuickChick, QuickSpec)
 
 \item 
-Generic programming techniques. (indexed pattern functors, functorial species)
+Type universes (ADT's, Ornaments) \cite{ko2016programming, dagand2017essence}
+
+\item 
+Generic programming techniques. (pattern functors, indexed functors, functorial species)
 
 \item 
 Techniques to generate complex or constrained data (Generating constrained random data with uniform distribution, Generators for inductive relations)
@@ -99,6 +130,9 @@ Techniques to speed up generation of data (Memoization, FEAT)
 
 \item 
 Formal specification of blockchain (bitml, (extended) UTxO ledger) \cite{zahnentferner2018chimeric, zahnentferner2018abstract}
+
+\item 
+Representing potentially infinite data in Agda (Colists, coinduction, sized types)
 
 \end{itemize}
 
@@ -117,10 +151,6 @@ Below is a bit of Agda code:
 \caption{Definition of \textGamma-match}
 \end{figure}
 
-Consider the specification of environments: 
-
-And compare with the formalization in Agda:
-
 \begin{figure}[h] \hrulefill
 \begin{code}
 data Env : Set where
@@ -138,17 +168,33 @@ data _[_↦_] : Env → Id → Ty → Set where
           →  (β ↦ σ ∷ Γ) [ α ↦ τ ]
 \end{code}
 \hrulefill
-\caption{Envirionment definition and membership}
+\caption{Envirionment definition and membership in \textit{Agda}}
 \end{figure}
 
 \begin{figure}[h] 
 \hrulefill
+
 \begin{equation*}
-TOP\frac{}{(\textalpha \mapsto \texttau : \Gamma) [\textalpha \mapsto \texttau]} 
-\quad\quad\quad POP\frac{\Gamma[\textalpha \mapsto \texttau]}{(\textbeta \mapsto \textsigma : \Gamma) [ \textalpha \mapsto \texttau ] }
+  TOP\ \frac{}{(\textalpha \mapsto \texttau : \Gamma) [\textalpha \mapsto \texttau]} 
+\quad\quad\quad 
+  POP\ \frac{\Gamma[\textalpha \mapsto \texttau]}{(\textbeta \mapsto \textsigma : \Gamma) [ \textalpha \mapsto \texttau ] }
 \end{equation*}
+
+\begin{equation*}
+  VAR\ \frac{\Gamma[\textalpha \mapsto \tau]}{\Gamma \vdash \textalpha : \tau}
+\quad\quad\quad
+  ABS\ \frac{\Gamma , \textalpha \mapsto \sigma \vdash t : \tau}{\Gamma \vdash \lambda \textalpha \rightarrow t : \sigma \rightarrow \tau}
+\end{equation*}
+
+\begin{equation*}
+  APP\ \frac{\Gamma \vdash f : \sigma \rightarrow \tau \quad \Gamma \vdash x : \sigma}{\Gamma \vdash f x : \tau}
+\quad\quad\quad 
+  LET\ \frac{\Gamma \vdash e : \sigma \quad \Gamma , \textalpha \mapsto \sigma \vdash t : \tau}
+            {\Gamma \vdash \texttt{ let } \textalpha := e \texttt{ in } t : \tau }
+\end{equation*}
+
 \hrulefill
-\caption{Envirionment semantics}
+\caption{Semantics of the \textit{Simply Typed Lambda Calculus}}
 \end{figure}
 
 

@@ -6,45 +6,45 @@ Database file #1: references.bib
 Warning--can't use both volume and number fields in runciman2008smallcheck
 Warning--can't use both volume and number fields in yakushev2009generic
 Warning--can't use both volume and number fields in yorgey2010species
-You've used 14 entries,
+You've used 16 entries,
             2118 wiz_defined-function locations,
-            583 strings with 6399 characters,
-and the built_in function-call counts, 5223 in all, are:
-= -- 536
-> -- 214
+            592 strings with 6585 characters,
+and the built_in function-call counts, 5677 in all, are:
+= -- 581
+> -- 234
 < -- 10
-+ -- 85
-- -- 70
-* -- 342
-:= -- 829
-add.period$ -- 49
-call.type$ -- 14
-change.case$ -- 78
++ -- 94
+- -- 76
+* -- 364
+:= -- 915
+add.period$ -- 55
+call.type$ -- 16
+change.case$ -- 87
 chr.to.int$ -- 0
-cite$ -- 17
-duplicate$ -- 224
-empty$ -- 424
-format.name$ -- 70
-if$ -- 1144
+cite$ -- 19
+duplicate$ -- 244
+empty$ -- 458
+format.name$ -- 76
+if$ -- 1235
 int.to.chr$ -- 0
-int.to.str$ -- 14
-missing$ -- 13
-newline$ -- 73
-num.names$ -- 28
-pop$ -- 85
+int.to.str$ -- 16
+missing$ -- 15
+newline$ -- 83
+num.names$ -- 32
+pop$ -- 90
 preamble$ -- 1
-purify$ -- 63
+purify$ -- 70
 quote$ -- 0
-skip$ -- 159
+skip$ -- 176
 stack$ -- 0
-substring$ -- 301
-swap$ -- 75
+substring$ -- 312
+swap$ -- 77
 text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 56
+type$ -- 64
 warning$ -- 3
-while$ -- 55
-width$ -- 16
-write$ -- 165
+while$ -- 59
+width$ -- 18
+write$ -- 187
 (There were 3 warnings)

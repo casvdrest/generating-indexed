@@ -11,14 +11,15 @@ open Relation.Binary.PropositionalEquality.≡-Reasoning
 
 open import Category.Functor
 open import Category.Applicative
+open import Category.Monad
 
 module src.Omega.Properties where
 
   open RawApplicative ⦃...⦄
 
-  _↝_ : ∀ {ℓ} {a : Set ℓ} → ω a → a → Set ℓ
-  f ↝ x = ∃[ n ] (x ∈ f n)
-
+  _↝_ : ∀ {a : Set} {n : ℕ} → 𝔾 a n → a → Set
+  f ↝ x = ∃[ p ] (x ∈ f p)
+  
   ∈-rewr : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a} → xs ≡ ys → x ∈ xs → x ∈ ys
   ∈-rewr refl x = x
 
@@ -73,23 +74,25 @@ module src.Omega.Properties where
   merge-sound {xs = x ∷ xs} {y ∷ ys} (there (there p)) =
     ⊕-bimap (λ x → there x) (λ y → there y) (merge-sound p)
   
-  ∥-complete-left : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
-                    → f ↝ x
+  ∥-complete-left : ∀ {a : Set} {x : a} {n : ℕ} {𝕗 𝕘 : 𝔾 a n}
+                    → 𝕗 ↝ x
                     ------------------------------------
-                    → (f ∥ g) ↝ x
+                    → (𝕗 ∥ 𝕘) ↝ x
   ∥-complete-left (n , p) = n , merge-complete-left p
 
-  ∥-complete-right : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
-                     → g ↝ x
+
+  ∥-complete-right : ∀ {a : Set} {x : a} {n : ℕ} {𝕗 𝕘 : 𝔾 a n}
+                     → 𝕘 ↝ x
                      ------------------------------------
-                     → (f ∥ g) ↝ x
+                     → (𝕗 ∥ 𝕘) ↝ x
   ∥-complete-right (n , p) = n , merge-complete-right p
 
-  ∥-sound : ∀ {ℓ} {a : Set ℓ} {x : a} {f g : ω a}
-            → (f ∥ g) ↝ x
+  ∥-sound : ∀ {a : Set} {x : a} {n : ℕ} → {𝕗 𝕘 : 𝔾 a n}
+            → (𝕗 ∥ 𝕘) ↝ x
             ------------------------------------
-            → (f ↝ x) ⊕ (g ↝ x)
+            → (𝕗 ↝ x) ⊕ (𝕘 ↝ x)
   ∥-sound (n , prf) = ⊕-bimap (λ x → n , x) (λ y → n , y) (merge-sound prf)
+
 
   ++-elem-left : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a}
               → x ∈ xs → x ∈ (xs ++ ys)
@@ -120,13 +123,6 @@ module src.Omega.Properties where
   list-ap-complete here p2 = ++-elem-left (map-preserves-elem p2)
   list-ap-complete (there p1) p2 = ++-elem-right (list-ap-complete p1 p2)
 
-  -- Obviously, we can't prove this for functions of type 'ℕ → List a'
-  -- in general, so for the time being i'll postulate it.
-  -- TODO: add depth monotonicity as an assumption to the completeness
-  -- proof for the ap-combinator instead of assuming it. 
-  postulate depth-monotone : ∀ {ℓ} {a : Set ℓ} {x : a} {f : ω a} {n m : ℕ}
-                             → n ≤ m → x ∈ f n → x ∈ f m
-
   ap-pure-is-map : ∀ {ℓ} {a b : Set ℓ} {xs : List a} {C : a → b}
                    → map C xs ≡ list-ap [ C ] xs
   ap-pure-is-map {xs = xs} {C = C} =
@@ -146,28 +142,10 @@ module src.Omega.Properties where
     list-ap-complete {f = C x} {x = y} {fs = list-ap [ C ] xs} {xs = ys}
       (∈-rewr ap-pure-is-map (map-preserves-elem p1)) p2
 
-  ≤-rewr : ∀ {n m k : ℕ} → m ≡ k → n ≤ m → n ≤ k
-  ≤-rewr refl p = p
-
-  ≤-cong : ∀ {n m : ℕ} → n ≤ m → n ≤ suc m
-  ≤-cong z≤n = z≤n
-  ≤-cong (s≤s p) = s≤s (≤-cong p)
-
-  ≤-comm : ∀ {n m : ℕ} → n ≤ n + m → n ≤ m + n
-  ≤-comm {n = n} {m = m} p = ≤-rewr (+-comm n m) p 
-
-  ≤-sum : (n m : ℕ) → n ≤ (n + m)
-  ≤-sum n zero = ≤-reflexive (+-comm 0 n)
-  ≤-sum n (suc m) with ≤-sum n m
-  ... | p = ≤-rewr (sym (+-suc n m)) (≤-cong p) 
-
-  ⊛-complete : ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
-                 {f : ω a} {g : ω b} {C : a → b → c}
+  ⊛-complete : ∀ {a b c : Set} {x : a} {y : b} {n : ℕ}
+                 {f : 𝔾 a n} {g : 𝔾 b n} {C : a → b → c}
                → f ↝ x → g ↝ y
                -------------------------------------
                → ⦇ C f g ⦈ ↝ C x y
-  ⊛-complete {f = f} {g = g} (n , p1) (m , p2) =
-     n + m , list-ap-constr
-      {xs = f (n + m)} {ys = g (n + m)}
-      (depth-monotone {f = f} (≤-sum n m) p1)
-      (depth-monotone {f = g} (≤-comm (≤-sum m n)) p2)
+  ⊛-complete ((n , refl) , p1) ((.n , refl) , p2) =
+    (n , refl) , list-ap-constr p1 p2

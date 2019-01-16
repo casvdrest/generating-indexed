@@ -16,7 +16,7 @@ module src.Data where
 
   module Pi where
 
-    Π : (a :  Set) → (a → Set) → Set
+    Π : ∀ {ℓ} (a : Set) → (a → Set ℓ) → Set ℓ
     Π a P = (x : a) → P x
 
 

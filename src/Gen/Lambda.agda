@@ -61,11 +61,11 @@ module src.Omega.Lambda where
   
     TOP : ∀ {Γ α τ}
           -----------------------------
-          → (α ↦ τ ∷ Γ) [ α ↦ τ ] 
+        → (α ↦ τ ∷ Γ) [ α ↦ τ ] 
 
     POP : ∀ {Γ α β τ σ} → Γ [ α ↦ τ ]
-          → ---------------------------------                              
-          (β ↦ σ ∷ Γ) [ α ↦ τ ] 
+          ---------------------------------                              
+        → (β ↦ σ ∷ Γ) [ α ↦ τ ] 
 
   _⋈_ : Env → Env → Env
   ∅ ⋈ Γ₂ = Γ₂
@@ -80,23 +80,23 @@ module src.Omega.Lambda where
   data _⊢_∶_ (Γ : Env) : Tm → Ty → Set where
 
     VAR : ∀ {α τ} → Γ [ α ↦ τ ]
-          -----------------------
-          → Γ ⊢ $ α ∶ τ
+          ---------------------
+        → Γ ⊢ $ α ∶ τ
 
     
     ABS : ∀ {α τ σ t} → (α ↦ σ ∷ Γ) ⊢ t ∶ τ
           ----------------------------------
-          → Γ ⊢ Λ α ⇒ t ∶ (σ `→ τ)
+        → Γ ⊢ Λ α ⇒ t ∶ (σ `→ τ)
 
     
     APP : ∀ {t₁ t₂ τ σ} → Γ ⊢ t₁ ∶ (σ `→ τ) → Γ ⊢ t₂ ∶ σ
           ------------------------------------------------
-          → Γ ⊢ t₁ ∙ t₂ ∶ τ
+        → Γ ⊢ t₁ ∙ t₂ ∶ τ
 
     
     LET : ∀ {t₁ t₂ α τ σ} → Γ ⊢ t₁ ∶ τ → (α ↦ τ ∷ Γ) ⊢ t₂ ∶ σ
           -----------------------------------------------------
-          → Γ ⊢ let` α := t₁ in` t₂ ∶ σ
+        → Γ ⊢ let` α := t₁ in` t₂ ∶ σ
           
 
   Γ-match : (τ : Ty) → ⟪ ωᵢ (λ Γ → Σ[ α ∈ Id ] Γ [ α ↦ τ ]) ⟫
@@ -169,19 +169,26 @@ module src.Omega.Lambda where
                                                 return (Σ₁ bd , LET (Σ₂ bn) (Σ₂ bd))
           `LET μ _ = uninhabited
 
-  λ-test : ⟨ λ-calculus ⟩ᵢ (`ℕ `→ `ℕ , 0 ↦ `ℕ ∷ ∅) 4
+  λ-test1 : ⟨ λ-calculus ⟩ᵢ (`ℕ `→ `ℕ , 0 ↦ `ℕ ∷ ∅) 4
     ≡ (Λ 1 ⇒ $ 1 , ABS (VAR TOP)) ∷
       (let` 1 := $ 0 in` Λ 2 ⇒ $ 2 , LET (VAR TOP) (ABS (VAR TOP))) ∷
       (Λ 1 ⇒ let` 2 := $ 1 in` $ 2 , ABS (LET (VAR TOP) (VAR TOP))) ∷
       (let` 1 := (let` 1 := $ 0 in` $ 1) in` Λ 2 ⇒ $ 2 , LET (LET (VAR TOP) (VAR TOP)) (ABS (VAR TOP))) ∷
       (Λ 1 ⇒ $ 0 , ABS (VAR (POP TOP))) ∷
       (let` 1 := (Λ 1 ⇒ $ 1) in` (Λ 2 ⇒ $ 2) , LET (ABS (VAR TOP)) (ABS (VAR TOP))) ∷ []
-  λ-test = refl
-
+  λ-test1 = refl
   
   λ-test'1 : ⟨ λ-calculus' ⟩ᵢ ($ 0 , 0 ↦ `ℕ ∷ ∅) 2 ≡ ((`ℕ , VAR TOP) ∷ [])
   λ-test'1 = refl
 
   λ-test'2 : ⟨ λ-calculus' ⟩ᵢ ((Λ 0 ⇒ $ 0) ∙ ($ 0) , 0 ↦ `ℕ ∷ ∅) 4 ≡ (`ℕ , APP (ABS (VAR TOP)) (VAR TOP)) ∷ []
   λ-test'2 = refl
-  
+
+  λ-test'3 : take 5 ( ⟨ λ-calculus' ⟩ᵢ (Λ 0 ⇒ (Λ 1 ⇒ (($ 0) ∙ ($ 1))) , ∅) 6)
+    ≡ (((`ℕ `→ `ℕ) `→ (`ℕ `→ `ℕ)) , ABS (ABS (APP (VAR (POP TOP)) (VAR TOP)))) ∷
+      (((`ℕ `→ (`ℕ `→ `ℕ)) `→ (`ℕ `→ (`ℕ `→ `ℕ))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷
+      (((`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ))) `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ)))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷
+      (((`ℕ `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ)))) `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ))))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷
+      (((`ℕ `→ (`ℕ `→ ((`ℕ `→ `ℕ) `→ `ℕ))) `→ (`ℕ `→ (`ℕ `→ ((`ℕ `→ `ℕ) `→ `ℕ)))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷ []
+  λ-test'3 = refl
+ 

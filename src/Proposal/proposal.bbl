@@ -22,6 +22,11 @@ Koen Claessen, Nicholas Smallbone, and John Hughes.
 \newblock In {\em International Conference on Tests and Proofs}, pages 6--21.
   Springer, 2010.
 
+\bibitem{dagand2017essence}
+Pierre-{\'E}variste Dagand.
+\newblock The essence of ornaments.
+\newblock {\em Journal of Functional Programming}, 27, 2017.
+
 \bibitem{denes2014quickchick}
 Maxime D{\'e}n{\`e}s, Catalin Hritcu, Leonidas Lampropoulos, Zoe
   Paraskevopoulou, and Benjamin~C Pierce.
@@ -32,6 +37,11 @@ Maxime D{\'e}n{\`e}s, Catalin Hritcu, Leonidas Lampropoulos, Zoe
 Jonas Dureg{\aa}rd, Patrik Jansson, and Meng Wang.
 \newblock Feat: functional enumeration of algebraic types.
 \newblock {\em ACM SIGPLAN Notices}, 47(12):61--72, 2013.
+
+\bibitem{ko2016programming}
+Hsiang-Shang Ko and Jeremy Gibbons.
+\newblock Programming with ornaments.
+\newblock {\em Journal of Functional Programming}, 27, 2016.
 
 \bibitem{lampropoulos2017generating}
 Leonidas Lampropoulos, Zoe Paraskevopoulou, and Benjamin~C Pierce.
