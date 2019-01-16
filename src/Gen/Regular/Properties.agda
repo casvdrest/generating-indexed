@@ -13,7 +13,7 @@ open import Category.Functor
 open import Category.Applicative
 open import Category.Monad
 
-module src.Gen.Properties where
+module src.Gen.Regular.Properties where
 
   open RawApplicative ⦃...⦄
 

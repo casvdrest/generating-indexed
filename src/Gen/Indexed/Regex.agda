@@ -5,8 +5,8 @@ open import Data.Product using (Σ; Σ-syntax; _,_)
 
 open import src.Data using (_⊗_; _,_; fst; snd)
 open import src.Gen.Base
-open import src.Gen.Indexed
-open import src.Gen.Examples
+open import src.Gen.Indexed.Examples
+open import src.Gen.Regular.Examples
 
 open import Category.Functor
 open import Category.Applicative
@@ -18,7 +18,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym 
 
 open import Function
 
-module src.Gen.Regex where
+module src.Gen.Indexed.Regex where
 
   open RawFunctor ⦃...⦄ using (_<$>_)
   open RawMonad ⦃...⦄ using (_>>_; _>>=_; return; pure)
@@ -234,49 +234,3 @@ module src.Gen.Regex where
                          char-ap : ∀ {n : ℕ} → (c : Char) → (s : String) → 𝔾 (Σ[ r ∈ Regex ] ((c ∷ s) ∈ L[ r ])) n
                          char-ap c [] = pure (`c c , CHAR)
                          char-ap c (x ∷ s) = uninhabited
-
-  
-  match-cas : Regex
-  match-cas = `c 'c' ∙ (`c 'a' ∙ (`c 's' ∙ one))
-
-  match-agda : Regex
-  match-agda = `c 'a' ∙ (`c 'g' ∙ (`c 'd' ∙ (`c 'a' ∙ one)))
-
-  
-  regex_test1 : 𝔾-runᵢ regex match-cas 4
-    ≡ [ ('c' ∷ 'a' ∷ 's' ∷ [] , SEQ CHAR (SEQ CHAR (SEQ CHAR ONE))) ]
-  regex_test1 = refl
-
-  regex_test2 : 𝔾-runᵢ regex match-agda 5
-    ≡ [ 'a' ∷ 'g' ∷ 'd' ∷ 'a' ∷ [] , SEQ CHAR (SEQ CHAR (SEQ CHAR (SEQ CHAR ONE))) ]
-  regex_test2 = refl
-
-  regex_test3 : 𝔾-runᵢ regex (match-agda + match-cas) 6
-    ≡ ('a' ∷ 'g' ∷ 'd' ∷ 'a' ∷ [] , LEFT (SEQ CHAR (SEQ CHAR (SEQ CHAR (SEQ CHAR ONE))))) ∷
-      ('c' ∷ 'a' ∷ 's' ∷ [] ,       RIGHT (SEQ CHAR (SEQ CHAR (SEQ CHAR ONE)))) ∷
-    []
-  regex_test3 = refl
-    
-  regex_test5 : 𝔾-runᵢ regex (`c 'a' *) 5
-    ≡ (ε , STOP) ∷
-      ('a' ∷ [] ,                   STEP CHAR STOP) ∷
-      ('a' ∷ 'a' ∷ [] ,             STEP CHAR (STEP CHAR STOP)) ∷
-      ('a' ∷ 'a' ∷ 'a' ∷ [] ,       STEP CHAR (STEP CHAR (STEP CHAR STOP))) ∷
-      ('a' ∷ 'a' ∷ 'a' ∷ 'a' ∷ [] , STEP CHAR (STEP CHAR (STEP CHAR (STEP CHAR STOP)))) ∷ []
-  regex_test5 = refl
-
-  regex_test6 : 𝔾-runᵢ regex ((`c 'a' ∙ `c 'b') *) 5
-    ≡ (ε , STOP) ∷
-      ('a' ∷ 'b' ∷ [] ,                         STEP (SEQ CHAR CHAR) STOP) ∷
-      ('a' ∷ 'b' ∷ 'a' ∷ 'b' ∷ [] ,             STEP (SEQ CHAR CHAR) (STEP (SEQ CHAR CHAR) STOP)) ∷
-      ('a' ∷ 'b' ∷ 'a' ∷ 'b' ∷ 'a' ∷ 'b' ∷ [] , STEP (SEQ CHAR CHAR) (STEP (SEQ CHAR CHAR) (STEP (SEQ CHAR CHAR) STOP))) ∷ []
-  regex_test6 = refl
-
-  regex'_test1 : 𝔾-runᵢ regex' ('a' ∷ []) 2
-    ≡ ((`c 'a') , CHAR) ∷
-      ((`c 'a' + zero) , LEFT CHAR) ∷
-      ((zero + `c 'a') , RIGHT CHAR) ∷
-      ((`c 'a' + one) , LEFT CHAR) ∷
-      ((one + `c 'a') , (RIGHT CHAR)) ∷ []
-  regex'_test1 = refl
-  

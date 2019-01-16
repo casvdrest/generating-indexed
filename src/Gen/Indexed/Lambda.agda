@@ -1,7 +1,7 @@
 open import src.Data hiding (_∈_; Σ)
 open import src.Gen.Base
-open import src.Gen.Indexed
-open import src.Gen.Examples
+open import src.Gen.Indexed.Examples
+open import src.Gen.Regular.Examples
 
 open import Data.Nat hiding (_≟_)
 open import Data.List
@@ -18,7 +18,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Function
 
-module src.Gen.Lambda where
+module src.Gen.Indexed.Lambda where
 
   open RawFunctor ⦃...⦄ using (_<$>_)
   open RawMonad ⦃...⦄ using (_>>_; _>>=_; return; pure)
@@ -168,27 +168,4 @@ module src.Gen.Lambda where
                                                 bd ← μ (t₂ , (α ↦ Σ₁ bn ∷ Γ))
                                                 return (Σ₁ bd , LET (Σ₂ bn) (Σ₂ bd))
           `LET μ _ = uninhabited
-
-  λ-test1 : 𝔾-runᵢ λ-calculus (`ℕ `→ `ℕ , 0 ↦ `ℕ ∷ ∅) 4
-    ≡ (Λ 1 ⇒ $ 1 , ABS (VAR TOP)) ∷
-      (let` 1 := $ 0 in` Λ 2 ⇒ $ 2 , LET (VAR TOP) (ABS (VAR TOP))) ∷
-      (Λ 1 ⇒ let` 2 := $ 1 in` $ 2 , ABS (LET (VAR TOP) (VAR TOP))) ∷
-      (let` 1 := (let` 1 := $ 0 in` $ 1) in` Λ 2 ⇒ $ 2 , LET (LET (VAR TOP) (VAR TOP)) (ABS (VAR TOP))) ∷
-      (Λ 1 ⇒ $ 0 , ABS (VAR (POP TOP))) ∷
-      (let` 1 := (Λ 1 ⇒ $ 1) in` (Λ 2 ⇒ $ 2) , LET (ABS (VAR TOP)) (ABS (VAR TOP))) ∷ []
-  λ-test1 = refl
-  
-  λ-test'1 : 𝔾-runᵢ λ-calculus' ($ 0 , 0 ↦ `ℕ ∷ ∅) 2 ≡ ((`ℕ , VAR TOP) ∷ [])
-  λ-test'1 = refl
-
-  λ-test'2 : 𝔾-runᵢ λ-calculus' ((Λ 0 ⇒ $ 0) ∙ ($ 0) , 0 ↦ `ℕ ∷ ∅) 4 ≡ (`ℕ , APP (ABS (VAR TOP)) (VAR TOP)) ∷ []
-  λ-test'2 = refl
-
-  λ-test'3 : take 5 (𝔾-runᵢ λ-calculus' (Λ 0 ⇒ (Λ 1 ⇒ (($ 0) ∙ ($ 1))) , ∅) 6)
-    ≡ (((`ℕ `→ `ℕ) `→ (`ℕ `→ `ℕ)) , ABS (ABS (APP (VAR (POP TOP)) (VAR TOP)))) ∷
-      (((`ℕ `→ (`ℕ `→ `ℕ)) `→ (`ℕ `→ (`ℕ `→ `ℕ))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷
-      (((`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ))) `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ)))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷
-      (((`ℕ `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ)))) `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ (`ℕ `→ `ℕ))))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷
-      (((`ℕ `→ (`ℕ `→ ((`ℕ `→ `ℕ) `→ `ℕ))) `→ (`ℕ `→ (`ℕ `→ ((`ℕ `→ `ℕ) `→ `ℕ)))) , (ABS (ABS (APP (VAR (POP TOP)) (VAR TOP))))) ∷ []
-  λ-test'3 = refl
  

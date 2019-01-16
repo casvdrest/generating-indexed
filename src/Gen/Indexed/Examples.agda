@@ -16,13 +16,13 @@ open Eq'.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
 
 open import src.Data
 open import src.Gen.Base
-open import src.Gen.Examples using (bools)
+open import src.Gen.Regular.Examples using (bool)
 
 open import Function
 
 open import Category.Applicative
 
-module src.Gen.Indexed where 
+module src.Gen.Indexed.Examples where 
 
   open RawApplicative ⦃...⦄ using (_⊛_; pure)
   
@@ -30,26 +30,11 @@ module src.Gen.Indexed where
   fin _ zero    = uninhabited
   fin μ (suc n) = ⦇ zero      ⦈
                 ∥ ⦇ suc (μ n) ⦈
-  
-  prop : 𝔾-runᵢ fin 10 10  ≡
-      zero ∷ suc zero ∷ suc (suc zero) ∷ suc (suc (suc zero))
-    ∷ suc (suc (suc (suc zero))) ∷ suc (suc (suc (suc (suc zero))))
-    ∷ suc (suc (suc (suc (suc (suc zero))))) ∷ suc (suc (suc (suc (suc (suc (suc zero))))))
-    ∷ suc (suc (suc (suc (suc (suc (suc (suc zero)))))))
-    ∷ suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ∷ []
-  prop = refl
-
 
   ≤m : ⟪ 𝔾ᵢ (uncurry _≤_) ⟫ 
   ≤m μ (zero  , m    ) = ⦇ z≤n ⦈
   ≤m μ (n     , zero ) = uninhabited
   ≤m μ (suc n , suc m) = ⦇ s≤s (μ (n , m)) ⦈
-
-  prop1 : 𝔾-runᵢ ≤m (1 , 2) 10 ≡ [ s≤s z≤n ]
-  prop1 = refl
-
-  prop2 : 𝔾-runᵢ ≤m (2 , 1) 10 ≡ []
-  prop2 = refl
 
   ≤-suc : ∀ {n m : ℕ} → n ≤ m → n ≤ suc m
   ≤-suc z≤n = z≤n
@@ -59,21 +44,9 @@ module src.Gen.Indexed where
   ≤n+k μ (n , zero ) = ⦇ (≤-reflexive refl) ⦈
   ≤n+k μ (n , suc k) = ⦇ ≤-suc (μ (n , k))  ⦈
 
-  prop3 : 𝔾-runᵢ ≤n+k (1 , 1) 10 ≡ [ s≤s z≤n ]
-  prop3 = refl
-
-  prop4 : 𝔾-runᵢ  ≤n+k (3 , 0) 10 ≡ [ s≤s (s≤s (s≤s z≤n)) ]
-  prop4 = refl
-
-
   vec : ∀ {a : Set} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ (Vec a) ⟫
   vec a μ zero    = ⦇ []            ⦈
   vec a μ (suc n) = ⦇ ⟨ a ⟩ ∷ (μ n) ⦈
-
-  prop5 : 𝔾-runᵢ (vec bools) 2 5 ≡
-    (true  ∷ true ∷ []) ∷ (true  ∷ false ∷ []) ∷
-    (false ∷ true ∷ []) ∷ (false ∷ false ∷ []) ∷ []
-  prop5 = refl
 
   data Sorted {ℓ} : List ℕ → Set ℓ where
     nil    : Sorted []
@@ -91,12 +64,6 @@ module src.Gen.Indexed where
   sortedₛ μ (x ∷ y ∷ xs) with n≤m? x y
   sortedₛ μ (x ∷ y ∷ xs) | nothing = uninhabited
   sortedₛ μ (x ∷ y ∷ xs) | just p = ⦇ (step p) (μ (y ∷ xs)) ⦈
-
-  prop6 : 𝔾-runᵢ sortedₛ (1 ∷ 2 ∷ 3 ∷ []) 15 ≡ step (s≤s z≤n) (step (s≤s (s≤s z≤n)) single) ∷ []
-  prop6 = refl
-
-  prop7 : 𝔾-runᵢ sortedₛ (3 ∷ 2 ∷ 1 ∷ []) 15 ≡ []
-  prop7 = refl
 
   bump : ℕ → List ℕ → List ℕ
   bump n [] = []
