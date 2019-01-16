@@ -1,4 +1,4 @@
-open import src.Omega.Base
+open import src.Gen.Base
 open import src.Data
 
 open import Data.Product using (∃; ∃-syntax; _,_)
@@ -13,7 +13,7 @@ open import Category.Functor
 open import Category.Applicative
 open import Category.Monad
 
-module src.Omega.Properties where
+module src.Gen.Properties where
 
   open RawApplicative ⦃...⦄
 

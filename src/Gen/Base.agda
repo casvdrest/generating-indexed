@@ -14,7 +14,7 @@ open import Function
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-module src.Omega.Base where
+module src.Gen.Base where
 
   𝔾 : Set → ℕ → Set 
   𝔾 a m = (p : Σ[ n ∈ ℕ ] n ≡ m) → List a  
@@ -103,6 +103,9 @@ module src.Omega.Base where
 
   𝔾-run : ∀ {a : Set } → ⟪ 𝔾 a ⟫ → ℕ → List a
   𝔾-run f n = fix n f (n , refl)
+
+  𝔾-runᵢ : ∀ {i : Set} {a : i → Set} → ⟪ 𝔾ᵢ a ⟫ → (x : i) → ℕ → List (a x)
+  𝔾-runᵢ f i n = fixᵢ n f i (n , refl)
 
 
   Σ-map : ∀ {a : Set} {P Q : a → Set}
