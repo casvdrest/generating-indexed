@@ -60,7 +60,7 @@
 %\usepackage{titling}
 %\setlength{\droptitle}{-7em}
 
-\title{Program Term Generation Through Enumeration of Indexed Data Types (Thesis Proposal)}
+\title{Program Term Generation Through Enumeration of Indexed datatypes (Thesis Proposal)}
 \author{Cas van der Rest}
 \date{\today}
 
@@ -76,11 +76,11 @@
 
 A common way of asserting a program's correctness is by defining properties that should universally hold, and asserting these properties over a range of random inputs. This technique is commonly referred to as \textit{property based testing}, and generally consists of a two-step process. Defining properties that universially hold on all inputs, and defining \textit{generators} that sample random values from the space of possible inputs. \textit{QuickCheck} \cite{claessen2011quickcheck} is likely the most well known tool for performing property based tests on haskell programs. 
 
-Although coming up with a set of properties that propertly captures a program's behavious might initially seem to be the most involved part of the process, defining suitable generators for complex input data is actually quite difficult as well. Questions such as how to handle datatypes that are inhabited by an infinite numer of values arise, or how to deal with constrained input data. The answers to these questions are reasonably well understood for \textit{Algebraic Data Types (ADT's)}, but no general solution exists when more complex input data is required. In particular, little is known about enumerating and generating inhabitants of \textit{Indexed Data Types}. 
+Although coming up with a set of properties that propertly captures a program's behavious might initially seem to be the most involved part of the process, defining suitable generators for complex input data is actually quite difficult as well. Questions such as how to handle datatypes that are inhabited by an infinite numer of values arise, or how to deal with constrained input data. The answers to these questions are reasonably well understood for \textit{Algebraic datatypes (ADT's)}, but no general solution exists when more complex input data is required. In particular, little is known about enumerating and generating inhabitants of \textit{Indexed datatypes}. 
 
-The latter may be of interest when considering property based testing in the context of languages with a more elaborate type system than Haskell's, such as \textit{Agda} or \textit{Idris}. Since the techniques used in existing tools such as QuickCheck and SmallCheck for the most part only apply to regular data types, meaning that there is no canonical way of generating inhabitants for a large class of datatypes in these languages. 
+The latter may be of interest when considering property based testing in the context of languages with a more elaborate type system than Haskell's, such as \textit{Agda} or \textit{Idris}. Since the techniques used in existing tools such as QuickCheck and SmallCheck for the most part only apply to regular datatypes, meaning that there is no canonical way of generating inhabitants for a large class of datatypes in these languages. 
 
-Besides the obvious applications to property based testing in the context of dependently typed languages, a broader understanding of how we can generate inhabitants of indexed datatypes may prove useful in other areas as well. Since we can often capture a programming language's semantics as an indexed data type, efficient generation of inhabitants of such a datatype may prove useful for testing compiler infrastructure. 
+Besides the obvious applications to property based testing in the context of dependently typed languages, a broader understanding of how we can generate inhabitants of indexed datatypes may prove useful in other areas as well. Since we can often capture a programming language's semantics as an indexed datatype, efficient generation of inhabitants of such a datatype may prove useful for testing compiler infrastructure. 
 
 \subsection{Problem Statement}
 
@@ -97,7 +97,9 @@ studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2
 
 \subsection{Dependently Typed Programming \& Agda}
 
-\subsubsection{Propositions as Types}
+\subsubsection{Dependent Type Theory}
+
+\subsubsection{The Curry-Howard Correspondence}
 
 \subsubsection{Codata}
 
@@ -109,9 +111,101 @@ studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2
 
 \subsection{Generic Programming \& Type Universes}
 
+If we desire to abstract over the structure of datatypes, we need a suitable type universe to do so. Many such universes have been developed and studied; this section discusses a few of them. 
+
 \subsubsection{Regular Datatypes}
 
+The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. Roughly, this class consists of ADT's in haskell, though mutual recursion is not accounted for. 
+
+Any value that lives in the induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. 
+
+
+
 \subsubsection{Ornaments}
+
+\textit{Ornaments} \cite{dagand2017essence} provide a type universe in which we can describe the structure of indexed datatypes in a very index-centric way. Indexed datatypes are described by \textit{Signatures}, consisting of three elements:
+
+\begin{itemize}
+\item 
+A function $Op : I \rightarrow Set$, that relates indices to operations/constructors
+
+\item 
+A function $Ar : Op\ i \rightarrow Set$, that describes the arity (with respect to recursive positions) for an operation 
+
+\item 
+A typing discipline $Ty : Ar\ op \rightarrow I$, that describes indices for recursive positions. 
+
+\end{itemize}
+
+When combined into a single structure, we say that $\Sigma_D$ gives the signature of some indexed datatype $D : I \rightarrow Set$:  
+
+\begin{equation*}
+\Sigma_D(I)=
+\begin{cases}
+Op : I \rightarrow Set \\
+Ar : Op\ i \rightarrow Set \\
+Ty : Ar\ op \rightarrow I
+\end{cases}
+\end{equation*}
+
+\textbf{Example}: the signature for the $Vec$ type, given by $\Sigma_{Vec}(\mathbb{N})$. Recall the definition of the $Vec$ datatype in listing \ref{vecdef}. It has the following relation between index and operations: 
+
+\begin{code}
+Op-vec : ∀ {a : Set} → ℕ → Set
+Op-vec zero = ⊤
+Op-vec {a} (suc n) = a
+\end{code} 
+
+If the index is $zero$, we have only the unary constructor $[]$ at our disposal, hence \texttt{Op-vec zero = top}. If the index is $suc n$, the number of possible constructions for $Vec$ corresponds to the set of inhabitants of its element type, hence we say that \texttt{Op-vec (suc n) = a}. 
+
+The $[]$ constructor has no recursive argument, so its arity is $\bot$. Similarly, $cons\ a$ takes one recursive argument, so its arity is $\top$:  
+
+\begin{code}
+Ar-vec : ∀ {a : Set} → (n : ℕ) → Op-vec {a} n → Set
+Ar-vec zero tt = ⊥
+Ar-vec (suc n) op = ⊤
+\end{code} 
+
+The definition of $::$ dictates that if the index is equal to $suc\ n$, the index of the recursive argument needs to be $n$. We interpret this as follows: if a vector has length (suc n), its tail has length n. This induces the following typing discipline for $Vec$: 
+
+\begin{code}
+Ty-vec : ∀ {a : Set} → (n : ℕ) → (op : Op-vec {a} n) → Ar-vec n op → ℕ
+Ty-vec zero a ()
+Ty-vec (suc n) a tt = n
+\end{code} 
+
+This defines the signature for $Vec$: $\Sigma_{Vec} \triangleq \texttt{Op-vec} \triangleleft^\texttt{Ty-vec} \texttt{Ar-vec}$. 
+
+\begin{figure} \hrulefill
+\begin{code}
+data Vec {a} (A : Set a) : ℕ → Set a where
+  []  : Vec A zero
+  _∷_ : ∀ {n} (x : A) (xs : Vec A n) → Vec A (suc n)
+\end{code} 
+\hrulefill
+\caption{Definition of $Vec$}\label{vecdef}
+\end{figure}
+
+We can define signatures for non-indexed datatypes as well by choosing a trivial index, e.g. $I = \top$. This gives $\Sigma_{\mathbb{N}} \triangleq \texttt{Op-nat} \triangleleft^\texttt{Ty-nat} \texttt{Ar-nat}$ with the definitions given in listing \ref{signat-def}: 
+
+\begin{figure} \hrulefill
+\begin{code}
+Op-nat : ⊤ → Set
+Op-nat tt = ⊤ ⊎ ⊤
+\end{code}
+\begin{code}
+Ar-nat : Op-nat tt → Set
+Ar-nat (inj₁ x) = ⊥
+Ar-nat (inj₂ y) = ⊤
+\end{code}
+\begin{code}
+Ty-nat : (op : Op-nat tt) → Ar-nat op → ⊤
+Ty-nat (inj₁ x) ()
+Ty-nat (inj₂ y) tt = tt
+\end{code}
+\hrulefill
+\caption{Signature definition for $\mathbb{N}$}\label{signat-def}
+\end{figure}
 
 \subsubsection{Functorial Species}
 
