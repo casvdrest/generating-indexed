@@ -86,7 +86,7 @@ module src.Gen.Regular.Generic where
   gen𝔾 : ∀ {a : Set} → (g : ⟪ 𝔾 a ⟫) → (f : Reg a) → ⟪ 𝔾 (μ f) ⟫
   gen𝔾 k U        μ = ⦇ (`μ tt) ⦈
   gen𝔾 k (K x)    μ = ⦇ `μ  ⟨ k ⟩ ⦈
-  gen𝔾 k (f ⊕ g) μ = ⦇ ? ⦈ ∥ {!!}
+  gen𝔾 k (f ⊕ g) μ = ⦇ {!!} ⦈ ∥ {!!}
   gen𝔾 k (f ⊗ g) μ = {!!}
   gen𝔾 k I        μ = ⦇ `μ μ ⦈
 
