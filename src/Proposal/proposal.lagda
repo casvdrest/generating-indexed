@@ -74,6 +74,18 @@
 
 \section{Introduction}
 
+A common way of asserting a program's correctness is by defining properties that should universally hold, and asserting these properties over a range of random inputs. This technique is commonly referred to as \textit{property based testing}, and generally consists of a two-step process. Defining properties that universially hold on all inputs, and defining \textit{generators} that sample random values from the space of possible inputs. \textit{QuickCheck} \cite{claessen2011quickcheck} is likely the most well known tool for performing property based tests on haskell programs. 
+
+Although coming up with a set of properties that propertly captures a program's behavious might initially seem to be the most involved part of the process, defining suitable generators for complex input data is actually quite difficult as well. Questions such as how to handle datatypes that are inhabited by an infinite numer of values arise, or how to deal with constrained input data. The answers to these questions are reasonably well understood for \textit{Algebraic Data Types (ADT's)}, but no general solution exists when more complex input data is required. In particular, little is known about enumerating and generating inhabitants of \textit{Indexed Data Types}. 
+
+The latter may be of interest when considering property based testing in the context of languages with a more elaborate type system than Haskell's, such as \textit{Agda} or \textit{Idris}. Since the techniques used in existing tools such as QuickCheck and SmallCheck for the most part only apply to regular data types, meaning that there is no canonical way of generating inhabitants for a large class of datatypes in these languages. 
+
+Besides the obvious applications to property based testing in the context of dependently typed languages, a broader understanding of how we can generate inhabitants of indexed datatypes may prove useful in other areas as well. Since we can often capture a programming language's semantics as an indexed data type, efficient generation of inhabitants of such a datatype may prove useful for testing compiler infrastructure. 
+
+\subsection{Problem Statement}
+
+\subsection{Research Questions and Contributions}
+
 What is the problem? Illustrate with an example. \cite{runciman2008smallcheck, altenkirch2003generic}
 
 What is/are your research questions/contributions? \cite{claessen2011quickcheck}

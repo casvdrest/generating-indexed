@@ -1,13 +1,13 @@
 {-# OPTIONS --type-in-type #-}
 
 import Level as L
-open import Data.Nat
+open import Data.Nat hiding (_≤_)
 open import Data.Fin using (Fin; suc; zero)
 open import Data.List
 
 open import Data.Product
 open import Data.Sum
-open import Data.Unit
+open import Data.Unit hiding (_≤_)
 open import Data.Empty
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
@@ -152,4 +152,81 @@ module src.Gen.Indexed.Signature where
   List-iso₁ {xs = []} = refl
   List-iso₁ {xs = x ∷ xs} = cong (_∷_ x) List-iso₁
 
-  
+  data _≤ : ℕ × ℕ → Set where
+    base : ∀ {n : ℕ} → (0 , n) ≤
+    step : ∀ {n m : ℕ} → (n , m) ≤ → (suc n , suc m) ≤ 
+
+  Op-≤ : ℕ × ℕ → Set
+  Op-≤ (zero , snd) = ⊤
+  Op-≤ (suc fst , zero) = ⊥
+  Op-≤ (suc fst , suc snd) = ⊤
+
+  Ar-≤ : ∀ {idx : ℕ × ℕ} → Op-≤ idx → Set
+  Ar-≤ {zero , snd} tt = ⊥
+  Ar-≤ {suc fst , zero} ()
+  Ar-≤ {suc fst , suc snd} tt = ⊤
+
+  Ty-≤ : ∀ {idx : ℕ × ℕ} → (op : Op-≤ idx) → Ar-≤ op → ℕ × ℕ
+  Ty-≤ {zero , snd} tt ()
+  Ty-≤ {suc fst , zero} () ar
+  Ty-≤ {suc fst , suc snd} tt tt = fst , snd
+
+  Σ-≤ : Sig (ℕ × ℕ)
+  Σ-≤ = Op-≤ ◃ (λ { idx → Ar-≤ idx }) ∣ λ {_} {op} → Ty-≤ op 
+
+  ≤F : ℕ × ℕ → Set
+  ≤F idx = μ Σ-≤ idx
+
+  from≤ : ∀ {idx : ℕ × ℕ} → idx ≤ → ≤F idx
+  from≤ base = `μ (tt , λ())
+  from≤ (step p) = `μ (tt , λ { tt → from≤ p })
+
+  to≤ : ∀ {idx : ℕ × ℕ} → ≤F idx → idx ≤
+  to≤ {zero , snd₁} (`μ (tt , snd)) = base
+  to≤ {suc fst₁ , zero} (`μ (() , snd))
+  to≤ {suc fst₁ , suc snd₁} (`μ (tt , snd)) = step (to≤ (snd tt))
+ 
+  ≤-iso₁ : ∀ {idx : ℕ × ℕ} {p : idx ≤} → to≤ (from≤ p) ≡ p
+  ≤-iso₁ {p = base} = refl
+  ≤-iso₁ {p = step p} = cong step ≤-iso₁
+
+  data Sorted : List ℕ → Set where
+    nil    : Sorted []
+    single : ∀ {x : ℕ} → Sorted [ x ]
+    step'  : ∀ {x y : ℕ} {xs : List ℕ} → (x , y) ≤ → Sorted (y ∷ xs) → Sorted (x ∷ y ∷ xs)  
+
+  Op-Sorted : List ℕ → Set
+  Op-Sorted [] = ⊤
+  Op-Sorted (x ∷ []) = ⊤
+  Op-Sorted (x ∷ y ∷ xs) = (x , y) ≤
+
+  Ar-Sorted : ∀ {xs : List ℕ} → Op-Sorted xs → Set
+  Ar-Sorted {[]} tt = ⊥
+  Ar-Sorted {x ∷ []} tt = ⊥
+  Ar-Sorted {x ∷ x₁ ∷ xs} op = ⊤
+
+  Ty-Sorted : ∀ {xs : List ℕ} → (op : Op-Sorted xs) → Ar-Sorted op → List ℕ
+  Ty-Sorted {[]} tt ()
+  Ty-Sorted {x ∷ []} tt ()
+  Ty-Sorted {x ∷ y ∷ xs} op tt = y ∷ xs
+
+  Σ-Sorted : Sig (List ℕ)
+  Σ-Sorted = Op-Sorted ◃ Ar-Sorted ∣ λ {_} {ar} → Ty-Sorted ar
+
+  SortedF : List ℕ → Set
+  SortedF xs = μ Σ-Sorted xs
+
+  fromSorted : ∀ {xs : List ℕ} → Sorted xs → SortedF xs
+  fromSorted nil = `μ (tt , λ())
+  fromSorted single = `μ (tt , λ())
+  fromSorted (step' x₁ p) = `μ (x₁ , λ { tt → fromSorted p } )
+
+  toSorted : ∀ {xs : List ℕ} → SortedF xs → Sorted xs
+  toSorted {[]} (`μ (tt , snd)) = nil
+  toSorted {x ∷ []} (`μ (tt , snd)) = single
+  toSorted {x ∷ x₁ ∷ xs} (`μ (fst , snd)) = step' fst (toSorted (snd tt))
+
+  Sorted-iso₁ : ∀ {xs : List ℕ} {p : Sorted xs} → toSorted (fromSorted p) ≡ p
+  Sorted-iso₁ {[]} {nil} = refl
+  Sorted-iso₁ {x ∷ []} {single} = refl
+  Sorted-iso₁ {x ∷ x₁ ∷ xs} {step' x₂ p} = cong (step' x₂) Sorted-iso₁ 
