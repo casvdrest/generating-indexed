@@ -4,18 +4,19 @@
 \contentsline {section}{\numberline {2}Background}{2}{section.2}
 \contentsline {subsection}{\numberline {2.1}Dependently Typed Programming \& Agda}{3}{subsection.2.1}
 \contentsline {subsubsection}{\numberline {2.1.1}Dependent Type Theory}{3}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}The Curry-Howard Correspondence}{3}{subsubsection.2.1.2}
-\contentsline {subsubsection}{\numberline {2.1.3}Codata}{3}{subsubsection.2.1.3}
+\contentsline {subsubsection}{\numberline {2.1.2}Codata}{3}{subsubsection.2.1.2}
 \contentsline {subsection}{\numberline {2.2}Property Based Testing}{3}{subsection.2.2}
 \contentsline {subsubsection}{\numberline {2.2.1}Existing Libraries}{3}{subsubsection.2.2.1}
 \contentsline {subsubsection}{\numberline {2.2.2}Generating Test Data}{3}{subsubsection.2.2.2}
 \contentsline {subsection}{\numberline {2.3}Generic Programming \& Type Universes}{3}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Regular Datatypes}{3}{subsubsection.2.3.1}
-\contentsline {subsubsection}{\numberline {2.3.2}Ornaments}{3}{subsubsection.2.3.2}
-\contentsline {subsubsection}{\numberline {2.3.3}Functorial Species}{5}{subsubsection.2.3.3}
-\contentsline {subsubsection}{\numberline {2.3.4}Indexed Functors}{5}{subsubsection.2.3.4}
-\contentsline {subsection}{\numberline {2.4}Blockchain Semantics}{5}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}BitML}{5}{subsubsection.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}UTXO \& Extended UTXO}{5}{subsubsection.2.4.2}
-\contentsline {section}{\numberline {3}Preliminary results}{6}{section.3}
-\contentsline {section}{\numberline {4}Timetable and planning}{6}{section.4}
+\contentsline {subsubsection}{\numberline {2.3.1}Regular Datatypes}{4}{subsubsection.2.3.1}
+\contentsline {paragraph}{Example}{4}{section*.2}
+\contentsline {subsubsection}{\numberline {2.3.2}Ornaments}{5}{subsubsection.2.3.2}
+\contentsline {paragraph}{Example}{6}{section*.3}
+\contentsline {subsubsection}{\numberline {2.3.3}Functorial Species}{7}{subsubsection.2.3.3}
+\contentsline {subsubsection}{\numberline {2.3.4}Indexed Functors}{7}{subsubsection.2.3.4}
+\contentsline {subsection}{\numberline {2.4}Blockchain Semantics}{7}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}BitML}{7}{subsubsection.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}UTXO \& Extended UTXO}{7}{subsubsection.2.4.2}
+\contentsline {section}{\numberline {3}Preliminary results}{8}{section.3}
+\contentsline {section}{\numberline {4}Timetable and planning}{8}{section.4}

@@ -391,9 +391,56 @@ studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2
 
 \subsubsection{Dependent Type Theory}
 
-\subsubsection{The Curry-Howard Correspondence}
+Dependent type theory extends a type theory with the possiblity of defining types that depend on values. In addition to familiar constructs, such as the unit type ($\top$) and the empty type $\bot$, one can use so-called $\Pi$-types and $\Sigma$-types. $\Pi$-types capture the idea of dependent function types, that is, \textit{functions} whose output type may depent on the values of its input. Given some type $A$ and a family $P$ of types indexed by values of type $A$ (i.e. $P$ has type $A \rightarrow Type$), $\Pi$-types have the following definition: 
+
+\begin{equation*}
+\Pi_{(x : A)} P(x) \quad \equiv \quad (x : A) \rightarrow P(x) 
+\end{equation*}
+
+In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of which the type of the second value may depend on te first value of the pair. 
+
+\begin{equation*}
+\Sigma_{(x : A)} P(x) \quad \equiv \quad (x : A) \times P(x) 
+\end{equation*}
+
+The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification. 
 
 \subsubsection{Codata}
+
+Agda requires all functions to be total. This means that they are required to yield a result on all inputs in a \textit{finite} amount of time. This means that we cannot work with infinite structures in the same way as in Haskell. For example, the following is perfectly fine in Haskell: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{infinity}\;\Conid{::}\;\Conid{Nat}{}\<[E]%
+\\
+\>[B]{}\Varid{infinity}\;\mathrel{=}\;\Conid{Suc}\;\Varid{infinity}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{29}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{isSmaller}\;\Conid{::}\;\Conid{Nat}\;\to \;\Conid{Nat}\;\to \;\Conid{Bool}{}\<[E]%
+\\
+\>[B]{}\Varid{isSmaller}\;(\Conid{Suc}\;\Varid{n})\;{}\<[20]%
+\>[20]{}\Conid{Zero}\;{}\<[29]%
+\>[29]{}\mathrel{=}\;\Conid{False}{}\<[E]%
+\\
+\>[B]{}\Varid{isSmaller}\;\Conid{Zero}\;{}\<[20]%
+\>[20]{}(\Conid{Suc}\;\Varid{n})\;{}\<[32]%
+\>[32]{}\mathrel{=}\;\Conid{True}{}\<[E]%
+\\
+\>[B]{}\Varid{isSmaller}\;(\Conid{Suc}\;\Varid{n})\;{}\<[20]%
+\>[20]{}(\Conid{Suc}\;\Varid{m})\;{}\<[29]%
+\>[29]{}\mathrel{=}\;\Varid{isSmaller}\;\Varid{n}\;\Varid{m}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
 
 \subsection{Property Based Testing}
 
@@ -409,7 +456,137 @@ If we desire to abstract over the structure of datatypes, we need a suitable typ
 
 The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. Roughly, this class consists of ADT's in haskell, though mutual recursion is not accounted for. 
 
-Any value that lives in the universe described by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. 
+Any value that lives in the induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. We can define a datatype in agda that captures these values: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{Reg}\;\mathbin{:}\;\Conid{Set}\;\Varid{→}\;{}\<[19]%
+\>[19]{}\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Conid{U}\;{}\<[10]%
+\>[10]{}\mathbin{:}\;\Conid{Reg}\;\Varid{⊥}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Conid{K}\;{}\<[10]%
+\>[10]{}\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;\Conid{Reg}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{\char95 ⊕\char95 }\;{}\<[10]%
+\>[10]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{Reg}\;\Varid{a}\;\Varid{→}\;\Conid{Reg}\;\Varid{a}\;\Varid{→}\;\Conid{Reg}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{\char95 ⊗\char95 }\;{}\<[10]%
+\>[10]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{Reg}\;\Varid{a}\;\Varid{→}\;\Conid{Reg}\;\Varid{a}\;\Varid{→}\;\Conid{Reg}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Conid{I}\;{}\<[10]%
+\>[10]{}\mathbin{:}\;\Conid{Reg}\;\Varid{⊥}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Pattern functors, i.e. values of the $Reg$ datatype, can be interpreted as types. Inhabitants of the interpretation of a pattern functor correspond to the inhabitants of the type that is represented by said pattern functor. We use the following interpretation function: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{⟦\char95 ⟧}\;\mathbin{:}\;\Conid{Reg}\;\Varid{→}\;\Conid{Set}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Varid{⟦}\;\Conid{U}\;{}\<[16]%
+\>[16]{}\Varid{⟧}\;\Varid{r}\;\mathrel{=}\;\Varid{⊤}{}\<[E]%
+\\
+\>[B]{}\Varid{⟦}\;\Conid{K}\;\Varid{a}\;{}\<[16]%
+\>[16]{}\Varid{⟧}\;\Varid{r}\;\mathrel{=}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{⟦}\;\Varid{reg₁}\;\Varid{⊕}\;\Varid{reg₂}\;{}\<[16]%
+\>[16]{}\Varid{⟧}\;\Varid{r}\;\mathrel{=}\;\Varid{⟦}\;\Varid{reg₁}\;\Varid{⟧}\;\Varid{r}\;\Varid{⊎}\;\Varid{⟦}\;\Varid{reg₂}\;\Varid{⟧}\;\Varid{r}{}\<[E]%
+\\
+\>[B]{}\Varid{⟦}\;\Varid{reg₁}\;\Varid{⊗}\;\Varid{reg₂}\;{}\<[16]%
+\>[16]{}\Varid{⟧}\;\Varid{r}\;\mathrel{=}\;\Varid{⟦}\;\Varid{reg₁}\;\Varid{⟧}\;\Varid{r}\;\Varid{×}\;\Varid{⟦}\;\Varid{reg₂}\;\Varid{⟧}\;\Varid{r}{}\<[E]%
+\\
+\>[B]{}\Varid{⟦}\;\Conid{I}\;{}\<[16]%
+\>[16]{}\Varid{⟧}\;\Varid{r}\;\mathrel{=}\;\Varid{r}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Notice that recursive positions are left explicit. This means that we require an appropriate fixed-point combinator to find a pattern functor's representation in \textbf{Set}. 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Varid{μ}\;(\Varid{f}\;\mathbin{:}\;\Conid{Reg})\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{`μ}\;\mathbin{:}\;\Varid{⟦}\;\Varid{f}\;\Varid{⟧}\;(\Varid{μ}\;\Varid{f})\;\Varid{→}\;\Varid{μ}\;\Varid{f}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\paragraph{Example} Consider the pattern functor corresponding to the definition of $List$: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{List'}\;\mathbin{:}\;\Conid{Set}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Conid{List'}\;\Varid{a}\;\mathrel{=}\;\Varid{μ}\;(\Conid{U}\;\Varid{⊕}\;(\Conid{K}\;\Varid{a}\;\Varid{⊗}\;\Conid{I})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Notice that this pattern functor denotes a choice between a unary constructor ($[]]$), and a constructor that takes a constant of type $a$ and a recursive positions as arguments ($::$). We can define conversion functions between the standard $List$ type, and the interpretation of our pattern functor: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fromList}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{List}\;\Varid{a}\;\Varid{→}\;\Conid{List'}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{fromList}\;\Varid{[]}\;\mathrel{=}\;\Varid{`μ}\;(\Varid{inj₁}\;\Varid{tt}){}\<[E]%
+\\
+\>[B]{}\Varid{fromList}\;(\Varid{x}\;\Varid{∷}\;\Varid{xs})\;\mathrel{=}\;\Varid{`μ}\;(\Varid{inj₂}\;(\Varid{x}\;\Varid{,}\;\Varid{fromList}\;\Varid{xs})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{toList}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{List'}\;\Varid{a}\;\Varid{→}\;\Conid{List}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{toList}\;(\Varid{`μ}\;(\Varid{inj₁}\;\Varid{tt}))\;\mathrel{=}\;\Varid{[]}{}\<[E]%
+\\
+\>[B]{}\Varid{toList}\;(\Varid{`μ}\;(\Varid{inj₂}\;(\Varid{fst}\;\Varid{,}\;\Varid{snd})))\;\mathrel{=}\;\Varid{fst}\;\Varid{∷}\;\Varid{toList}\;\Varid{snd}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+With these definitions, it is now trivial to show that there is indeed an isomorphism between the two: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{isoList₁}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{xs}\;\mathbin{:}\;\Conid{List}\;\Varid{a}\mskip1.5mu\}\;\Varid{→}\;\Varid{toList}\;(\Varid{fromList}\;\Varid{xs})\;\Varid{≡}\;\Varid{xs}{}\<[E]%
+\\
+\>[B]{}\Varid{isoList₁}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{[]}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\Varid{isoList₁}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{x}\;\Varid{∷}\;\Varid{xs}\mskip1.5mu\}\;\mathrel{=}\;\Varid{cong}\;(\Varid{\char95 ∷\char95 }\;\Varid{x})\;\Varid{isoList₁}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{isoList₂}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{xs}\;\mathbin{:}\;\Conid{List'}\;\Varid{a}\mskip1.5mu\}\;\Varid{→}\;\Varid{fromList}\;(\Varid{toList}\;\Varid{xs})\;\Varid{≡}\;\Varid{xs}{}\<[E]%
+\\
+\>[B]{}\Varid{isoList₂}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{`μ}\;(\Varid{inj₁}\;\Varid{x})\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\Varid{isoList₂}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{`μ}\;(\Varid{inj₂}\;(\Varid{fst}\;\Varid{,}\;\Varid{snd}))\mskip1.5mu\}\;\mathrel{=}\;\Varid{cong}\;(\Varid{`μ}\;\Varid{∘}\;\Varid{inj₂}\;\Varid{∘}\;\Varid{\char95 ,\char95 }\;\Varid{fst})\;\Varid{isoList₂}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Using such isomorphisms, we can automatically derive functionality for datatypes that can be captured using pattern functors. We will see an example of this in section \ref{preliminary}, where we will derive enumeration of inhabitants for arbitrary pattern functors. 
 
 \subsubsection{Ornaments}
 
@@ -438,7 +615,7 @@ Ty : Ar\ op \rightarrow I
 \end{cases}
 \end{equation*}
 
-\textbf{Example}: the signature for the $Vec$ type, given by $\Sigma_{Vec}(\mathbb{N})$. Recall the definition of the $Vec$ datatype in listing \ref{vecdef}. It has the following relation between index and operations: 
+\paragraph{Example} Let us consider the signature for the $Vec$ type, given by $\Sigma_{Vec}(\mathbb{N})$. Recall the definition of the $Vec$ datatype in listing \ref{vecdef}. It has the following relation between index and operations: 
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -451,7 +628,7 @@ Ty : Ar\ op \rightarrow I
 \ColumnHook
 \end{hscode}\resethooks
 
-If the index is $zero$, we have only the unary constructor $[]$ at our disposal, hence \texttt{Op-vec zero = top}. If the index is $suc n$, the number of possible constructions for $Vec$ corresponds to the set of inhabitants of its element type, hence we say that \texttt{Op-vec (suc n) = a}. 
+If the index is $zero$, we have only the unary constructor $[]$ at our disposal, hence \texttt{Op-vec zero = top}. If the index is $suc\ n$, the number of possible constructions for $Vec$ corresponds to the set of inhabitants of its element type, hence we say that \texttt{Op-vec (suc n) = a}. 
 
 The $[]$ constructor has no recursive argument, so its arity is $\bot$. Similarly, $cons\ a$ takes one recursive argument, so its arity is $\top$:  
 
@@ -481,7 +658,7 @@ The definition of $::$ dictates that if the index is equal to $suc\ n$, the inde
 
 This defines the signature for $Vec$: $\Sigma_{Vec} \triangleq \texttt{Op-vec} \triangleleft^\texttt{Ty-vec} \texttt{Ar-vec}$. 
 
-\begin{figure} \hrulefill
+\begin{figure}[h] \hrulefill
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -692,7 +869,7 @@ Below is a bit of Agda code:
 \end{figure}
 
 
-\section{Preliminary results}
+\section{Preliminary results}\label{preliminary}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
 

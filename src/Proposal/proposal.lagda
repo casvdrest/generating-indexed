@@ -99,9 +99,30 @@ studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2
 
 \subsubsection{Dependent Type Theory}
 
-\subsubsection{The Curry-Howard Correspondence}
+Dependent type theory extends a type theory with the possiblity of defining types that depend on values. In addition to familiar constructs, such as the unit type ($\top$) and the empty type $\bot$, one can use so-called $\Pi$-types and $\Sigma$-types. $\Pi$-types capture the idea of dependent function types, that is, \textit{functions} whose output type may depent on the values of its input. Given some type $A$ and a family $P$ of types indexed by values of type $A$ (i.e. $P$ has type $A \rightarrow Type$), $\Pi$-types have the following definition: 
+
+\begin{equation*}
+\Pi_{(x : A)} P(x) \quad \equiv \quad (x : A) \rightarrow P(x) 
+\end{equation*}
+
+In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of which the type of the second value may depend on te first value of the pair. 
+
+\begin{equation*}
+\Sigma_{(x : A)} P(x) \quad \equiv \quad (x : A) \times P(x) 
+\end{equation*}
+
+The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification. 
 
 \subsubsection{Codata}
+
+Agda requires all functions to be total. This means that they are required to yield a result on all inputs in a \textit{finite} amount of time. This means that we cannot work with infinite structures in the same way as in Haskell. For example, the following is perfectly fine in Haskell: 
+
+\begin{code} 
+nats :: [Nat] 
+nats = Zero : map Suc nats
+\end{code}
+
+However, we cannot write the same definition for \texttt{nats} as an inhabitant of $\mathbb{List N}$ in Agda: 
 
 \subsection{Property Based Testing}
 
@@ -117,9 +138,71 @@ If we desire to abstract over the structure of datatypes, we need a suitable typ
 
 The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. Roughly, this class consists of ADT's in haskell, though mutual recursion is not accounted for. 
 
-Any value that lives in the induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. 
+Any value that lives in the induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. We can define a datatype in agda that captures these values: 
 
+\begin{code}
+data Reg : Set →  Set where
+    U    : Reg ⊥
+    K    : (a : Set) → Reg a
+    _⊕_  : ∀ {a : Set} → Reg a → Reg a → Reg a
+    _⊗_  : ∀ {a : Set} → Reg a → Reg a → Reg a
+    I    : Reg ⊥
+\end{code}
 
+Pattern functors, i.e. values of the $Reg$ datatype, can be interpreted as types. Inhabitants of the interpretation of a pattern functor correspond to the inhabitants of the type that is represented by said pattern functor. We use the following interpretation function: 
+
+\begin{code}
+⟦_⟧ : Reg → Set → Set
+⟦ U            ⟧ r = ⊤
+⟦ K a          ⟧ r = a
+⟦ reg₁ ⊕ reg₂  ⟧ r = ⟦ reg₁ ⟧ r ⊎ ⟦ reg₂ ⟧ r
+⟦ reg₁ ⊗ reg₂  ⟧ r = ⟦ reg₁ ⟧ r × ⟦ reg₂ ⟧ r 
+⟦ I            ⟧ r = r
+\end{code}
+
+Notice that recursive positions are left explicit. This means that we require an appropriate fixed-point combinator to find a pattern functor's representation in \textbf{Set}. 
+
+\begin{code}
+data μ (f : Reg) : Set where
+  `μ : ⟦ f ⟧ (μ f) → μ f
+\end{code}
+
+\paragraph{Example} Consider the pattern functor corresponding to the definition of $List$: 
+
+\begin{code}
+List' : Set → Set
+List' a = μ (U ⊕ (K a ⊗ I))
+\end{code}
+
+Notice that this pattern functor denotes a choice between a unary constructor ($[]]$), and a constructor that takes a constant of type $a$ and a recursive positions as arguments ($::$). We can define conversion functions between the standard $List$ type, and the interpretation of our pattern functor: 
+
+\begin{code}
+fromList : ∀ {a : Set} → List a → List' a
+fromList [] = `μ (inj₁ tt)
+fromList (x ∷ xs) = `μ (inj₂ (x , fromList xs))
+\end{code}
+
+\begin{code}
+toList : ∀ {a : Set} → List' a → List a
+toList (`μ (inj₁ tt)) = []
+toList (`μ (inj₂ (fst , snd))) = fst ∷ toList snd
+\end{code}
+
+With these definitions, it is now trivial to show that there is indeed an isomorphism between the two: 
+
+\begin{code}
+isoList₁ : ∀ {a : Set} {xs : List a} → toList (fromList xs) ≡ xs
+isoList₁ {xs = []} = refl
+isoList₁ {xs = x ∷ xs} = cong (_∷_ x) isoList₁
+\end{code}
+
+\begin{code}
+isoList₂ : ∀ {a : Set} {xs : List' a} → fromList (toList xs) ≡ xs
+isoList₂ {xs = `μ (inj₁ x)} = refl
+isoList₂ {xs = `μ (inj₂ (fst , snd))} = cong (`μ ∘ inj₂ ∘ _,_ fst) isoList₂
+\end{code}
+
+Using such isomorphisms, we can automatically derive functionality for datatypes that can be captured using pattern functors. We will see an example of this in section \ref{preliminary}, where we will derive enumeration of inhabitants for arbitrary pattern functors. 
 
 \subsubsection{Ornaments}
 
@@ -148,7 +231,7 @@ Ty : Ar\ op \rightarrow I
 \end{cases}
 \end{equation*}
 
-\textbf{Example}: the signature for the $Vec$ type, given by $\Sigma_{Vec}(\mathbb{N})$. Recall the definition of the $Vec$ datatype in listing \ref{vecdef}. It has the following relation between index and operations: 
+\paragraph{Example} Let us consider the signature for the $Vec$ type, given by $\Sigma_{Vec}(\mathbb{N})$. Recall the definition of the $Vec$ datatype in listing \ref{vecdef}. It has the following relation between index and operations: 
 
 \begin{code}
 Op-vec : ∀ {a : Set} → ℕ → Set
@@ -156,7 +239,7 @@ Op-vec zero = ⊤
 Op-vec {a} (suc n) = a
 \end{code} 
 
-If the index is $zero$, we have only the unary constructor $[]$ at our disposal, hence \texttt{Op-vec zero = top}. If the index is $suc n$, the number of possible constructions for $Vec$ corresponds to the set of inhabitants of its element type, hence we say that \texttt{Op-vec (suc n) = a}. 
+If the index is $zero$, we have only the unary constructor $[]$ at our disposal, hence \texttt{Op-vec zero = top}. If the index is $suc\ n$, the number of possible constructions for $Vec$ corresponds to the set of inhabitants of its element type, hence we say that \texttt{Op-vec (suc n) = a}. 
 
 The $[]$ constructor has no recursive argument, so its arity is $\bot$. Similarly, $cons\ a$ takes one recursive argument, so its arity is $\top$:  
 
@@ -176,7 +259,7 @@ Ty-vec (suc n) a tt = n
 
 This defines the signature for $Vec$: $\Sigma_{Vec} \triangleq \texttt{Op-vec} \triangleleft^\texttt{Ty-vec} \texttt{Ar-vec}$. 
 
-\begin{figure} \hrulefill
+\begin{figure}[h] \hrulefill
 \begin{code}
 data Vec {a} (A : Set a) : ℕ → Set a where
   []  : Vec A zero
@@ -304,7 +387,7 @@ data _[_↦_] : Env → Id → Ty → Set where
 \end{figure}
 
 
-\section{Preliminary results}
+\section{Preliminary results}\label{preliminary}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
 

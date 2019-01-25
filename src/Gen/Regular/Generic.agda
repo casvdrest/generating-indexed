@@ -1,3 +1,4 @@
+
 {-# OPTIONS --type-in-type #-}
 
 open import src.Gen.Base
@@ -6,13 +7,17 @@ open import Data.Nat
 open import Data.Unit
 open import Data.Empty
 open import Data.Bool
+open import Data.List
 
 open import Category.Monad
 
-open import Data.Product using (_×_; _,_)
+open import Data.Product using (_×_; _,_; Σ; Σ-syntax)
 open import Data.Sum
 
 open import Function
+
+open import Codata.Thunk using (Thunk; force)
+open import Size
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
@@ -20,26 +25,23 @@ module src.Gen.Regular.Generic where
 
   open RawMonad ⦃...⦄ using (_⊛_; pure)
 
-  data Reg : Set →  Set where
-    U   : Reg ⊥
-    K   : (a : Set) → Reg a
-    _⊕_ : ∀ {a : Set} → Reg a → Reg a → Reg a
-    _⊗_ : ∀ {a : Set} → Reg a → Reg a → Reg a
-    I   : Reg ⊥
+  data Reg : Set where
+    U   : Reg
+    _⊕_ : Reg → Reg → Reg
+    _⊗_ : Reg → Reg → Reg
+    I   : Reg
 
-  ⟦_⟧ : ∀ {a : Set} → Reg a → Set → Set
+  ⟦_⟧ : Reg → Set → Set
   ⟦ U           ⟧ r = ⊤
-  ⟦ K a         ⟧ r = a
   ⟦ reg₁ ⊕ reg₂ ⟧ r = ⟦ reg₁ ⟧ r ⊎ ⟦ reg₂ ⟧ r
   ⟦ reg₁ ⊗ reg₂ ⟧ r = ⟦ reg₁ ⟧ r × ⟦ reg₂ ⟧ r 
   ⟦ I           ⟧ r = r
   
-  data μ {a : Set} (f : Reg a) : Set where
+  data μ (f : Reg) : Set where
     `μ : ⟦ f ⟧ (μ f) → μ f
 
-  mapᵣ : ∀ {a b c : Set} → (f : Reg c) → (a → b) → ⟦ f ⟧ a → ⟦ f ⟧ b
+  mapᵣ : ∀ {a b : Set} → (f : Reg) → (a → b) → ⟦ f ⟧ a → ⟦ f ⟧ b
   mapᵣ U f tt = tt
-  mapᵣ (K x) f i = i
   mapᵣ (pf₁ ⊕ pf₂) f (inj₁ x) = inj₁ (mapᵣ pf₁ f x)
   mapᵣ (pf₁ ⊕ pf₂) f (inj₂ y) = inj₂ (mapᵣ pf₂ f y)
   mapᵣ (pf₁ ⊗ pf₂) f (fst , snd) = mapᵣ pf₁ f fst , mapᵣ pf₂ f snd
@@ -83,13 +85,53 @@ module src.Gen.Regular.Generic where
   isoℕ₂ {`μ (inj₁ x)} = refl
   isoℕ₂ {`μ (inj₂ y)} = cong (`μ ∘ inj₂) isoℕ₂
 
-  gen𝔾 : ∀ {a : Set} → (g : ⟪ 𝔾 a ⟫) → (f : Reg a) → ⟪ 𝔾 (μ f) ⟫
-  gen𝔾 k U        μ = ⦇ (`μ tt) ⦈
-  gen𝔾 k (K x)    μ = ⦇ `μ  ⟨ k ⟩ ⦈
-  gen𝔾 k (f ⊕ g) μ = ⦇ {!!} ⦈ ∥ {!!}
-  gen𝔾 k (f ⊗ g) μ = {!!}
-  gen𝔾 k I        μ = ⦇ `μ μ ⦈
+  {-
+  ListF : Set → Set
+  ListF a = μ (U ⊕ (K a ⊗ I))
 
-  
+  fromList : ∀ {a : Set} → List a → ListF a
+  fromList [] = `μ (inj₁ tt)
+  fromList (x ∷ xs) = `μ (inj₂ (x , fromList xs))
+
+  toList : ∀ {a : Set} → ListF a → List a
+  toList (`μ (inj₁ tt)) = []
+  toList (`μ (inj₂ (fst , snd))) = fst ∷ toList snd
+
+  isoList₁ : ∀ {a : Set} {xs : List a} → toList (fromList xs) ≡ xs
+  isoList₁ {xs = []} = refl
+  isoList₁ {xs = x ∷ xs} = cong (_∷_ x) isoList₁
+
+  isoList₂ : ∀ {a : Set} {xs : ListF a} → fromList (toList xs) ≡ xs
+  isoList₂ {xs = `μ (inj₁ x)} = refl
+  isoList₂ {xs = `μ (inj₂ (fst , snd))} = cong (`μ ∘ inj₂ ∘ _,_ fst) isoList₂
+  -}
+
+  ugen : ∀ {n : ℕ} {a : Set} → 𝔾 (⟦ U ⟧ a) n
+  ugen = pure tt
+
+  igen : ∀ {n : ℕ} {a : Set} {f : Reg} → 𝔾 (⟦ f ⟧ a) n →
+         𝔾 (⟦ f ⟧ a) n
+  igen μ = μ
+
+  ⊕gen : ∀ {n : ℕ} {f g : Reg} {a : Set} →
+         𝔾 (⟦ f ⟧ a) n → 𝔾 (⟦ g ⟧ a) n →
+         𝔾 (⟦ f ⊕ g ⟧ a) n
+  ⊕gen f g = ⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈
+
+  ⊗gen : ∀ {n : ℕ} {f g : Reg} {a : Set} →
+         𝔾 (⟦ f ⟧ a) n → 𝔾 (⟦ g ⟧ a) n →
+         𝔾 (⟦ f ⊗ g ⟧ a) n
+  ⊗gen f g = ⦇ f , g ⦈
+
+  deriveGen : ∀ {f g : Reg} {n : ℕ}
+              → 𝔾 (⟦ g ⟧ (μ g)) n
+              → 𝔾 (⟦ f ⟧ (μ g)) n
+  deriveGen {U}      {g} rec = ugen {a = μ g}
+  deriveGen {f ⊕ f₁} {g} rec = ⊕gen {f = f} (deriveGen rec) (deriveGen rec)
+  deriveGen {f ⊗ f₁} {g} rec = ⊗gen {f = f} (deriveGen rec) (deriveGen rec)
+  deriveGen {I}      {g} rec = ⦇ `μ (igen {f = g} rec) ⦈
+
+  prop : Data.List.map (toBool ∘ `μ) (𝔾-run (deriveGen {f = U ⊕ U}) 5) ≡ false ∷ true ∷ []
+  prop = refl
 
   
