@@ -2,12 +2,13 @@
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
-open import Data.Product using (Σ; _,_; Σ-syntax)
+open import Data.Product using (Σ; _,_; Σ-syntax; _×_)
 open import Data.Sum
 open import Data.Nat
 open import Data.Bool
 open import Data.Unit
 open import Data.List
+open import Data.Maybe
 
 open import Category.Monad
 
@@ -134,10 +135,94 @@ module src.Gen.Regular.Isomorphism where
     List-Regular : ∀ {a : Set} ⦃ _ : Regular a ⦄ → Regular (List a)
     List-Regular {a} = record { W = ListF (const (isoGen a)) , List≅ListF }
 
-  prop2 : isoGen (List Bool) (5 , refl)
-    ≡ [] ∷ (false ∷ []) ∷ (false ∷ false ∷ []) ∷ (false ∷ false ∷ false ∷ []) ∷
-      (false ∷ false ∷ true ∷ []) ∷ (false ∷ true ∷ []) ∷ (false ∷ true ∷ false ∷ []) ∷
-      (false ∷ true ∷ true ∷ []) ∷ (true ∷ []) ∷ (true ∷ false ∷ []) ∷
-      (true ∷ false ∷ false ∷ []) ∷ (true ∷ false ∷ true ∷ []) ∷ (true ∷ true ∷ []) ∷
-      (true ∷ true ∷ false ∷ []) ∷ (true ∷ true ∷ true ∷ []) ∷ []
-  prop2 = refl
+
+  _⊎F_ : ∀ {a b : Set} → (g₁ : ⟪ 𝔾 a ⟫) → (g₂ : ⟪ 𝔾 b ⟫) → Reg
+  _⊎F_ {a} {b} g₁ g₂ = K (a , g₁) ⊕ K (b , g₂)
+
+  ⊎→⊎F : ∀ {a b} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → a ⊎ b → μ (g₁ ⊎F g₂)
+  ⊎→⊎F (inj₁ x) = `μ (inj₁ x)
+  ⊎→⊎F (inj₂ y) = `μ (inj₂ y)
+
+  ⊎F→⊎ : ∀ {a b} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → μ (g₁ ⊎F g₂) → a ⊎ b
+  ⊎F→⊎ (`μ (inj₁ x)) = inj₁ x
+  ⊎F→⊎ (`μ (inj₂ y)) = inj₂ y
+
+  iso⊎ : ∀ {a b : Set} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → {x : a ⊎ b} → ⊎F→⊎ {g₁ = g₁} {g₂ = g₂} (⊎→⊎F x) ≡ x
+  iso⊎ {x = inj₁ x} = refl
+  iso⊎ {x = inj₂ y} = refl
+
+  iso⊎F : ∀ {a b : Set} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → {y : μ (g₁ ⊎F g₂)} → ⊎→⊎F (⊎F→⊎ y) ≡ y
+  iso⊎F {y = `μ (inj₁ x)} = refl
+  iso⊎F {y = `μ (inj₂ y)} = refl
+
+  ⊎≅⊎F : ∀ {a b : Set} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → (a ⊎ b) ≅ (μ (g₁ ⊎F g₂))
+  ⊎≅⊎F = record { from = ⊎→⊎F
+                ; to   = ⊎F→⊎
+                ; iso₁ = iso⊎
+                ; iso₂ = iso⊎F
+                }
+
+  instance
+    ⊎-Regular : ∀ {a b : Set} ⦃ _ : Regular a ⦄ ⦃ _ : Regular b ⦄ → Regular (a ⊎ b)
+    ⊎-Regular {a} {b} = record { W = (const (isoGen a) ⊎F const (isoGen b)) , ⊎≅⊎F }
+
+
+  _×F_ : ∀ {a b : Set} → (g₁ : ⟪ 𝔾 a ⟫) → (g₂ : ⟪ 𝔾 b ⟫) → Reg
+  _×F_ {a} {b} g₁ g₂ = K (a , g₁) ⊗ K (b , g₂)
+
+  ×→×F : ∀ {a b} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → a × b → μ (g₁ ×F g₂)
+  ×→×F (fst , snd) = `μ (fst , snd)
+  
+  ×F→× : ∀ {a b} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → μ (g₁ ×F g₂) → a × b
+  ×F→× (`μ (fst , snd)) = fst , snd
+
+  iso× : ∀ {a b : Set} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → {x : a × b} → ×F→× {g₁ = g₁} {g₂ = g₂} (×→×F x) ≡ x
+  iso× {x = fst , snd} = refl
+
+  iso×F : ∀ {a b : Set} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → {y : μ (g₁ ×F g₂)} → ×→×F (×F→× y) ≡ y
+  iso×F {y = `μ x} = refl
+
+  ×≅×F : ∀ {a b : Set} {g₁ : ⟪ 𝔾 a ⟫} {g₂ : ⟪ 𝔾 b ⟫} → (a × b) ≅ (μ (g₁ ×F g₂))
+  ×≅×F  {g₁ = g₁} {g₂ = g₂} = record { from = ×→×F
+                                     ; to   = ×F→×
+                                     ; iso₁ = iso× {g₁ = g₁} {g₂ = g₂}
+                                     ; iso₂ = iso×F
+                                     }
+
+  instance
+    ×-Regular : ∀ {a b : Set} ⦃ _ : Regular a ⦄ ⦃ _ : Regular b ⦄ → Regular (a × b)
+    ×-Regular {a} {b} = record { W = (const (isoGen a) ×F const (isoGen b)) , ×≅×F }
+
+  MaybeF : ∀ {a : Set} → ⟪ 𝔾 a ⟫ → Reg
+  MaybeF {a} g = K (a , g) ⊕ U
+
+  Maybe→MaybeF : ∀ {a : Set} {g : ⟪ 𝔾 a ⟫} → Maybe a → μ (MaybeF g)
+  Maybe→MaybeF (just x) = `μ (inj₁ x)
+  Maybe→MaybeF nothing = `μ (inj₂ tt)
+
+  MaybeF→Maybe : ∀ {a : Set} {g : ⟪ 𝔾 a ⟫} → μ (MaybeF g) → Maybe a
+  MaybeF→Maybe (`μ (inj₁ x)) = just x
+  MaybeF→Maybe (`μ (inj₂ tt)) = nothing
+
+  isoMaybe : ∀ {a : Set} {g : ⟪ 𝔾 a ⟫} {m : Maybe a} → MaybeF→Maybe {g = g} (Maybe→MaybeF m) ≡ m
+  isoMaybe {m = just x} = refl
+  isoMaybe {m = nothing} = refl
+
+  isoMaybeF : ∀ {a : Set} {g : ⟪ 𝔾 a ⟫} {m : μ (MaybeF g)} → Maybe→MaybeF (MaybeF→Maybe m) ≡ m
+  isoMaybeF {m = `μ (inj₁ x)} = refl
+  isoMaybeF {m = `μ (inj₂ y)} = refl
+
+  Maybe≅MaybeF : ∀ {a : Set} {g : ⟪ 𝔾 a ⟫} → Maybe a ≅ μ (MaybeF g)
+  Maybe≅MaybeF = record { from = Maybe→MaybeF
+                        ; to   = MaybeF→Maybe 
+                        ; iso₁ = isoMaybe
+                        ; iso₂ = isoMaybeF
+                        }
+
+  instance
+    Maybe-Regular : ∀ {a : Set} ⦃ _ : Regular a ⦄ → Regular (Maybe a)
+    Maybe-Regular {a} = record { W = MaybeF (const (isoGen a)) , Maybe≅MaybeF }
+
+  
+
+  
