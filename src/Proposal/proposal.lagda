@@ -113,16 +113,9 @@ In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of which the type
 
 The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification. 
 
-\subsubsection{Codata}
+\subsubsection{Codata and Sized Types}
 
-Agda requires all functions to be total. This means that they are required to yield a result on all inputs in a \textit{finite} amount of time. This means that we cannot work with infinite structures in the same way as in Haskell. For example, the following is perfectly fine in Haskell: 
-
-\begin{code} 
-nats :: [Nat] 
-nats = Zero : map Suc nats
-\end{code}
-
-However, we cannot write the same definition for \texttt{nats} as an inhabitant of $\mathbb{List N}$ in Agda: 
+Agda requires all functions to be total, where total means that they should be defined on any possible input, and give a result in a finite amount of time. The latter means that Agda is equipped with a termination checker that tries to prove that functions terminate. It is implied by undecidability of the halting problem that such a checker cannot be both sound and complete. Agda's termination checker is sound, meaning that there are functions that terminate which get rejected. This means that we cannot represent infinite structures in the same way as in haskell. For example, we might use the following definition in Haskell: \textt{nats = 0 : map (+1) nats}. A similar definition in Agda will get rejected by the termination checker. 
 
 \subsection{Property Based Testing}
 

@@ -222,7 +222,3 @@ module src.Gen.Regular.Isomorphism where
   instance
     Maybe-Regular : ∀ {a : Set} ⦃ _ : Regular a ⦄ → Regular (Maybe a)
     Maybe-Regular {a} = record { W = MaybeF (const (isoGen a)) , Maybe≅MaybeF }
-
-  
-
-  

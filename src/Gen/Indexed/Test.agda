@@ -65,7 +65,7 @@ module src.Gen.Indexed.Test where
 
   ------------------------------------------ L A M B D A  C A L C U L U S ----------------------------------------
 
-  λ-test1 : 𝔾-runᵢ λ-calculus (`ℕ `→ `ℕ , 0 ↦ `ℕ ∷ ∅) 4
+  λ-test1 : 𝔾-runᵢ λ-calculus ((`ℕ `→ `ℕ) , 0 ↦ `ℕ ∷ ∅) 4
     ≡ (Λ 1 ⇒ $ 1 , ABS (VAR TOP)) ∷
       (let` 1 := $ 0 in` Λ 2 ⇒ $ 2 , LET (VAR TOP) (ABS (VAR TOP))) ∷
       (Λ 1 ⇒ let` 2 := $ 1 in` $ 2 , ABS (LET (VAR TOP) (VAR TOP))) ∷
