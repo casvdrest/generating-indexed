@@ -149,3 +149,5 @@ module src.Gen.Properties where
                → ⦇ C f g ⦈ ↝ C x y
   ⊛-complete ((n , refl) , p1) ((.n , refl) , p2) =
     (n , refl) , list-ap-constr p1 p2
+
+  

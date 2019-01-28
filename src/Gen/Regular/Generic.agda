@@ -57,6 +57,9 @@ module src.Gen.Regular.Generic where
          𝔾 (⟦ f ⟧ a) n
   igen μ = μ
 
+  kgen : ∀ {n : ℕ} {a b : Set} {g : ⟪ 𝔾 b ⟫} → 𝔾 (⟦ K (b , g) ⟧ a) n
+  kgen {g = g} = ⟨ g ⟩
+
   ⊕gen : ∀ {n : ℕ} {f g : Reg} {a : Set} →
          𝔾 (⟦ f ⟧ a) n → 𝔾 (⟦ g ⟧ a) n →
          𝔾 (⟦ f ⊕ g ⟧ a) n
@@ -74,4 +77,4 @@ module src.Gen.Regular.Generic where
   deriveGen {f ⊕ f₁} {g} rec = ⊕gen {f = f} {g = f₁} (deriveGen {f = f} rec) (deriveGen {f = f₁} rec)
   deriveGen {f ⊗ f₁} {g} rec = ⊗gen {f = f} {g = f₁} (deriveGen {f = f} rec) (deriveGen {f = f₁} rec)
   deriveGen {I}      {g} rec = ⦇ `μ (igen {f = g} rec) ⦈
-  deriveGen {K (a , gen)} {g} {n} rec = ⟨ gen ⟩
+  deriveGen {K (a , gen)} {g} {n} rec = kgen {a = μ g} {b = a} {g = gen}

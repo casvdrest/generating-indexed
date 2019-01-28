@@ -36,6 +36,9 @@ module src.Gen.Regular.Isomorphism where
 
   open Regular ⦃...⦄
 
+  isoGen : ∀ {n : ℕ} → (a : Set) → ⦃ p : Regular a ⦄ → 𝔾 a n
+  isoGen a ⦃ record { W = f , iso } ⦄ = ⦇ (_≅_.to iso ∘ `μ) ⟨ deriveGen {f = f} {g = f} ⟩ ⦈
+
   ℕF : Reg
   ℕF = U ⊕ I
 
@@ -95,9 +98,6 @@ module src.Gen.Regular.Isomorphism where
   instance 
     Bool-Regular : Regular Bool
     Bool-Regular = record { W = BoolF , Bool≅BoolF }
-
-  isoGen : ∀ {n : ℕ} → (a : Set) → ⦃ p : Regular a ⦄ → 𝔾 a n
-  isoGen a ⦃ record { W = f , iso } ⦄ = ⦇ (_≅_.to iso ∘ `μ) ⟨ deriveGen {f = f} {g = f} ⟩ ⦈
 
   prop : 𝔾-run (const (isoGen Bool)) 5 ≡ false ∷ true ∷ []
   prop = refl
