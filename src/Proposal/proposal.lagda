@@ -586,15 +586,74 @@ Given a value of type $Regular\ a$, we can now derive a generator for $a$ by der
 
 \subsection{Proving Correctness of Generators}
 
+Since generators are essentially an embellishment of the $List$ monad, we can reasonably expect them to behave according to our expectations. However, it would be better to prove that generators behave as intended. Before we can start reasoning about generators, we need to formulate our properties of interest:
 
+\paragraph{Productivity} We say that a generator $g$ \textit{produces} some value $x$ if there exists some $n \in \mathbb{N}$ such that $x$ is an element of $g n$. We denote this by $g \leadsto x$. Below is the Agda formulation for this property: 
+
+\begin{code}
+_↝_ : ∀ {a : Set} → (∀ {n : ℕ} → 𝔾 a n) → a → Set
+f ↝ x = ∃[ n ] (x ∈ f (n , refl))
+\end{code}
+
+\paragraph{Completeness} A generator $g : \mathbb{G}\ a\ n$ is complete when for all $x : a$, $g \leadsto x$. Informally, this means that a complete generator will eventually produce any inhabitant of the type it generates, provided it is given a large enough depth bound. We can formulate this in Adga as follows: 
+
+\begin{code}
+Complete : ∀ {a : Set} → (∀ {n : ℕ} → 𝔾 a n) → Set
+Complete {a} f = ∀ {x : a} → f ↝ x
+\end{code}
+
+\paragraph{Equivalence} Informally, two generators of type $\mathbb{G}\ a\ n$ can be considered equivalent if they produce the same elements. We formulate this as a bi-implication between productivity proofs, i.e. for all $x : a$, $g_1 \leadsto x$ if and only if $g_2 \leadsto x$. In Agda: 
+
+\begin{code}
+_∼_ : ∀ {a} (g₁ g₂ : ∀ {n} → 𝔾 a n) → Set
+g₁  ∼  g₂ = (∀ {x} → g₁ ↝ x → g₂ ↝ x) × (∀ {x} → g₂ ↝ x → g₁ ↝ x)
+\end{code}
+
+Notice that equivalence follows trivially from completeness, i.e. if two generators produce the same type, and they are both complete, then they are equivalent: 
+
+\begin{code}
+Complete→eq :  ∀ {a} {g₁ g₂ : ∀ {n} → 𝔾 a n}
+               → Complete g₁ → Complete g₂
+               → g₁ ∼ g₂
+Complete→eq p₁ p₂ = (λ _ → p₂) , (λ _ → p₁)
+\end{code}
 
 \subsubsection{Combinator Correctness}
 
+A natural starting point is to prove that properties are preserved by combinators. This section is by no means intended to exhaustively enumerate all possible combinations of combinators and properties and prove them correct, but rather serves to illustrate the general structure which can be used to construct such proofs. 
+
+We take productivity of choice as an example, hence our goal is to show that if, for some generator $g_1 : \mathbb{G}\ a\ n$ and $x : a$, $g_1 \leadsto x$, then for all generators $g_2$ we have that $(g_1 \parallel g_2) \leadsto x$. Since the $\parallel$-combinator is defined in terms of $merge$, we first prove a similar property over the $merge$ function. 
+
+\begin{code}
+merge-cong :  ∀ {ℓ} {a : Set ℓ} {xs ys : List a} {x y : a}
+              → y ∈ merge xs ys
+              → y ∈ merge (x ∷ xs) ys
+merge-cong = {!!} -- omitted
+\end{code}
+
+\begin{code}
+merge-complete-left :  ∀ {ℓ} {a : Set ℓ} {xs ys : List a} {x : a}
+                       → x ∈ xs
+                       → x ∈ merge xs ys
+merge-complete-left (here)                   = here
+merge-complete-left {xs = _ ∷ xs} (there p)  = 
+  merge-cong {xs = xs} (merge-complete-left p)
+\end{code}
+
+The definition for \textit{merge-cong} is omitted for conciseness. Armed with the above lemma that asserts left-completeness of the $merge$ function, we can set out to prove left-completeness for the $\parallel$-combinator. The key insight here is that the depth bound at which $x$ occurs does not change, thus we can sipmly reuse it, and lift the above lemma to the generator type: 
+
+\begin{code}
+∥-complete-left :  ∀ {a : Set} {x : a} {f g : ∀ {n : ℕ} → 𝔾 a n}
+                   → f ↝ x
+                   → (f ∥ g) ↝ x
+∥-complete-left (n , p) = n , merge-complete-left p
+\end{code}
+
+We can construct a similar proof for products by first proving similar properties about lists, and lifting them to the generator type. Proofs about the productivity of combinators can, in a similar fashion, consequently be lifted to reason about completeness. This allows us to show that, for example, if the two operands of a choice are both complete, then the resulting generator is complete as well. 
+
 \subsubsection{Correctness of Derived Generators}
 
-\subsection{Generator Equivalence}
-
-\subsection{Generalization to Generic Enumeration of Indexed Types}
+\subsection{Generalization to Indexed Types}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
 

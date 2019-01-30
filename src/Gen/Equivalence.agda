@@ -21,5 +21,3 @@ module src.Gen.Equivalence where
                 → g₁ ∼ g₂
   Complete→eq p₁ p₂ =
     (λ _ → p₂) , λ _ → p₁
-
-  
