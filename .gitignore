@@ -6,6 +6,6 @@ colloqium/
 #*
 '#*
 src/Proposal/*
-!src/Proposal/*.bib
-!src/Proposal/*.lagda
-!src/Proposal/*.pdf
+# !src/Proposal/*.bib
+# !src/Proposal/*.lagda
+# !src/Proposal/*.pdf
