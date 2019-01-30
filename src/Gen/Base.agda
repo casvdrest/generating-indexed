@@ -4,7 +4,7 @@ open import Level using (_⊔_)
 open import Data.Nat hiding (_⊔_)
 open import Data.Bool
 open import Data.List using (List; map; [_]; concatMap; []; _∷_; _++_)
-open import Data.Product using (Σ; Σ-syntax; _,_)
+open import Data.Product using (Σ; Σ-syntax; _,_; _×_)
 
 open import Category.Functor
 open import Category.Applicative
@@ -86,14 +86,13 @@ module src.Gen.Base where
   choiceᵢ : ∀ {i : Set} {a : i → Set} {n : ℕ} → List (𝔾ᵢ a n) → 𝔾ᵢ a n
   choiceᵢ xs i = choice (map (λ x → x i) xs)
 
-  fix : ∀ {a : Set} → (m : ℕ) → ⟪ 𝔾 a ⟫ → 𝔾 a m
+  fix : ∀ {a : Set} → (n : ℕ) → ⟪ 𝔾 a ⟫ → 𝔾 a n
   fix zero f (.0 , refl) = []
-  fix (suc m) f (.suc m , refl) = f {m} (fix m f) (m , refl)
+  fix (suc n) f (.suc n , refl) = f {n} (fix n f) (n , refl)
 
   fixᵢ : ∀ {i : Set} {a : i → Set} → (m : ℕ) → ⟪ 𝔾ᵢ a ⟫ → 𝔾ᵢ a m
   fixᵢ zero f i (.0 , refl) = []
   fixᵢ (suc m) f i (.(suc m) , refl) = f {m} (fixᵢ m f) i (m , refl)
-
 
   ⟨_⟩ : ∀ {a : Set} {n : ℕ} → ⟪ 𝔾 a ⟫ → 𝔾 a n
   ⟨_⟩ {n = n} = fix n
@@ -106,7 +105,6 @@ module src.Gen.Base where
 
   𝔾-runᵢ : ∀ {i : Set} {a : i → Set} → ⟪ 𝔾ᵢ a ⟫ → (x : i) → ℕ → List (a x)
   𝔾-runᵢ f i n = fixᵢ n f i (n , refl)
-
 
   Σ-map : ∀ {a : Set} {P Q : a → Set}
           → (∀ {y : a} → (P y → Q y))
@@ -137,7 +135,7 @@ module src.Gen.Base where
   (xs 〗) μ = choiceᵢ (map (λ x → x μ) xs) 
 
   _⋎_ : ∀ {i : Set} {a : i → Set} → List ⟪ 𝔾ᵢ a ⟫ → ⟪ 𝔾ᵢ a ⟫ → List ⟪ 𝔾ᵢ a ⟫
-  xs ⋎ x = x ∷ xs 
+  xs ⋎ x = x ∷ xs
 
   -- TODO : mailing list over omega monad
   --        refactoren met verschillende implementaties

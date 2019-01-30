@@ -29,6 +29,14 @@ module src.Gen.Regular.Properties where
 
   ------ ⊕ combinator (Coproduct) ------
 
+  constr-preserves-elem : ∀ {a b : Set} {f : a → b}
+                            {g : Π ℕ (𝔾 a)} {x : a}
+                          → g ↝ x
+                          ---------------------------
+                          → (λ n → ⦇ f (g n) ⦈) ↝ f x
+  constr-preserves-elem {f = f} (p , elem) =
+    p , list-ap-complete {fs = f ∷ []} here elem
+
   
   ⊕gen-complete-left : ∀ {n : ℕ} {a : Set} {f g : Reg}
                          {g₁ : Π ℕ (𝔾 (⟦ f ⟧ a))} {g₂ : Π ℕ (𝔾 (⟦ g ⟧ a))}
@@ -87,6 +95,6 @@ module src.Gen.Regular.Properties where
   complete {f = U} {g} {x} = ugen-complete
   complete {f = f ⊕ f₁} {g} {inj₁ x} = ⊕gen-complete-left complete
   complete {f = f ⊕ f₁} {g} {inj₂ y} = ⊕gen-complete-right complete
-  complete {f = f ⊗ f₁} {g} {x} = {!⊗gen-complete!}
+  complete {f = f ⊗ f₁} {g} {x} = {!!}
   complete {f = I} {g} {x} = igen-complete complete
   complete {f = K x₁} {g} {x} = kgen-complete complete

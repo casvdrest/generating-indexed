@@ -45,8 +45,8 @@ module src.Gen.Regular.Examples where
         ∥ ⦇ suc μ ⦈
 
   nats : ∀ {n : ℕ} → 𝔾 ℕ n
-  nats = ⦇ zero ⦈
-       ∥ (⦇ suc nats ⦈)
+  nats = ⦇ zero     ⦈
+       ∥ ⦇ suc nats ⦈
 
   nat' : ∀ {n : ℕ} → 𝔾 ℕ n
   nat' = isoGen ℕ

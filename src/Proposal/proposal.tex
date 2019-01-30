@@ -405,42 +405,9 @@ In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of which the type
 
 The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification. 
 
-\subsubsection{Codata}
+\subsubsection{Codata and Sized Types}
 
-Agda requires all functions to be total. This means that they are required to yield a result on all inputs in a \textit{finite} amount of time. This means that we cannot work with infinite structures in the same way as in Haskell. For example, the following is perfectly fine in Haskell: 
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{infinity}\;\Conid{::}\;\Conid{Nat}{}\<[E]%
-\\
-\>[B]{}\Varid{infinity}\;\mathrel{=}\;\Conid{Suc}\;\Varid{infinity}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{29}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{isSmaller}\;\Conid{::}\;\Conid{Nat}\;\to \;\Conid{Nat}\;\to \;\Conid{Bool}{}\<[E]%
-\\
-\>[B]{}\Varid{isSmaller}\;(\Conid{Suc}\;\Varid{n})\;{}\<[20]%
-\>[20]{}\Conid{Zero}\;{}\<[29]%
-\>[29]{}\mathrel{=}\;\Conid{False}{}\<[E]%
-\\
-\>[B]{}\Varid{isSmaller}\;\Conid{Zero}\;{}\<[20]%
-\>[20]{}(\Conid{Suc}\;\Varid{n})\;{}\<[32]%
-\>[32]{}\mathrel{=}\;\Conid{True}{}\<[E]%
-\\
-\>[B]{}\Varid{isSmaller}\;(\Conid{Suc}\;\Varid{n})\;{}\<[20]%
-\>[20]{}(\Conid{Suc}\;\Varid{m})\;{}\<[29]%
-\>[29]{}\mathrel{=}\;\Varid{isSmaller}\;\Varid{n}\;\Varid{m}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-
+Agda requires all functions to be total, where total means that they should be defined on any possible input, and give a result in a finite amount of time. The latter means that Agda is equipped with a termination checker that tries to prove that functions terminate. It is implied by undecidability of the halting problem that such a checker cannot be both sound and complete. Agda's termination checker is sound, meaning that there are functions that terminate which get rejected. This means that we cannot represent infinite structures in the same way as in haskell. For example, we might use the following definition in Haskell: \texttt{nats = 0 : map (+1) nats}. A similar definition in Agda will get rejected by the termination checker. 
 
 \subsection{Property Based Testing}
 
@@ -454,9 +421,9 @@ If we desire to abstract over the structure of datatypes, we need a suitable typ
 
 \subsubsection{Regular Datatypes}
 
-The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. Roughly, this class consists of ADT's in haskell, though mutual recursion is not accounted for. 
+The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. 
 
-Any value that lives in the induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. We can define a datatype in agda that captures these values: 
+Any value that lives in universe induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. We can define a datatype in agda that captures these values: 
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -489,7 +456,7 @@ Any value that lives in the induced by these combinators describes a regular dat
 \ColumnHook
 \end{hscode}\resethooks
 
-Pattern functors, i.e. values of the $Reg$ datatype, can be interpreted as types. Inhabitants of the interpretation of a pattern functor correspond to the inhabitants of the type that is represented by said pattern functor. We use the following interpretation function: 
+Pattern functors can be interpreted as types in such a way that inhabitants of the interpreted type correspond to inhabitants of the type that is represented by the functor.  
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -514,7 +481,7 @@ Pattern functors, i.e. values of the $Reg$ datatype, can be interpreted as types
 \ColumnHook
 \end{hscode}\resethooks
 
-Notice that recursive positions are left explicit. This means that we require an appropriate fixed-point combinator to find a pattern functor's representation in \textbf{Set}. 
+Notice that recursive positions are left explicit. This means that we require an appropriate fixed-point combinator: 
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -562,31 +529,7 @@ Notice that this pattern functor denotes a choice between a unary constructor ($
 \ColumnHook
 \end{hscode}\resethooks
 
-With these definitions, it is now trivial to show that there is indeed an isomorphism between the two: 
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{isoList₁}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{xs}\;\mathbin{:}\;\Conid{List}\;\Varid{a}\mskip1.5mu\}\;\Varid{→}\;\Varid{toList}\;(\Varid{fromList}\;\Varid{xs})\;\Varid{≡}\;\Varid{xs}{}\<[E]%
-\\
-\>[B]{}\Varid{isoList₁}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{[]}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
-\\
-\>[B]{}\Varid{isoList₁}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{x}\;\Varid{∷}\;\Varid{xs}\mskip1.5mu\}\;\mathrel{=}\;\Varid{cong}\;(\Varid{\char95 ∷\char95 }\;\Varid{x})\;\Varid{isoList₁}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{isoList₂}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{xs}\;\mathbin{:}\;\Conid{List'}\;\Varid{a}\mskip1.5mu\}\;\Varid{→}\;\Varid{fromList}\;(\Varid{toList}\;\Varid{xs})\;\Varid{≡}\;\Varid{xs}{}\<[E]%
-\\
-\>[B]{}\Varid{isoList₂}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{`μ}\;(\Varid{inj₁}\;\Varid{x})\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
-\\
-\>[B]{}\Varid{isoList₂}\;\{\mskip1.5mu \Varid{xs}\;\mathrel{=}\;\Varid{`μ}\;(\Varid{inj₂}\;(\Varid{fst}\;\Varid{,}\;\Varid{snd}))\mskip1.5mu\}\;\mathrel{=}\;\Varid{cong}\;(\Varid{`μ}\;\Varid{∘}\;\Varid{inj₂}\;\Varid{∘}\;\Varid{\char95 ,\char95 }\;\Varid{fst})\;\Varid{isoList₂}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-Using such isomorphisms, we can automatically derive functionality for datatypes that can be captured using pattern functors. We will see an example of this in section \ref{preliminary}, where we will derive enumeration of inhabitants for arbitrary pattern functors. 
+Using such isomorphisms, we can automatically derive functionality for datatypes that can be captured using pattern functors. We will see an example of this in section \ref{derivegen}, where we will derive enumeration of inhabitants for arbitrary pattern functors. 
 
 \subsubsection{Ornaments}
 
@@ -870,6 +813,304 @@ Below is a bit of Agda code:
 
 
 \section{Preliminary results}\label{preliminary}
+
+\subsection{Enumeration of Agda Types}
+
+We look at how to enumerate various datatypes in Agda, starting with simple examples such as $\mathbb{N}$ or $Bool$, and progressively working towards more complex data. The first question we encounter is what the result of an enumeration should be. The ovious answer is that $enumerate a$ should return something of type $List a$, containing all possible values of type $a$. This is however not possible, as $List$ in Agda can only represent a finite list, and many datatypes, such as $\mathbb{N}$ have an infinite number of inhabitants. To solve this, we may either use the $Codata$ functionality from the standard library, or index our result with some kind of metric that limits the number of solutions to a finite set. The latter approach is what is used by both \textit{SmallCheck}\cite{} and \textit{LeanCheck}\cite{}, enumerating values up to a certain depth or size. 
+
+We admit the same approach as the SmallCheck library, defining an enumerator/generator to be a function of type $\mathbb{N} \rightarrow List\ a$, where input argument signifies the maximum depth. By working with $List$, ensuring termination becomes a lot easier, since it is by definition a finite structure. Furthermore, proving properties about generators becomes more straightforward, as we can simply prove the desired properties about the $List$ type, and lift the result to our generator type. 
+
+\subsubsection{Basic Combinators}
+
+We can define a few basic combinators to allow composition of generators. 
+
+\paragraph{Constants} Generators can yield a constant value, e.g. $true$ for the $Bool$ type. Unary constructors have a recursive depth of zero, so we simply return a singleton list: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{𝔾-pure}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{n}\;\mathbin{:}\;\Conid{ℕ}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Conid{𝔾-pure}\;\Varid{x}\;\anonymous \;\mathrel{=}\;[\mskip1.5mu \;\Varid{x}\;\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\paragraph{Application} Many datatypes are constructed by applying a constructor to a value of another datatype. An example is the $just$ constructor that takes a value of type $a$ and yields a value of type $Maybe a$. We can achieve this by lifting the familiar $map$ function for lists to the generator type: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{𝔾-map}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{n}\;\mathbin{:}\;\Conid{ℕ}\mskip1.5mu\}\;\Varid{→}\;(\Varid{a}\;\Varid{→}\;\Varid{b})\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{n}\;\Varid{→}\;\Conid{𝔾}\;\Varid{b}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Conid{𝔾-map}\;\Varid{f}\;\Varid{x}\;\Varid{n}\;\mathrel{=}\;\Varid{map}\;\Varid{f}\;(\Varid{x}\;\Varid{n}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\paragraph{Product} When a constructor takes two or more values (e.g. $\_,\_$), enumerating all values that can be constructed using that constructor comes down to enumerating all possible combinations of its input values, and applying the constructor. Again, we can do this by defining the canonical cartesian product on lists, and lifing it to the generator type: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{list-ap}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{ℓ}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{Set}\;\Varid{ℓ}\mskip1.5mu\}\;\Varid{→}\;\Conid{List}\;(\Varid{a}\;\Varid{→}\;\Varid{b})\;\Varid{→}\;\Conid{List}\;\Varid{a}\;\Varid{→}\;\Conid{List}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Varid{list-ap}\;\Varid{fs}\;\Varid{xs}\;\mathrel{=}\;\Varid{concatMap}\;(\Varid{λ}\;\Varid{f}\;\Varid{→}\;\Varid{map}\;\Varid{f}\;\Varid{xs})\;\Varid{fs}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{𝔾-ap}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{𝔾}\;(\Varid{a}\;\Varid{→}\;\Varid{b})\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{→}\;\Conid{𝔾}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Conid{𝔾-ap}\;\Varid{f}\;\Varid{x}\;\Varid{n}\;\mathrel{=}\;\Varid{list-ap}\;(\Varid{f}\;\Varid{n})\;(\Varid{x}\;\Varid{n}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Note that in addition to $\mathbb{G}-ap$, one also needs $\mathbb{G}-map$ to construct values using constructors with arity greater than one. Assuming $f$ generates values of type $a$, and $g$ generates values of type $b$, we can generate values of type $a \times b$ using the following snippet:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pair}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{→}\;\Conid{𝔾}\;\Varid{b}\;\Varid{→}\;\Conid{𝔾}\;(\Varid{a}\;\Varid{×}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\Varid{pair}\;\Varid{f}\;\Varid{g}\;\mathrel{=}\;\Conid{𝔾-ap}\;(\Conid{𝔾-map}\;\Varid{\char95 ,\char95 }\;\Varid{f})\;\Varid{g}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Notice that $\mathbb{G}-map$, $\mathbb{G}-pure$ and $\mathbb{G}-ap$ make $\mathbb{G}$ an instance of both $Functor$ and $Applicative$, allowing us to use Agda's \textit{idiom brackets} to define generators. This allows us to write 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{49}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pair}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{n}\;\mathbin{:}\;\Conid{ℕ}\mskip1.5mu\}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{n}\;\Varid{→}\;\Conid{𝔾}\;\Varid{b}\;\Varid{n}\;\Varid{→}\;{}\<[49]%
+\>[49]{}\Conid{𝔾}\;(\Varid{a}\;\Varid{×}\;\Varid{b})\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{pair}\;\Varid{f}\;\Varid{g}\;\mathrel{=}\;\Varid{⦇}\;\Varid{f}\;\Varid{,}\;\Varid{g}\;\Varid{⦈}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+instead. 
+
+\paragraph{Choice} Choice between generators can be defined by first defining a \textit{merge} function on lists 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{18}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{merge}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{ℓ}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\;\Varid{ℓ}\mskip1.5mu\}\;\Varid{→}\;\Conid{List}\;\Varid{a}\;\Varid{→}\;\Conid{List}\;\Varid{a}\;\Varid{→}\;\Conid{List}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{merge}\;{}\<[8]%
+\>[8]{}\Varid{[]}\;{}\<[18]%
+\>[18]{}\Varid{ys}\;{}\<[22]%
+\>[22]{}\mathrel{=}\;{}\<[25]%
+\>[25]{}\Varid{ys}{}\<[E]%
+\\
+\>[B]{}\Varid{merge}\;{}\<[8]%
+\>[8]{}(\Varid{x}\;\Varid{∷}\;\Varid{xs})\;{}\<[18]%
+\>[18]{}\Varid{ys}\;{}\<[22]%
+\>[22]{}\mathrel{=}\;{}\<[25]%
+\>[25]{}\Varid{x}\;\Varid{∷}\;\Varid{merge}\;\Varid{ys}\;\Varid{xs}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+and lifting it to the generator type: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∥\char95 }\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{n}\;\mathbin{:}\;\Conid{ℕ}\mskip1.5mu\}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{n}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{n}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{x}\;\Varid{∥}\;\Varid{y}\;\mathrel{=}\;\Varid{λ}\;\Varid{n}\;\Varid{→}\;\Varid{merge}\;(\Varid{x}\;\Varid{n})\;(\Varid{y}\;\Varid{n}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Allowing for choice between constructors to be denoted in a very natural way: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{18}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{bool}\;\mathbin{:}\;\Conid{𝔾}\;\Conid{Bool}{}\<[E]%
+\\
+\>[B]{}\Varid{bool}\;{}\<[7]%
+\>[7]{}\mathrel{=}\;{}\<[10]%
+\>[10]{}\Varid{⦇}\;\Varid{true}\;{}\<[18]%
+\>[18]{}\Varid{⦈}\;{}\<[E]%
+\\
+\>[7]{}\Varid{∥}\;{}\<[10]%
+\>[10]{}\Varid{⦇}\;\Varid{false}\;\Varid{⦈}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\paragraph{Recursion} Simply using implicit recursion is the most natural way for defining generators for recursive datatypes. However, the following definition that generates inhabitants of $\mathbb{N}$ gets rejected by the termination checker: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{nats}\;\mathbin{:}\;\Conid{𝔾}\;\Conid{ℕ}{}\<[E]%
+\\
+\>[B]{}\Varid{nats}\;{}\<[7]%
+\>[7]{}\mathrel{=}\;{}\<[10]%
+\>[10]{}\Varid{⦇}\;\Varid{zero}\;{}\<[22]%
+\>[22]{}\Varid{⦈}\;{}\<[E]%
+\\
+\>[7]{}\Varid{∥}\;{}\<[10]%
+\>[10]{}\Varid{⦇}\;\Varid{suc}\;\Varid{nats}\;{}\<[22]%
+\>[22]{}\Varid{⦈}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Though the above code does terminate, the termination checker cannot see this. Since the input depth is threaded through the applicative combinators, it is not immediately clear that the depth parameter decreases with the recursive call. We solve this by making recursive positions explicit:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{nat}\;\mathbin{:}\;\Conid{𝔾}\;\Conid{ℕ}\;\Varid{→}\;\Conid{𝔾}\;\Conid{ℕ}{}\<[E]%
+\\
+\>[B]{}\Varid{nat}\;\Varid{μ}\;{}\<[8]%
+\>[8]{}\mathrel{=}\;{}\<[11]%
+\>[11]{}\Varid{⦇}\;\Varid{zero}\;{}\<[20]%
+\>[20]{}\Varid{⦈}\;{}\<[E]%
+\\
+\>[8]{}\Varid{∥}\;{}\<[11]%
+\>[11]{}\Varid{⦇}\;\Varid{suc}\;\Varid{μ}\;{}\<[20]%
+\>[20]{}\Varid{⦈}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+and defining an appropriate fixed-point combinator: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fix}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;(\Conid{𝔾}\;\Varid{a}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a})\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{fix}\;\Varid{f}\;\Varid{0}\;{}\<[16]%
+\>[16]{}\mathrel{=}\;{}\<[19]%
+\>[19]{}\Varid{[]}{}\<[E]%
+\\
+\>[B]{}\Varid{fix}\;\Varid{f}\;(\Varid{suc}\;\Varid{n})\;{}\<[16]%
+\>[16]{}\mathrel{=}\;{}\<[19]%
+\>[19]{}\Varid{f}\;(\Varid{fix}\;\Varid{f})\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+This definition of $fix$ gets rejected by the termination checker as well. We will see later how we can fix this. However, it should be apparent that it is terminating under the assumption that $f$ is well-behaved, i.e. it applies the $n$ supplied by $fix$ to its recursive positions. 
+
+\subsubsection{Indexed Types}
+
+Indexed types can be generated as well. Indexed generators can simply be defined as a $\Pi$-type, where the generated type depends on some input index: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{𝔾ᵢ}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{i}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;(\Varid{i}\;\Varid{→}\;\Conid{Set})\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Conid{𝔾ᵢ}\;\{\mskip1.5mu \Varid{i}\;\mathrel{=}\;\Varid{i}\mskip1.5mu\}\;\Varid{a}\;\mathrel{=}\;(\Varid{x}\;\mathbin{:}\;\Varid{i})\;\Varid{→}\;\Conid{𝔾}\;(\Varid{a}\;\Varid{x}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The previously defined combinators can then be easily lifted to work with indexed types: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∥ᵢ\char95 }\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{i}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Varid{i}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{𝔾ᵢ}\;\Varid{a}\;\Varid{→}\;\Conid{𝔾ᵢ}\;\Varid{a}\;\Varid{→}\;\Conid{𝔾ᵢ}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}(\Varid{f}\;\Varid{∥ᵢ}\;\Varid{g})\;\Varid{i}\;\mathrel{=}\;\Varid{f}\;\Varid{i}\;\Varid{∥}\;\Varid{g}\;\Varid{i}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Throughout the code, a subscript $i$ is used to indicate that we deal with indexed types. 
+
+\subsubsection{Guarantueeing Termination}
+
+We can prove termination for our fixed-point combinator if we somehow enforce that its input function is well behaved. Consider the following example of a generator that does not terminate under our fixed-point combinator: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{bad}\;\mathbin{:}\;\Conid{𝔾}\;\Conid{ℕ}\;\Varid{→}\;\Conid{𝔾}\;\Conid{ℕ}{}\<[E]%
+\\
+\>[B]{}\Varid{bad}\;\Varid{μ}\;\anonymous \;\mathrel{=}\;\Varid{map}\;\Varid{suc}\;(\Varid{μ}\;\Varid{1}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Clearly, the base case of $fix$ is never reached. We can solve this by indexing generators with a natural number, and requiring generators to be called with their index, yielding the following alternative definition for $\mathbb{G}$: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{𝔾}\;\mathbin{:}\;\Conid{Set}\;\Varid{→}\;\Conid{ℕ}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Conid{𝔾}\;\Varid{a}\;\Varid{m}\;\mathrel{=}\;(\Varid{p}\;\mathbin{:}\;\Conid{Σ[}\;\Varid{n}\;\Varid{∈}\;\Conid{ℕ}\;\mskip1.5mu]\;\Varid{n}\;\Varid{≡}\;\Varid{m})\;\Varid{→}\;\Conid{List}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+We then use the following type for recursive generators: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{⟪\char95 ⟫}\;\mathbin{:}\;(\Conid{ℕ}\;\Varid{→}\;\Conid{Set})\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Varid{⟪}\;\Varid{a}\;\Varid{⟫}\;\mathrel{=}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\;\mathbin{:}\;\Conid{ℕ}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{n}\;\Varid{→}\;\Varid{a}\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Meaning that the resulting generator can only apply \textit{its own input number} to recursive positions. If we now decrease the index explicitly in the fixed-point combinator, the termination checker is able to see that $fix$ allways terminates.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fix}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Varid{⟪}\;\Conid{𝔾}\;\Varid{a}\;\Varid{⟫}\;\Varid{→}\;\Conid{𝔾}\;\Varid{a}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{fix}\;\Varid{zero}\;{}\<[14]%
+\>[14]{}\Varid{f}\;{}\<[17]%
+\>[17]{}(\Varid{.0}\;\Varid{,}\;\Varid{refl})\;{}\<[34]%
+\>[34]{}\mathrel{=}\;\Varid{[]}{}\<[E]%
+\\
+\>[B]{}\Varid{fix}\;(\Varid{suc}\;\Varid{n})\;{}\<[14]%
+\>[14]{}\Varid{f}\;{}\<[17]%
+\>[17]{}(\Varid{.suc}\;\Varid{n}\;\Varid{,}\;\Varid{refl})\;{}\<[34]%
+\>[34]{}\mathrel{=}\;\Varid{f}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;(\Varid{fix}\;\Varid{n}\;\Varid{f})\;(\Varid{n}\;\Varid{,}\;\Varid{refl}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Let us reconsider the previous counter exapmle: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{bad}\;\mathbin{:}\;\Varid{⟪}\;\Conid{𝔾}\;\Conid{ℕ}\;\Varid{⟫}{}\<[E]%
+\\
+\>[B]{}\Varid{bad}\;\Varid{μ}\;\Varid{n}\;\mathrel{=}\;\Conid{Data.List.map}\;\Varid{suc}\;(\Varid{μ}\;(\Varid{1}\;\Varid{,}\;\{\mskip1.5mu \mathbin{!!}\mskip1.5mu\})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+It is impossible to complete this definition when applying any other value than $n$ to the recursive position. 
+
+\subsubsection{Deriving Enumeration for Regular Types}\label{derivegen}
+
+\subsection{Proving Correctness of Generators}
+
+\subsection{Generalization to Generic Enumeration of Indexed Types}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
 

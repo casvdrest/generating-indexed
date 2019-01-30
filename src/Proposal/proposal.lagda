@@ -115,7 +115,7 @@ The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they 
 
 \subsubsection{Codata and Sized Types}
 
-Agda requires all functions to be total, where total means that they should be defined on any possible input, and give a result in a finite amount of time. The latter means that Agda is equipped with a termination checker that tries to prove that functions terminate. It is implied by undecidability of the halting problem that such a checker cannot be both sound and complete. Agda's termination checker is sound, meaning that there are functions that terminate which get rejected. This means that we cannot represent infinite structures in the same way as in haskell. For example, we might use the following definition in Haskell: \textt{nats = 0 : map (+1) nats}. A similar definition in Agda will get rejected by the termination checker. 
+Agda requires all functions to be total, where total means that they should be defined on any possible input, and give a result in a finite amount of time. The latter means that Agda is equipped with a termination checker that tries to prove that functions terminate. It is implied by undecidability of the halting problem that such a checker cannot be both sound and complete. Agda's termination checker is sound, meaning that there are functions that terminate which get rejected. This means that we cannot represent infinite structures in the same way as in haskell. For example, we might use the following definition in Haskell: \texttt{nats = 0 : map (+1) nats}. A similar definition in Agda will get rejected by the termination checker. 
 
 \subsection{Property Based Testing}
 
@@ -129,9 +129,9 @@ If we desire to abstract over the structure of datatypes, we need a suitable typ
 
 \subsubsection{Regular Datatypes}
 
-The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. Roughly, this class consists of ADT's in haskell, though mutual recursion is not accounted for. 
+The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. 
 
-Any value that lives in the induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. We can define a datatype in agda that captures these values: 
+Any value that lives in universe induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. We can define a datatype in agda that captures these values: 
 
 \begin{code}
 data Reg : Set →  Set where
@@ -142,7 +142,7 @@ data Reg : Set →  Set where
     I    : Reg ⊥
 \end{code}
 
-Pattern functors, i.e. values of the $Reg$ datatype, can be interpreted as types. Inhabitants of the interpretation of a pattern functor correspond to the inhabitants of the type that is represented by said pattern functor. We use the following interpretation function: 
+Pattern functors can be interpreted as types in such a way that inhabitants of the interpreted type correspond to inhabitants of the type that is represented by the functor.  
 
 \begin{code}
 ⟦_⟧ : Reg → Set → Set
@@ -153,7 +153,7 @@ Pattern functors, i.e. values of the $Reg$ datatype, can be interpreted as types
 ⟦ I            ⟧ r = r
 \end{code}
 
-Notice that recursive positions are left explicit. This means that we require an appropriate fixed-point combinator to find a pattern functor's representation in \textbf{Set}. 
+Notice that recursive positions are left explicit. This means that we require an appropriate fixed-point combinator: 
 
 \begin{code}
 data μ (f : Reg) : Set where
@@ -181,21 +181,7 @@ toList (`μ (inj₁ tt)) = []
 toList (`μ (inj₂ (fst , snd))) = fst ∷ toList snd
 \end{code}
 
-With these definitions, it is now trivial to show that there is indeed an isomorphism between the two: 
-
-\begin{code}
-isoList₁ : ∀ {a : Set} {xs : List a} → toList (fromList xs) ≡ xs
-isoList₁ {xs = []} = refl
-isoList₁ {xs = x ∷ xs} = cong (_∷_ x) isoList₁
-\end{code}
-
-\begin{code}
-isoList₂ : ∀ {a : Set} {xs : List' a} → fromList (toList xs) ≡ xs
-isoList₂ {xs = `μ (inj₁ x)} = refl
-isoList₂ {xs = `μ (inj₂ (fst , snd))} = cong (`μ ∘ inj₂ ∘ _,_ fst) isoList₂
-\end{code}
-
-Using such isomorphisms, we can automatically derive functionality for datatypes that can be captured using pattern functors. We will see an example of this in section \ref{preliminary}, where we will derive enumeration of inhabitants for arbitrary pattern functors. 
+Using such isomorphisms, we can automatically derive functionality for datatypes that can be captured using pattern functors. We will see an example of this in section \ref{derivegen}, where we will derive enumeration of inhabitants for arbitrary pattern functors. 
 
 \subsubsection{Ornaments}
 
@@ -381,6 +367,172 @@ data _[_↦_] : Env → Id → Ty → Set where
 
 
 \section{Preliminary results}\label{preliminary}
+
+\subsection{Enumeration of Agda Types}
+
+We look at how to enumerate various datatypes in Agda, starting with simple examples such as $\mathbb{N}$ or $Bool$, and progressively working towards more complex data. The first question we encounter is what the result of an enumeration should be. The ovious answer is that $enumerate a$ should return something of type $List a$, containing all possible values of type $a$. This is however not possible, as $List$ in Agda can only represent a finite list, and many datatypes, such as $\mathbb{N}$ have an infinite number of inhabitants. To solve this, we may either use the $Codata$ functionality from the standard library, or index our result with some kind of metric that limits the number of solutions to a finite set. The latter approach is what is used by both \textit{SmallCheck}\cite{} and \textit{LeanCheck}\cite{}, enumerating values up to a certain depth or size. 
+
+We admit the same approach as the SmallCheck library, defining an enumerator/generator to be a function of type $\mathbb{N} \rightarrow List\ a$, where input argument signifies the maximum depth. By working with $List$, ensuring termination becomes a lot easier, since it is by definition a finite structure. Furthermore, proving properties about generators becomes more straightforward, as we can simply prove the desired properties about the $List$ type, and lift the result to our generator type. 
+
+\subsubsection{Basic Combinators}
+
+We can define a few basic combinators to allow composition of generators. 
+
+\paragraph{Constants} Generators can yield a constant value, e.g. $true$ for the $Bool$ type. Unary constructors have a recursive depth of zero, so we simply return a singleton list: 
+
+\begin{code}
+𝔾-pure : ∀ {a : Set} {n : ℕ} → a → 𝔾 a n
+𝔾-pure x _ = [ x ]
+\end{code}
+
+\paragraph{Application} Many datatypes are constructed by applying a constructor to a value of another datatype. An example is the $just$ constructor that takes a value of type $a$ and yields a value of type $Maybe a$. We can achieve this by lifting the familiar $map$ function for lists to the generator type: 
+
+\begin{code}
+𝔾-map : ∀ {a b : Set} {n : ℕ} → (a → b) → 𝔾 a n → 𝔾 b n
+𝔾-map f x n = map f (x n)
+\end{code}
+
+\paragraph{Product} When a constructor takes two or more values (e.g. $\_,\_$), enumerating all values that can be constructed using that constructor comes down to enumerating all possible combinations of its input values, and applying the constructor. Again, we can do this by defining the canonical cartesian product on lists, and lifing it to the generator type: 
+
+\begin{code}
+list-ap : ∀ {ℓ} {a b : Set ℓ} → List (a → b) → List a → List b
+list-ap fs xs = concatMap (λ f → map f xs) fs
+\end{code}
+\begin{code}
+𝔾-ap : ∀ {a b : Set} → 𝔾 (a → b) → 𝔾 a → 𝔾 b
+𝔾-ap f x n = list-ap (f n) (x n)
+\end{code}
+
+Note that in addition to $\mathbb{G}-ap$, one also needs $\mathbb{G}-map$ to construct values using constructors with arity greater than one. Assuming $f$ generates values of type $a$, and $g$ generates values of type $b$, we can generate values of type $a \times b$ using the following snippet:
+
+\begin{code}
+pair : ∀ {a b : Set} → 𝔾 a → 𝔾 b → 𝔾 (a × b)
+pair f g = 𝔾-ap (𝔾-map _,_ f) g
+\end{code}
+
+Notice that $\mathbb{G}-map$, $\mathbb{G}-pure$ and $\mathbb{G}-ap$ make $\mathbb{G}$ an instance of both $Functor$ and $Applicative$, allowing us to use Agda's \textit{idiom brackets} to define generators. This allows us to write 
+
+\begin{code}
+pair : ∀ {a b : Set} {n : ℕ} → 𝔾 a n → 𝔾 b n →  𝔾 (a × b) n
+pair f g = ⦇ f , g ⦈
+\end{code}
+
+instead. 
+
+\paragraph{Choice} Choice between generators can be defined by first defining a \textit{merge} function on lists 
+
+\begin{code}
+merge : ∀ {ℓ} {a : Set ℓ} → List a → List a → List a
+merge  []        ys  =  ys
+merge  (x ∷ xs)  ys  =  x ∷ merge ys xs
+\end{code}
+
+and lifting it to the generator type: 
+
+\begin{code}
+_∥_ : ∀ {a : Set} {n : ℕ} → 𝔾 a n → 𝔾 a n → 𝔾 a n
+x ∥ y = λ n → merge (x n) (y n)
+\end{code}
+
+Allowing for choice between constructors to be denoted in a very natural way: 
+
+\begin{code}
+bool : 𝔾 Bool
+bool  =  ⦇ true  ⦈
+      ∥  ⦇ false ⦈
+\end{code}
+
+\paragraph{Recursion} Simply using implicit recursion is the most natural way for defining generators for recursive datatypes. However, the following definition that generates inhabitants of $\mathbb{N}$ gets rejected by the termination checker: 
+
+\begin{code}
+nats : 𝔾 ℕ
+nats  =  ⦇ zero      ⦈
+      ∥  ⦇ suc nats  ⦈
+\end{code}
+
+Though the above code does terminate, the termination checker cannot see this. Since the input depth is threaded through the applicative combinators, it is not immediately clear that the depth parameter decreases with the recursive call. We solve this by making recursive positions explicit:
+
+\begin{code}
+nat : 𝔾 ℕ → 𝔾 ℕ
+nat μ  =  ⦇ zero   ⦈
+       ∥  ⦇ suc μ  ⦈
+\end{code}
+
+and defining an appropriate fixed-point combinator: 
+
+\begin{code}
+fix : ∀ {a : Set} → (𝔾 a → 𝔾 a) → 𝔾 a
+fix f 0        =  []
+fix f (suc n)  =  f (fix f) n
+\end{code}
+
+This definition of $fix$ gets rejected by the termination checker as well. We will see later how we can fix this. However, it should be apparent that it is terminating under the assumption that $f$ is well-behaved, i.e. it applies the $n$ supplied by $fix$ to its recursive positions. 
+
+\subsubsection{Indexed Types}
+
+Indexed types can be generated as well. Indexed generators can simply be defined as a $\Pi$-type, where the generated type depends on some input index: 
+
+\begin{code}
+𝔾ᵢ : ∀ {i : Set} → (i → Set) → Set
+𝔾ᵢ {i = i} a = (x : i) → 𝔾 (a x)
+\end{code}
+
+The previously defined combinators can then be easily lifted to work with indexed types: 
+
+\begin{code}
+_∥ᵢ_ : ∀ {i : Set} {a : i → Set} → 𝔾ᵢ a → 𝔾ᵢ a → 𝔾ᵢ a 
+(f ∥ᵢ g) i = f i ∥ g i
+\end{code}
+
+Throughout the code, a subscript $i$ is used to indicate that we deal with indexed types. 
+
+\subsubsection{Guarantueeing Termination}
+
+We can prove termination for our fixed-point combinator if we somehow enforce that its input function is well behaved. Consider the following example of a generator that does not terminate under our fixed-point combinator: 
+
+\begin{code}
+bad : 𝔾 ℕ → 𝔾 ℕ 
+bad μ _ = map suc (μ 1)
+\end{code}
+
+Clearly, the base case of $fix$ is never reached. We can solve this by indexing generators with a natural number, and requiring generators to be called with their index, yielding the following alternative definition for $\mathbb{G}$: 
+
+\begin{code}
+𝔾 : Set → ℕ → Set 
+𝔾 a m = (p : Σ[ n ∈ ℕ ] n ≡ m) → List a
+\end{code}
+
+We then use the following type for recursive generators: 
+
+\begin{code}
+⟪_⟫ : (ℕ → Set) → Set
+⟪ a ⟫ = ∀ {n : ℕ} → a n → a n
+\end{code}
+
+Meaning that the resulting generator can only apply \textit{its own input number} to recursive positions. If we now decrease the index explicitly in the fixed-point combinator, the termination checker is able to see that $fix$ allways terminates.
+
+\begin{code}
+fix : ∀ {a : Set} → (n : ℕ) → ⟪ 𝔾 a ⟫ → 𝔾 a n
+fix zero     f  (.0 , refl)      = []
+fix (suc n)  f  (.suc n , refl)  = f {n} (fix n f) (n , refl)
+\end{code}
+
+Let us reconsider the previous counterexapmle: 
+
+\begin{code}
+bad : ⟪ 𝔾 ℕ ⟫
+bad μ n = Data.List.map suc (μ (1 , {!!}))
+\end{code}
+
+It is impossible to complete this definition when applying any other value than $n$ to the recursive position. 
+
+\subsubsection{Deriving Enumeration for Regular Types}\label{derivegen}
+
+\subsection{Proving Correctness of Generators}
+
+
+
+\subsection{Generalization to Generic Enumeration of Indexed Types}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
 
