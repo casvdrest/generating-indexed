@@ -586,9 +586,13 @@ Given a value of type $Regular\ a$, we can now derive a generator for $a$ by der
 
 \subsection{Proving Correctness of Generators}
 
+
+
 \subsubsection{Combinator Correctness}
 
 \subsubsection{Correctness of Derived Generators}
+
+\subsection{Generator Equivalence}
 
 \subsection{Generalization to Generic Enumeration of Indexed Types}
 

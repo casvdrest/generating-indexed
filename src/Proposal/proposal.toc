@@ -34,5 +34,6 @@
 \contentsline {subsection}{\numberline {3.2}Proving Correctness of Generators}{14}{subsection.3.2}
 \contentsline {subsubsection}{\numberline {3.2.1}Combinator Correctness}{14}{subsubsection.3.2.1}
 \contentsline {subsubsection}{\numberline {3.2.2}Correctness of Derived Generators}{14}{subsubsection.3.2.2}
-\contentsline {subsection}{\numberline {3.3}Generalization to Generic Enumeration of Indexed Types}{14}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.3}Generator Equivalence}{14}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Generalization to Generic Enumeration of Indexed Types}{14}{subsection.3.4}
 \contentsline {section}{\numberline {4}Timetable and planning}{14}{section.4}

@@ -25,5 +25,6 @@
 \BOOKMARK [2][-]{subsection.3.2}{Proving Correctness of Generators}{section.3}% 25
 \BOOKMARK [3][-]{subsubsection.3.2.1}{Combinator Correctness}{subsection.3.2}% 26
 \BOOKMARK [3][-]{subsubsection.3.2.2}{Correctness of Derived Generators}{subsection.3.2}% 27
-\BOOKMARK [2][-]{subsection.3.3}{Generalization to Generic Enumeration of Indexed Types}{section.3}% 28
-\BOOKMARK [1][-]{section.4}{Timetable and planning}{}% 29
+\BOOKMARK [2][-]{subsection.3.3}{Generator Equivalence}{section.3}% 28
+\BOOKMARK [2][-]{subsection.3.4}{Generalization to Generic Enumeration of Indexed Types}{section.3}% 29
+\BOOKMARK [1][-]{section.4}{Timetable and planning}{}% 30
