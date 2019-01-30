@@ -1,7 +1,7 @@
 open import src.Gen.Base
 open import src.Data
 
-open import Data.Product using (Σ; Σ-syntax; ∃; ∃-syntax; _,_; _×_; proj₁; proj₂)
+open import Data.Product using (Σ; Σ-syntax; ∃; ∃-syntax; _×_; _,_; proj₁; proj₂)
 open import Data.Sum hiding (map)
 open import Data.List
 open import Data.Nat
@@ -216,7 +216,6 @@ module src.Gen.Properties where
                → ⦇ C f g ⦈ ↝ C x y
   ⊛-complete (n , snd₁) (n , snd₂) refl  = n , list-ap-constr snd₁ snd₂
 
-
   ------ Combinator Completeness ------
 
   -- Completeness of the ∥ combinator, using coproducts to unify
@@ -232,4 +231,13 @@ module src.Gen.Properties where
   ∥-Complete {f = f} {g = g} p₁ p₂ {inj₂ y} =
     ∥-complete-right {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈} (constr-preserves-elem {g = g} p₂)
   
-  
+  -- Completeness of the ⊗ combinator, using products to unify
+  -- the operands into a single type
+  ⊗-Complete : ∀ {a b : Set} {x : a} {y : b}
+                 {f : ∀ {n : ℕ} → 𝔾 a n} {g : ∀ {n : ℕ} → 𝔾 b n} 
+               → (p₁ : f ↝ x) → (p₂ : g ↝ y)
+               → depth {f = f} p₁ ≡ depth {f = g} p₂ -- TODO: use depth monotonicity and maximum of the operand depths
+               -------------------------------------
+               → ⦇ f , g ⦈ ↝ (x , y)
+  ⊗-Complete {a} {b} {f = f} {g = g} (n , snd₁) (n , snd₂) refl =
+    ⊛-complete {c = a × b} {f = f} {g = g} (n , snd₁) (n , snd₂) refl

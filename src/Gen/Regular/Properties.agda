@@ -23,70 +23,90 @@ module src.Gen.Regular.Properties where
 
   ------ U Combinator (Unit) ------
 
-  ugen-complete : ∀ {n : ℕ} {a : Set}  → (λ n → ugen {n} {a}) ↝ tt
-  ugen-complete {n} = (n , refl) , here
+  ugen-complete : ∀ {n : ℕ} {a : Set}
+                  -------------------------
+                  → Complete (ugen {a = a})
+  ugen-complete {n} = n , here
   
-
+  
   ------ ⊕ combinator (Coproduct) ------
 
-  
-  ⊕gen-complete-left : ∀ {n : ℕ} {a : Set} {f g : Reg}
-                         {g₁ : Π ℕ (𝔾 (⟦ f ⟧ a))} {g₂ : Π ℕ (𝔾 (⟦ g ⟧ a))}
+  -- If 'x' is produced by a generator, 'inj₁ x' is produced by generator derived
+  -- from the coproduct of that generator with any other generator
+  ⊕gen-complete-left : ∀ {a : Set} {f g : Reg}
+                         {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
+                         {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                          {x : ⟦ f ⟧ a} → g₁ ↝ x
                        -------------------------------------
-                       → (λ n → ⊕gen {f = f} {g = g} (g₁ n) (g₂ n)) ↝ inj₁ x
+                       → ⊕gen {f = f} {g = g} g₁ g₂ ↝ inj₁ x
   ⊕gen-complete-left {g₁ = g₁} {g₂ = g₂} p =
-    ∥-complete-left {f = λ n → ⦇ inj₁ (g₁ n) ⦈} {g = λ n → ⦇ inj₂ (g₂ n) ⦈}
+    ∥-complete-left {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
       (constr-preserves-elem {g = g₁} p)
 
-  
+  -- If 'y' is produced by a generator, 'inj₂ y' is produced by the generator
+  -- derived from the coproduct of any generator with that generator. 
   ⊕gen-complete-right : ∀ {a : Set} {f g : Reg}
-                          {g₁ : Π ℕ (𝔾 (⟦ f ⟧ a))} {g₂ : Π ℕ (𝔾 (⟦ g ⟧ a))}
+                          {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
+                          {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                         → {y : ⟦ g ⟧ a} → g₂ ↝ y
                         -------------------------------------
-                        → (λ n → ⊕gen {f = f} {g = g} (g₁ n) (g₂ n)) ↝ inj₂ y
+                        → ⊕gen {f = f} {g = g} g₁ g₂ ↝ inj₂ y
   ⊕gen-complete-right {g₁ = g₁} {g₂ = g₂} p =
-    ∥-complete-right {f = λ n → ⦇ inj₁ (g₁ n) ⦈} {g = λ n → ⦇ inj₂ (g₂ n) ⦈}
+    ∥-complete-right {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
       (constr-preserves-elem {g = g₂} p)
-  
+
+  -- Given that its operands are complete, the generator derived from
+  -- a coproduct is com
+  ⊕gen-Complete : ∀ {a : Set} {f g : Reg}
+                    {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
+                    {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
+                  → Complete g₁ → Complete g₂
+                  ---------------------------------------
+                  → Complete (⊕gen {f = f} {g = g} g₁ g₂)
+  ⊕gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂ {inj₁ x} =
+    ⊕gen-complete-left {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₁
+  ⊕gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂ {inj₂ y} =
+    ⊕gen-complete-right {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₂
+
   
   ------ ⊗ combinator (Product) ------
 
-  ⊗gen-complete : ∀ {n : ℕ} {a : Set} {f g : Reg}
-                    {g₁ : Π ℕ (𝔾 (⟦ f ⟧ a))} {g₂ : Π ℕ (𝔾 (⟦ g ⟧ a))}
+  -- If both operands are complete, the generator derived from a product
+  -- is complete as well. 
+  ⊗gen-complete : ∀ {a : Set} {f g : Reg}
+                    {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
+                    {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                     {x : ⟦ f ⟧ a} {y : ⟦ g ⟧ a}
                   → (p₁ : g₁ ↝ x) → (p₂ : g₂ ↝ y)
                   → depth {f = g₁} p₁ ≡ depth {f = g₂} p₂
                   --------------------------------------
-                  → (λ n → ⊗gen {f = f} {g = g} (g₁ n) (g₂ n)) ↝ (x , y)
+                  → ⊗gen {f = f} {g = g} g₁ g₂ ↝ (x , y)
   ⊗gen-complete {g₁ = g₁} {g₂ = g₂}  p1 p2 = ⊛-complete {f = g₁} {g = g₂} p1 p2
 
-
+  -- Completeness for product, but now with the quantification over arbitrary values
+  -- hidden. 
+  ⊗gen-Complete : ∀ {a : Set} {f g : Reg}
+                    {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
+                    {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
+                  → (p₁ : Complete g₁) → (p₂ : Complete g₂)
+                  → (∀ {x y} → depth {f = g₁} {x} p₁ ≡ depth {f = g₂} {y} p₂)
+                  -----------------------------------------------------------
+                  → Complete (⊗gen {f = f} {g = g} g₁ g₂)
+  ⊗gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂ dp =
+    ⊗gen-complete {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₁ p₂ dp
+ 
   ------ K combinator (constants) ------
 
-  kgen-complete : ∀ {n : ℕ} {a b : Set} {x : b} {f : ⟪ 𝔾 b ⟫}
-                  → (λ n → ⟨_⟩ {n = n} f) ↝ x
+  -- The generator derived from a constant is complete if
+  -- the generator for that constant is complete
+  kgen-complete : ∀ {a b : Set} {x : b} {f : ⟪ 𝔾 b ⟫}
+                  → ⟨ f ⟩ ↝ x
                   --------------------------------------------
-                  → (λ n → (kgen {a = a} {g = f})) ↝ x
+                  → kgen {a = a} {g = f} ↝ x
   kgen-complete (p , snd) = p , snd
 
-
-  ------ I combinator (constants) ------
-
-  igen-complete : ∀ {n : ℕ} {a : Set} {f : Reg} {x : ⟦ f ⟧ a} {g : Π ℕ (𝔾 (⟦ f ⟧ a))} → g ↝ x → (λ n → igen {f = f} (g n)) ↝ x
-  igen-complete p = p
-
-
-  fix-lemma : ∀ {n : ℕ} {f : Reg} → ⟨ deriveGen {f = f} ⟩ (suc n , refl) ≡ deriveGen {f = f} {g = f} {n = n} ⟨ deriveGen {f = f} ⟩ (n , refl)
-  fix-lemma {zero} = refl
-  fix-lemma {suc n} {f} = refl
-
-  -----
-  
-  complete : ∀ {n : ℕ} {f g : Reg} {x : ⟦ f ⟧ (μ g)} → (λ n → deriveGen {f = f} ⟨ deriveGen {f = g} ⟩) ↝ x
-  complete {f = U} {g} {x} = ugen-complete
-  complete {f = f ⊕ f₁} {g} {inj₁ x} = ⊕gen-complete-left complete
-  complete {f = f ⊕ f₁} {g} {inj₂ y} = ⊕gen-complete-right complete
-  complete {f = f ⊗ f₁} {g} {x} = {!⊗gen-complete!}
-  complete {f = I} {g} {x} = igen-complete complete
-  complete {f = K x₁} {g} {x} = kgen-complete complete
+-- ### TODO ###
+--
+-- * prove completeness for recursion
+-- * Assemble lemma's into proof about
+--   generators derived from pattern functors

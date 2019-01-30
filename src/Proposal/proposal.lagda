@@ -127,7 +127,7 @@ Agda requires all functions to be total, where total means that they should be d
 
 If we desire to abstract over the structure of datatypes, we need a suitable type universe to do so. Many such universes have been developed and studied; this section discusses a few of them. 
 
-\subsubsection{Regular Datatypes}
+\subsubsection{Regular Datatypes}\label{patternfunctors}
 
 The term \textit{regular datatypes} is often used to refer to the class of datatypes that can be assembled using any combination of products, coproducts, unary constructors, constants (a position that is inhabited by a value of another type) and recursive positions. 
 
@@ -521,16 +521,74 @@ Let us reconsider the previous counterexapmle:
 
 \begin{code}
 bad : ⟪ 𝔾 ℕ ⟫
-bad μ n = Data.List.map suc (μ (1 , {!!}))
+bad μ n = map suc (μ (1 , {!!}))
 \end{code}
 
 It is impossible to complete this definition when applying any other value than $n$ to the recursive position. 
 
 \subsubsection{Deriving Enumeration for Regular Types}\label{derivegen}
 
+One may have noticed that the way in which generators are defined is structurally \textit{very} similar to how one would define the corresponding datatypes in Haskell. This similarity is intentional, and serves to illustrate that the definition of many generators is completely mechanical with respect to the structure of the underlying datatype. 
+
+If we consider the universe of regular datatypes described in section \ref{patternfunctors}, we see that there is a clear correspondence between our generator combinators, and the constructors of the $Reg$ datatype. We can utilize this correspondence to automatically derive generators for datatypes, given an isomorphism with the fixed-point of some pattern functor. 
+
+\paragraph{Generating pattern functors} Recall that by fixing the interpretation of some value $f$ of type $Reg$, we get a type whose inhabitants correspond to the inhabitants of the type that is represented by $f$. If we thus construct a generator that produces all inhabitants of this type, we have a generator that is isomorphic to a complete generator for the type represented by $f$. Doing this generically amounts to constructing a function of the following type: 
+
+\begin{code}
+deriveGen : (f : Reg) → ⟪ 𝔾 (μ f) ⟫
+deriveGen = {!!}
+\end{code}
+
+Intuitively, this definition is easily completed by pattern matching on $f$, and returning the appropriate combinator. However, due to the intertwined usage of two fixed-point combinators to deal with recursion, there are quite a few subtleties that need to be taken into account. 
+
+We simplify the definition slightly by expanding the generator type: $\mu$ has one constructor, with one argument, so we replace $\mu\ f$ by its constructor's argument: $\llbracket f \rrbracket\ (\mu\ f)$. 
+
+Let us now consider the branch of $deriveGen$ that deals with coproducts. We would like to simply write the following:
+
+\begin{code}
+deriveGen (f₁ ⊕ f₂) μ = ⦇ inj₁ (deriveGen f₁ μ) ⦈ ∥ ⦇ inj₂ (deriveGen f₂ μ) ⦈
+\end{code}
+
+This definition is incorrect, however. The recursive call $deriveGen\ f_1$ yields a generator of type $\langle\langle\ \mathbb{G}\ (\llbracket\ f_1\ \rrbracket\ (\mu\ f_1))\ \rangle\rangle$, meaning that two things go wrong: The recursive argument $\mu$ we apply to the recursive call has the wrong type, and recursive positions in $f_1$ refer to values of type $\mu\ f_1$ instead of $\mu\ (f_1 \oplus f_2)$. A similar problem occurs when attempting to define a suitable definition for products. 
+
+We solve this issue by \textit{remembering} the top-level pattern functor for which we are deriving a generator when entering recursive calls to $deriveGen$. This can be done by having the recursive argument be a generator for the interpretation of this top-level pattern functor: 
+
+\begin{code}
+deriveGen : ∀ {n : ℕ} → (f g : Reg) → 𝔾 (⟦ g ⟧ (μ g)) n → 𝔾 (⟦ f ⟧ (μ g)) n
+\end{code}
+
+By using the type signature defined above instead, the previously shown defintion for the coproduct branch is accepted. 
+
+In most cases, the initial call to $deriveGen$ will have the same value for $f$ and $g$. Observe that $\forall f \in Reg\ .\ deriveGen\ f\ f : \mathbb{G}\ (\llbracket\ f\ \rrbracket\ (\mu\ f))\ n \rightarrow \mathbb{G}\ (\llbracket\ f\ \rrbracket\ (\mu\ f))\ n$, thus we can use $fix$ to obtain a genrator that generates values of type $\llbracket\ f\ \rrbracket\ (\mu\ f))$. 
+
+\paragraph{Deriving generators from isomorphism} We use the following record to witness an isomorphism betwen type $a$ and $b$: 
+
+\begin{code}
+record _≅_ (a b : Set) : Set where
+  field
+    from  : a → b
+    to    : b → a
+    iso₁  : ∀ {x : a} → to (from x) ≡ x
+    iso₂  : ∀ {y : b} → from (to y) ≡ y
+\end{code}
+
+The functions $from$ and $to$ allow for conversion between $a$ and $b$, while $iso_1$ and $iso_2$ assert that these conversion functions do indeed form a bijection between values of type $a$ and type $b$. Given an isomorphism $a \cong b$, a generator $\mathbb{G}\ a\ n$ can easily be converted to a generator $\mathbb{G}\ b\ n$ by using $\llparenthesis\ \texttt{\_$\cong$\_}.to\ gen\ \rrparenthesis$. 
+
+We can say that some type $a$ is \texttt{Regular} if there exists some value $f$ of type $Reg$ such that $a$ is isomorphic to $\mu\ f$. We capture this notion using the following record: 
+
+\begin{code}
+record Regular (a : Set) : Set where
+  field
+    W : Σ[ f ∈ Reg ] (a ≅ μ f)
+\end{code}
+
+Given a value of type $Regular\ a$, we can now derive a generator for $a$ by deriving a generator for $f$, and traveling through the isomorphism by applying the aforementioned conversion. 
+
 \subsection{Proving Correctness of Generators}
 
+\subsubsection{Combinator Correctness}
 
+\subsubsection{Correctness of Derived Generators}
 
 \subsection{Generalization to Generic Enumeration of Indexed Types}
 

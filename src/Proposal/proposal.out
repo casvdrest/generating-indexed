@@ -23,5 +23,7 @@
 \BOOKMARK [3][-]{subsubsection.3.1.3}{Guarantueeing Termination}{subsection.3.1}% 23
 \BOOKMARK [3][-]{subsubsection.3.1.4}{Deriving Enumeration for Regular Types}{subsection.3.1}% 24
 \BOOKMARK [2][-]{subsection.3.2}{Proving Correctness of Generators}{section.3}% 25
-\BOOKMARK [2][-]{subsection.3.3}{Generalization to Generic Enumeration of Indexed Types}{section.3}% 26
-\BOOKMARK [1][-]{section.4}{Timetable and planning}{}% 27
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Combinator Correctness}{subsection.3.2}% 26
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Correctness of Derived Generators}{subsection.3.2}% 27
+\BOOKMARK [2][-]{subsection.3.3}{Generalization to Generic Enumeration of Indexed Types}{section.3}% 28
+\BOOKMARK [1][-]{section.4}{Timetable and planning}{}% 29

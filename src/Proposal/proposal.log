@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.1.17)  30 JAN 2019 10:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.1.17)  30 JAN 2019 14:33
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -741,13 +741,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Try loading font information for U+stmry on input line 362.
 
 
-(/usr/share/texmf-dist/tex/latex/stmaryrd/Ustmry.fd) (./proposal.toc)
+(/usr/share/texmf-dist/tex/latex/stmaryrd/Ustmry.fd) (./proposal.toc [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
 \tf@toc=\write5
 \openout5 = `proposal.toc'.
 
- [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
@@ -1004,21 +1004,12 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [12]
+\openout3 = `proposal.ptb'.
 
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
+\openout3 = `proposal.ptb'.
 
-[13] (./proposal.bbl
+\openout3 = `proposal.ptb'.
 
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[14])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1132.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1026,24 +1017,52 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[15]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1132.
+[13]
+\openout3 = `proposal.ptb'.
+
+\openout3 = `proposal.ptb'.
+
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[14] (./proposal.bbl
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[15])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1231.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[16]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1231.
  (./proposal.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1132.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1132.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1231.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1231.
 
 Package rerunfilecheck Info: File `proposal.out' has not changed.
-(rerunfilecheck)             Checksum: 4672B0580D992644E89F6C74D7F3472A;2035.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1132.
+(rerunfilecheck)             Checksum: 95764F19351827E7FB9AD17CBCED5380;2210.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1231.
  ) 
 Here is how much of TeX's memory you used:
- 13188 strings out of 492639
- 191076 string characters out of 6135497
- 273962 words of memory out of 5000000
- 16786 multiletter control sequences out of 15000+600000
+ 13196 strings out of 492639
+ 191202 string characters out of 6135497
+ 274962 words of memory out of 5000000
+ 16789 multiletter control sequences out of 15000+600000
  35644 words of font info for 87 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,13n,43p,908b,637s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,15n,43p,908b,637s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/t
 exmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texmf-dist/font
 s/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public
@@ -1070,10 +1089,10 @@ pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb></usr/share
 /texmf-dist/fonts/type1/public/cm-super/sftt0800.pfb></usr/share/texmf-dist/fon
 ts/type1/public/cm-super/sftt1095.pfb></usr/share/texmf-dist/fonts/type1/public
 /stmaryrd/stmary10.pfb>
-Output written on proposal.pdf (15 pages, 443571 bytes).
+Output written on proposal.pdf (16 pages, 452325 bytes).
 PDF statistics:
- 400 PDF objects out of 1000 (max. 8388607)
- 350 compressed objects within 4 object streams
- 73 named destinations out of 1000 (max. 500000)
- 217 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 417 PDF objects out of 1000 (max. 8388607)
+ 366 compressed objects within 4 object streams
+ 78 named destinations out of 1000 (max. 500000)
+ 233 words of extra memory for PDF output out of 10000 (max. 10000000)
 
