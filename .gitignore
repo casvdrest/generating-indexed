@@ -1,4 +1,7 @@
 marco/
+model/
+colloqium/
 *.agdai
 *.agda~
 #*
+'#*

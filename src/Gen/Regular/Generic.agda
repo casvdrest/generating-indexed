@@ -70,7 +70,7 @@ module src.Gen.Regular.Generic where
          𝔾 (⟦ f ⊗ g ⟧ a) n
   ⊗gen f g = ⦇ f , g ⦈
 
-  deriveGen : ∀ {f g : Reg} {n : ℕ}
+  deriveGen : ∀{f g : Reg} {n : ℕ}
               → 𝔾 (⟦ g ⟧ (μ g)) n
               → 𝔾 (⟦ f ⟧ (μ g)) n
   deriveGen {U}      {g} rec = ugen {a = μ g}
