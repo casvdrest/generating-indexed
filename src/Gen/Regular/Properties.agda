@@ -23,10 +23,10 @@ module src.Gen.Regular.Properties where
 
   ------ U Combinator (Unit) ------
 
-  ugen-complete : ∀ {n : ℕ} {a : Set}
+  ugen-complete : ∀ {a : Set} {n : ℕ}
                   -------------------------
                   → Complete (ugen {a = a})
-  ugen-complete {n} = n , here
+  ugen-complete {n = n} = n , here
   
   
   ------ ⊕ combinator (Coproduct) ------
@@ -56,7 +56,7 @@ module src.Gen.Regular.Properties where
       (constr-preserves-elem {g = g₂} p)
 
   -- Given that its operands are complete, the generator derived from
-  -- a coproduct is com
+  -- a coproduct is complete
   ⊕gen-Complete : ∀ {a : Set} {f g : Reg}
                     {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
                     {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
@@ -94,7 +94,8 @@ module src.Gen.Regular.Properties where
                   → Complete (⊗gen {f = f} {g = g} g₁ g₂)
   ⊗gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂ dp =
     ⊗gen-complete {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₁ p₂ dp
- 
+
+
   ------ K combinator (constants) ------
 
   -- The generator derived from a constant is complete if
@@ -104,9 +105,8 @@ module src.Gen.Regular.Properties where
                   --------------------------------------------
                   → kgen {a = a} {g = f} ↝ x
   kgen-complete (p , snd) = p , snd
-
+  
 -- ### TODO ###
 --
--- * prove completeness for recursion
 -- * Assemble lemma's into proof about
 --   generators derived from pattern functors

@@ -625,13 +625,6 @@ A natural starting point is to prove that properties are preserved by combinator
 We take productivity of choice as an example, hence our goal is to show that if, for some generator $g_1 : \mathbb{G}\ a\ n$ and $x : a$, $g_1 \leadsto x$, then for all generators $g_2$ we have that $(g_1 \parallel g_2) \leadsto x$. Since the $\parallel$-combinator is defined in terms of $merge$, we first prove a similar property over the $merge$ function. 
 
 \begin{code}
-merge-cong :  ∀ {ℓ} {a : Set ℓ} {xs ys : List a} {x y : a}
-              → y ∈ merge xs ys
-              → y ∈ merge (x ∷ xs) ys
-merge-cong = {!!} -- omitted
-\end{code}
-
-\begin{code}
 merge-complete-left :  ∀ {ℓ} {a : Set ℓ} {xs ys : List a} {x : a}
                        → x ∈ xs
                        → x ∈ merge xs ys
@@ -640,7 +633,7 @@ merge-complete-left {xs = _ ∷ xs} (there p)  =
   merge-cong {xs = xs} (merge-complete-left p)
 \end{code}
 
-The definition for \textit{merge-cong} is omitted for conciseness. Armed with the above lemma that asserts left-completeness of the $merge$ function, we can set out to prove left-completeness for the $\parallel$-combinator. The key insight here is that the depth bound at which $x$ occurs does not change, thus we can sipmly reuse it, and lift the above lemma to the generator type: 
+\textit{merge-cong} is a lemma stating that if $y \in merge\ xs\ ys$, then $y \in merge\ (x :: xs)\ ys$; its definition is omitted for conciseness. Armed with the above lemma that asserts left-completeness of the $merge$ function, we can set out to prove left-completeness for the $\parallel$-combinator. The key insight here is that the depth bound at which $x$ occurs does not change, thus we can sipmly reuse it, and lift the above lemma to the generator type: 
 
 \begin{code}
 ∥-complete-left :  ∀ {a : Set} {x : a} {f g : ∀ {n : ℕ} → 𝔾 a n}
