@@ -1,12 +1,9 @@
-\documentclass[11pt]{article}
+\documentclass[acmsmall]{acmart}
+
 
 %include agda.fmt
 %include polycode.fmt
 %include greek.fmt
-
-\usepackage[top=4cm,bottom=4cm,left=3cm,right=3cm]{geometry} 
-\usepackage{fancyhdr}
-\pagestyle{fancy}
 
 \usepackage{textcomp}
 
@@ -16,23 +13,9 @@
 \DeclareUnicodeCharacter{10631}{$\llparenthesis$}
 \DeclareUnicodeCharacter{10632}{$\rrparenthesis$}
 
-\renewcommand{\figurename}{Listing}
 \usepackage[font=small,labelfont=bf]{caption}
 
-\usepackage{cite}
-
-\usepackage[T1]{fontenc}
-\rhead{\leftmark}
-\cfoot{\textsc{Utrecht University}}
-\rfoot{\thepage}
-% Quotes
-\usepackage{epigraph}
-
-\usepackage{geometry}
-
 \usepackage{textgreek}
-
-\usepackage{multicol}
 
 % Math
 \usepackage{amssymb}
@@ -56,9 +39,7 @@
 \definecolor{linkcolour}{rgb}{0,0.2,0.6}
 \hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour,citecolor=blue}
 
-% Geometry
-%\usepackage{titling}
-%\setlength{\droptitle}{-7em}
+\setlength\mathindent{1cm}
 
 \title{Program Term Generation Through Enumeration of Indexed datatypes (Thesis Proposal)}
 \author{Cas van der Rest}
@@ -67,8 +48,6 @@
 \begin{document}
 
 \maketitle
-
-\tableofcontents 
 
 \newpage
 
@@ -95,9 +74,7 @@ What is/are your research questions/contributions? \cite{claessen2011quickcheck}
 What is the existing technology and literature that I'll be
 studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2011generic, norell2008dependently}
 
-\subsection{Dependently Typed Programming \& Agda}
-
-\subsubsection{Dependent Type Theory}
+\subsection{Dependent Types}
 
 Dependent type theory extends a type theory with the possiblity of defining types that depend on values. In addition to familiar constructs, such as the unit type ($\top$) and the empty type $\bot$, one can use so-called $\Pi$-types and $\Sigma$-types. $\Pi$-types capture the idea of dependent function types, that is, \textit{functions} whose output type may depent on the values of its input. Given some type $A$ and a family $P$ of types indexed by values of type $A$ (i.e. $P$ has type $A \rightarrow Type$), $\Pi$-types have the following definition: 
 
@@ -111,17 +88,135 @@ In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of which the type
 \Sigma_{(x : A)} P(x) \quad \equiv \quad (x : A) \times P(x) 
 \end{equation*}
 
-The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification. 
+The Curry-Howard equivalence \cite{wadler2015propositions} extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification. 
+
+\subsection{Agda}
+
+Agda is a programming language that implements dependent types \cite{norell2008dependently}. Its syntax is broadly similar to Haskell's, though Agda's type system is vastly more expressive due to the possibility for types to depend on term level values. Agda has a dual purpose as proof assistent based on the Curry-Howard equivalence. 
 
 \subsubsection{Codata and Sized Types}
 
-Agda requires all functions to be total, where total means that they should be defined on any possible input, and give a result in a finite amount of time. The latter means that Agda is equipped with a termination checker that tries to prove that functions terminate. It is implied by undecidability of the halting problem that such a checker cannot be both sound and complete. Agda's termination checker is sound, meaning that there are functions that terminate which get rejected. This means that we cannot represent infinite structures in the same way as in haskell. For example, we might use the following definition in Haskell: \texttt{nats = 0 : map (+1) nats}. A similar definition in Agda will get rejected by the termination checker. 
+All definitions are required to be \textit{total} in Agda, meaning that they should be defined and terminate in finite time on all possible inputs. The Halting problem states that it is impossible to define a general procedure that decides whether the latter condition. To ensure that only terminating definitions are accepted, Agda's termination checker uses a sound approximation. A logical consequence is that there are Agda programs that terminate, but are rejected by the termination checker. This means that we cannot work with infinite data in the same way as in the same way as in Haskell, which does not care about termination. This means that co-recursive definitions are often problematic. For example, the following definition is perfectly fine in Haskell: 
+
+\begin{code}
+nats :: [Int]
+nats = 0 : map (+1) nats
+\end{code}
+
+meanwhile, an equivalent definition in Agda gets rejected by the Termination checker: 
+
+\begin{code}
+nats : List ℕ
+nats = 0 ∷ map suc nats
+\end{code}
+
+This is no surprise, as the termination checker will reject any recursive calls where there is not at least one argument that is strictly smaller. However, in both Agda and Haskell, an expression such as |take 10 nats| evaluates to $[0,1, \ldots , 9]$ in finite time. 
+
+\paragraph{Codata} To allow these kind of manipulations on infinite structures, the Agda Standard Library makes the lazy semantics that allow these operations explicit. In the case of lists, this means that we explicitly specify that the recursive argument to the $::$ constructor is a \textit{Thunk}, which should only be evaluated when needed: 
+
+\begin{code}
+data Colist {a} (A : Set a) (i : Size) : Set a where
+  []  : Colist A i
+  _∷_ : A → Thunk (Colist A) i → Colist A i
+\end{code}
+
+We can now define |nats| in Agda by wrapping the recursive call in a thunk: 
+
+\begin{code}
+nats : ∀ {i : Size} → Colist ℕ i
+nats = 0 ∷ λ where .force → map suc nats'
+\end{code}
+
+Since colists are possible infinite structures, there are some functions we can define on lists, but not on colists. An example of this is a function calculating the length of a colist: 
+
+\begin{code}
+length : ∀ {a : Set} → Colist a ∞ →  ℕ
+length [] = 0
+length (x ∷ xs) = suc (length' (xs .force))
+\end{code}
+
+\paragraph{Sized Types} Sized types extend the space of function definitions that are recognized by the termination checker as terminating by tracking information about the size of values in types \cite{abel2010miniagda}. Consider the folowing example of a function that increments every element in a list of naturals with its position: 
+
+\begin{code}
+incpos : List ℕ → List ℕ
+incpos [] = []
+incpos (x ∷ xs) = x ∷ incpos (map suc xs)
+\end{code}
+
+The recursive call to |incpos| gets flagged by the termination checker; we know that |map| does not alter the length of a list, but the termination checker cannot see this. For all it knows |map| equals |const [ 1 ]|, which would make |incpos| non-terminating. The size-preserving property of |map| is not reflected in its type. 
+
+We can define an alternative version of the |List| datatype indexed with |Size|, which tracks the depth of a value in its type. 
+
+\begin{code}
+data List (a : Set) : Size → Set where
+  []  : ∀ {i} → List' a i
+  _∷_ : ∀ {i} → a → List' a i → List' a (↑ i)
+\end{code}
+
+here |↑ i| means that the depth of a value constructed using the $::$ constructor is one deeper than its recursive argument. Incidently, the recursive depth of a list is equal to its size (or length), but this is not necessarily the case. By indexing values of |List| with their size, we can define a version of |map| which reflects in its type that the size of the input argument is preserved: 
+
+\begin{code}
+map : ∀ {i} {a b : Set} → (a → b) → List a i → List b i
+\end{code}
+
+using this definition of |map|, the definition of |incpos| is no longer rejected by the termination checker. 
 
 \subsection{Property Based Testing}
 
+\textit{Property Based Testing} aims to assert properties that universally hold for our programs by parameterizing tests over values and checking them against a collection of test values. An example of a property (in Haskell) would be: 
+
+\begin{code}
+reverse_preserves_length :: [a] -> Bool 
+reverse_preserves_length xs = length xs == length (reverse xs)
+\end{code}
+
+We can \textit{check} this property by taking a collection of lists, and asserting that |reverse_preserves_length| is |true| on all test inputs. Libraries for property based testing often include some kind of mechanism to automatically generate collections of test values. Existing tools take different approaches towards generatino of test data: \textit{QuickCheck} \cite{claessen2011quickcheck} randomly generates values within the test domain, while \textit{SmallCheck} \cite{runciman2008smallcheck} and \textit{LeanCheck} \cite{matela2017tools} exhaustively enumerate all values in the test domain up to a certain point. 
+
 \subsubsection{Existing Libraries}
 
+Many libraries exist for property based testing. This section briefly discusses some of them. 
+
+\paragraph{QuickCheck} Published in 2000 by Claessen \& Hughes \cite{claessen2011quickcheck}, QuickCheck implements property based testing for Haskell. As mentioned before, test values are generated by sampling randomly from the domain of test values. QuickCheck supplies the typeclass \texttt{Arbitrary}, whose instances are those types for which random values can be generated. A property of type |a -> Bool| can be tested if |a| is an instance of \texttt{Arbitrary}. Instances for most common Haskell types are supplied by the library. 
+
+If a property fails on a testcase, QuickCheck supplies a counterexapmle. Consider the following faulty definition of |reverse|: 
+
+\begin{code}
+reverse :: Eq a => [a] -> [a]
+reverse []      =  []
+reverse (x:xs)  =  nub ((reverse xs) ++ [x, x])
+\end{code}
+
+If we now test our function by calling |quickCheck reverse_preserves_length|, we get the following output: 
+
+\begin{verbatim}
+Test.QuickCheck> quickCheck reverse_preserves_length 
+*** Failed! Falsifiable (after 8 tests and 2 shrinks):    
+[7,7]
+\end{verbatim}
+
+We see that a counterexample was found after 8 tests \textit{and 2 shrinks}. Due to the random nature of the tested values, the counterexamples that falsify a property are almost never minimal counterexamples. QuickCheck takes a counterexample and applies some function that produces a collection of values that are smaller than the original counterexample, and attempts to falsify the property using one of the smaller values. By repeatedly \textit{Schrinking} a counterexample, QuickCheck is able to find much smaller counterexamples, which are in general of much more use to the programmer. 
+
+Perhaps somewhat surprising is that QuickCheck is also able randomly generate values for function types. The general idea here is that for a function of type |a -> b|, a |case| expression is generated that switches over the possible constructors for |a|, and returns a random value of type |b| for every branch. 
+
+\paragraph{(Lazy) SmallCheck} Contrary to QuickCheck, SmallCheck \cite{runciman2008smallcheck} takes an \textit{enumerative} approach to the generation of test data. While the approach to formulation and testing of properties is largely similar to QuickCheck's, test values are not generated at random, but rather exhaustively enumerated up to a certain \textit{depth}. Zero-arity constructors have depth $0$, while the depth of any positive arity constructor is one greather than the maximum depth of its arguments.  The motivation for this is the \textit{small scope hypothesis}: if a program is incorrect, it will almost allways fail on some small input \cite{andoni2003evaluating}. 
+
+In addition to SmallCheck, there is also \textit{Lazy} SmallCheck. In many cases, the value of a property is determined only by part of the input. Additionally, Haskell's lazy semantics allow for functions to be defined on partial inputs. The prime example of this is a property \texttt{sorted :: Ord a => [a] -> Bool} that returns \texttt{false} when presented with \texttt{1:0:$\bot$}. It is not necessary to evaluate $\bot$ to determine that the input list is not ordered. 
+
+Partial values represent an entire class of values. That is, \texttt{1:0:$\bot$} can be viewed as a representation of the set of lists that start with \texttt{[1, 0]}. By checking properties on partial values, it is possible to falsify a property for an entire class of values in one go, in some cases greatly reducing the amount of testcases needed. 
+
+\paragraph{LeanCheck} Where SmallCheck uses a value's \textit{depth} to bound the number of test values, LeanCheck uses a value's \textit{size} \cite{matela2017tools}, where size is defined as the number of construction applications of positive arity.
+
+Both SmallChack and LeanCheck contain functionality to enumerate functions similar to QuickCheck's \texttt{Coarbitrary}. 
+
+\paragraph{Feat} A downside to both SmallCheck and LeanCheck is that they do not provide an efficient way to generate or sample large test values. QuickCheck has no problem with either, but QuickCheck generators are often more tedious to write compared to their SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill this gap by providing a way to efficiently enumerate algebraic types. More specifically, when requesting the $n^th$ element of an enumeration, Feat does not need to generate all elements up to $n$, but rather skips large parts of the enumeration. This allows for values to be sampled from an enumeration that are vastly larger than what SmallCheck would be able to handle. 
+
+
+
+\paragraph{QuickChick}
+
 \subsubsection{Generating Test Data}
+
+\subsubsection{Automatic Generation of Specifications}
 
 \subsection{Generic Programming \& Type Universes}
 
@@ -167,7 +262,7 @@ List' : Set → Set
 List' a = μ (U ⊕ (K a ⊗ I))
 \end{code}
 
-Notice that this pattern functor denotes a choice between a unary constructor ($[]]$), and a constructor that takes a constant of type $a$ and a recursive positions as arguments ($::$). We can define conversion functions between the standard $List$ type, and the interpretation of our pattern functor: 
+Notice that this pattern functor denotes a choice between a unary constructor ($[]$), and a constructor that takes a constant of type $a$ and a recursive positions as arguments ($::$). We can define conversion functions between the standard $List$ type, and the interpretation of our pattern functor: 
 
 \begin{code}
 fromList : ∀ {a : Set} → List a → List' a
@@ -210,7 +305,15 @@ Ty : Ar\ op \rightarrow I
 \end{cases}
 \end{equation*}
 
-\paragraph{Example} Let us consider the signature for the $Vec$ type, given by $\Sigma_{Vec}(\mathbb{N})$. Recall the definition of the $Vec$ datatype in listing \ref{vecdef}. It has the following relation between index and operations: 
+\paragraph{Example} Let us consider the signature for the $Vec$ type, denoted by $\Sigma_{Vec}(\mathbb{N})$. Recall the definition of the $Vec$ datatype: 
+
+\begin{code}
+data Vec {a} (A : Set a) : ℕ → Set a where
+  []  : Vec A zero
+  _∷_ : ∀ {n} (x : A) (xs : Vec A n) → Vec A (suc n)
+\end{code} 
+
+It has the following relation between indices and operations (available constructors): 
 
 \begin{code}
 Op-vec : ∀ {a : Set} → ℕ → Set
@@ -238,46 +341,24 @@ Ty-vec (suc n) a tt = n
 
 This defines the signature for $Vec$: $\Sigma_{Vec} \triangleq \texttt{Op-vec} \triangleleft^\texttt{Ty-vec} \texttt{Ar-vec}$. 
 
-\begin{figure}[h] \hrulefill
-\begin{code}
-data Vec {a} (A : Set a) : ℕ → Set a where
-  []  : Vec A zero
-  _∷_ : ∀ {n} (x : A) (xs : Vec A n) → Vec A (suc n)
-\end{code} 
-\hrulefill
-\caption{Definition of $Vec$}\label{vecdef}
-\end{figure}
+Non-indexed datatypes can be represented as an indexed type by choosing an index type with only a single object: $\top$. Below is a signature definition for $\mathbb{N}$ using $\top$ as the index: 
 
-We can define signatures for non-indexed datatypes as well by choosing a trivial index, e.g. $I = \top$. This gives $\Sigma_{\mathbb{N}} \triangleq \texttt{Op-nat} \triangleleft^\texttt{Ty-nat} \texttt{Ar-nat}$ with the definitions given in listing \ref{signat-def}: 
-
-\begin{figure} \hrulefill
 \begin{code}
 Op-nat : ⊤ → Set
 Op-nat tt = ⊤ ⊎ ⊤
-\end{code}
-\begin{code}
+
 Ar-nat : Op-nat tt → Set
 Ar-nat (inj₁ x) = ⊥
 Ar-nat (inj₂ y) = ⊤
-\end{code}
-\begin{code}
+
 Ty-nat : (op : Op-nat tt) → Ar-nat op → ⊤
 Ty-nat (inj₁ x) ()
 Ty-nat (inj₂ y) tt = tt
 \end{code}
-\hrulefill
-\caption{Signature definition for $\mathbb{N}$}\label{signat-def}
-\end{figure}
 
 \subsubsection{Functorial Species}
 
 \subsubsection{Indexed Functors}
-
-\subsection{Blockchain Semantics}
-
-\subsubsection{BitML}
-
-\subsubsection{UTXO \& Extended UTXO}
 
 \begin{itemize}
 
@@ -370,7 +451,7 @@ data _[_↦_] : Env → Id → Ty → Set where
 
 \subsection{Enumeration of Agda Types}
 
-We look at how to enumerate various datatypes in Agda, starting with simple examples such as $\mathbb{N}$ or $Bool$, and progressively working towards more complex data. The first question we encounter is what the result of an enumeration should be. The ovious answer is that $enumerate a$ should return something of type $List a$, containing all possible values of type $a$. This is however not possible, as $List$ in Agda can only represent a finite list, and many datatypes, such as $\mathbb{N}$ have an infinite number of inhabitants. To solve this, we may either use the $Codata$ functionality from the standard library, or index our result with some kind of metric that limits the number of solutions to a finite set. The latter approach is what is used by both \textit{SmallCheck}\cite{} and \textit{LeanCheck}\cite{}, enumerating values up to a certain depth or size. 
+We look at how to enumerate various datatypes in Agda, starting with simple examples such as $\mathbb{N}$ or $Bool$, and progressively working towards more complex data. The first question we encounter is what the result of an enumeration should be. The ovious answer is that $enumerate a$ should return something of type $List a$, containing all possible values of type $a$. This is however not possible, as $List$ in Agda can only represent a finite list, and many datatypes, such as $\mathbb{N}$ have an infinite number of inhabitants. To solve this, we may either use the $Codata$ functionality from the standard library, or index our result with some kind of metric that limits the number of solutions to a finite set. The latter approach is what is used by both \textit{SmallCheck}\cite{runciman2008smallcheck} and \textit{LeanCheck}\cite{matela2017tools}, enumerating values up to a certain depth or size. 
 
 We admit the same approach as the SmallCheck library, defining an enumerator/generator to be a function of type $\mathbb{N} \rightarrow List\ a$, where input argument signifies the maximum depth. By working with $List$, ensuring termination becomes a lot easier, since it is by definition a finite structure. Furthermore, proving properties about generators becomes more straightforward, as we can simply prove the desired properties about the $List$ type, and lift the result to our generator type. 
 
@@ -646,6 +727,8 @@ We can construct a similar proof for products by first proving similar propertie
 
 \subsubsection{Correctness of Derived Generators}
 
+
+
 \subsection{Generalization to Indexed Types}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
@@ -662,7 +745,7 @@ What will I do with the remainder of my thesis? \cite{claessen2015generating}
 Give an approximate estimation/timetable for what you will do and when you will be done.
 
 \newpage
-\bibliography{references}{}
-\bibliographystyle{plain}
+\bibliographystyle{acm} % ACM-Reference-Format
+\bibliography{references}
 
-\end{document}paramter
+\end{document}
