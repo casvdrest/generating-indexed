@@ -63,32 +63,64 @@ Besides the obvious applications to property based testing in the context of dep
 
 \subsection{Problem Statement}
 
-\subsection{Research Questions and Contributions}
-
 What is the problem? Illustrate with an example. \cite{runciman2008smallcheck, altenkirch2003generic}
 
-What is/are your research questions/contributions? \cite{claessen2011quickcheck}
+\subsection{Research Questions and Contributions}
+
+The general aim of this thesis is to work towards an answer to the following question:
+
+\begin{center}
+\textit{How can we generically enumerate and/or sample values of indexed datatypes?}
+\end{center}
+
+Obviously, this question is not easily answered and sparks quite a lot of new questions, of which many are deserving of our attention in their own right. Some examples of interesting further questions include: 
+
+\begin{itemize}
+
+\item
+We know that enumeration and sampling is possible for regular datatypes. QuickCheck \cite{claessen2011quickcheck} and SmallCheck \cite{runciman2008smallcheck} do this to generically derive test data generators. However, the question remains for which universes of indexed datatypes we can do the same. 
+
+\item 
+For more complex datatypes (such as ASTs or lambda terms), the number of values grows \textit{extremely} fast with their size: there are only a few lambda terms (up to \textalpha-equivalence) with depth $1$ or $2$, but for depth $50$ there are a little under $10^66$ \cite{grygiel2013counting} distinguished terms. How can we efficiently sample or enumerate larger values of such datatypes? Can we apply techniques such memoization to extend our reach?
+
+\item 
+How can insights gained into the enumeration and sampling of indexed datatypes aid in efficient generation of program terms?
+
+\item 
+What guarantees about enumeration or sampling can we give? Can we exhaustively enumerate all datatypes, or are there some classes for which this is not possible (if not, why)?
+
+\end{itemize}
+
+\paragraph{Intented research contributions} 
+
+\subsection{Methodology}
+
+We use the programming language/proof assistant Agda \cite{norell2008dependently} as our vehicle of choice, with the intention to eventually backport to Haskell in order to be able to investigate the practical applications of our insights in the context of program term generation. 
 
 \section{Background}
 
 What is the existing technology and literature that I'll be
 studying/using in my research \cite{denes2014quickchick, yorgey2010species, loh2011generic, norell2008dependently}
 
+\subsection{Prerequisites}
+
+The reader is assumed to be familiar (to some extent) with functional programming in general, and Agda and Haskell in particular. 
+
 \subsection{Dependent Types}
 
 Dependent type theory extends a type theory with the possiblity of defining types that depend on values. In addition to familiar constructs, such as the unit type ($\top$) and the empty type $\bot$, one can use so-called $\Pi$-types and $\Sigma$-types. $\Pi$-types capture the idea of dependent function types, that is, \textit{functions} whose output type may depent on the values of its input. Given some type $A$ and a family $P$ of types indexed by values of type $A$ (i.e. $P$ has type $A \rightarrow Type$), $\Pi$-types have the following definition: 
 
 \begin{equation*}
-\Pi_{(x : A)} P(x) \quad \equiv \quad (x : A) \rightarrow P(x) 
+\Pi_{(x : A)} P(x) \equiv (x : A) \rightarrow P(x) 
 \end{equation*}
 
 In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of which the type of the second value may depend on te first value of the pair. 
 
 \begin{equation*}
-\Sigma_{(x : A)} P(x) \quad \equiv \quad (x : A) \times P(x) 
+\Sigma_{(x : A)} P(x) \equiv (x : A) P(x) 
 \end{equation*}
 
-The Curry-Howard equivalence \cite{wadler2015propositions} extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification. 
+The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they can be used to model universal and existential quantification \cite{wadler2015propositions}. 
 
 \subsection{Agda}
 
@@ -96,7 +128,7 @@ Agda is a programming language that implements dependent types \cite{norell2008d
 
 \subsubsection{Codata and Sized Types}
 
-All definitions are required to be \textit{total} in Agda, meaning that they should be defined and terminate in finite time on all possible inputs. The Halting problem states that it is impossible to define a general procedure that decides whether the latter condition. To ensure that only terminating definitions are accepted, Agda's termination checker uses a sound approximation. A logical consequence is that there are Agda programs that terminate, but are rejected by the termination checker. This means that we cannot work with infinite data in the same way as in the same way as in Haskell, which does not care about termination. This means that co-recursive definitions are often problematic. For example, the following definition is perfectly fine in Haskell: 
+All definitions in Agda are required to be \textit{total}, meaning that they should be defined and terminate in finite time on all possible inputs. The Halting problem states that it is impossible to define a general procedure that decides whether the latter condition. To ensure that only terminating definitions are accepted, Agda's termination checker uses a sound approximation. A logical consequence is that there are Agda programs that terminate, but are rejected by the termination checker. This means that we cannot work with infinite data in the same way as in the same way as in Haskell, which does not care about termination. This means that co-recursive definitions are often problematic. For example, the following definition is perfectly fine in Haskell: 
 
 \begin{code}
 nats :: [Int]
@@ -206,17 +238,60 @@ Partial values represent an entire class of values. That is, \texttt{1:0:$\bot$}
 
 \paragraph{LeanCheck} Where SmallCheck uses a value's \textit{depth} to bound the number of test values, LeanCheck uses a value's \textit{size} \cite{matela2017tools}, where size is defined as the number of construction applications of positive arity.
 
-Both SmallChack and LeanCheck contain functionality to enumerate functions similar to QuickCheck's \texttt{Coarbitrary}. 
+Both SmallCheck and LeanCheck contain functionality to enumerate functions similar to QuickCheck's \texttt{Coarbitrary}. 
 
-\paragraph{Feat} A downside to both SmallCheck and LeanCheck is that they do not provide an efficient way to generate or sample large test values. QuickCheck has no problem with either, but QuickCheck generators are often more tedious to write compared to their SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill this gap by providing a way to efficiently enumerate algebraic types. More specifically, when requesting the $n^th$ element of an enumeration, Feat does not need to generate all elements up to $n$, but rather skips large parts of the enumeration. This allows for values to be sampled from an enumeration that are vastly larger than what SmallCheck would be able to handle. 
+\paragraph{Feat} A downside to both SmallCheck and LeanCheck is that they do not provide an efficient way to generate or sample large test values. QuickCheck has no problem with either, but QuickCheck generators are often more tedious to write compared to their SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill this gap by providing a way to efficiently enumerate algebraic types, employing memoization techniques to efficiently find the $n^{th}$ element of an enumeration. 
 
+\paragraph{QuickChick} QuickChick is a QuickCheck clone for the proof assistent Coq \cite{denes2014quickchick}. The fact that Coq is a proof assistent enables the user to reason about the testing framework itself \cite{paraskevopoulou2015foundational}. This allows one, for example, to prove that generators adhere to some distribution.  
 
+\subsubsection{Generating Constrained Test Data}\label{genconstrainedtd}
 
-\paragraph{QuickChick}
+Defining a suitable generation of test data for property based testing is notoriously difficult in many cases, independent of whether we choose to sample from or enumerate the space of test values. Writing generators for mutually recursive datatypes with a suitable distribution is especially challanging. Another frequently occuring problem is that of how to test conditional properties with a sparse precondition. The canonical example of this is that of sorted lists. Suppose we have the following \texttt{insert} function (in Haskell): 
 
-\subsubsection{Generating Test Data}
+\begin{code}
+insert :: Ord a => a -> [a] -> [a]
+insert v []                   = [v]
+insert v (x:xs)  |  v <= x     = v:x:xs 
+                 |  otherwise  = x:insert v xs
+\end{code}
 
-\subsubsection{Automatic Generation of Specifications}
+We would like to ensure that sortedness of lists is preserved by \texttt{insert}. However, if we define a property to test this: 
+
+\begin{code}
+insert_preserves_sorted :: Int -> [Int] -> Property 
+insert_preserves_sorted x xs = (sorted xs) ==> sorted (insert' x xs)
+\end{code}
+
+and invoke QuickCheck in the usual manner (\texttt{quickCheck insert\_preserves\_sorted}), we get the following output: 
+
+\begin{verbatim}
+Test.QuickCheck> quickCheck prop_insertPreservesSorted 
+*** Gave up! Passed only 70 tests; 1000 discarded tests.
+\end{verbatim}
+
+In essence, two things go wrong here. The obvious problem is that QuickCheck is unable to generate a sufficient amount of relevant test cases due to the sparseness of the precondition. The second and perhaps more subtle problem is that the generated test data for which the precondition holds almost exclusively consists of small values (that is, lists of $0$, $1$ or $2$ elements). These problems make testing both inefficient in terms of computational power required, as well as ineffective. Obviously, things will only get worse once we require more complex test data. 
+
+The solution to this problem is to define a custom generator that only generates sorted lists, and remove the precondition from the property. For sorted (integer) lists, defining such a generator is somewhat straightforward
+
+\begin{code}
+gen_sorted :: Gen [Int]
+gen_sorted = arbitrary >>= return . diff
+  where  diff :: [Int] -> [Int]
+         diff []      = [] 
+         diff (x:xs)  = x:map (+x) (diff xs) 
+\end{code}
+
+However, for more complex preconditions defining suitable generators is all but trivial. 
+
+\subsection{Techniques for Generating Test Data}
+
+As discussed in section \ref{genconstrainedtd}, proper generation of test data is a hard problem, and involves a lot of details and subtleties. This section discusses some related work that attempts to tackle this problem. 
+
+\subsubsection{Lambda Terms} 
+
+A problem often considered in literature is the generation of (well-typed) lambda terms \cite{palka2011testing, grygiel2013counting, claessen2015generating}. Good generation of arbitrary program terms is especially interesting in the context of testing compiler infrastructure, and lambda terms provide a natural first step towards that goal. 
+
+\subsubsection{Inductive Relations}
 
 \subsection{Generic Programming \& Type Universes}
 
@@ -449,7 +524,7 @@ data _[_↦_] : Env → Id → Ty → Set where
 
 \section{Preliminary results}\label{preliminary}
 
-\subsection{Enumeration of Agda Types}
+\subsection{Enumerating Regular Types in Agda}
 
 We look at how to enumerate various datatypes in Agda, starting with simple examples such as $\mathbb{N}$ or $Bool$, and progressively working towards more complex data. The first question we encounter is what the result of an enumeration should be. The ovious answer is that $enumerate a$ should return something of type $List a$, containing all possible values of type $a$. This is however not possible, as $List$ in Agda can only represent a finite list, and many datatypes, such as $\mathbb{N}$ have an infinite number of inhabitants. To solve this, we may either use the $Codata$ functionality from the standard library, or index our result with some kind of metric that limits the number of solutions to a finite set. The latter approach is what is used by both \textit{SmallCheck}\cite{runciman2008smallcheck} and \textit{LeanCheck}\cite{matela2017tools}, enumerating values up to a certain depth or size. 
 
@@ -694,8 +769,7 @@ Notice that equivalence follows trivially from completeness, i.e. if two generat
 
 \begin{code}
 Complete→eq :  ∀ {a} {g₁ g₂ : ∀ {n} → 𝔾 a n}
-               → Complete g₁ → Complete g₂
-               → g₁ ∼ g₂
+               → Complete g₁ → Complete g₂ → g₁ ∼ g₂
 Complete→eq p₁ p₂ = (λ _ → p₂) , (λ _ → p₁)
 \end{code}
 
@@ -707,8 +781,7 @@ We take productivity of choice as an example, hence our goal is to show that if,
 
 \begin{code}
 merge-complete-left :  ∀ {ℓ} {a : Set ℓ} {xs ys : List a} {x : a}
-                       → x ∈ xs
-                       → x ∈ merge xs ys
+                       → x ∈ xs → x ∈ merge xs ys
 merge-complete-left (here)                   = here
 merge-complete-left {xs = _ ∷ xs} (there p)  = 
   merge-cong {xs = xs} (merge-complete-left p)
@@ -718,8 +791,7 @@ merge-complete-left {xs = _ ∷ xs} (there p)  =
 
 \begin{code}
 ∥-complete-left :  ∀ {a : Set} {x : a} {f g : ∀ {n : ℕ} → 𝔾 a n}
-                   → f ↝ x
-                   → (f ∥ g) ↝ x
+                   → f ↝ x → (f ∥ g) ↝ x
 ∥-complete-left (n , p) = n , merge-complete-left p
 \end{code}
 
