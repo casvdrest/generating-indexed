@@ -233,7 +233,8 @@ module src.Gen.Properties where
 
   -- Depth monotonicity: if a generator produces a values for a given depth, it will also produce that value for greater depths.
   -- NB: this is not necessarily the case for all generators, but those defined with our combinators do satisfy this property. 
-  postulate depth-monotone : ∀ {a : Set} {x : a} {n m : ℕ} {g₁ : ∀ {n : ℕ} → 𝔾 a n} → n ≤ m → x ∈ g₁ {n} (n , refl) → x ∈ g₁ {m} (m , refl)  
+  postulate depth-monotone : ∀ {a : Set} {x : a} {n m : ℕ} {g₁ : ∀ {n : ℕ} → 𝔾 a n}
+                             → n ≤ m → x ∈ g₁ {n} (n , refl) → x ∈ g₁ {m} (m , refl)  
 
   -- If f produces x and g produces y, then ⦇ C f g ⦈, where C is any
   -- 2-arity constructor, produces C x y

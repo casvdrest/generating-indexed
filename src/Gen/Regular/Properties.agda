@@ -104,8 +104,6 @@ module src.Gen.Regular.Properties where
                   → kgen {a = a} {g = f} ↝ x
   kgen-complete (p , snd) = p , snd
 
-  postulate depth-monotonicity : ∀ {a : Set} {n m : ℕ} → n ≤ m → 𝔾 a n → 𝔾 a m 
-
   {-# TERMINATING #-}
   deriveGen-complete : ∀ {f g : Reg} {x : ⟦ f ⟧ (μ g)}
                        → deriveGen {f = f} {g = g} ⟨ deriveGen {f = g} {g = g} ⟩ ↝ x
@@ -123,7 +121,7 @@ module src.Gen.Regular.Properties where
       (deriveGen-complete {f = f₁})
       (deriveGen-complete {f = f₂})
   deriveGen-complete {I} {g} {x = `μ x} with deriveGen-complete {f = g} {g = g} {x = x}
-  ... | n , prf = suc n , (∈-rewr (sym ++-right-ident) (map-preserves-elem {f = `μ} prf))
+  ... | n  , prf = suc n , (∈-rewr (sym ++-right-ident) (map-preserves-elem {f = `μ} prf))
   deriveGen-complete {K x} {g} = {!!}
 
 

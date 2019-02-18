@@ -26,18 +26,34 @@ module src.Gen.Regular.Generic where
   open RawMonad ⦃...⦄ using (_⊛_; pure)
 
   data Reg : Set where
-    U   : Reg
+    U   : Reg 
     _⊕_ : Reg → Reg → Reg
     _⊗_ : Reg → Reg → Reg
     I   : Reg
-    K   : Σ[ a ∈ Set ] ⟪ 𝔾 a ⟫ → Reg
+    K   : Set → Reg
+
+  data RegInfo (P : Set → Set) : Reg → Set where
+    U~   : RegInfo P U
+    
+    _⊕~_ : ∀ {f₁ f₂ : Reg}
+           → RegInfo P f₁ → RegInfo P f₂
+           → RegInfo P (f₁ ⊕ f₂)
+           
+    _⊗~_ : ∀ {f₁ f₂ : Reg}
+           → RegInfo P f₁ → RegInfo P f₂
+           → RegInfo P (f₁ ⊗ f₂)
+           
+    I    : RegInfo P I
+    
+    K    : ∀ {a : Set} → P a → RegInfo P (K a)
+    
 
   ⟦_⟧ : Reg → Set → Set
   ⟦ U           ⟧ r = ⊤
   ⟦ reg₁ ⊕ reg₂ ⟧ r = ⟦ reg₁ ⟧ r ⊎ ⟦ reg₂ ⟧ r
   ⟦ reg₁ ⊗ reg₂ ⟧ r = ⟦ reg₁ ⟧ r × ⟦ reg₂ ⟧ r 
   ⟦ I           ⟧ r = r
-  ⟦ K (a , g)   ⟧ r = a
+  ⟦ K a         ⟧ r = a
   
   data μ (f : Reg) : Set where
     `μ : ⟦ f ⟧ (μ f) → μ f
@@ -50,31 +66,14 @@ module src.Gen.Regular.Generic where
   mapᵣ I f i     = f i
   mapᵣ (K x) f i = i
 
-  ugen : ∀ {n : ℕ} {a : Set} → 𝔾 (⟦ U ⟧ a) n
-  ugen = pure tt
-
-  igen : ∀ {n : ℕ} {a : Set} {f : Reg} → 𝔾 (⟦ f ⟧ a) n →
-         𝔾 (⟦ f ⟧ a) n
-  igen μ = μ
-
-  kgen : ∀ {n : ℕ} {a b : Set} {g : ⟪ 𝔾 b ⟫} → 𝔾 (⟦ K (b , g) ⟧ a) n
-  kgen {g = g} = ⟨ g ⟩
-
-  ⊕gen : ∀ {n : ℕ} {f g : Reg} {a : Set} →
-         𝔾 (⟦ f ⟧ a) n → 𝔾 (⟦ g ⟧ a) n →
-         𝔾 (⟦ f ⊕ g ⟧ a) n
-  ⊕gen f g = ⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈
-
-  ⊗gen : ∀ {n : ℕ} {f g : Reg} {a : Set} →
-         𝔾 (⟦ f ⟧ a) n → 𝔾 (⟦ g ⟧ a) n →
-         𝔾 (⟦ f ⊗ g ⟧ a) n
-  ⊗gen f g = ⦇ f , g ⦈
-
-  deriveGen : ∀{f g : Reg} {n : ℕ}
+  deriveGen : ∀ {f g : Reg} {n : ℕ}
+              → RegInfo (λ a → ⟪ 𝔾 a ⟫) f
               → 𝔾 (⟦ g ⟧ (μ g)) n
               → 𝔾 (⟦ f ⟧ (μ g)) n
-  deriveGen {U}      {g} rec = ugen {a = μ g}
-  deriveGen {f ⊕ f₁} {g} rec = ⦇ inj₁ (deriveGen {f = f} rec) ⦈ ∥ ⦇ inj₂ (deriveGen {f = f₁} rec) ⦈ 
-  deriveGen {f ⊗ f₁} {g} rec = ⊗gen {f = f} {g = f₁} (deriveGen {f = f} rec) (deriveGen {f = f₁} rec)
-  deriveGen {I}      {g} rec = ⦇ `μ (igen {f = g} rec) ⦈
-  deriveGen {K (a , gen)} {g} {n} rec = kgen {a = μ g} {b = a} {g = gen}
+  deriveGen {U}       {g} c rec = pure tt
+  deriveGen {f ⊕ f₁}  {g} (c₁ ⊕~ c₂) rec =
+    ⦇ inj₁ (deriveGen {f = f} c₁ rec) ⦈ ∥ ⦇ inj₂ (deriveGen {f = f₁} c₂ rec) ⦈ 
+  deriveGen {f ⊗ f₁}  {g} (c₁ ⊗~ c₂) rec =
+    ⦇ (deriveGen {f = f} c₁ rec) , (deriveGen {f = f₁} c₂ rec) ⦈
+  deriveGen {I}       {g} c rec = ⦇ `μ rec ⦈
+  deriveGen {K a} {g} {n} (K x) rec = ⟨ x ⟩
