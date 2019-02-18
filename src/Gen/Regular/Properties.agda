@@ -6,8 +6,8 @@ open import src.Gen.Regular.Generic
 open import src.Gen.Regular.Isomorphism
 open import src.Data using (_∈_; here; Π)
 
-open import Data.Unit
-open import Data.Product
+open import Data.Unit hiding (_≤_)
+open import Data.Product using (proj₁; proj₂; _,_)
 open import Data.Sum
 open import Data.Nat
 open import Data.List
@@ -23,10 +23,10 @@ module src.Gen.Regular.Properties where
 
   ------ U Combinator (Unit) ------
 
-  ugen-complete : ∀ {a : Set} {n : ℕ}
+  ugen-complete : ∀ {g : Reg}
                   -------------------------
-                  → Complete (ugen {a = a})
-  ugen-complete {n = n} = n , here
+                  → Complete (ugen {a = μ g})
+  ugen-complete = 1 , here
   
   
   ------ ⊕ combinator (Coproduct) ------
@@ -78,10 +78,9 @@ module src.Gen.Regular.Properties where
                     {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                     {x : ⟦ f ⟧ a} {y : ⟦ g ⟧ a}
                   → (p₁ : g₁ ↝ x) → (p₂ : g₂ ↝ y)
-                  → depth {f = g₁} p₁ ≡ depth {f = g₂} p₂
                   --------------------------------------
                   → ⊗gen {f = f} {g = g} g₁ g₂ ↝ (x , y)
-  ⊗gen-complete {g₁ = g₁} {g₂ = g₂}  p1 p2 = ⊛-complete {f = g₁} {g = g₂} p1 p2
+  ⊗gen-complete {g₁ = g₁} {g₂ = g₂} p1 p2 = ⊛-complete {f = g₁} {g = g₂} p1 p2
 
   -- Completeness for product, but now with the quantification over arbitrary values
   -- hidden. 
@@ -89,11 +88,10 @@ module src.Gen.Regular.Properties where
                     {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
                     {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                   → (p₁ : Complete g₁) → (p₂ : Complete g₂)
-                  → (∀ {x y} → depth {f = g₁} {x} p₁ ≡ depth {f = g₂} {y} p₂)
                   -----------------------------------------------------------
                   → Complete (⊗gen {f = f} {g = g} g₁ g₂)
-  ⊗gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂ dp =
-    ⊗gen-complete {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₁ p₂ dp
+  ⊗gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂  =
+    ⊗gen-complete {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₁ p₂
 
 
   ------ K combinator (constants) ------
@@ -105,8 +103,34 @@ module src.Gen.Regular.Properties where
                   --------------------------------------------
                   → kgen {a = a} {g = f} ↝ x
   kgen-complete (p , snd) = p , snd
-  
--- ### TODO ###
---
--- * Assemble lemma's into proof about
---   generators derived from pattern functors
+
+  postulate depth-monotonicity : ∀ {a : Set} {n m : ℕ} → n ≤ m → 𝔾 a n → 𝔾 a m 
+
+  {-# TERMINATING #-}
+  deriveGen-complete : ∀ {f g : Reg} {x : ⟦ f ⟧ (μ g)}
+                       → deriveGen {f = f} {g = g} ⟨ deriveGen {f = g} {g = g} ⟩ ↝ x
+  deriveGen-complete {U} {g} = ugen-complete {g = g}
+  deriveGen-complete {f₁ ⊕ f₂} {g} =
+    ⊕gen-Complete {f = f₁} {g = f₂}
+      {g₁ = deriveGen {f = f₁} ⟨ deriveGen {f = g} ⟩}
+      {g₂ = deriveGen {f = f₂} ⟨ deriveGen {f = g} ⟩}
+      (deriveGen-complete {f = f₁})
+      (deriveGen-complete {f = f₂})
+  deriveGen-complete {f₁ ⊗ f₂} {g} =
+    ⊗gen-Complete {f = f₁} {g = f₂}
+      {g₁ = deriveGen {f = f₁} ⟨ deriveGen {f = g} ⟩}
+      {g₂ = deriveGen {f = f₂} ⟨ deriveGen {f = g} ⟩}
+      (deriveGen-complete {f = f₁})
+      (deriveGen-complete {f = f₂})
+  deriveGen-complete {I} {g} {x = `μ x} with deriveGen-complete {f = g} {g = g} {x = x}
+  ... | n , prf = suc n , (∈-rewr (sym ++-right-ident) (map-preserves-elem {f = `μ} prf))
+  deriveGen-complete {K x} {g} = {!!}
+
+
+  --=============================================--
+  ------ Completeness for derived generators ------
+  --=============================================--
+
+  deriveGen-Complete : ∀ {f : Reg} → Complete ⟨ deriveGen {f = f} {g = f} ⟩
+  deriveGen-Complete {f} {x} with deriveGen-complete {f = f} {g = f} {x = x}
+  deriveGen-Complete {f} {x} | n , p = suc n , p

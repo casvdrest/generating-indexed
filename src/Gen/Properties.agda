@@ -1,5 +1,5 @@
 open import src.Gen.Base
-open import src.Data
+open import src.Data using (_∈_; here; _⊕_; inl; inr; there; merge)
 
 open import Data.Product using (Σ; Σ-syntax; ∃; ∃-syntax; _×_; _,_; proj₁; proj₂)
 open import Data.Sum hiding (map)
@@ -192,9 +192,8 @@ module src.Gen.Properties where
 
   ------ Generator Product ------
 
-  -- Gets a genrator's depth
-  depth : ∀ {a : Set} {f : ∀ {n : ℕ} → 𝔾 a n} {x : a} → f ↝ x → ℕ
-  depth (fst₁ , snd₁) = fst₁
+  depth : ∀ {a : Set} {n : ℕ} → 𝔾 a n → ℕ
+  depth {n = n} _ = n
 
   -- Applying a constructor to a generator does not affect
   -- its production
@@ -206,15 +205,47 @@ module src.Gen.Properties where
   constr-preserves-elem {f = f} (p , elem) =
     p , list-ap-complete {fs = f ∷ []} here elem
 
+  max : ℕ → ℕ → ℕ
+  max zero m = m
+  max (suc n) zero = suc n
+  max (suc n) (suc m) = suc (max n m)
+
+  max-zero : ∀ {n : ℕ} → max n 0 ≡ n
+  max-zero {zero} = refl
+  max-zero {suc n} = refl
+
+  max-zero' : ∀ {n : ℕ} → max 0 n ≡ n
+  max-zero' = refl
+
+  max-sym : ∀ {n m} → max n m ≡ max m n
+  max-sym {zero} {m} rewrite max-zero {m} = refl
+  max-sym {suc n} {zero} = refl
+  max-sym {suc n} {suc m} = cong suc (max-sym {n} {m})
+
+  lemma-max₁ : ∀ {n m : ℕ} → n ≤ max n m
+  lemma-max₁ {zero} {m} = z≤n
+  lemma-max₁ {suc n} {zero} rewrite max-zero {n = n}
+    = s≤s ≤-refl
+  lemma-max₁ {suc n} {suc m} = s≤s lemma-max₁
+  
+  lemma-max₂ : ∀ {n m : ℕ} → m ≤ max n m
+  lemma-max₂ {n} {m} rewrite max-sym {n} {m} = lemma-max₁ 
+
+  -- Depth monotonicity: if a generator produces a values for a given depth, it will also produce that value for greater depths.
+  -- NB: this is not necessarily the case for all generators, but those defined with our combinators do satisfy this property. 
+  postulate depth-monotone : ∀ {a : Set} {x : a} {n m : ℕ} {g₁ : ∀ {n : ℕ} → 𝔾 a n} → n ≤ m → x ∈ g₁ {n} (n , refl) → x ∈ g₁ {m} (m , refl)  
+
   -- If f produces x and g produces y, then ⦇ C f g ⦈, where C is any
   -- 2-arity constructor, produces C x y
   ⊛-complete : ∀ {a b c : Set} {x : a} {y : b}
                  {f : ∀ {n : ℕ} → 𝔾 a n} {g : ∀ {n : ℕ} → 𝔾 b n} {C : a → b → c}
                → (p₁ : f ↝ x) → (p₂ : g ↝ y)
-               → depth {f = f} p₁ ≡ depth {f = g} p₂ -- TODO: use depth monotonicity and maximum of the operand depths
                -------------------------------------
                → ⦇ C f g ⦈ ↝ C x y
-  ⊛-complete (n , snd₁) (n , snd₂) refl  = n , list-ap-constr snd₁ snd₂
+  ⊛-complete {a} {b} {c} {f = f} {g = g} {C = C} (n , snd₁) (m , snd₂) =
+    max n m , list-ap-constr {a = a} {b = b} {c = c} {xs = f ((max n m) , refl)}
+    (depth-monotone {n = n} {m = max n m} {g₁ = f} (lemma-max₁ {n = n} {m = m}) snd₁)
+    (depth-monotone {n = m} {m = max n m} {g₁ = g} (lemma-max₂ {n = n} {m = m}) snd₂)
 
   ------ Combinator Completeness ------
 
@@ -230,14 +261,3 @@ module src.Gen.Properties where
     ∥-complete-left {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈} (constr-preserves-elem {g = f} p₁)
   ∥-Complete {f = f} {g = g} p₁ p₂ {inj₂ y} =
     ∥-complete-right {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈} (constr-preserves-elem {g = g} p₂)
-  
-  -- Completeness of the ⊗ combinator, using products to unify
-  -- the operands into a single type
-  ⊗-Complete : ∀ {a b : Set} {x : a} {y : b}
-                 {f : ∀ {n : ℕ} → 𝔾 a n} {g : ∀ {n : ℕ} → 𝔾 b n} 
-               → (p₁ : f ↝ x) → (p₂ : g ↝ y)
-               → depth {f = f} p₁ ≡ depth {f = g} p₂ -- TODO: use depth monotonicity and maximum of the operand depths
-               -------------------------------------
-               → ⦇ f , g ⦈ ↝ (x , y)
-  ⊗-Complete {a} {b} {f = f} {g = g} (n , snd₁) (n , snd₂) refl =
-    ⊛-complete {c = a × b} {f = f} {g = g} (n , snd₁) (n , snd₂) refl
