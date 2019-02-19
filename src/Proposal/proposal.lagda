@@ -304,12 +304,12 @@ The term \textit{regular datatypes} is often used to refer to the class of datat
 Any value that lives in universe induced by these combinators describes a regular datatype, and is generally referred to as a \textit{pattern functor}. We can define a datatype in agda that captures these values: 
 
 \begin{code}
-data Reg : Set →  Set where
-    U    : Reg ⊥
-    K    : (a : Set) → Reg a
-    _⊕_  : ∀ {a : Set} → Reg a → Reg a → Reg a
-    _⊗_  : ∀ {a : Set} → Reg a → Reg a → Reg a
-    I    : Reg ⊥
+data Reg : Set where
+    U   : Reg 
+    _⊕_ : Reg → Reg → Reg
+    _⊗_ : Reg → Reg → Reg
+    I   : Reg
+    K   : Set → Reg
 \end{code}
 
 Pattern functors can be interpreted as types in such a way that inhabitants of the interpreted type correspond to inhabitants of the type that is represented by the functor.  
@@ -717,6 +717,46 @@ By using the type signature defined above instead, the previously shown defintio
 
 In most cases, the initial call to $deriveGen$ will have the same value for $f$ and $g$. Observe that $\forall f \in Reg\ .\ deriveGen\ f\ f : \mathbb{G}\ (\llbracket\ f\ \rrbracket\ (\mu\ f))\ n \rightarrow \mathbb{G}\ (\llbracket\ f\ \rrbracket\ (\mu\ f))\ n$, thus we can use $fix$ to obtain a genrator that generates values of type $\llbracket\ f\ \rrbracket\ (\mu\ f))$. 
 
+\paragraph{Deriving for the |K|-combinator} Since we can refer to arbitrary values of |Set| using the |K|-combinator, there is no general procedure to construct generators of type |𝔾 (⟦ K a ⟧ (μ g))| for any |a| and |g|. At first glance, there are two ways to resolve this issue: 
+
+\begin{enumerate}
+\item
+Restrict the set of types to which we can refer using |K| to those types for which we can automatically derive a generator (i.e. the regular types). 
+
+\item 
+Somehow require the programmer to supply generators for all occurenses of |K| in the pattern functor, and use those generators
+\end{enumerate}
+
+The first approach has as a downside that it limits the expressiveness of derived generators, and excludes references to irregular types, hence we choose to require the user to supply a suitable set of generators that can be used whenever we encounter a value constructed using |K|. 
+
+Since it is likely that we will need to record other information about |K| constructors beyond generators at some point, we use a separate metadata structure that records whatever auxiliary information necessary. This metadata structure is indexed by some value of the |Reg| datatype. Values of this type have the exact same structure as their index, with the relevant data stored at the |K| leaves: 
+
+\begin{code}
+data RegInfo (P : Set → Set) : Reg → Set where
+    U~    :  RegInfo P U
+    _⊕~_  :  ∀ {f₁ f₂ : Reg}
+             → RegInfo P f₁ → RegInfo P f₂
+             → RegInfo P (f₁ ⊕ f₂)
+    _⊗~_  :  ∀ {f₁ f₂ : Reg}
+             → RegInfo P f₁ → RegInfo P f₂
+             → RegInfo P (f₁ ⊗ f₂)
+    I~    :  RegInfo P I
+    K~    :  ∀ {a : Set} → P a → RegInfo P (K a)
+\end{code}
+
+This means that |deriveGen| gets an additional parameter of type |RegInfo (λ a → ⟪ 𝔾 a ⟫) f|, where |f| is the pattern functor we are \textit{currently} deriving a generator for (so not the top level pattern functor): 
+
+\begin{code}
+deriveGen :  ∀ {f g : Reg} {n : ℕ} → RegInfo (λ a → ⟪ 𝔾 a ⟫) f
+             → 𝔾 (⟦ g ⟧ (μ g)) n → 𝔾 (⟦ f ⟧ (μ g)) n
+\end{code}
+
+In the |K| branch of |deriveGen|, we can then simply return the generator that is recorded in the metadata structure: 
+
+\begin{code}
+deriveGen {K a} {g} {n} (K~ x) rec = ⟨ x ⟩
+\end{code}
+
 \paragraph{Deriving generators from isomorphism} We use the following record to witness an isomorphism betwen type $a$ and $b$: 
 
 \begin{code}
@@ -795,13 +835,59 @@ merge-complete-left {xs = _ ∷ xs} (there p)  =
 ∥-complete-left (n , p) = n , merge-complete-left p
 \end{code}
 
-We can construct a similar proof for products by first proving similar properties about lists, and lifting them to the generator type. Proofs about the productivity of combinators can, in a similar fashion, consequently be lifted to reason about completeness. This allows us to show that, for example, if the two operands of a choice are both complete, then the resulting generator is complete as well. 
+We can construct a similar proof for products by first proving similar properties about lists, and lifting them to the generator type. Proofs about the productivity of combinators can, in a similar fashion, be lifted to reason about completeness. This allows us to show that if the two operands of a choice are both complete, then the resulting generator is complete as well: 
+
+\begin{code}
+∥-Complete :  ∀ {a b : Set} {f : ∀ {n : ℕ} → 𝔾 a n} {g : ∀ {n : ℕ} → 𝔾 b n}
+              → Complete f → Complete g
+              → Complete (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈)
+\end{code}
+
+The definition of |∥-Complete| is not particular interesting, as it essentially boils down to invoking previously defined lemmas, with some extra work to deal with the unification of produced values as coproducts. 
+
+\paragraph{Depth monotonicity} Contrary to coproducts, the depth bound at which values occur in the production of a generator is not preserved by products. If a value |x| occurs at depth $n$, it is by no means guaranteed that |(x , y)| occurs at depth $n$ for any value |y|. This poses the following problem: suppose |f ↝ x| and |g ↝ y|, what depth do we chose when we aim to show that |⦇ f , g ⦈ ↝ (x , y)|? 
+
+We might say that the lowest depth that at which the product generator produces the pair |(x , y)| is equal to |max (depth (f ↝ x)) (depth (g ↝ y))|. However, this includes the implicit assumption that if a generator produces a value at depth $n$, it will also produce this value at depth $m$ for any $m \geq n$. This property follows automatically from the intended meaning of the term \textit{depth bound}, but is in no way enforced in Agda. This means that we cannot complete the proof for product generators without adding the following postulate:
+
+\begin{code}
+postulate depth-monotone :
+            ∀ {a : Set} {x : a} {n m : ℕ} {g₁ : ∀ {n : ℕ} → 𝔾 a n}
+            → n ≤ m → x ∈ g₁ (n , refl) → x ∈ g₁ (m , refl)  
+\end{code}
+
+Of course, adding such a postulate is dangerous, since it establishes depth monotonicity for \textit{any} inhabitant of the generator type, while the generator type itself in no way enforces that its inhabitants are actually depth monotone. A better solution would be to make the completeness proof for product generators depend on the depth monotonicity of its operands, shifting the reponsibility to the programmer defining the generator. Additionally, we could write monotonicity proofs for our combinators, hopefully allowing monotonicity proofs to be constructed automatically for derived generators. 
 
 \subsubsection{Correctness of Derived Generators}
 
+When assembling a completeness proof for derived generators, the question arises which metadata structure to use to deal with |K|-combinators; we need both a generator of the type referred to by the |K| leave, as well as a proof that it is correct. The natural choice for metadata is then a dependent pair with a generator and a completeness proof. This gives rise to the following formulation of the completeness theorem for derived generators: 
+
+\begin{code}
+deriveGen-Complete :  
+  ∀ {f : Reg}  → (md : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) f)
+               → Complete ⟨ deriveGen {f = f} {g = f} {!!} ⟩
+\end{code}
+
+\paragraph{Dealing with the |K|-combinator (again)} The question remains what metadata structure to pass to |deriveGen|. Luckily, usinging an appropriate mapping function, we can transform the input metadata structure into a new structure that is suitable as input for |deriveGen|. Notice that |map-reginfo| differs from the regular |map| in that it requires its input function to be polymorphic in the index of the metadata type. 
+
+\begin{code}
+map-reginfo :  ∀ {f : Reg} {P Q : Set → Set} 
+               → (∀ {a : Set} → P a → Q a) → RegInfo P f → RegInfo Q f
+map-reginfo f U~           = U~
+map-reginfo f (ri ⊕~ ri₁)  = map-reginfo f ri ⊕~ map-reginfo f ri₁
+map-reginfo f (ri ⊗~ ri₁)  = map-reginfo f ri ⊗~ map-reginfo f ri₁
+map-reginfo f I~           = I~
+map-reginfo f (K~ x)       = K~ (f x)
+\end{code}
+
+Resulting the following result type: 
+
+\begin{code}
+Complete ⟨ deriveGen {f = f} {g = f} (map-reginfo proj₁ info) ⟩
+\end{code}
 
 
-\subsection{Generalization to Indexed Types}
+
+\paragraph{Pattern Functor Metadata}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
 

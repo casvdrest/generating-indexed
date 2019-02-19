@@ -7,7 +7,7 @@ open import src.Gen.Regular.Isomorphism
 open import src.Data using (_∈_; here; Π)
 
 open import Data.Unit hiding (_≤_)
-open import Data.Product using (proj₁; proj₂; _,_)
+open import Data.Product using (proj₁; proj₂; _,_; Σ; Σ-syntax)
 open import Data.Sum
 open import Data.Nat
 open import Data.List
@@ -23,9 +23,9 @@ module src.Gen.Regular.Properties where
 
   ------ U Combinator (Unit) ------
 
-  ugen-complete : ∀ {g : Reg}
-                  -------------------------
-                  → Complete (ugen {a = μ g})
+  ugen-complete : ∀ {g : Reg} {gi : RegInfo (λ a → ⟪ 𝔾 a ⟫) g}
+                  ----------------------------------------------------------
+                  → Complete (deriveGen {f = U} {g = g} U~ ⟨ deriveGen gi ⟩)
   ugen-complete = 1 , here
   
   
@@ -37,12 +37,13 @@ module src.Gen.Regular.Properties where
                          {g₁ : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ a) n}
                          {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                          {x : ⟦ f ⟧ a} → g₁ ↝ x
-                       -------------------------------------
-                       → ⊕gen {f = f} {g = g} g₁ g₂ ↝ inj₁ x
+                       --------------------------------------
+                       → (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) ↝ inj₁ x
   ⊕gen-complete-left {g₁ = g₁} {g₂ = g₂} p =
     ∥-complete-left {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
       (constr-preserves-elem {g = g₁} p)
-
+      
+  
   -- If 'y' is produced by a generator, 'inj₂ y' is produced by the generator
   -- derived from the coproduct of any generator with that generator. 
   ⊕gen-complete-right : ∀ {a : Set} {f g : Reg}
@@ -50,11 +51,12 @@ module src.Gen.Regular.Properties where
                           {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                         → {y : ⟦ g ⟧ a} → g₂ ↝ y
                         -------------------------------------
-                        → ⊕gen {f = f} {g = g} g₁ g₂ ↝ inj₂ y
+                        → (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) ↝ inj₂ y
   ⊕gen-complete-right {g₁ = g₁} {g₂ = g₂} p =
     ∥-complete-right {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
       (constr-preserves-elem {g = g₂} p)
 
+  
   -- Given that its operands are complete, the generator derived from
   -- a coproduct is complete
   ⊕gen-Complete : ∀ {a : Set} {f g : Reg}
@@ -62,13 +64,13 @@ module src.Gen.Regular.Properties where
                     {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                   → Complete g₁ → Complete g₂
                   ---------------------------------------
-                  → Complete (⊕gen {f = f} {g = g} g₁ g₂)
+                  → Complete (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈)
   ⊕gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂ {inj₁ x} =
     ⊕gen-complete-left {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₁
   ⊕gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂ {inj₂ y} =
     ⊕gen-complete-right {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₂
 
-  
+
   ------ ⊗ combinator (Product) ------
 
   -- If both operands are complete, the generator derived from a product
@@ -79,7 +81,7 @@ module src.Gen.Regular.Properties where
                     {x : ⟦ f ⟧ a} {y : ⟦ g ⟧ a}
                   → (p₁ : g₁ ↝ x) → (p₂ : g₂ ↝ y)
                   --------------------------------------
-                  → ⊗gen {f = f} {g = g} g₁ g₂ ↝ (x , y)
+                  → ⦇ g₁ , g₂ ⦈ ↝ (x , y)
   ⊗gen-complete {g₁ = g₁} {g₂ = g₂} p1 p2 = ⊛-complete {f = g₁} {g = g₂} p1 p2
 
   -- Completeness for product, but now with the quantification over arbitrary values
@@ -89,46 +91,44 @@ module src.Gen.Regular.Properties where
                     {g₂ : ∀ {n : ℕ} → 𝔾 (⟦ g ⟧ a) n}
                   → (p₁ : Complete g₁) → (p₂ : Complete g₂)
                   -----------------------------------------------------------
-                  → Complete (⊗gen {f = f} {g = g} g₁ g₂)
+                  → Complete ⦇ g₁ , g₂ ⦈
   ⊗gen-Complete {f = f} {g = g} {g₁} {g₂} p₁ p₂  =
     ⊗gen-complete {f = f} {g = g} {g₁ = g₁} {g₂ = g₂} p₁ p₂
 
-
-  ------ K combinator (constants) ------
-
-  -- The generator derived from a constant is complete if
-  -- the generator for that constant is complete
-  kgen-complete : ∀ {a b : Set} {x : b} {f : ⟪ 𝔾 b ⟫}
-                  → ⟨ f ⟩ ↝ x
-                  --------------------------------------------
-                  → kgen {a = a} {g = f} ↝ x
-  kgen-complete (p , snd) = p , snd
-
+  
   {-# TERMINATING #-}
   deriveGen-complete : ∀ {f g : Reg} {x : ⟦ f ⟧ (μ g)}
-                       → deriveGen {f = f} {g = g} ⟨ deriveGen {f = g} {g = g} ⟩ ↝ x
-  deriveGen-complete {U} {g} = ugen-complete {g = g}
-  deriveGen-complete {f₁ ⊕ f₂} {g} =
+                       → (info₁ : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) f)
+                       → (info₂ : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) g)
+                       → (deriveGen {f = f} {g = g} (map-reginfo proj₁ info₁)
+                           ⟨ deriveGen {f = g} {g = g} (map-reginfo proj₁ info₂) ⟩) ↝ x
+  deriveGen-complete {U} {g} _ info₂ = ugen-complete {gi = map-reginfo proj₁ info₂}
+  deriveGen-complete {f₁ ⊕ f₂} {g} (iₗ ⊕~ iᵣ) info₂ =
     ⊕gen-Complete {f = f₁} {g = f₂}
-      {g₁ = deriveGen {f = f₁} ⟨ deriveGen {f = g} ⟩}
-      {g₂ = deriveGen {f = f₂} ⟨ deriveGen {f = g} ⟩}
-      (deriveGen-complete {f = f₁})
-      (deriveGen-complete {f = f₂})
-  deriveGen-complete {f₁ ⊗ f₂} {g} =
+      {g₁ = deriveGen {f = f₁} {g = g} (map-reginfo proj₁ iₗ)
+        ⟨ deriveGen {f = g} {g = g} (map-reginfo proj₁ info₂) ⟩}
+      {g₂ = deriveGen {f = f₂} {g = g} (map-reginfo proj₁ iᵣ)
+        ⟨ deriveGen {f = g} {g = g} (map-reginfo proj₁ info₂) ⟩}
+      (deriveGen-complete iₗ info₂)
+      (deriveGen-complete iᵣ info₂)
+  deriveGen-complete {f₁ ⊗ f₂} {g} (iₗ ⊗~ iᵣ) info₂ =
     ⊗gen-Complete {f = f₁} {g = f₂}
-      {g₁ = deriveGen {f = f₁} ⟨ deriveGen {f = g} ⟩}
-      {g₂ = deriveGen {f = f₂} ⟨ deriveGen {f = g} ⟩}
-      (deriveGen-complete {f = f₁})
-      (deriveGen-complete {f = f₂})
-  deriveGen-complete {I} {g} {x = `μ x} with deriveGen-complete {f = g} {g = g} {x = x}
+      {g₁ = deriveGen {f = f₁} (map-reginfo proj₁ iₗ)
+        ⟨ deriveGen {f = g} (map-reginfo proj₁ info₂) ⟩}
+      {g₂ = deriveGen {f = f₂} (map-reginfo proj₁ iᵣ)
+        ⟨ deriveGen {f = g} (map-reginfo proj₁ info₂) ⟩}
+      (deriveGen-complete iₗ info₂)
+      (deriveGen-complete iᵣ info₂)
+  deriveGen-complete {I} {g} {x = `μ x} I~ info₂  with deriveGen-complete {f = g} {g = g} {x = x} info₂ info₂
   ... | n  , prf = suc n , (∈-rewr (sym ++-right-ident) (map-preserves-elem {f = `μ} prf))
-  deriveGen-complete {K x} {g} = {!!}
+  deriveGen-complete {K x} {g} (K~ info₁) info₂ = proj₂ info₁
 
-
-  --=============================================--
-  ------ Completeness for derived generators ------
-  --=============================================--
-
-  deriveGen-Complete : ∀ {f : Reg} → Complete ⟨ deriveGen {f = f} {g = f} ⟩
-  deriveGen-Complete {f} {x} with deriveGen-complete {f = f} {g = f} {x = x}
-  deriveGen-Complete {f} {x} | n , p = suc n , p
+  --=====================================================--
+  ------ Completeness theorem for derived generators ------
+  --=====================================================--
+  
+  deriveGen-Complete : ∀ {f : Reg}
+                       → (info : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) f)
+                       → Complete ⟨ deriveGen {f = f} {g = f} (map-reginfo proj₁ info) ⟩
+  deriveGen-Complete {f} info {x} with deriveGen-complete {f = f} {g = f} {x = x} info info
+  deriveGen-Complete {f} info {x} | n , p = suc n , p 

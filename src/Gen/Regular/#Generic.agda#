@@ -72,10 +72,8 @@ module src.Gen.Regular.Generic where
   mapᵣ I f i     = f i
   mapᵣ (K x) f i = i
 
-  deriveGen : ∀ {f g : Reg} {n : ℕ}
-              → RegInfo (λ a → ⟪ 𝔾 a ⟫) f
-              → 𝔾 (⟦ g ⟧ (μ g)) n
-              → 𝔾 (⟦ f ⟧ (μ g)) n
+  deriveGen : ∀ {f g : Reg} {n : ℕ} → RegInfo (λ a → ⟪ 𝔾 a ⟫) f
+              → 𝔾 (⟦ g ⟧ (μ g)) n → 𝔾 (⟦ f ⟧ (μ g)) n
   deriveGen {U}       {g} c rec = pure tt
   deriveGen {f ⊕ f₁}  {g} (c₁ ⊕~ c₂) rec =
     ⦇ inj₁ (deriveGen {f = f} c₁ rec) ⦈ ∥ ⦇ inj₂ (deriveGen {f = f₁} c₂ rec) ⦈ 
@@ -83,7 +81,3 @@ module src.Gen.Regular.Generic where
     ⦇ (deriveGen {f = f} c₁ rec) , (deriveGen {f = f₁} c₂ rec) ⦈
   deriveGen {I}       {g} c rec = ⦇ `μ rec ⦈
   deriveGen {K a} {g} {n} (K~ x) rec = ⟨ x ⟩
-
-  {-# TERMINATING #-}
-  foo : ∀ {a : Set} → a
-  foo = foo

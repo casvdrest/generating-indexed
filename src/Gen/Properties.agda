@@ -133,7 +133,7 @@ module src.Gen.Properties where
   -- A value is an element of the concatenation of two lists
   -- if it is an element of the left operand
   ++-elem-left : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a}
-              → x ∈ xs → x ∈ (xs ++ ys)
+               → x ∈ xs → x ∈ (xs ++ ys)
   ++-elem-left here = here
   ++-elem-left (there p) = there (++-elem-left p)
 
@@ -233,8 +233,9 @@ module src.Gen.Properties where
 
   -- Depth monotonicity: if a generator produces a values for a given depth, it will also produce that value for greater depths.
   -- NB: this is not necessarily the case for all generators, but those defined with our combinators do satisfy this property. 
-  postulate depth-monotone : ∀ {a : Set} {x : a} {n m : ℕ} {g₁ : ∀ {n : ℕ} → 𝔾 a n}
-                             → n ≤ m → x ∈ g₁ {n} (n , refl) → x ∈ g₁ {m} (m , refl)  
+  postulate depth-monotone :
+              ∀ {a : Set} {x : a} {n m : ℕ} {g₁ : ∀ {n : ℕ} → 𝔾 a n}
+              → n ≤ m → x ∈ g₁ (n , refl) → x ∈ g₁ (m , refl)  
 
   -- If f produces x and g produces y, then ⦇ C f g ⦈, where C is any
   -- 2-arity constructor, produces C x y
@@ -252,9 +253,7 @@ module src.Gen.Properties where
 
   -- Completeness of the ∥ combinator, using coproducts to unify
   -- option types
-  ∥-Complete : ∀ {a b : Set} 
-                 {f : ∀ {n : ℕ} → 𝔾 a n}
-                 {g : ∀ {n : ℕ} → 𝔾 b n}
+  ∥-Complete : ∀ {a b : Set} {f : ∀ {n : ℕ} → 𝔾 a n} {g : ∀ {n : ℕ} → 𝔾 b n}
                → Complete f → Complete g
                ------------------------------------
                → Complete (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈)
