@@ -8,9 +8,11 @@ open import src.Data using (_∈_; here; Π)
 
 open import Data.Unit hiding (_≤_)
 open import Data.Product using (proj₁; proj₂; _,_; Σ; Σ-syntax)
-open import Data.Sum
+open import Data.Sum hiding (map)
 open import Data.Nat
 open import Data.List
+
+open import Function
 
 open import Category.Monad
 
@@ -123,6 +125,7 @@ module src.Gen.Regular.Properties where
   ... | n  , prf = suc n , (∈-rewr (sym ++-right-ident) (map-preserves-elem {f = `μ} prf))
   deriveGen-complete {K x} {g} (K~ info₁) info₂ = proj₂ info₁
 
+
   --=====================================================--
   ------ Completeness theorem for derived generators ------
   --=====================================================--
@@ -133,3 +136,27 @@ module src.Gen.Regular.Properties where
   deriveGen-Complete {f} info {x}
     with deriveGen-complete {f = f} {g = f} {x = x} info info
   ... | n , p = suc n , p
+
+  `μ⁻¹ : ∀ {f : Reg} → μ f → ⟦ f ⟧ (μ f)
+  `μ⁻¹ (`μ x) = x
+
+  μ-iso₂ : ∀ {f : Reg} {y : μ f} → `μ (`μ⁻¹ y) ≡ y
+  μ-iso₂ {y = `μ x} = refl
+
+  μ-iso : ∀ {f : Reg} → ⟦ f ⟧ (μ f) ≅ μ f
+  μ-iso = record { from = `μ ; to = `μ⁻¹ ; iso₁ = refl ; iso₂ = μ-iso₂ }
+
+  lemma-≅-derive : ∀ {a : Set} {f : Reg} {gen : ∀ {n : ℕ} → 𝔾 (⟦ f ⟧ (μ f)) n }
+                   → (iso : a ≅ μ f) → Complete gen → Complete ⦇ (_≅_.to iso ∘ `μ) gen ⦈
+  lemma-≅-derive {a} {f} {gen} iso p {x} with p {(`μ⁻¹ ∘ _≅_.from iso) x}
+  ... | n , snd rewrite sym (_≅_.iso₂ (≅-transitive μ-iso (≅-symmetric iso)) {y = x}) =
+    n , ++-elem-left {ys = []}
+      (map-preserves-elem (∈-rewr' (_≅_.iso₁ (≅-transitive μ-iso (≅-symmetric iso))) snd))
+  
+  isoGen-Complete : ∀ {a : Set} ⦃ p : Regular a ⦄
+                    → (info : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) (getPf p))
+                    → Complete (isoGen a (map-reginfo proj₁ info))
+  isoGen-Complete ⦃ p ⦄ info = lemma-≅-derive {gen = ⟨ deriveGen (map-reginfo proj₁ info) ⟩}
+    (proj₂ (Regular.W p)) (deriveGen-Complete info)
+
+  

@@ -1,4 +1,5 @@
 open import src.Gen.Base
+open import src.Gen.Regular.Isomorphism
 open import src.Data using (_∈_; here; _⊕_; inl; inr; there; merge)
 
 open import Data.Product using (Σ; Σ-syntax; ∃; ∃-syntax; _×_; _,_; proj₁; proj₂)
@@ -37,6 +38,9 @@ module src.Gen.Properties where
   -- If two lists are equal, we can rewrite elemental proofs about them
   ∈-rewr : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a} → xs ≡ ys → x ∈ xs → x ∈ ys
   ∈-rewr refl x = x
+
+  ∈-rewr' : ∀ {ℓ} {a : Set ℓ} {x y : a} {xs : List a} → x ≡ y → x ∈ xs → y ∈ xs
+  ∈-rewr' refl p = p
 
   -- Left and right identity of 'merge'
   merge-empty-sym : ∀ {ℓ} {a : Set ℓ} {xs : List a} → merge xs [] ≡ merge [] xs
@@ -150,7 +154,7 @@ module src.Gen.Properties where
   ++-right-ident {xs = []} = refl
   ++-right-ident {xs = x ∷ xs} = cong (_∷_ x) (++-right-ident {xs = xs})
 
-  -- If f ∈ xs, then f x ∈ map f xs
+  -- If x ∈ xs, then f x ∈ map f xs
   map-preserves-elem : ∀ {ℓ} {a b : Set ℓ} {f : a → b}
                          {x : a} {xs : List a}
                        → x ∈ xs → f x ∈ map f xs

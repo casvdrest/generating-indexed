@@ -1,7 +1,10 @@
 open import src.Gen.Base
-open import src.Data
+open import src.Data using (here; there; _∈_; merge)
 open import src.Gen.Regular.Isomorphism
+open import src.Gen.Regular.Generic
+open import src.Gen.Regular.Properties
 open import src.Gen.Properties
+open import src.Gen.Equivalence
 
 open import Data.Bool
 open import Data.Maybe using (just; nothing; Maybe)
@@ -29,11 +32,12 @@ module src.Gen.Regular.Examples where
   bool-Complete : Complete ⟨ bool ⟩
   bool-Complete {false} = 1 , there here
   bool-Complete {true} = 1 , here
-
-  {-
+  
   bool' : ∀ {n : ℕ} → 𝔾 Bool n
-  bool' = isoGen Bool
-  -}
+  bool' = isoGen Bool (U~ ⊕~ U~)
+
+  bool∼bool' : ⟨ bool ⟩ ∼ bool'
+  bool∼bool' = Complete→eq {g₁ = ⟨ bool ⟩} {g₂ = bool'} bool-Complete (isoGen-Complete (U~ ⊕~ U~))
   
   ------ Maybe ------
 
@@ -41,17 +45,11 @@ module src.Gen.Regular.Examples where
   maybe a _ = ⦇ nothing    ⦈
             ∥ ⦇ just ⟨ a ⟩ ⦈
 
+  
+  maybe' : ∀ {n : ℕ} → (a : Set) → ⟪ 𝔾 a ⟫ →  𝔾 (Maybe a) n
+  maybe' a gen = isoGen (Maybe a) (K~ gen ⊕~ U~)
 
-  maybe-Complete : ∀ {a : Set} {gen : ⟪ 𝔾 a ⟫} → Complete ⟨ gen ⟩ → Complete ⟨ maybe gen ⟩
-  maybe-Complete p {x = just x} with p {x}
-  maybe-Complete p {just x} | n , elem = {!!} , there (map-preserves-elem {!elem!})
-  maybe-Complete _ {x = nothing} = 1 , here
-
-  {-
-  maybe' : ∀ {n : ℕ} → (a : Set) ⦃ _ : Regular a ⦄ → 𝔾 (Maybe a) n
-  maybe' a = isoGen (Maybe a)
-
-
+  
   ------ Naturals ------
 
   nat : ⟪ 𝔾 ℕ ⟫
@@ -59,8 +57,15 @@ module src.Gen.Regular.Examples where
         ∥ ⦇ suc μ ⦈
 
   nat' : ∀ {n : ℕ} → 𝔾 ℕ n
-  nat' = isoGen ℕ
+  nat' = isoGen ℕ (U~ ⊕~ I~)
 
+  nat-Complete : Complete ⟨ nat ⟩
+  nat-Complete {zero} = 1 , here
+  nat-Complete {suc n} with nat-Complete {n}
+  nat-Complete {suc n} | n' , snd = suc n' , merge-cong {xs = []} (++-elem-left (map-preserves-elem snd))
+
+  nat∼nat' : ⟨ nat ⟩ ∼ nat'
+  nat∼nat' = Complete→eq {g₁ = ⟨ nat ⟩} {g₂ = nat'} nat-Complete (isoGen-Complete (U~ ⊕~ I~))
 
   ------ Lists ------
 
@@ -68,27 +73,26 @@ module src.Gen.Regular.Examples where
   list a μ = ⦇ [] ⦈
            ∥ ⦇ ⟨ a ⟩ ∷ μ ⦈
 
-  list' : ∀ {n : ℕ} → (a : Set) ⦃ _ : Regular a ⦄ → 𝔾 (List a) n
-  list' a = isoGen (List a)
+  list' : ∀ {n : ℕ} → (a : Set) → ⟪ 𝔾 a ⟫ → 𝔾 (List a) n
+  list' a gen = isoGen (List a) (U~ ⊕~ (K~ gen ⊗~ I~))
 
-
+  
   ------ Pairs ------
 
   pair : ∀ {a b} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾 b ⟫
          → ⟪ 𝔾 (a × b) ⟫
   pair a b _ = ⦇ ⟨ a ⟩ , ⟨ b ⟩ ⦈
 
-  pair' : ∀ {n : ℕ} → (a b : Set) ⦃ _ : Regular a ⦄ ⦃ _ : Regular b ⦄ → 𝔾 (a × b) n
-  pair' a b = isoGen (a × b)
+  pair' : ∀ {n : ℕ} → (a b : Set) → ⟪ 𝔾 a ⟫ → ⟪ 𝔾 b ⟫ → 𝔾 (a × b) n
+  pair' a b gen₁ gen₂ = isoGen (a × b) ((K~ gen₁) ⊗~ (K~ gen₂))
 
 
   ------ Either ------
 
-  either : ∀ {a b} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾 b ⟫
-           → ⟪ 𝔾 (a ⊎ b) ⟫
+  either : ∀ {a b} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾 b ⟫ → ⟪ 𝔾 (a ⊎ b) ⟫
   either a b _ = ⦇ inj₁ ⟨ a ⟩ ⦈
                ∥ ⦇ inj₂ ⟨ b ⟩ ⦈  
 
-  either' : ∀ {n : ℕ} → (a b : Set) ⦃ _ : Regular a ⦄ ⦃ _ : Regular b ⦄ → 𝔾 (a ⊎ b) n
-  either' a b = isoGen (a ⊎ b)
-  -}
+  either' : ∀ {n : ℕ} → (a b : Set) → ⟪ 𝔾 a ⟫ → ⟪ 𝔾 b ⟫ → 𝔾 (a ⊎ b) n
+  either' a b gen₁ gen₂ = isoGen (a ⊎ b) ((K~ gen₁) ⊕~ (K~ gen₂))
+  

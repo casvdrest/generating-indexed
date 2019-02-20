@@ -83,7 +83,3 @@ module src.Gen.Regular.Generic where
     ⦇ (deriveGen {f = f} c₁ rec) , (deriveGen {f = f₁} c₂ rec) ⦈
   deriveGen {I}       {g} c rec = ⦇ `μ rec ⦈
   deriveGen {K a} {g} {n} (K~ x) rec = ⟨ x ⟩
-
-  {-# TERMINATING #-}
-  foo : ∀ {a : Set} → a
-  foo = foo
