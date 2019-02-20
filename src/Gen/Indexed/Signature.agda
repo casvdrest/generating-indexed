@@ -32,22 +32,34 @@ module src.Gen.Indexed.Signature where
   syntax Π-syntax A B = Π[ A ] B
 
 
+  data 𝕌 : Set where
+    𝟘   : 𝕌
+    𝟙   : 𝕌
+    _⊞_ : 𝕌 → 𝕌 → 𝕌
+    _⊠_ : 𝕌 → 𝕌 → 𝕌
+
+  ⟦_⟧ᵤ : 𝕌 → Set
+  ⟦ 𝟘 ⟧ᵤ       = ⊥
+  ⟦ 𝟙 ⟧ᵤ       = ⊤
+  ⟦ U₁ ⊞ U₂ ⟧ᵤ = ⟦ U₁ ⟧ᵤ ⊎ ⟦ U₂ ⟧ᵤ
+  ⟦ U₁ ⊠ U₂ ⟧ᵤ = ⟦ U₁ ⟧ᵤ × ⟦ U₂ ⟧ᵤ
+
   ------ Signature definition ------
 
   record Sig {ℓ} (i : Set ℓ) : Set (L.suc ℓ) where
     constructor _◃_∣_
     field
-      Op : i → Set
-      Ar : ∀ {x} → Op x → Set
-      Ty : ∀ {x} {op : Op x} → Ar op → i
+      Op : i → 𝕌
+      Ar : ∀ {x} → ⟦ Op x ⟧ᵤ → 𝕌
+      Ty : ∀ {x} {op : ⟦ Op x ⟧ᵤ} → ⟦ Ar op ⟧ᵤ → i
 
   ⟦_⟧ : ∀ {i : Set} → Sig i → (x : i → Set) → (i → Set)
-  ⟦ Op ◃ Ar ∣ Ty ⟧ x = λ i → Σ[ op ∈ Op i ] Π[ Ar op ] x ∘ Ty
+  ⟦ Op ◃ Ar ∣ Ty ⟧ x = λ i → Σ[ op ∈ ⟦ Op i ⟧ᵤ ] Π[ ⟦ Ar op ⟧ᵤ ] x ∘ Ty
 
   data μ {i : Set} (Σ : Sig i) (x : i) : Set where
     `μ : ⟦ Σ ⟧ (μ Σ) x → μ Σ x
 
-
+ {-
   ------ Vec ------
 
   Op-vec : ∀ {a : Set} → ℕ → Set
@@ -82,43 +94,43 @@ module src.Gen.Indexed.Signature where
   Σ-list : (a : Set) → Sig ⊤
   Σ-list a = Op-list ◃ (λ {tt} → Ar-list {a} tt) ∣ λ {tt} {op} → Ty-list tt op
 
-
+-}
   ------ Naturals ------
 
-  Op-nat : ⊤ → Set
-  Op-nat tt = ⊤ ⊎ ⊤
+  Op-nat : ⊤ → 𝕌
+  Op-nat tt = 𝟙 ⊞ 𝟙
 
-  Ar-nat : Op-nat tt → Set
-  Ar-nat (inj₁ x) = ⊥
-  Ar-nat (inj₂ y) = ⊤
+  Ar-nat : ⟦ Op-nat tt ⟧ᵤ → 𝕌
+  Ar-nat (inj₁ tt) = 𝟘
+  Ar-nat (inj₂ tt) = 𝟙
 
-  Ty-nat : (op : Op-nat tt) → Ar-nat op → ⊤
+  Ty-nat : (op : ⟦ Op-nat tt ⟧ᵤ) → ⟦ Ar-nat op ⟧ᵤ → ⊤
   Ty-nat (inj₁ x) ()
   Ty-nat (inj₂ y) tt = tt
      
   Σ-nat : Sig ⊤
   Σ-nat = Op-nat ◃ Ar-nat ∣ λ {op} {ar} → Ty-nat ar
 
-
   ------ Finite Sets ------
 
-  Op-fin : ℕ → Set
-  Op-fin zero = ⊥
-  Op-fin (suc t) = ⊤ ⊎ ⊤
+  Op-fin : ℕ → 𝕌
+  Op-fin zero = 𝟘
+  Op-fin (suc t) = 𝟙 ⊞ 𝟙
 
-  Ar-fin : (n : ℕ) → Op-fin n → Set
+  Ar-fin : (n : ℕ) → ⟦ Op-fin n ⟧ᵤ → 𝕌
   Ar-fin zero ()
-  Ar-fin (suc n) (inj₁ tt) = ⊥
-  Ar-fin (suc n) (inj₂ tt) = ⊤
+  Ar-fin (suc n) (inj₁ tt) = 𝟘
+  Ar-fin (suc n) (inj₂ tt) = 𝟙
 
-  Ty-fin : (n : ℕ) → (op : Op-fin n) → Ar-fin n op → ℕ
-  Ty-fin zero () ar
-  Ty-fin (suc n) (inj₁ tt) ar = ⊥-elim ar
+  Ty-fin : (n : ℕ) → (op : ⟦ Op-fin n ⟧ᵤ) → ⟦ Ar-fin n op ⟧ᵤ → ℕ
+  Ty-fin zero () 
+  Ty-fin (suc n) (inj₁ tt) ()
   Ty-fin (suc n) (inj₂ tt) tt = n
 
   Σ-fin : Sig ℕ
   Σ-fin = Op-fin ◃ (λ {n} → Ar-fin n) ∣ λ {n} {op} → Ty-fin n op
 
+{-
   data _≤ : ℕ × ℕ → Set where
     base : ∀ {n : ℕ} → (0 , n) ≤
     step : ∀ {n m : ℕ} → (n , m) ≤ → (suc n , suc m) ≤ 
@@ -163,3 +175,4 @@ module src.Gen.Indexed.Signature where
 
   Σ-Sorted : Sig (List ℕ)
   Σ-Sorted = Op-Sorted ◃ Ar-Sorted ∣ λ {_} {ar} → Ty-Sorted ar
+-}

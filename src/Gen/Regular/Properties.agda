@@ -130,5 +130,6 @@ module src.Gen.Regular.Properties where
   deriveGen-Complete : ∀ {f : Reg}
                        → (info : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) f)
                        → Complete ⟨ deriveGen {f = f} {g = f} (map-reginfo proj₁ info) ⟩
-  deriveGen-Complete {f} info {x} with deriveGen-complete {f = f} {g = f} {x = x} info info
-  deriveGen-Complete {f} info {x} | n , p = suc n , p 
+  deriveGen-Complete {f} info {x}
+    with deriveGen-complete {f = f} {g = f} {x = x} info info
+  ... | n , p = suc n , p

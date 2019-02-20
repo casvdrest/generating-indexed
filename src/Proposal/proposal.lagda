@@ -780,7 +780,7 @@ record Regular (a : Set) : Set where
 
 Given a value of type $Regular\ a$, we can now derive a generator for $a$ by deriving a generator for $f$, and traveling through the isomorphism by applying the aforementioned conversion. 
 
-\subsection{Proving Correctness of Generators}
+\subsection{Proving Generator Correctness}
 
 Since generators are essentially an embellishment of the $List$ monad, we can reasonably expect them to behave according to our expectations. However, it would be better to prove that generators behave as intended. Before we can start reasoning about generators, we need to formulate our properties of interest:
 
@@ -885,9 +885,28 @@ Resulting the following result type:
 Complete ⟨ deriveGen {f = f} {g = f} (map-reginfo proj₁ info) ⟩
 \end{code}
 
+\paragraph{Assembling the proof} When attempting assemble a completeness proof we encounter similar issues to when defining |deriveGen|. Especially in the case of products and coproducts, we would like to recurse on the left- and right subtree before combining the result into the desired proof. This is again problematic, since the proofs resulting from the recursive calls will have the wrong type. To solve this, we use an auxiliary lemma that establishes a productivity proof for |deriveGen|, where we keep track both of the top level pattern functor for which we are deriving the proof, as well as the top level metadata structure (which is needed for the |I|-combinator). 
 
+\begin{code}
+deriveGen-complete : 
+  ∀ {f g : Reg} {x : ⟦ f ⟧ (μ g)}
+  → (info₁ : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) f)
+  → (info₂ : RegInfo (λ a → Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) g)
+  → (deriveGen {f = f} {g = g} (map-reginfo proj₁ info₁)
+        ⟨ deriveGen {f = g} {g = g} (map-reginfo proj₁ info₂) ⟩) ↝ x
+\end{code}
 
-\paragraph{Pattern Functor Metadata}
+Notice that this type definition unifies the type of recursive calls by applying the fixed point of |deriveGen| applied to the top level pattern functor. If we choose |f| and |g| to be the same pattern functor. Observe that, by definition of |fix|, |gen ⟨ gen ⟩ (n , refl) ≡ ⟨ gen ⟩ (suc n , refl)| for any |gen : ∀ {n : ℕ} → 𝔾 a n|. Hence we can finish the completeness theorem with the following definition: 
+
+\begin{code}
+deriveGen-Complete {f} info {x}
+    with deriveGen-complete {f = f} {g = f} {x = x} info info
+  ... | n , p = suc n , p
+\end{code}
+
+\subsubsection{Equivalence with manually defined generators}
+
+\subsection{Generalization to Indexed Datatypes}
 
 What examples can you handle already? \cite{lampropoulos2017generating}
 

@@ -1,6 +1,7 @@
 {-# OPTIONS --type-in-type #-}
 
 open import src.Gen.Indexed.Signature
+open import src.Gen.Base
 open import src.Gen.Regular.Isomorphism using (_≅_)
 
 open import Data.Empty
@@ -12,9 +13,13 @@ open import Data.Fin using (Fin; suc; zero)
 open import Data.List using (List; []; _∷_)
 open import Data.Vec using (Vec; []; _∷_)
 
+open import Category.Applicative
+
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 module src.Gen.Indexed.Isomorphism where
+
+  open RawApplicative ⦃...⦄ using (_⊛_; pure)
 
    -- Function exensionality
   postulate funext : ∀ {ℓ} {a b : Set ℓ} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
@@ -92,11 +97,14 @@ module src.Gen.Indexed.Isomorphism where
 
   Fin≅Σ-fin : ∀ {n : ℕ} → Fin n ≅ μ Σ-fin n
   Fin≅Σ-fin = record { from = fromFin
-                     ; to = toFin
+                     ; to   = toFin
                      ; iso₁ = Fin-iso₁
                      ; iso₂ = Fin-iso₂ 
                      }
 
+  fin : ⟪ 𝔾ᵢ (μ Σ-fin) ⟫
+  fin μ zero = uninhabited
+  fin μ (suc n) = ⦇ (λ x → `μ (inj₁ tt , λ())) (μ n) ⦈
 
   ------ Lists ------
 
@@ -164,7 +172,9 @@ module src.Gen.Indexed.Isomorphism where
                      ; iso₂ = Vec-iso₂
                      }
 
-
+  vec : ∀ {a : Set} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ (μ (Σ-vec a)) ⟫
+  vec a μ zero    = ⦇ (`μ (tt , λ())) ⦈
+  vec a μ (suc n) = ⦇ (λ x y → `μ (x , λ { tt → y })) ⟨ a ⟩ (μ n) ⦈
 
   ------ LEQ ------
   
@@ -240,6 +250,7 @@ module src.Gen.Indexed.Isomorphism where
                            ; iso₂ = Sorted-iso₂
                            }
 
+  
 
   
   
