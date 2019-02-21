@@ -15,7 +15,9 @@ open import Data.Vec using (Vec; []; _∷_)
 
 open import Category.Applicative
 
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
+open import Function
+
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
 module src.Gen.Indexed.Isomorphism where
 
@@ -106,6 +108,71 @@ module src.Gen.Indexed.Isomorphism where
   fin μ zero = uninhabited
   fin μ (suc n) = ⦇ (λ x → `μ (inj₁ tt , λ())) (μ n) ⦈
 
+  ------ Well-Scoped Lambda Terms ------
+
+  fromTerm : ∀ {n : ℕ} → Term n → μ Σ-Term n
+  fromTerm {zero} (Abs t) =
+    `μ (inj₁ tt , λ { tt → fromTerm t })
+  fromTerm {zero} (App t t₁) =
+    `μ (inj₂ tt , λ { (inj₁ tt) → fromTerm t ; (inj₂ tt) → fromTerm t₁ })
+  fromTerm {zero} (Var ())
+  fromTerm {suc n} (Abs t) =
+    `μ ((inj₁ tt) , λ { tt → fromTerm t })
+  fromTerm {suc n} (App t t₁) =
+    `μ ((inj₂ (inj₁ tt)) , (λ { (inj₁ tt) → fromTerm t ; (inj₂ tt) → fromTerm t₁ }))
+  fromTerm {suc n} (Var x) =
+    `μ ((inj₂ (inj₂ x)) , λ())
+
+  toTerm : ∀ {n : ℕ} → μ Σ-Term n → Term n
+  toTerm {zero} (`μ (inj₁ tt , snd)) =
+    Abs (toTerm (snd tt))
+  toTerm {zero} (`μ (inj₂ tt , snd)) =
+    App (toTerm (snd (inj₁ tt))) (toTerm (snd (inj₂ tt)))
+  toTerm {suc n} (`μ (inj₁ tt , snd)) =
+    Abs (toTerm (snd tt))
+  toTerm {suc n} (`μ (inj₂ (inj₁ tt) , snd)) =
+    App (toTerm (snd (inj₁ tt))) (toTerm (snd (inj₂ tt)))
+  toTerm {suc n} (`μ (inj₂ (inj₂ y) , snd)) =
+    Var y
+
+  ,-eq : ∀ {a b} {x₁ x₂ : a} {y₁ y₂ : b}
+         → x₁ ≡ x₂ → y₁ ≡ y₂ → (x₁ , y₁) ≡ (x₂ , y₂)
+  ,-eq refl refl = refl
+
+  Term-iso₁ : ∀ {n : ℕ} {t : Term n} → toTerm (fromTerm t) ≡ t
+  Term-iso₁ {zero} {Abs t} =
+    cong Abs Term-iso₁
+  Term-iso₁ {zero} {App t₁ t₂} =
+    cong (uncurry App) (,-eq Term-iso₁ Term-iso₁) 
+  Term-iso₁ {zero} {Var ()}
+  Term-iso₁ {suc n} {Abs t} =
+    cong Abs Term-iso₁
+  Term-iso₁ {suc n} {App t t₁} =
+    cong (uncurry App) (,-eq Term-iso₁ Term-iso₁)
+  Term-iso₁ {suc n} {Var x} = refl
+
+  Term-iso₂ : ∀ {n : ℕ} {t : μ Σ-Term n} → fromTerm (toTerm t) ≡ t
+  Term-iso₂ {zero} {`μ (inj₁ tt , snd)} =
+    cong (`μ ∘ λ x → inj₁ tt , x) (funext Term-iso₂)
+  Term-iso₂ {zero} {`μ (inj₂ tt , snd)} =
+    cong (`μ ∘ λ x → inj₂ tt , x) (
+      funext' λ { {inj₁ x} → Term-iso₂ ; {inj₂ y} → Term-iso₂ })
+  Term-iso₂ {suc n} {`μ (inj₁ tt , snd)} =
+    cong (`μ ∘ λ x → (inj₁ tt) , x) (funext Term-iso₂)
+  Term-iso₂ {suc n} {`μ (inj₂ (inj₁ tt) , snd)} =
+    cong (`μ ∘ λ x → (inj₂ (inj₁ tt)) , x)
+      (funext' λ { {inj₁ tt} → Term-iso₂ ; {inj₂ tt} → Term-iso₂ })
+  Term-iso₂ {suc n} {`μ (inj₂ (inj₂ y) , snd)} =
+    cong (`μ ∘ λ x → (inj₂ (inj₂ y)) , x) (funext' λ {x} → ⊥-elim x)
+
+  Term≅Σ-Term : ∀ {n : ℕ} → Term n ≅ μ Σ-Term n
+  Term≅Σ-Term = record { from = fromTerm
+                       ; to   = toTerm
+                       ; iso₁ = Term-iso₁
+                       ; iso₂ = Term-iso₂
+                       }
+
+  
   ------ Lists ------
 
   fromList : ∀ {a : Set} → List a → μ (Σ-list a) tt
@@ -140,6 +207,7 @@ module src.Gen.Indexed.Isomorphism where
                        ; iso₂ = List-iso₂
                        }
 
+  
   ------ Vectors ------
 
   fromVec : ∀ {a : Set} {n : ℕ} → Vec a n → μ (Σ-vec a) n
@@ -174,8 +242,9 @@ module src.Gen.Indexed.Isomorphism where
 
   vec : ∀ {a : Set} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ (μ (Σ-vec a)) ⟫
   vec a μ zero    = ⦇ (`μ (tt , λ())) ⦈
-  vec a μ (suc n) = ⦇ (λ x y → `μ (x , λ { tt → y })) ⟨ a ⟩ (μ n) ⦈
+  vec a μ (suc n) = ⦇ (λ x y → `μ (x , λ { tt → y })) (⟨ a ⟩) (μ n) ⦈ 
 
+  
   ------ LEQ ------
   
   from≤ : ∀ {idx : ℕ × ℕ} → (proj₁ idx) ≤ (proj₂ idx) → μ Σ-≤ idx 
@@ -250,7 +319,3 @@ module src.Gen.Indexed.Isomorphism where
                            ; iso₂ = Sorted-iso₂
                            }
 
-  
-
-  
-  

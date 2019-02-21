@@ -150,4 +150,3 @@ module src.Gen.Indexed.Examples where
   sorted-equivalence {xs = x ∷ []} single rewrite +-comm 0 x = [ x ] , single , refl
   sorted-equivalence {xs = x ∷ y ∷ xs} (step leq p) = {!!}
   -}
-  

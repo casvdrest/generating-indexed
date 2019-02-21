@@ -136,7 +136,3 @@ module src.Gen.Base where
 
   _⋎_ : ∀ {i : Set} {a : i → Set} → List ⟪ 𝔾ᵢ a ⟫ → ⟪ 𝔾ᵢ a ⟫ → List ⟪ 𝔾ᵢ a ⟫
   xs ⋎ x = x ∷ xs
-
-  -- TODO : mailing list over omega monad
-  --        refactoren met verschillende implementaties
-
