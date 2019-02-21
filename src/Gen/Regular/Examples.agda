@@ -130,8 +130,13 @@ module src.Gen.Regular.Examples where
                {C = _,_} (proj₂ sig₁ {x}) (proj₂ sig₂ {y})
   pair-Complete sig₁ sig₂ {x , y} | n , elem = suc n , elem
 
-  pair∼pair' : ∀ {a b : Set} → (sig₁ : Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩) → (sig₂ : Σ[ gen ∈ ⟪ 𝔾 b ⟫ ] Complete ⟨ gen ⟩) → ⟨ pair (proj₁ sig₁) (proj₁ sig₂) ⟩ ∼ pair' a b (proj₁ sig₁) (proj₁ sig₂)
-  pair∼pair' {a} {b} sig₁ sig₂ = Complete→eq {g₁ = ⟨ pair (proj₁ sig₁) (proj₁ sig₂) ⟩} {g₂ = pair' a b (proj₁ sig₁) (proj₁ sig₂)} (pair-Complete sig₁ sig₂) (isoGen-Complete ((K~ sig₁) ⊗~ K~ sig₂))
+  pair∼pair' : ∀ {a b : Set} → (sig₁ : Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩)
+               → (sig₂ : Σ[ gen ∈ ⟪ 𝔾 b ⟫ ] Complete ⟨ gen ⟩)
+               → ⟨ pair (proj₁ sig₁) (proj₁ sig₂) ⟩ ∼ pair' a b (proj₁ sig₁) (proj₁ sig₂)
+  pair∼pair' {a} {b} sig₁ sig₂ =
+    Complete→eq {g₁ = ⟨ pair (proj₁ sig₁) (proj₁ sig₂) ⟩}
+                {g₂ = pair' a b (proj₁ sig₁) (proj₁ sig₂)}
+                (pair-Complete sig₁ sig₂) (isoGen-Complete ((K~ sig₁) ⊗~ K~ sig₂))
 
   ------ Either ------
 
@@ -141,4 +146,20 @@ module src.Gen.Regular.Examples where
 
   either' : ∀ {n : ℕ} → (a b : Set) → ⟪ 𝔾 a ⟫ → ⟪ 𝔾 b ⟫ → 𝔾 (a ⊎ b) n
   either' a b gen₁ gen₂ = isoGen (a ⊎ b) ((K~ gen₁) ⊕~ (K~ gen₂))
-  
+
+  either-Complete : ∀ {a b : Set} → (sig₁ : Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩)
+                    → (sig₂ : Σ[ gen ∈ ⟪ 𝔾 b ⟫ ] Complete ⟨ gen ⟩)
+                    → Complete ⟨ either (proj₁ sig₁) (proj₁ sig₂) ⟩
+  either-Complete sig₁ sig₂ {x} with
+    ∥-Complete {f = ⟨ (proj₁ sig₁) ⟩} {g = ⟨ proj₁ sig₂ ⟩}
+      (proj₂ sig₁) (proj₂ sig₂) {x}
+  either-Complete sig₁ sig₂ {x} | n , elem = suc n , elem
+
+  either∼either' : ∀ {a b : Set} → (sig₁ : Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩)
+                    → (sig₂ : Σ[ gen ∈ ⟪ 𝔾 b ⟫ ] Complete ⟨ gen ⟩)
+                    → ⟨ either (proj₁ sig₁) (proj₁ sig₂) ⟩ ∼ either' a b (proj₁ sig₁) (proj₁ sig₂)
+  either∼either' {a} {b} sig₁ sig₂ =
+    Complete→eq {g₁ = ⟨ either (proj₁ sig₁) (proj₁ sig₂) ⟩}
+                {g₂ = either' a b (proj₁ sig₁) (proj₁ sig₂)}
+                (either-Complete sig₁ sig₂)
+                (isoGen-Complete ((K~ sig₁) ⊕~ (K~ sig₂)))
