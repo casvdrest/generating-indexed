@@ -18,31 +18,25 @@ module src.Gen.Indexed.Generic where
   open RawFunctor ⦃...⦄ using (_<$>_)
   open RawMonad ⦃...⦄ using (_>>_; _>>=_; return; pure)
 
-  𝕌-gen : (u : 𝕌) → ∀ {n : ℕ} → 𝔾 ⟦ u ⟧ᵤ n
-  𝕌-gen 𝟘 = uninhabited
-  𝕌-gen 𝟙 = pure tt
-  𝕌-gen (u₁ ⊞ u₂) = ⦇ inj₁ (𝕌-gen u₁) ⦈ ∥ ⦇ inj₂ (𝕌-gen u₂) ⦈
-  𝕌-gen (u₁ ⊠ u₂) = ⦇ (𝕌-gen u₁) , (𝕌-gen u₂) ⦈
-
-  _~Σ~_ : ∀ {a : Set} {P : a → Set} {n : ℕ}
-          → (∀ {n : ℕ} → 𝔾 a n) → (∀ {n : ℕ} → 𝔾ᵢ P n)
-          → 𝔾 (Σ[ x ∈ a ] P x) n
-  gₐ ~Σ~ gₚ =
-    do idx ← gₐ
-       val ← gₚ idx
-       return (idx , val)
+  𝕌-gen : (u : 𝕌) → (`u : 𝕌~ (λ a → ⟪ 𝔾 a ⟫) u) → ∀ {n : ℕ} → 𝔾 ⟦ u ⟧ᵤ n
+  𝕌-gen 𝟘 m = uninhabited
+  𝕌-gen 𝟙 m = pure tt
+  𝕌-gen (u₁ ⊞ u₂) (m₁ ⊞~ m₂) =
+    ⦇ inj₁ (𝕌-gen u₁ m₁) ⦈ ∥ ⦇ inj₂ (𝕌-gen u₂ m₂) ⦈
+  𝕌-gen (u₁ ⊠ u₂) (m₁ ⊠~ m₂) =
+    ⦇ (𝕌-gen u₁ m₁) , (𝕌-gen u₂ m₂) ⦈
+  𝕌-gen (𝕂 x) (𝕂~ x₁) = ⟨ x₁ ⟩
 
   _~Π~_ : ∀ {a : Set} {P : a → Set} {n : ℕ}
           → 𝔾 a n → (∀ {n : ℕ} → 𝔾ᵢ P n) → 𝔾 (Π[ a ] P) n
-  gₐ ~Π~ gₚ =
-    do idx ← gₐ
-       val ← gₚ idx
-       return λ {x → {!!}}
+  gₐ ~Π~ gₚ = {!!}
 
-  deriveGenᵢ : ∀ {i : Set} {Σ : Sig i} {n : ℕ} → (∀ {n : ℕ}
-               → 𝔾ᵢ (⟦ Σ ⟧ (μ Σ)) n) → 𝔾ᵢ (⟦ Σ ⟧ (μ Σ)) n
-  deriveGenᵢ {Σ = Op ◃ Ar ∣ Ty} μ ind =
-    do op ← 𝕌-gen (Op ind)
-       let gen = 𝕌-gen (Ar op)
-       f  ← 𝕌-gen (Ar op) ~Π~ (λ ind → ⦇ `μ (μ (Ty ind)) ⦈)
+  deriveGenᵢ : ∀ {i : Set} {Σ : Sig i} {n : ℕ}
+               → ((x : i) → 𝕌~ (λ a → ⟪ 𝔾 a ⟫) (Sig.Op Σ x))
+               → ((x : i) → (op : ⟦ Sig.Op Σ x ⟧ᵤ) → 𝕌~ (λ a → ⟪ 𝔾 a ⟫) (Sig.Ar Σ op))
+               → (∀ {n : ℕ} → 𝔾ᵢ (⟦ Σ ⟧ (μ Σ)) n) → 𝔾ᵢ (⟦ Σ ⟧ (μ Σ)) n
+  deriveGenᵢ {Σ = Op ◃ Ar ∣ Ty} sig₁ sig₂ μ ind =
+    do op ← 𝕌-gen (Op ind) (sig₁ ind)
+       f  ← 𝕌-gen (Ar op) (sig₂ ind op) ~Π~ (λ ind → ⦇ `μ (μ (Ty ind)) ⦈)
        return (op , f) 
+  
