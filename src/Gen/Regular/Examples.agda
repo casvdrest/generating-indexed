@@ -48,7 +48,7 @@ module src.Gen.Regular.Examples where
             ∥ ⦇ just ⟨ a ⟩ ⦈
 
   
-  maybe' : ∀ {n : ℕ} → (a : Set) → ⟪ 𝔾 a ⟫ →  𝔾 (Maybe a) n
+  maybe' : ∀ {n : ℕ} → (a : Set) → ⟪ 𝔾 a ⟫ → 𝔾 (Maybe a) n
   maybe' a gen = isoGen (Maybe a) (K~ gen ⊕~ U~)
 
   maybe-Complete : ∀ {a : Set} → (sig : Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩ )

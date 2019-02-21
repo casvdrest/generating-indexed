@@ -66,8 +66,10 @@ module src.Gen.Regular.Isomorphism where
 
   open Regular ⦃...⦄
 
-  isoGen : ∀ {n : ℕ} → (a : Set) → ⦃ p : Regular a ⦄ → RegInfo (λ a → ⟪ 𝔾 a ⟫) (getPf p) → 𝔾 a n
-  isoGen a ⦃ record { W = f , iso } ⦄ reginfo = ⦇ (_≅_.to iso ∘ `μ) ⟨ deriveGen {f = f} {g = f} reginfo ⟩ ⦈
+  isoGen : ∀ {n : ℕ} → (a : Set) → ⦃ p : Regular a ⦄
+           → RegInfo (λ a → ⟪ 𝔾 a ⟫) (getPf p) → 𝔾 a n
+  isoGen a ⦃ record { W = f , iso } ⦄ reginfo =
+    ⦇ (_≅_.to iso ∘ `μ) ⟨ deriveGen {f = f} {g = f} reginfo ⟩ ⦈
   
   ℕF : Reg
   ℕF = U ⊕ I
@@ -166,7 +168,6 @@ module src.Gen.Regular.Isomorphism where
   instance
     List-Regular : ∀ {a : Set} → Regular (List a)
     List-Regular {a} = record { W = ListF a , List≅ListF }
-
   
   _⊎F_ : Set → Set → Reg
   a ⊎F b = K a ⊕ K b
