@@ -3,7 +3,7 @@ open import Size
 open import Data.Nat 
 open import Data.Nat.Properties
 open import Data.Fin hiding (_≤_; _+_)
-open import Data.Vec hiding (map; [_])
+open import Data.Vec hiding (map; [_]; _>>=_)
 open import Data.Bool
 open import Data.List hiding (fromMaybe)
 open import Data.Maybe hiding (fromMaybe; map)
@@ -20,11 +20,11 @@ open import src.Gen.Regular.Examples using (bool)
 
 open import Function
 
-open import Category.Applicative
+open import Category.Monad
 
 module src.Gen.Indexed.Examples where 
 
-  open RawApplicative ⦃...⦄ using (_⊛_; pure)
+  open RawMonad ⦃...⦄ using (_⊛_; pure; _>>=_; return)
   
   fin : ⟪ 𝔾ᵢ Fin ⟫
   fin _ zero    = uninhabited
@@ -150,3 +150,12 @@ module src.Gen.Indexed.Examples where
   sorted-equivalence {xs = x ∷ []} single rewrite +-comm 0 x = [ x ] , single , refl
   sorted-equivalence {xs = x ∷ y ∷ xs} (step leq p) = {!!}
   -}
+
+  data Foo : ℕ → Set where
+    bar : Foo zero
+    baz : ∀ {n m : ℕ} → Foo n → Foo m → Foo (n + m)
+
+  foo : ⟪ 𝔾ᵢ Foo ⟫
+  foo μ zero    = ⦇ bar ⦈ ∥ ⦇ baz (μ 0) (μ 0) ⦈
+  foo μ (suc n) = ⦇ baz (μ {!!}) (μ {!!}) ⦈
+

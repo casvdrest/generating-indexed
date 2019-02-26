@@ -222,3 +222,4 @@ module src.Gen.Indexed.Signature where
 
   Σ-Term : Sig ℕ
   Σ-Term = Op-Term ◃ (λ {n} → Ar-Term n) ∣ λ {n} {op} → Ty-Term n op
+

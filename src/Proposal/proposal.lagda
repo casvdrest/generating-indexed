@@ -9,10 +9,14 @@
 \DeclareUnicodeCharacter{10218}{$\langle\langle$}
 \DeclareUnicodeCharacter{10219}{$\rangle\rangle$}
 \DeclareUnicodeCharacter{7522}{\textsubscript{i}}
+\DeclareUnicodeCharacter{7524}{\textsubscript{u}}
+\DeclareUnicodeCharacter{8336}{\textsubscript{a}}
+\DeclareUnicodeCharacter{8346}{\textsubscript{p}}
 \DeclareUnicodeCharacter{10631}{$\llparenthesis$}
 \DeclareUnicodeCharacter{10632}{$\rrparenthesis$}
 \DeclareUnicodeCharacter{10627}{\{\!\!\{}
 \DeclareUnicodeCharacter{10628}{\}\!\!\}}
+\DeclareUnicodeCharacter{9656}{$\blacktriangleright$}
 
 \usepackage[font=small,labelfont=bf]{caption}
 
@@ -20,7 +24,6 @@
 
 % Math
 \usepackage{amssymb}
-\usepackage[inference, ligature]{semantic}
 % Tables
 \usepackage{amsmath}
 
@@ -283,6 +286,10 @@ gen_sorted = arbitrary >>= return . diff
 
     However, for more complex preconditions defining suitable generators is all but trivial. 
 
+  \subsubsection{Automatic Generation of Specifications}
+
+    A surprising application of property based testing is the automatic generation of program specifications, proposed by Claessen et al. \cite{claessen2010quickspec} with the tool \textit{QuickSpec}. QuickSpec automatically generates a set of candidate formal specifications given a list of pure functions, specifically in the form of algebraic equations. Random property based testing is then used to falsify specifications. In the end, the user is presented with a set of equations for which no counterexample was found. 
+
   \subsection{Techniques for Generating Test Data}
 
     As discussed in section \ref{genconstrainedtd}, proper generation of test data is a hard problem, and involves a lot of details and subtleties. This section discusses some related work that attempts to tackle this problem. 
@@ -291,7 +298,15 @@ gen_sorted = arbitrary >>= return . diff
 
     A problem often considered in literature is the generation of (well-typed) lambda terms \cite{palka2011testing, grygiel2013counting, claessen2015generating}. Good generation of arbitrary program terms is especially interesting in the context of testing compiler infrastructure, and lambda terms provide a natural first step towards that goal. 
 
-  \subsubsection{Inductive Relations}
+    Claessen et al. \cite{claessen2015generating} adapt the techniques described in \cite{duregaard2013feat} to allow efficient generation of constrained data. They use a variation on rejection sampling, where the space of values is gradually refined by rejecting classes of values through partial evaluation (similar to SmallCheck \cite{runciman2008smallcheck}) until a value satisfying the imposed constrained is found. 
+
+    An alternative approach centered around the semantics of the simply typed lambda calculus is described in \cite{palka2011testing}. Contrary to \cite{claessen2015generating}, where typechecking is viewed as a black box, they utilize definition of the typing rules to devise an algorithm for generation of random lambda terms. The basic approach is to take some input type, and randomly select an inference rule from the set of rules that could have been applied to arrive at the goal type. Obviously, such a procedure does not guarantee termination, as repeated application of the function application rule will lead to an arbitrarily large goal type. As such, the algorithm requires a maximum search depth and backtracking in order to guarantee that a suitable term will eventually be generated.
+
+  \subsubsection{Inductive Relations in Coq}
+
+    An approach to generation of constrained test datat for Coq's QuickChick was proposed by Lampropoulos et al. \cite{lampropoulos2017generating} in their 2017 paper \textit{Generating Good Generators for Inductive Relations}. They observe a common pattern where the required test data is of a simple type, but constrained by some precondition. The precondition is then given by some inductive dependent relation indexed by said simple type. The |Sorted| datatype is a prime example of this. 
+
+    They derive such generators by abstracting over dependent inductive relations indexed by simple types. For every constructor, the resulting type uses a set of expressions as indices, that may depend on the constructor's arguments and universally quantified variables. These expressions induce a set of unification constraints that apply when using that particular constructor. These unification constraints are then used when constructing generators to ensure that only values for which the dependent inductive relation is inhabited are generated. 
 
   \subsection{Generic Programming \& Type Universes}
 
@@ -353,7 +368,7 @@ toList (`μ (inj₂ (fst , snd))) = fst ∷ toList snd
 
     Using such isomorphisms, we can automatically derive functionality for datatypes that can be captured using pattern functors. We will see an example of this in section \ref{derivegen}, where we will derive enumeration of inhabitants for arbitrary pattern functors. 
 
-  \subsubsection{Ornaments}\ref{ornaments}
+  \subsubsection{Ornaments}\label{ornaments}
 
     \textit{Ornaments} \cite{dagand2017essence} provide a type universe in which we can describe the structure of indexed datatypes in a very index-centric way. Indexed datatypes are described by \textit{Signatures}, consisting of three elements:
 
@@ -416,88 +431,19 @@ Ty-vec (suc n) a tt = n
 
     This defines the signature for $Vec$: $\Sigma_{Vec} \triangleq \texttt{Op-vec} \triangleleft^\texttt{Ty-vec} \texttt{Ar-vec}$. 
 
-    Non-indexed datatypes can be represented as an indexed type by choosing an index type with only a single object: $\top$. Below is a signature definition for $\mathbb{N}$ using $\top$ as the index: 
-
-\begin{code}
-Op-nat : ⊤ → Set
-Op-nat tt = ⊤ ⊎ ⊤
-
-Ar-nat : Op-nat tt → Set
-Ar-nat (inj₁ x) = ⊥
-Ar-nat (inj₂ y) = ⊤
-
-Ty-nat : (op : Op-nat tt) → Ar-nat op → ⊤
-Ty-nat (inj₁ x) ()
-Ty-nat (inj₂ y) tt = tt
-\end{code}
-
-  \subsubsection{Functorial Species}
+  \subsubsection{Functorial Species}\cite{yorgey2010species}
 
   \subsubsection{Indexed Functors}
 
-    Below is a bit of Agda code: 
+    The most notable downside to the encoding described in section \ref{patternfunctors} is the lack of ability to encode mutually recursive datatypes. This makes geneneric operations on regular types of limited use in the context of program term generation, as abstract syntax trees often make heavy use of mutual recursion. 
 
-\begin{figure}[h] \hrulefill
-\begin{code}
-Γ-match : (τ : Ty) → ⟪ ωᵢ (λ Γ → Σ[ α ∈ Id ] Γ [ α ↦ τ ]) ⟫
-Γ-match τ μ ∅ = uninhabited
-Γ-match τ μ (α ↦ σ ∷ Γ) with τ ≟ σ
-Γ-match τ μ (α ↦ τ ∷ Γ)  | yes refl   =  ⦇  (α , TOP)          ⦈
-                                      ∥  ⦇  (Σ-map POP) (μ Γ)  ⦈
-Γ-match τ μ (α ↦ σ ∷ Γ)  | no ¬p      =  ⦇  (Σ-map POP) (μ Γ)  ⦈
-\end{code} 
-\hrulefill
-\caption{Definition of \textGamma-match}
-\end{figure}
-
-\begin{figure}[h] \hrulefill
-\begin{code}
-data Env : Set where
-  ∅     : Env
-  _↦_∷_ : Id → Ty → Env → Env
-\end{code}
-
-\begin{code}
-data _[_↦_] : Env → Id → Ty → Set where
-{-""-}
-  TOP  :  ∀  {Γ α τ}
-          →  (α ↦ τ ∷ Γ) [ α ↦ τ ] 
-{-""-}
-  POP  :  ∀  {Γ α β τ σ} → Γ [ α ↦ τ ]                            
-          →  (β ↦ σ ∷ Γ) [ α ↦ τ ]
-\end{code}
-\hrulefill
-\caption{Envirionment definition and membership in \textit{Agda}}
-\end{figure}
-
-\begin{figure}[h] 
-\hrulefill
-
-\begin{equation*}
-  TOP\ \frac{}{(\textalpha \mapsto \texttau : \Gamma) [\textalpha \mapsto \texttau]} 
-\quad\quad\quad 
-  POP\ \frac{\Gamma[\textalpha \mapsto \texttau]}{(\textbeta \mapsto \textsigma : \Gamma) [ \textalpha \mapsto \texttau ] }
-\end{equation*}
-
-\begin{equation*}
-  VAR\ \frac{\Gamma[\textalpha \mapsto \tau]}{\Gamma \vdash \textalpha : \tau}
-\quad\quad\quad
-  ABS\ \frac{\Gamma , \textalpha \mapsto \sigma \vdash t : \tau}{\Gamma \vdash \lambda \textalpha \rightarrow t : \sigma \rightarrow \tau}
-\end{equation*}
-
-\begin{equation*}
-  APP\ \frac{\Gamma \vdash f : \sigma \rightarrow \tau \quad \Gamma \vdash x : \sigma}{\Gamma \vdash f x : \tau}
-\quad\quad\quad 
-  LET\ \frac{\Gamma \vdash e : \sigma \quad \Gamma , \textalpha \mapsto \sigma \vdash t : \tau}
-            {\Gamma \vdash \texttt{ let } \textalpha := e \texttt{ in } t : \tau }
-\end{equation*}
-
-\hrulefill
-\caption{Semantics of the \textit{Simply Typed Lambda Calculus}}
-\end{figure}
-
+    Löh and Magalhães \cite{loh2011generic} describe a universe that allows for these kind of mutual recursive structures to be encoded. Codes are indexed with an input and output type (both in |Set|), and are interpreted as a function between indexed functors. That is, a code of type |I ▸ O| gets interpreted as a function of type |(I → Set) → O → Set|. Compared to \ref{patternfunctors}, a number of combinators are added to the universe, such as a construct for dependent pairs or isomorphisms. 
 
   \section{Preliminary results}\label{preliminary}
+
+    This section discusses the progress made in the Agda development accompanying this proposal. The main contribution of this development is a set of proven complete combinators that can be used to assemble generators for Agda types, as well as a proven complete derivation mechanism that automatically constructs generators for all Agda types for which an isomorphism exists to some pattern functor. 
+
+    These isomorphisms are included for a number of common types, together with proofs asserting equivalence between manually defined and derived generators for these types. 
 
   \subsection{Enumerating Regular Types in Agda}
 
@@ -877,7 +823,7 @@ deriveGen-complete :
         ⟨ deriveGen {f = g} {g = g} (map-reginfo proj₁ info₂) ⟩) ↝ x
 \end{code}
 
-    Notice that this type definition unifies the type of recursive calls by applying the fixed point of |deriveGen| applied to the top level pattern functor. If we choose |f| and |g| to be the same pattern functor, we can take the fixed point of |deriveGen|. Observe that, by definition of |fix|, |gen ⟨ gen ⟩ (n , refl) ≡ ⟨ gen ⟩ (suc n , refl)| for any |gen : ∀ {n : ℕ} → 𝔾 a n|. Hence we can finish the completeness theorem with the following definition: 
+    Notice that this type definition unifies the type of recursive calls by applying the fixed point of |deriveGen| applied to the top level pattern functor. If we choose |f| and |g| to be the same pattern functor, we can take the fixed point of |deriveGen|. Observe that, by definition of |fix|, |gen ⟨ gen ⟩ (n , refl)| |≡ ⟨ gen ⟩ (suc n , refl)| for any |gen : ∀ {n : ℕ} → 𝔾 a n|. Hence we can finish the completeness theorem with the following definition: 
 
 \begin{code}
 deriveGen-Complete {f} info {x}
@@ -907,7 +853,7 @@ maybe-Complete sig {just x} with (proj₂ sig) {x}
 maybe-Complete sig {nothing} = 1 , here
 \end{code}
 
-    The proof basically points out that |nothing| will allways be at the head of its production, and uses the input dependent pair to establish that all possible values using the |just| constructor are generated as well. |++-elem-left| states that if |x ∈ xs|, then |x ∈ (xs ++ ys)|    for all |ys|, and |map-preserves-elem| that if |x ∈ xs|, then |f x ∈ map f xs|. 
+    The proof basically points out that |nothing| will allways be at the head of its production, and uses the input dependent pair to establish that all possible values using the |just| constructor are generated as well. |++-elem-left| states that if |x ∈ xs|, then |x ∈ (xs ++ ys)| for all |ys|, and |map-preserves-elem| that if |x ∈ xs|, then |f x ∈ map f xs|. 
 
     Assuming an instance argument is in scope of type |Regular (Maybe a)|, we can derive a generator for the |Maybe| type as well: 
 
@@ -918,9 +864,18 @@ maybe' a gen = isoGen (Maybe a) (K~ gen ⊕~ U~)
 
     In order to show the completeness of |maybe'|, we need to establish completeness of the generator derived by |isoGen|. The proof itself is slightly technical so it is omitted here, but it comes down to the following: |isoGen| works by deriving a generator for pattern functor corresponding to a regular type, and traveling through some isomorphism. We know that generators produced by |deriveGen| are complete, thus we need to show that the completeness property is preserved when applying an isomorphism. The key insight here is that if |g : 𝔾 a n| is a complete generator for type |a|, and |f : a → b| is a bijection, then |⦇ f g ⦈ : 𝔾 b n| is a complete generator for type |b|. 
 
+    Given that |isoGen-Complete| establishes completeness for derived generator, equivalence between the manual and derived generator for the maybe type now trivially follows from their respective completeness: 
+
+\begin{code}
+maybe∼maybe' : ∀ {a : Set} → (sig : Σ[ gen ∈ ⟪ 𝔾 a ⟫ ] Complete ⟨ gen ⟩)
+                 → ⟨ maybe (proj₁ sig) ⟩ ∼ maybe' a (proj₁ sig)
+maybe∼maybe' {a} sig = Complete→eq  (maybe-Complete sig)
+                                    (isoGen-Complete ((K~ sig) ⊕~ U~))
+\end{code}
+
   \subsection{Generalization to Indexed Datatypes}
 
-    Although having a well understood and proven set of definitions for the enumeration of regular types, we would like to achieve something similar for indexed datatypes. As described in section \ref{genindex}, our existing set of combinators can be easily adapted to work with indexed datatypes, meaning that generators for indexed types can be defined in a very natural way. For example, for the |Fin| datatype: 
+    Although having a well understood and proven set of definitions for the enumeration of regular types is defenitely useful, we would like to achieve something similar for indexed datatypes. As described in section \ref{genindex}, our existing set of combinators can be easily adapted to work with indexed datatypes, meaning that generators for indexed types can be defined in a very natural way. For example, for the |Fin| datatype: 
 
 \begin{code}
 fin : ⟪ 𝔾ᵢ Fin ⟫
@@ -929,26 +884,67 @@ fin μ (suc n)  =  ⦇ zero      ⦈
                ∥  ⦇ suc (μ n) ⦈
 \end{code}
 
-    Here, |uninhabited| denotes that a type is uninhabited for a certain index, and is simply defined as |const []|. Note that |uninhabited should be used with care, since it has the potential to be source of inefficiency!
+    Here, |uninhabited| denotes that a type is uninhabited for a certain index, and is simply defined as |const []|. Note that |uninhabited| should be used with care, since it has the potential to be source of inefficiency!
 
   \subsubsection{Generation For Ornaments}
 
-    Section \ref{ornaments} describes a universe for indexed datatypes called \textit{ornaments}, which might be suitable for automatic derivation of generators for certain indexed datatypes. 
+    Section \ref{ornaments} describes a universe for indexed datatypes called \textit{ornaments}, which might be suitable for automatic derivation of generators for certain indexed datatypes. It can capture a large range of indexed datatypes, though there are some that cannot be described as a signature. 
+    
+    \paragraph{Generic Generators} The procedure for deriving generators for datatypes that can be described as an ornament would largely be the same as the approach we used for regular types: derive a generator that produces inhabitants of the fixed point of some signature, and travel through some isomorphism to obtain a generator for the intended type. 
 
-  \subsubsection{Simply Typed Lambda Calculus}
+    One of the challenges of automatically deriving generators for signature interpretations becomes clear when we recall the definition of the interpretation function defined in section \ref{ornaments}: part of a signature is interpreted as a $\Pi$-type. This means that if we desire to derive generators for signatures, we need something similar to QuickCheck's |CoArbitrary|\cite{claessen2011quickcheck} or SmallCheck's |CoSeries|\cite{runciman2008smallcheck} to generate all inhabitants of the relevant function space. 
+    
+    \paragraph{Non-describable Datatypes} As mentioned above, not all indexed datatypes can be described as a signature. In particular, constructors are used with arity greater than 1 with dependencies between the indices of recursive calls are problematic. For example, consider the following datatype definition: 
 
-  \paragraph{Monadic Combinators}
+\begin{code}
+data Foo : ℕ → Set where
+    bar : Foo zero
+    baz : ∀ {n m : ℕ} → Foo n → Foo m → Foo (n + m)
+\end{code}
 
-What examples can you handle already? \cite{lampropoulos2017generating}
+    When attempting to define a signature for this type, we cannot define a suitable typing discipline: 
 
-What prototype have I built? \cite{duregaard2013feat, claessen2010quickspec}
+\begin{code}
+Ty-Foo : (n : ℕ) → (op : ⟦ Op-Foo n ⟧ᵤ) → ⟦ Ar-Foo n op ⟧ᵤ → ℕ
+Ty-Foo (suc n) tt (inj₁ tt) = {!!} 
+Ty-Foo (suc n) tt (inj₂ tt) = {!!} 
+\end{code}
+
+    The definition of |Foo| requires that the sum of the last two branches is equal to |suc n|, but since they are independently determined, there is no way to enforce this requirement. In general this means that we cannot capture any datatype that has a constructor with recursive positions whose indices in some way depend on each other as a signature. 
+
+    This limitation means, for example, that we cannot describe the simply typed lambda calculus as a signature, since similar dependencies occur when constructing typing judgements for function application. 
+ 
+    \paragraph{Monadic Combinators} Perhaps surprisingly, we cannot even manually define a generator for |Foo| using our standard combinators. Consider the obvious definition: 
+
+\begin{code}
+foo : ⟪ 𝔾ᵢ Foo ⟫
+foo μ zero     = ⦇ bar ⦈ ∥ ⦇ baz (μ 0) (μ 0) ⦈
+foo μ (suc n)  = ⦇ baz (μ {!!}) (μ {!!}) ⦈
+\end{code}
+
+    It is not clear what index values to use for the recursive positions. More specifically, we need to know which index was used for the first recursive call in order to determine the index for the second recursive call. |Applicative| unfortunately is not expressive enough to carry around this kind of contextual information. We can define a |Monad| instance for |𝔾| to allow these kind of dependencies to exist between generated values: 
+
+\begin{code}
+𝔾-bind : ∀ {a b : Set} {n : ℕ} → 𝔾 a n → (a → 𝔾 b n) → 𝔾 b n
+𝔾-bind f g = λ n → concatMap ((λ x → x n) ∘ g) (f n)
+\end{code}
+
+    This allows us, for example, to define a generator for $\Sigma$-types: 
+
+\begin{code}
+Σ-gen :  ∀ {a : Set} {P : a → Set} {n : ℕ}
+         → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ P ⟫ → 𝔾 (Σ[ x ∈ a ] P x) n
+Σ-gen gₐ gₚ = do  x ← ⟨ gₐ ⟩
+                  y ← ⟨ gₚ ⟩ᵢ x 
+                  return (x , y)
+\end{code}
 
 How can I generalize these results? What problems have I identified or
 do I expect? \cite{yakushev2009generic}
 
 \section{Timetable and planning}
 
-\subsection{Planning}
+\subsection{Roadmap}
 
 \subsection{Timetable}
 
