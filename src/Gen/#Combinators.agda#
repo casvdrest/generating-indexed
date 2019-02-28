@@ -44,3 +44,4 @@ module src.Gen.Combinators where
     Var : ∀ {n : ℕ} → Fin n → Term n
 
   
+    ℕ → List a

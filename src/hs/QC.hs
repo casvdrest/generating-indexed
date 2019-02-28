@@ -1,7 +1,10 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module QC where
 
   import Data.List
   import Test.QuickCheck
+  import Test.QuickCheck.Gen
 
   reverse' :: Eq a => [a] -> [a]
   reverse' []     = []
@@ -33,3 +36,27 @@ module QC where
     where diff :: [Int] -> [Int]
           diff []     = [] 
           diff (x:xs) = x:map (+x) (diff xs) 
+
+  data Term = Abs Term
+            | App Term Term 
+            | Var Int 
+            deriving Show
+
+
+  instance Arbitrary Term where 
+    arbitrary = oneof [ Abs <$> arbitrary
+                      , App <$> arbitrary <*> arbitrary
+                      , Var <$>  arbitrary `suchThat` (>=0) ]
+
+  well_scoped :: Term -> Bool  
+  well_scoped tm = well_scoped' 0 tm  
+    where well_scoped' :: Int -> Term -> Bool 
+          well_scoped' n (Abs tm) = well_scoped' (n + 1) tm
+          well_scoped' n (App tm1 tm2) = well_scoped' n tm1 && well_scoped' n tm2
+          well_scoped' n (Var v) = v < n
+
+  well_typed :: Term -> Bool 
+  well_typed _ = True
+
+  foo :: Term -> Property 
+  foo tm = well_scoped tm ==> well_typed tm
