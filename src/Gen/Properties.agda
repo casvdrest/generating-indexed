@@ -102,7 +102,7 @@ module src.Gen.Properties where
   merge-sound {xs = x ∷ xs} {y ∷ ys} here = inl here
   merge-sound {xs = x ∷ xs} {y ∷ ys} (there here) = inr here
   merge-sound {xs = x ∷ xs} {y ∷ ys} (there (there p)) =
-    ⊕-bimap (λ x → there x) (λ y → there y) (merge-sound p)
+    ⊕-bimap there there (merge-sound p)
 
 
   ------ Generator Choice ------

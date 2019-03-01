@@ -71,9 +71,9 @@
     Suppose we have an evaluator for the simply typed lambda calculus. How do we test it? One approach we might take is to supply it with random lambda terms, and see how it behaves (which is essentially property based testing). We use the following Haskell datatype to represent terms, using De Bruijn indices to reference bound variables: 
 
 \begin{code}
-data Term  = Abs Term
-           | App Term Term 
-           | Var Int 
+data Term  =  Abs Term
+           |  App Term Term 
+           |  Var Int 
 \end{code}
 
     We might write a predicate that asserts whether a term is well scoped, and use it as a precondition in some property: |prop tm = well_scoped tm ==> (...) |. Testing such a property is not viable without a specialized generator. By default, QuickCheck uses rejection sampling to make sure there are enough relevant test cases, but in the case of a sparse precondition (such as is the case with |well_scoped|), it will have a hard time generating values that satisfy the precondition. This would mean that we need a specialized generator for every precondition. 
