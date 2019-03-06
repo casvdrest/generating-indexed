@@ -58,9 +58,9 @@
 
   \section{Introduction}
 
-    A common way of asserting a program's correctness is by defining properties that should universally hold, and asserting these properties over a range of random inputs. This technique is commonly referred to as \textit{property based testing}, and generally consists of a two-step process. Defining properties that universially hold on all inputs, and defining \textit{generators} that sample random values from the space of possible inputs. \textit{QuickCheck} \cite{claessen2011quickcheck} is likely the most well known tool for performing property based tests on haskell programs. 
+    A common way of asserting a program's correctness is by defining properties that should universally hold, and asserting these properties over a range of random inputs. This technique is commonly referred to as \textit{property based testing}, and generally consists of a two-step process. Defining properties that universally hold on all inputs, and defining \textit{generators} that sample random values from the space of possible inputs. \textit{QuickCheck} \cite{claessen2011quickcheck} is likely the most well known tool for performing property based tests on haskell programs. 
 
-    Although coming up with a set of properties that propertly captures a program's behavious might initially seem to be the most involved part of the process, defining suitable generators for complex input data is actually quite difficult as well. Questions such as how to handle datatypes that are inhabited by an infinite numer of values arise, or how to deal with constrained input data. The answers to these questions are reasonably well understood for \textit{Algebraic datatypes (ADT's)}, but no general solution exists when more complex input data is required. In particular, little is known about enumerating and generating inhabitants of \textit{Indexed datatypes}. 
+    Although coming up with a set of properties that properly captures a program's behavior might initially seem to be the most involved part of the process, defining suitable generators for complex input data is actually quite difficult as well. Questions such as how to handle datatypes that are inhabited by an infinite number of values arise, or how to deal with constrained input data. The answers to these questions are reasonably well understood for \textit{Algebraic datatypes (ADT's)}, but no general solution exists when more complex input data is required. In particular, little is known about enumerating and generating inhabitants of \textit{Indexed datatypes}. 
 
     The latter may be of interest when considering property based testing in the context of languages with a more elaborate type system than Haskell's, such as \textit{Agda} \cite{norell2008dependently} or \textit{Idris} \cite{brady2013idris}. Since the techniques used in existing tools such as QuickCheck and SmallCheck for the most part only apply to regular datatypes, meaning that there is no canonical way of generating inhabitants for a large class of datatypes in these languages. 
 
@@ -76,7 +76,8 @@ data Term  =  Abs Term
            |  Var Int 
 \end{code}
 
-    We might write a predicate that asserts whether a term is well scoped, and use it as a precondition in some property: |prop tm = well_scoped tm ==> (...) |. Testing such a property is not viable without a specialized generator. By default, QuickCheck uses rejection sampling to make sure there are enough relevant test cases, but in the case of a sparse precondition (such as is the case with |well_scoped|), it will have a hard time generating values that satisfy the precondition. This would mean that we need a specialized generator for every precondition. 
+    We might write a predicate that asserts whether a term is well scoped, and use it as a precondition in some property: |prop tm = well_scoped tm ==> (...) |. Testing such a property is not viable without a specialized generator. By default, QuickCheck uses rejection sampling to make sure there are enough relevant test cases, but in the case of a sparse precondition (such as is the case with |well_scoped|), it will have a hard time generating
+    g values that satisfy the precondition. This would mean that we need a specialized generator for every precondition. 
 
     Often, we can model such constraints as an indexed datatype. This means that a generator for a suitable indexed datatype may serve as a generator for a property with precondition. Generic derivation for simple datatypes is implemented by some existing libraries, such as SmallCheck \cite{runciman2008smallcheck}. The same cannot be said of indexed datatypes. 
 
@@ -106,7 +107,7 @@ data Term  =  Abs Term
 
     \end{itemize}
 
-    \paragraph{Intented research contributions} automatic derivation of generators for at least a subset of indexed datatypes and an implementation in Haskell showing how such derivations can be applied to practical problems. 
+    \paragraph{Intended research contributions} automatic derivation of generators for at least a subset of indexed datatypes and an implementation in Haskell showing how such derivations can be applied to practical problems. 
 
   \subsection{Methodology}
 
@@ -116,7 +117,7 @@ data Term  =  Abs Term
 
   \subsection{Dependent Types}
 
-    Dependent type theory extends a type theory with the possiblity of defining types that depend on values. In addition to familiar constructs, such as the unit type ($\top$) and the empty type $\bot$, one can use so-called $\Pi$-types and $\Sigma$-types. $\Pi$-types capture the idea of dependent function types, that is, \textit{functions} whose output type may depent on the values of its input. Given some type $A$ and a family $P$ of types indexed by values of type $A$ (i.e. $P$ has type $A \rightarrow Type$), $\Pi$-types have the following definition: 
+    Dependent type theory extends a type theory with the possibility of defining types that depend on values. In addition to familiar constructs, such as the unit type ($\top$) and the empty type $\bot$, one can use so-called $\Pi$-types and $\Sigma$-types. $\Pi$-types capture the idea of dependent function types, that is, \textit{functions} whose output type may depend on the values of its input. Given some type $A$ and a family $P$ of types indexed by values of type $A$ (i.e. $P$ has type $A \rightarrow Type$), $\Pi$-types have the following definition: 
 
 \begin{equation*}
 \Pi_{(x : A)} P(x) \equiv (x : A) \rightarrow P(x) 
@@ -132,7 +133,7 @@ data Term  =  Abs Term
 
   \subsection{Agda}
 
-    Agda is a programming language that implements dependent types \cite{norell2008dependently}. Its syntax is broadly similar to Haskell's, though Agda's type system is vastly more expressive due to the possibility for types to depend on term level values. Agda has a dual purpose as proof assistent based on the Curry-Howard equivalence. 
+    Agda is a programming language that implements dependent types \cite{norell2008dependently}. Its syntax is broadly similar to Haskell's, though Agda's type system is vastly more expressive due to the possibility for types to depend on term level values. Agda has a dual purpose as proof assistant based on the Curry-Howard equivalence. 
 
   \subsubsection{Codata and Sized Types}\label{codata}
 
@@ -218,7 +219,7 @@ reverse_preserves_length xs = length xs == length (reverse xs)
 
     \paragraph{QuickCheck} Published in 2000 by Claessen \& Hughes \cite{claessen2011quickcheck}, QuickCheck implements property based testing for Haskell. As mentioned before, test values are generated by sampling randomly from the domain of test values. QuickCheck supplies the typeclass \texttt{Arbitrary}, whose instances are those types for which random values can be generated. A property of type |a -> Bool| can be tested if |a| is an instance of \texttt{Arbitrary}. Instances for most common Haskell types are supplied by the library. 
 
-    If a property fails on a testcase, QuickCheck supplies a counterexapmle. Consider the following faulty definition of |reverse|: 
+    If a property fails on a testcase, QuickCheck supplies a counterexample. Consider the following faulty definition of |reverse|: 
 
 \begin{code}
 reverse :: Eq a => [a] -> [a]
@@ -252,11 +253,11 @@ Test.QuickCheck> quickCheck reverse_preserves_length
 
     \paragraph{Feat} A downside to both SmallCheck and LeanCheck is that they do not provide an efficient way to generate or sample large test values. QuickCheck has no problem with either, but QuickCheck generators are often more tedious to write compared to their SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill this gap by providing a way to efficiently enumerate algebraic types, employing memoization techniques to efficiently find the $n^{th}$ element of an enumeration. 
 
-    \paragraph{QuickChick} QuickChick is a QuickCheck clone for the proof assistent Coq \cite{denes2014quickchick}. The fact that Coq is a proof assistent enables the user to reason about the testing framework itself \cite{paraskevopoulou2015foundational}. This allows one, for example, to prove that generators adhere to some distribution.  
+    \paragraph{QuickChick} QuickChick is a QuickCheck clone for the proof assistant Coq \cite{denes2014quickchick}. The fact that Coq is a proof assistant enables the user to reason about the testing framework itself \cite{paraskevopoulou2015foundational}. This allows one, for example, to prove that generators adhere to some distribution.  
 
   \subsubsection{Generating Constrained Test Data}\label{genconstrainedtd}
 
-    Defining a suitable generation of test data for property based testing is notoriously difficult in many cases, independent of whether we choose to sample from or enumerate the space of test values. Writing generators for mutually recursive datatypes with a suitable distribution is especially challanging. Another frequently occuring problem is that of how to test conditional properties with a sparse precondition. The canonical example of this is that of sorted lists. Suppose we have the following \texttt{insert} function (in Haskell): 
+    Defining a suitable generation of test data for property based testing is notoriously difficult in many cases, independent of whether we choose to sample from or enumerate the space of test values. Writing generators for mutually recursive datatypes with a suitable distribution is especially challenging. Another frequently occuring problem is that of how to test conditional properties with a sparse precondition. The canonical example of this is that of sorted lists. Suppose we have the following \texttt{insert} function (in Haskell): 
 
 \begin{code}
 insert :: Ord a => a -> [a] -> [a]
@@ -279,7 +280,7 @@ Test.QuickCheck> quickCheck prop_insertPreservesSorted
 *** Gave up! Passed only 70 tests; 1000 discarded tests.
 \end{verbatim}
 
-    In essence, two things go wrong here. The obvious problem is that QuickCheck is unable to generate a sufficient amount of relevant test cases due to the sparseness of the precondition. The second and perhaps more subtle problem is that the generated test data for which the precondition holds almost exclusively consists of small values (that is, lists of $0$, $1$ or $2$ elements). These problems make testing both inefficient in terms of computational power required, as well as ineffective. Obviously, things will only get worse once we require more complex test data. 
+    In essence, two things go wrong here. The obvious problem is that QuickCheck is unable to generate a sufficient amount of relevant testcases due to the sparseness of the precondition. The second and perhaps more subtle problem is that the generated test data for which the precondition holds almost exclusively consists of small values (that is, lists of $0$, $1$ or $2$ elements). These problems make testing both inefficient in terms of computational power required, as well as ineffective. Obviously, things will only get worse once we require more complex test data. 
 
     The solution to this problem is to define a custom generator that only generates sorted lists, and remove the precondition from the property. For sorted (integer) lists, defining such a generator is somewhat straightforward
 
@@ -313,7 +314,7 @@ gen_sorted = arbitrary >>= return . diff
 
   \subsubsection{Inductive Relations in Coq}
 
-    An approach to generation of constrained test datat for Coq's QuickChick was proposed by Lampropoulos et al. \cite{lampropoulos2017generating} in their 2017 paper \textit{Generating Good Generators for Inductive Relations}. They observe a common pattern where the required test data is of a simple type, but constrained by some precondition. The precondition is then given by some inductive dependent relation indexed by said simple type. The |Sorted| datatype below is a good example of this: 
+    An approach to generation of constrained test data for Coq's QuickChick was proposed by Lampropoulos et al. \cite{lampropoulos2017generating} in their 2017 paper \textit{Generating Good Generators for Inductive Relations}. They observe a common pattern where the required test data is of a simple type, but constrained by some precondition. The precondition is then given by some inductive dependent relation indexed by said simple type. The |Sorted| datatype below is a good example of this: 
 
 \begin{code}
 data Sorted {ℓ} : List ℕ → Set ℓ where
@@ -331,7 +332,7 @@ data Sorted {ℓ} : List ℕ → Set ℓ where
 
   \subsubsection{SOP (Sum of Products)}\label{sop}
 
-    On of the more simple representations is the so called \textit{Sum of Products} view \cite{de2014true}, where datatypes are respresented as a choice between an aribtrary amount of constructors, each of which can have any arity. This view corresponds to how datatypes are defined in haskell. As we will see (for example in section \ref{patternfunctors}), other universes too employ sum and product combinators to describe the structure of datatypes, though they do not necessarily enforce the representation to be in disjunctive normal form. 
+    On of the more simple representations is the so called \textit{Sum of Products} view \cite{de2014true}, where datatypes are respresented as a choice between an arbitrary amount of constructors, each of which can have any arity. This view corresponds to how datatypes are defined in haskell. As we will see (for example in section \ref{patternfunctors}), other universes too employ sum and product combinators to describe the structure of datatypes, though they do not necessarily enforce the representation to be in disjunctive normal form. 
 
     Sum of Products, in its simplest form, cannot represent mutually recursive families of datatypes. An extension that allows this has been developed in \cite{miraldo2018sums}. 
 
@@ -458,11 +459,11 @@ Ty-vec (suc n) a tt = n
 
   \subsubsection{Combinatorial Species}
   
-    \textit{Combinatorial species} \cite{yorgey2010species} were originally developed as a mathematical framework, but can also be used as an alternative way of looking at datatypes. A \textit{species} can, in terms of functional programming, be thought of as a type constructor with one polymorphic argument. Haskell's ADTs (or regular types in general) can be described by definining familiar combinators for species, such as sum and product. 
+    \textit{Combinatorial species} \cite{yorgey2010species} were originally developed as a mathematical framework, but can also be used as an alternative way of looking at datatypes. A \textit{species} can, in terms of functional programming, be thought of as a type constructor with one polymorphic argument. Haskell's ADTs (or regular types in general) can be described by defining familiar combinators for species, such as sum and product. 
 
   \subsubsection{Indexed Functors}
 
-    The most notable downside to the encoding described in section \ref{patternfunctors} is the lack of ability to encode mutually recursive datatypes. This makes geneneric operations on regular types of limited use in the context of program term generation, as abstract syntax trees often make heavy use of mutual recursion. 
+    The most notable downside to the encoding described in section \ref{patternfunctors} is the lack of ability to encode mutually recursive datatypes. This makes generic operations on regular types of limited use in the context of program term generation, as abstract syntax trees often make heavy use of mutual recursion. 
 
     Löh and Magalhães \cite{loh2011generic} describe a universe that allows for these kind of mutual recursive structures to be encoded. Codes are indexed with an input and output type (both in |Set|), and are interpreted as a function between indexed functors. That is, a code of type |I ▸ O| gets interpreted as a function of type |(I → Set) → O → Set|. Compared to \ref{patternfunctors}, a number of combinators are added to the universe, such as a construct for dependent pairs or isomorphisms. 
 
@@ -474,7 +475,7 @@ Ty-vec (suc n) a tt = n
 
   \subsection{Enumerating Regular Types in Agda}
 
-    We look at how to enumerate various datatypes in Agda, starting with simple examples such as $\mathbb{N}$ or $Bool$, and progressively working towards more complex data. The first question we encounter is what the result of an enumeration should be. The ovious answer is that |enumerate a| should return something of type $List a$, containing all possible values of type $a$. This is however not possible, as |List| in Agda can only represent a finite list, and many datatypes, such as $\mathbb{N}$ have an infinite number of inhabitants. To solve this, we may either use the |Codata| functionality from the standard library (see \ref{codata}), or index our result with some kind of metric that limits the number of solutions to a finite set. The latter approach is what is used by both \textit{SmallCheck}\cite{runciman2008smallcheck} and \textit{LeanCheck}\cite{matela2017tools}, enumerating values up to a certain depth or size. 
+    We look at how to enumerate various datatypes in Agda, starting with simple examples such as $\mathbb{N}$ or $Bool$, and progressively working towards more complex data. The first question we encounter is what the result of an enumeration should be. The obvious answer is that |enumerate a| should return something of type $List a$, containing all possible values of type $a$. This is however not possible, as |List| in Agda can only represent a finite list, and many datatypes, such as $\mathbb{N}$ have an infinite number of inhabitants. To solve this, we may either use the |Codata| functionality from the standard library (see \ref{codata}), or index our result with some kind of metric that limits the number of solutions to a finite set. The latter approach is what is used by both \textit{SmallCheck}\cite{runciman2008smallcheck} and \textit{LeanCheck}\cite{matela2017tools}, enumerating values up to a certain depth or size. 
 
     We admit the same approach as the SmallCheck library, defining an enumerator/generator to be a function of type |ℕ → List a|, where input argument signifies the maximum depth. By working with |List|, ensuring termination becomes a lot easier, since it is by definition a finite structure. Furthermore, proving properties about generators becomes more straightforward compared to |Colist|, as we can simply prove the desired properties about the $List$ type, and lift the result to our generator type. 
 
@@ -496,7 +497,7 @@ Ty-vec (suc n) a tt = n
 𝔾-map f x n = map f (x n)
 \end{code}
 
-    \paragraph{Product} When a constructor takes two or more values (e.g. |_,_|), enumerating all values that can be constructed using that constructor comes down to enumerating all possible combinations of its input values, and applying the constructor. Again, we can do this by defining the canonical cartesian product on lists, and lifing it to the generator type: 
+    \paragraph{Product} When a constructor takes two or more values (e.g. |_,_|), enumerating all values that can be constructed using that constructor comes down to enumerating all possible combinations of its input values, and applying the constructor. Again, we can do this by defining the canonical cartesian product on lists, and lifting it to the generator type: 
 
 \begin{code}
 list-ap : ∀ {ℓ} {a b : Set ℓ} → List (a → b) → List a → List b
@@ -589,7 +590,7 @@ _∥ᵢ_ : ∀ {i : Set} {a : i → Set} → 𝔾ᵢ a → 𝔾ᵢ a → 𝔾ᵢ
 
     Throughout the code, a subscript $i$ is used to indicate that we deal with indexed types. 
 
-  \subsubsection{Guarantueeing Termination}
+  \subsubsection{Guaranteeing Termination}
 
     We can prove termination for our fixed-point combinator if we somehow enforce that its input function is well behaved. Consider the following example of a generator that does not terminate under our fixed-point combinator: 
 
@@ -620,7 +621,7 @@ fix zero     f  (.0 , refl)      = []
 fix (suc n)  f  (.suc n , refl)  = f {n} (fix n f) (n , refl)
 \end{code}
 
-    Let us reconsider the previous counterexapmle: 
+    Let us reconsider the previous counterexample: 
 
 \begin{code}
 bad : ⟪ 𝔾 ℕ ⟫
@@ -662,7 +663,7 @@ deriveGen : ∀ {n : ℕ} → (f g : Reg) → 𝔾 (⟦ g ⟧ (μ g)) n → 𝔾
 
     By using the type signature defined above instead, the previously shown defintion for the coproduct branch is accepted. 
 
-    In most cases, the initial call to $deriveGen$ will have the same value for $f$ and $g$, which means that we can use $fix$ to obtain a genrator that generates values of type $\llbracket\ f\ \rrbracket\ (\mu\ f))$. 
+    In most cases, the initial call to $deriveGen$ will have the same value for $f$ and $g$, which means that we can use $fix$ to obtain a generator that generates values of type $\llbracket\ f\ \rrbracket\ (\mu\ f))$. 
 
     \paragraph{Deriving for the |K|-combinator} Since we can refer to arbitrary values of |Set| using the |K|-combinator, there is no general procedure to construct generators of type |𝔾 (⟦ K a ⟧ (μ g))| for any |a| and |g|. At first glance, there are two ways to resolve this issue: 
 
@@ -671,7 +672,7 @@ deriveGen : ∀ {n : ℕ} → (f g : Reg) → 𝔾 (⟦ g ⟧ (μ g)) n → 𝔾
     Restrict the set of types to which we can refer using |K| to those types for which we can automatically derive a generator (i.e. the regular types). 
 
     \item 
-    Somehow require the programmer to supply generators for all occurenses of |K| in the pattern functor, and use those generators
+    Somehow require the programmer to supply generators for all occurrences of |K| in the pattern functor, and use those generators
     \end{enumerate}
 
     The first approach has as a downside that it limits the expressiveness of derived generators, and excludes references to irregular types, hence we choose to require the user to supply a suitable set of generators that can be used whenever we encounter a value constructed using |K|. 
@@ -779,7 +780,7 @@ merge-complete-left {xs = _ ∷ xs} (there p)  =
   merge-cong {xs = xs} (merge-complete-left p)
 \end{code}
 
-    \textit{merge-cong} is a lemma stating that if $y \in merge\ xs\ ys$, then $y \in merge\ (x :: xs)\ ys$; its definition is omitted for conciseness. Armed with the above lemma that asserts left-completeness of the $merge$ function, we can set out to prove left-completeness for the $\parallel$-combinator. The key insight here is that the depth bound at which $x$ occurs does not change, thus we can sipmly reuse it, and lift the above lemma to the generator type: 
+    \textit{merge-cong} is a lemma stating that if $y \in merge\ xs\ ys$, then $y \in merge\ (x :: xs)\ ys$; its definition is omitted for conciseness. Armed with the above lemma that asserts left-completeness of the $merge$ function, we can set out to prove left-completeness for the $\parallel$-combinator. The key insight here is that the depth bound at which $x$ occurs does not change, thus we can simply reuse it, and lift the above lemma to the generator type: 
 
 \begin{code}
 ∥-complete-left :  ∀ {a : Set} {x : a} {f g : ∀ {n : ℕ} → 𝔾 a n}
@@ -807,7 +808,7 @@ postulate depth-monotone :
             → n ≤ m → x ∈ g₁ (n , refl) → x ∈ g₁ (m , refl)  
 \end{code}
 
-    Of course, adding such a postulate is dangerous, since it establishes depth monotonicity for \textit{any} inhabitant of the generator type, while the generator type itself in no way enforces that its inhabitants are actually depth monotone. A better solution would be to make the completeness proof for product generators depend on the depth monotonicity of its operands, shifting the reponsibility to the programmer defining the generator. Additionally, we could write monotonicity proofs for our combinators, hopefully allowing monotonicity proofs to be constructed automatically for derived generators. 
+    Of course, adding such a postulate is dangerous, since it establishes depth monotonicity for \textit{any} inhabitant of the generator type, while the generator type itself in no way enforces that its inhabitants are actually depth monotone. A better solution would be to make the completeness proof for product generators depend on the depth monotonicity of its operands, shifting the responsibility to the programmer defining the generator. Additionally, we could write monotonicity proofs for our combinators, hopefully allowing monotonicity proofs to be constructed automatically for derived generators. 
 
   \subsubsection{Correctness of Derived Generators}
 
@@ -903,7 +904,7 @@ maybe∼maybe' {a} sig = Complete→eq  (maybe-Complete sig)
 
   \subsection{Generalization to Indexed Datatypes}
 
-    Although having a well understood and proven set of definitions for the enumeration of regular types is defenitely useful, we would like to achieve something similar for indexed datatypes. As described in section \ref{genindex}, our existing set of combinators can be easily adapted to work with indexed datatypes, meaning that generators for indexed types can be defined in a very natural way. For example, for the |Fin| datatype: 
+    Although having a well understood and proven set of definitions for the enumeration of regular types is useful, we would like to achieve something similar for indexed datatypes. As described in section \ref{genindex}, our existing set of combinators can be easily adapted to work with indexed datatypes, meaning that generators for indexed types can be defined in a very natural way. For example, for the |Fin| datatype: 
 
 \begin{code}
 fin : ⟪ 𝔾ᵢ Fin ⟫
@@ -940,7 +941,7 @@ Ty-Foo (suc n) tt (inj₂ tt) = {!!}
 
     The definition of |Foo| requires that the sum of the last two branches is equal to |suc n|, but since they are independently determined, there is no way to enforce this requirement. In general this means that we cannot capture any datatype that has a constructor with recursive positions whose indices in some way depend on each other as a signature. 
 
-    This limitation means, for example, that we cannot describe the simply typed lambda calculus as a signature, since similar dependencies occur when constructing typing judgements for function application. 
+    This limitation means, for example, that we cannot describe the simply typed lambda calculus as a signature, since similar dependencies occur when constructing a typing judgement for function application. 
  
     \paragraph{Monadic Combinators} Perhaps surprisingly, we cannot even manually define a generator for |Foo| using our standard combinators. Consider the obvious definition: 
 
@@ -996,7 +997,7 @@ foo μ (suc n)  = ⦇ baz (μ {!!}) (μ {!!}) ⦈
 
   \section{Timetable and planning}
 
-    This section contains a brief description of the path we intend to take towards the reasearch goals described in this proposal. 
+    This section contains a brief description of the path we intend to take towards the research goals described in this proposal. 
 
   \subsection{Roadmap}
 
