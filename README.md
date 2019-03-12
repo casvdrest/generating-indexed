@@ -41,12 +41,65 @@ nat μ = ⦇ zero  ⦈
 fix nat 5 ≡ 0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ []
 ```
 
-## Derived Generators for Regular Types
+## Deriving Generators for Regular Types
 
-**TODO: write this**
+For regular types, a complete generator can automatically be derived given an isomorphism to the fixed point of some pattern functor. Types can be represented using the following canonical set of combinators: 
+
+```
+data Reg : Set where
+  U   : Reg 
+  _⊕_ : Reg → Reg → Reg
+  _⊗_ : Reg → Reg → Reg
+  I   : Reg
+  K   : Set → Reg
+```
+
+Using these codes, we can define `ℕF = (U ⊕ I)` to be the code for `ℕ`. Consequently we can show an isomorphism between `ℕ` and `Fix ℕF`: 
+
+```
+  ℕ→ℕF : ℕ → Fix ℕF
+  ℕ→ℕF zero = In (inj₁ tt)
+  ℕ→ℕF (suc n) = In (inj₂ (ℕ→ℕF n))
+
+  ℕF→ℕ : Fix ℕF → ℕ
+  ℕF→ℕ (In (inj₁ x)) = zero
+  ℕF→ℕ (In (inj₂ y)) = suc (ℕF→ℕ y)
+
+  isoℕ : ∀ {n : ℕ} → ℕF→ℕ (ℕ→ℕF n) ≡ n
+  isoℕ {zero} = refl
+  isoℕ {suc n} = cong suc isoℕ
+
+  isoℕF : ∀ {f : Fix ℕF} → ℕ→ℕF (ℕF→ℕ f) ≡ f
+  isoℕF {In (inj₁ tt)} = refl
+  isoℕF {In (inj₂ y)}  = cong (In ∘ inj₂) isoℕF
+  
+  ℕ≅ℕF : ℕ ≅ Fix ℕF
+  ℕ≅ℕF = record { from = ℕ→ℕF
+                ; to   = ℕF→ℕ
+                ; iso₁ = isoℕ
+                ; iso₂ = isoℕF
+                }
+```
+
+And use this isomorphism to show that `ℕ` is a regular type: 
+
+```
+instance 
+    ℕ-Regular : Regular ℕ
+    ℕ-Regular = record { W = ℕF , ℕ≅ℕF }
+```
+
+meaning that we can automatically derive a generator for it: 
+
+```
+nat' : 𝔾 ℕ
+nat' = isoGen ℕ (U~ ⊕~ I~)
+```
+
+`isoGen` takes one parameter that describes how to generate elements for the constants referred to by the code. In this case there are none. 
 
 ## Proving completeness
 
-**TODO: write this**
+**TODO**
 
 
