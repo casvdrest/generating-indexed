@@ -71,10 +71,9 @@ module src.Gen.Indexed.Signature where
   ⟦_⟧ : ∀ {i : Set} → Sig i → (x : i → Set) → (i → Set)
   ⟦ Op ◃ Ar ∣ Ty ⟧ x = λ i → Σ[ op ∈ ⟦ Op i ⟧ᵤ ] Π[ ⟦ Ar op ⟧ᵤ ] x ∘ Ty
 
-  data μ {i : Set} (Σ : Sig i) (x : i) : Set where
-    `μ : ⟦ Σ ⟧ (μ Σ) x → μ Σ x
+  data Fix {i : Set} (Σ : Sig i) (x : i) : Set where
+    In : ⟦ Σ ⟧ (Fix Σ) x → Fix Σ x
 
- 
   ------ Vec ------
 
   Op-vec : ∀ {a : Set} → ℕ → 𝕌
@@ -222,4 +221,3 @@ module src.Gen.Indexed.Signature where
 
   Σ-Term : Sig ℕ
   Σ-Term = Op-Term ◃ (λ {n} → Ar-Term n) ∣ λ {n} {op} → Ty-Term n op
-

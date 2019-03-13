@@ -10,6 +10,9 @@ module src.Gen.ListProperties where
 
   ------ List Merge ------
 
+  list-ap : ∀ {a b : Set} → List (a → b) → List a → List b
+  list-ap fs xs = concatMap (λ f → map f xs) fs
+
   -- If two lists are equal, we can rewrite elemental proofs about them
   ∈-rewr : ∀ {ℓ} {a : Set ℓ} {x : a} {xs ys : List a} → xs ≡ ys → x ∈ xs → x ∈ ys
   ∈-rewr refl x = x
@@ -101,6 +104,11 @@ module src.Gen.ListProperties where
   ++-right-ident {xs = []} = refl
   ++-right-ident {xs = x ∷ xs} = cong (_∷_ x) (++-right-ident {xs = xs})
 
+  map-++-ident : ∀ {a b : Set} {f : a → b} {y : b} {xs : List a} → y ∈ ((map f (xs)) ++ []) → y ∈ map f xs
+  map-++-ident {xs = []} ()
+  map-++-ident {xs = x ∷ xs} here = here
+  map-++-ident {xs = x ∷ xs} (there elem) = there (map-++-ident elem)
+
   -- If x ∈ xs, then f x ∈ map f xs
   map-preserves-elem : ∀ {ℓ} {a b : Set ℓ} {f : a → b}
                          {x : a} {xs : List a}
@@ -110,7 +118,7 @@ module src.Gen.ListProperties where
     there (map-preserves-elem p)
 
   -- The 'list-ap' function does indeed produce all combinations
-  list-ap-complete : ∀ {ℓ} {a b : Set ℓ} {f : a → b} {x : a}
+  list-ap-complete : ∀ {a b : Set} {f : a → b} {x : a}
                        {fs : List (a → b)} {xs : List a} 
                      → f ∈ fs → x ∈ xs
                      → f x ∈ list-ap fs xs
@@ -118,7 +126,7 @@ module src.Gen.ListProperties where
   list-ap-complete (there p1) p2 = ++-elem-right (list-ap-complete p1 p2)
 
   -- pure f <*> xs ≡ map f xs
-  ap-pure-is-map : ∀ {ℓ} {a b : Set ℓ} {xs : List a} {C : a → b}
+  ap-pure-is-map : ∀ {a b : Set} {xs : List a} {C : a → b}
                    → map C xs ≡ list-ap [ C ] xs
   ap-pure-is-map {xs = xs} {C = C} =
     begin
@@ -131,7 +139,7 @@ module src.Gen.ListProperties where
 
   -- Applying a constructor of arity 2 over two lists yields all
   -- possible combination of elements applied to that constructor
-  list-ap-constr : ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
+  list-ap-constr : ∀ {a b c : Set} {x : a} {y : b}
                      {xs : List a} {ys : List b} {C : a → b → c}
                    → x ∈ xs → y ∈ ys
                    -----------------------------------------

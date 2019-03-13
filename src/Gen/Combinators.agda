@@ -1,15 +1,20 @@
 module src.Gen.Combinators where
 
   open import Size
+  open import src.Gen.Base
 
   open import Data.List
   open import Data.Nat
-  open import Data.Fin
+  open import Data.Fin hiding (_+_)
 
   open import Codata.Colist
   open import Codata.Thunk
 
+  open import Category.Applicative
+
   open import Relation.Binary.PropositionalEquality
+
+  open RawApplicative ⦃...⦄ using (_<*>_; pure)
 
   {-# TERMINATING #-}
   nats : List ℕ
@@ -42,5 +47,3 @@ module src.Gen.Combinators where
     Lam : ∀ {n : ℕ} → Term (suc n) → Term n
     App : ∀ {n : ℕ} → Term n → Term n → Term n
     Var : ∀ {n : ℕ} → Fin n → Term n
-
-  

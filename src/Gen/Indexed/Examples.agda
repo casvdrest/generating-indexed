@@ -16,7 +16,7 @@ open Eq'.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
 
 open import src.Data
 open import src.Gen.Base
-open import src.Gen.Regular.Examples using (bool)
+--open import src.Gen.Regular.Examples using (bool)
 
 open import Function
 

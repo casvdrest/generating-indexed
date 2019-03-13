@@ -16,6 +16,7 @@ open import Function
 
 open import src.Gen.Base
 open import src.Gen.Regular.Generic
+open import src.Gen.Regular.Cogen
 
 module src.Gen.Regular.Isomorphism where
 
@@ -59,39 +60,44 @@ module src.Gen.Regular.Isomorphism where
   
   record Regular (a : Set) : Set where
     field
-      W : Σ[ f ∈ Reg ] (a ≅ μ f)
+      W : Σ[ f ∈ Reg ] (a ≅ Fix f)
 
   getPf : ∀ {a : Set} → Regular a → Reg
   getPf record { W = W } = proj₁ W
 
   open Regular ⦃...⦄
 
-  isoGen : ∀ {n : ℕ} → (a : Set) → ⦃ p : Regular a ⦄
-           → RegInfo (λ a → ⟪ 𝔾 a ⟫) (getPf p) → 𝔾 a n
+  isoGen : ∀ (a : Set) → ⦃ p : Regular a ⦄
+           → RegInfo (𝔾) (getPf p) → 𝔾 a
   isoGen a ⦃ record { W = f , iso } ⦄ reginfo =
-    ⦇ (_≅_.to iso ∘ `μ) ⟨ deriveGen {f = f} {g = f} reginfo ⟩ ⦈
+    ⦇ (_≅_.to iso ∘ In) (` deriveGen reginfo) ⦈
+
+  isoCogen : ∀ (a : Set) → ⦃ p : Regular a ⦄
+             → RegInfo co𝔾 (getPf p) → co𝔾 a
+  isoCogen a ⦃ record { W = f , iso } ⦄ reginfo {b} gₐ =
+    ⦇ (λ f → f ∘ (λ { (In x) → x }) ∘ _≅_.from iso)
+      (` deriveCogen {g = f} {a = b} reginfo gₐ) ⦈
   
   ℕF : Reg
   ℕF = U ⊕ I
 
-  ℕ→ℕF : ℕ → μ ℕF
-  ℕ→ℕF zero = `μ (inj₁ tt)
-  ℕ→ℕF (suc n) = `μ (inj₂ (ℕ→ℕF n))
+  ℕ→ℕF : ℕ → Fix ℕF
+  ℕ→ℕF zero = In (inj₁ tt)
+  ℕ→ℕF (suc n) = In (inj₂ (ℕ→ℕF n))
 
-  ℕF→ℕ : μ ℕF → ℕ
-  ℕF→ℕ (`μ (inj₁ x)) = zero
-  ℕF→ℕ (`μ (inj₂ y)) = suc (ℕF→ℕ y)
+  ℕF→ℕ : Fix ℕF → ℕ
+  ℕF→ℕ (In (inj₁ x)) = zero
+  ℕF→ℕ (In (inj₂ y)) = suc (ℕF→ℕ y)
 
   isoℕ : ∀ {n : ℕ} → ℕF→ℕ (ℕ→ℕF n) ≡ n
   isoℕ {zero} = refl
   isoℕ {suc n} = cong suc isoℕ
 
-  isoℕF : ∀ {f : μ ℕF} → ℕ→ℕF (ℕF→ℕ f) ≡ f
-  isoℕF {`μ (inj₁ tt)} = refl
-  isoℕF {`μ (inj₂ y)}  = cong (`μ ∘ inj₂) isoℕF
-
+  isoℕF : ∀ {f : Fix ℕF} → ℕ→ℕF (ℕF→ℕ f) ≡ f
+  isoℕF {In (inj₁ tt)} = refl
+  isoℕF {In (inj₂ y)}  = cong (In ∘ inj₂) isoℕF
   
-  ℕ≅ℕF : ℕ ≅ μ ℕF
+  ℕ≅ℕF : ℕ ≅ Fix ℕF
   ℕ≅ℕF = record { from = ℕ→ℕF
                 ; to   = ℕF→ℕ
                 ; iso₁ = isoℕ
@@ -102,26 +108,29 @@ module src.Gen.Regular.Isomorphism where
     ℕ-Regular : Regular ℕ
     ℕ-Regular = record { W = ℕF , ℕ≅ℕF }
 
+  prop : ⟨ isoGen ℕ (U~ ⊕~ I~) ⟩ 10 ≡ zero ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ 7 ∷ 8 ∷ 9 ∷ []
+  prop = refl
+
   BoolF : Reg
   BoolF = U ⊕ U
 
-  Bool→BoolF : Bool → μ BoolF
-  Bool→BoolF false = `μ (inj₁ tt)
-  Bool→BoolF true = `μ (inj₂ tt)
+  Bool→BoolF : Bool → Fix BoolF
+  Bool→BoolF false = In (inj₁ tt)
+  Bool→BoolF true = In (inj₂ tt)
 
-  BoolF→Bool : μ BoolF → Bool
-  BoolF→Bool (`μ (inj₁ tt)) = false
-  BoolF→Bool (`μ (inj₂ tt)) = true
+  BoolF→Bool : Fix BoolF → Bool
+  BoolF→Bool (In (inj₁ tt)) = false
+  BoolF→Bool (In (inj₂ tt)) = true
 
   isoBool : ∀ {b : Bool} → BoolF→Bool (Bool→BoolF b) ≡ b
   isoBool {false} = refl
   isoBool {true} = refl
 
-  isoBoolF : ∀ {f : μ BoolF} → Bool→BoolF (BoolF→Bool f) ≡ f
-  isoBoolF {`μ (inj₁ x)} = refl
-  isoBoolF {`μ (inj₂ y)} = refl
+  isoBoolF : ∀ {f : Fix BoolF} → Bool→BoolF (BoolF→Bool f) ≡ f
+  isoBoolF {In (inj₁ x)} = refl
+  isoBoolF {In (inj₂ y)} = refl
 
-  Bool≅BoolF : Bool ≅ μ BoolF
+  Bool≅BoolF : Bool ≅ Fix BoolF
   Bool≅BoolF = record { from = Bool→BoolF
                       ; to   = BoolF→Bool
                       ; iso₁ = isoBool
@@ -132,32 +141,26 @@ module src.Gen.Regular.Isomorphism where
     Bool-Regular : Regular Bool
     Bool-Regular = record { W = BoolF , Bool≅BoolF }
 
-  prop : 𝔾-run (const (isoGen Bool (U~ ⊕~ U~))) 5 ≡ false ∷ true ∷ []
-  prop = refl
-
-  prop1 : 𝔾-run (const (isoGen ℕ (U~ ⊕~ I~))) 5 ≡ zero ∷ 1 ∷ 2 ∷ 3 ∷ []
-  prop1 = refl
-
   ListF : Set → Reg
   ListF a = U ⊕ (K a ⊗ I)
 
-  List→ListF : ∀ {a : Set} → List a → μ (ListF a)
-  List→ListF [] = `μ (inj₁ tt)
-  List→ListF (x ∷ xs) = `μ (inj₂ (x , List→ListF xs))
+  List→ListF : ∀ {a : Set} → List a → Fix (ListF a)
+  List→ListF [] = In (inj₁ tt)
+  List→ListF (x ∷ xs) = In (inj₂ (x , List→ListF xs))
 
-  ListF→List : ∀ {a : Set} → μ (ListF a) → List a
-  ListF→List (`μ (inj₁ tt)) = []
-  ListF→List (`μ (inj₂ (fst , snd))) = fst ∷ ListF→List snd
+  ListF→List : ∀ {a : Set} → Fix (ListF a) → List a
+  ListF→List (In (inj₁ tt)) = []
+  ListF→List (In (inj₂ (fst , snd))) = fst ∷ ListF→List snd
 
   isoList : ∀ {a : Set} {xs : List a} → ListF→List (List→ListF xs) ≡ xs
   isoList {xs = []} = refl
   isoList {xs = x ∷ xs} = cong (_∷_ x) isoList
 
-  isoListF : ∀ {a : Set} {xs : μ (ListF a)} → List→ListF (ListF→List xs) ≡ xs
-  isoListF {xs = `μ (inj₁ tt)} = refl
-  isoListF {xs = `μ (inj₂ (fst , snd))} = cong (`μ ∘ inj₂ ∘ _,_ fst) isoListF
+  isoListF : ∀ {a : Set} {xs : Fix (ListF a)} → List→ListF (ListF→List xs) ≡ xs
+  isoListF {xs = In (inj₁ tt)} = refl
+  isoListF {xs = In (inj₂ (fst , snd))} = cong (In ∘ inj₂ ∘ _,_ fst) isoListF
 
-  List≅ListF : ∀ {a : Set} → List a ≅ μ (ListF a)
+  List≅ListF : ∀ {a : Set} → List a ≅ Fix (ListF a)
   List≅ListF = record { from = List→ListF
                       ; to = ListF→List
                       ; iso₁ = isoList
@@ -172,23 +175,23 @@ module src.Gen.Regular.Isomorphism where
   _⊎F_ : Set → Set → Reg
   a ⊎F b = K a ⊕ K b
 
-  ⊎→⊎F : ∀ {a b} → a ⊎ b → μ (a ⊎F b)
-  ⊎→⊎F (inj₁ x) = `μ (inj₁ x)
-  ⊎→⊎F (inj₂ y) = `μ (inj₂ y)
+  ⊎→⊎F : ∀ {a b} → a ⊎ b → Fix (a ⊎F b)
+  ⊎→⊎F (inj₁ x) = In (inj₁ x)
+  ⊎→⊎F (inj₂ y) = In (inj₂ y)
 
-  ⊎F→⊎ : ∀ {a b} → μ (a ⊎F b) → a ⊎ b
-  ⊎F→⊎ (`μ (inj₁ x)) = inj₁ x
-  ⊎F→⊎ (`μ (inj₂ y)) = inj₂ y
+  ⊎F→⊎ : ∀ {a b} → Fix (a ⊎F b) → a ⊎ b
+  ⊎F→⊎ (In (inj₁ x)) = inj₁ x
+  ⊎F→⊎ (In (inj₂ y)) = inj₂ y
 
   iso⊎ : ∀ {a b : Set} → {x : a ⊎ b} → ⊎F→⊎ (⊎→⊎F x) ≡ x
   iso⊎ {x = inj₁ x} = refl
   iso⊎ {x = inj₂ y} = refl
 
-  iso⊎F : ∀ {a b : Set} → {y : μ (a ⊎F b)} → ⊎→⊎F (⊎F→⊎ y) ≡ y
-  iso⊎F {y = `μ (inj₁ x)} = refl
-  iso⊎F {y = `μ (inj₂ y)} = refl
+  iso⊎F : ∀ {a b : Set} → {y : Fix (a ⊎F b)} → ⊎→⊎F (⊎F→⊎ y) ≡ y
+  iso⊎F {y = In (inj₁ x)} = refl
+  iso⊎F {y = In (inj₂ y)} = refl
 
-  ⊎≅⊎F : ∀ {a b : Set} → (a ⊎ b) ≅ (μ (a ⊎F b))
+  ⊎≅⊎F : ∀ {a b : Set} → (a ⊎ b) ≅ (Fix (a ⊎F b))
   ⊎≅⊎F = record { from = ⊎→⊎F
                 ; to   = ⊎F→⊎
                 ; iso₁ = iso⊎
@@ -203,19 +206,19 @@ module src.Gen.Regular.Isomorphism where
   _×F_ : Set → Set → Reg
   a ×F b = K a ⊗ K b
 
-  ×→×F : ∀ {a b} → a × b → μ (a ×F b)
-  ×→×F (fst , snd) = `μ (fst , snd)
+  ×→×F : ∀ {a b} → a × b → Fix (a ×F b)
+  ×→×F (fst , snd) = In (fst , snd)
   
-  ×F→× : ∀ {a b} → μ (a ×F b) → a × b
-  ×F→× (`μ (fst , snd)) = fst , snd
+  ×F→× : ∀ {a b} → Fix (a ×F b) → a × b
+  ×F→× (In (fst , snd)) = fst , snd
 
   iso× : ∀ {a b : Set} → {x : a × b} → ×F→× (×→×F x) ≡ x
   iso× {x = fst , snd} = refl
 
-  iso×F : ∀ {a b : Set} → {y : μ (a ×F b)} → ×→×F (×F→× y) ≡ y
-  iso×F {y = `μ x} = refl
+  iso×F : ∀ {a b : Set} → {y : Fix (a ×F b)} → ×→×F (×F→× y) ≡ y
+  iso×F {y = In x} = refl
 
-  ×≅×F : ∀ {a b : Set} → (a × b) ≅ (μ (a ×F b))
+  ×≅×F : ∀ {a b : Set} → (a × b) ≅ (Fix (a ×F b))
   ×≅×F  = record { from = ×→×F
                                      ; to   = ×F→×
                                      ; iso₁ = iso× 
@@ -230,23 +233,23 @@ module src.Gen.Regular.Isomorphism where
   MaybeF : Set → Reg
   MaybeF a = K a ⊕ U
 
-  Maybe→MaybeF : ∀ {a : Set} → Maybe a → μ (MaybeF a)
-  Maybe→MaybeF (just x) = `μ (inj₁ x)
-  Maybe→MaybeF nothing = `μ (inj₂ tt)
+  Maybe→MaybeF : ∀ {a : Set} → Maybe a → Fix (MaybeF a)
+  Maybe→MaybeF (just x) = In (inj₁ x)
+  Maybe→MaybeF nothing = In (inj₂ tt)
 
-  MaybeF→Maybe : ∀ {a : Set} → μ (MaybeF a) → Maybe a
-  MaybeF→Maybe (`μ (inj₁ x)) = just x
-  MaybeF→Maybe (`μ (inj₂ tt)) = nothing
+  MaybeF→Maybe : ∀ {a : Set} → Fix (MaybeF a) → Maybe a
+  MaybeF→Maybe (In (inj₁ x)) = just x
+  MaybeF→Maybe (In (inj₂ tt)) = nothing
 
   isoMaybe : ∀ {a : Set} {m : Maybe a} → MaybeF→Maybe (Maybe→MaybeF m) ≡ m
   isoMaybe {m = just x} = refl
   isoMaybe {m = nothing} = refl
 
-  isoMaybeF : ∀ {a : Set} {m : μ (MaybeF a)} → Maybe→MaybeF (MaybeF→Maybe m) ≡ m
-  isoMaybeF {m = `μ (inj₁ x)} = refl
-  isoMaybeF {m = `μ (inj₂ y)} = refl
+  isoMaybeF : ∀ {a : Set} {m : Fix (MaybeF a)} → Maybe→MaybeF (MaybeF→Maybe m) ≡ m
+  isoMaybeF {m = In (inj₁ x)} = refl
+  isoMaybeF {m = In (inj₂ y)} = refl
 
-  Maybe≅MaybeF : ∀ {a : Set} → Maybe a ≅ μ (MaybeF a)
+  Maybe≅MaybeF : ∀ {a : Set} → Maybe a ≅ Fix (MaybeF a)
   Maybe≅MaybeF = record { from = Maybe→MaybeF
                         ; to   = MaybeF→Maybe 
                         ; iso₁ = isoMaybe

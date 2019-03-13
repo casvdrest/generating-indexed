@@ -8,6 +8,7 @@ open import Data.Sum hiding (map)
 open import Data.List
 open import Data.Nat
 open import Data.Nat.Properties
+open import Data.Empty
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 open Relation.Binary.PropositionalEquality.≡-Reasoning
@@ -23,27 +24,27 @@ module src.Gen.Monotonicity where
   ------ Monotonicity definition ------
 
   Depth-Monotone :
-    ∀ {a : Set}
-    → (∀ {n : ℕ} → 𝔾 a n) → a → Set
-  Depth-Monotone {a} g x =
+    ∀ {a t : Set}
+    → Gen a t → a → 𝔾 t → Set
+  Depth-Monotone {a} g x tg =
     ∀ {n m : ℕ} 
-    → n ≤ m → x ∈ g (n , refl)
-    → x ∈ g (m , refl)
+    → n ≤ m → x ∈ interpret g tg  n
+    → x ∈ interpret g tg m
 
   ------ Combinator monotonicity ------
-
   
   pure-monotone :
-    ∀ {a : Set} {x : a}
-    → Depth-Monotone (pure x) x
-  pure-monotone prf elem = elem
+    ∀ {a t : Set} {x : a} {tg : 𝔾 t}
+    → Depth-Monotone (Pure x) x tg
+  pure-monotone (s≤s prf) elem = elem
 
+  
   uninhabited-monotone :
-    ∀ {a : Set} {x : a}
-    → Depth-Monotone {a} uninhabited x
-  uninhabited-monotone leq ()
-  
-  
+    ∀ {a t : Set} {x : a} {tg : 𝔾 t}
+    → Depth-Monotone {a} None x tg
+  uninhabited-monotone (s≤s leq) ()
+
+
   -- Bimap for coproducts
   ⊎-bimap : ∀ {ℓ} {a b c d : Set ℓ}
             → (a → c) → (b → d)
@@ -67,7 +68,7 @@ module src.Gen.Monotonicity where
     inj₂ here
   merge-sound' {xs = x ∷ xs} {y ∷ ys} (there (there p)) =
     ⊎-bimap there there (merge-sound' p)
-
+  
   ≤-left : ∀ {n m : ℕ} → n ≤ m → ℕ
   ≤-left {n} _ = n
 
@@ -76,7 +77,7 @@ module src.Gen.Monotonicity where
   
   $_ : ∀ {a b : Set} → (a → b) × a → b
   $ (f , x) = f x
-
+  
   ap-right-[] :
     ∀ {a b : Set} {fs : List (a → b)}
     → list-ap fs [] ≡ []
@@ -162,31 +163,32 @@ module src.Gen.Monotonicity where
 
   ∈x-rewr : ∀ {a : Set} {x y : a} {xs : List a} → x ∈ xs → x ≡ y → y ∈ xs
   ∈x-rewr elem refl = elem
-
-  constr-monotone : ∀ {a b : Set} {g : ∀ {n : ℕ} → 𝔾 a n} 
-                      {C : a → b} {x : a}
+ 
+  constr-monotone : ∀ {a b t : Set} {g : Gen a t} 
+                      {C : a → b} {x : a} {tg : 𝔾 t}
                     → (∀ {x y : a} → C x ≡ C y → x ≡ y) 
-                    → Depth-Monotone g x
-                    → Depth-Monotone ⦇ C g ⦈ (C x)
-  constr-monotone {g = g} {C} {x} inv p leq elem with ap-singleton elem
-  constr-monotone {g = g} {C} {x} inv p leq elem | val , (loc , eq) =
-    list-ap-complete {fs = [ C ]} here (p leq (∈x-rewr loc (inv eq)))
-
-  ⊛-monotone : ∀ {a b c : Set} {x : a} {y : b} {g₁ : ∀ {n : ℕ} → 𝔾 a n}
-                 {g₂ : ∀ {n : ℕ} → 𝔾 b n} {C : a → b → c}
+                    → Depth-Monotone g x tg
+                    → Depth-Monotone ⦇ C g ⦈ (C x) tg
+  constr-monotone {g = g} {C} {x} inv p (s≤s leq) elem with ap-singleton elem
+  constr-monotone {g = g} {C} {x} inv p (s≤s leq) elem | val , (loc , eq) =
+    list-ap-complete {fs = [ C ]} here (p (s≤s leq) (∈x-rewr loc (inv eq))) 
+  
+  ⊛-monotone : ∀ {a b c t : Set} {x : a} {y : b} {g₁ : Gen a t}
+                 {g₂ : Gen b t} {tg : 𝔾 t} {C : a → b → c}
                → (∀ {x₁ x₂ : a} {y₁ y₂ : b} → C x₁ y₁ ≡ C x₂ y₂ → x₁ ≡ x₂ × y₁ ≡ y₂)
-               → Depth-Monotone g₁ x → Depth-Monotone g₂ y
-               → Depth-Monotone ⦇ C g₁ g₂ ⦈ (C x y)
-  ⊛-monotone {g₁ = g₁} {g₂ = g₂} {C} inv p₁ p₂ leq elem with
-    ap-inv {fs = list-ap [ C ] (g₁ ((≤-left leq) , refl))}
-           {xs = g₂ (≤-left leq , refl)} elem
+               → Depth-Monotone g₁ x tg → Depth-Monotone g₂ y tg
+               → Depth-Monotone ⦇ C g₁ g₂ ⦈ (C x y) tg
+  ⊛-monotone {g₁ = g₁} {g₂ = g₂} {tg} {C} inv p₁ p₂ (s≤s leq) elem with
+    ap-inv {fs = list-ap [ C ] (interpret g₁ tg (≤-left (s≤s leq)))}
+           {xs = interpret g₂ tg (≤-left (s≤s leq))} elem
   ... | (Cx , y) , loc₁ , eq with
     ap-singleton (proj₁ loc₁)
-  ... | (x) , loc₂ , refl  = list-ap-complete
+  ... | (x) , loc₂ , refl = list-ap-complete
     (list-ap-complete {fs = [ C ]} here
-      (p₁ leq (∈x-rewr loc₂ (proj₁ (inv eq))))) (p₂ leq (∈x-rewr (proj₂ loc₁) (proj₂ (inv eq))
-    ))
-
+      (p₁ (s≤s leq) (∈x-rewr loc₂ (proj₁ (inv eq)))))
+      (p₂ (s≤s leq) (∈x-rewr (proj₂ loc₁) (proj₂ (inv eq))
+    )) 
+  
   map-inv : ∀ {a b : Set} {y : b} {xs : List a} {f : a → b} → y ∈ map f xs → Σ[ x ∈ a ] f x ∈ map f xs × f x ≡ y
   map-inv {xs = []} ()
   map-inv {xs = x ∷ xs} here = x , (here , refl)
@@ -196,22 +198,51 @@ module src.Gen.Monotonicity where
   lemma : ∀ {a b : Set} {f : a → b} → map f [] ≡ []
   lemma = refl
 
-  ∥-monotone-left : ∀ {a b : Set} {x : a} {g₁ : ∀ {n : ℕ} → 𝔾 a n} { g₂ : ∀ {n : ℕ} → 𝔾 b n}
-                    → Depth-Monotone g₁ x
-                    → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₁ x)
-  ∥-monotone-left {g₁ = g₁} {g₂ = g₂} mt₁ leq elem with merge-sound' {ys = list-ap [ inj₂ ] (g₂ (≤-left leq , refl))} elem
-  ∥-monotone-left {g₁ = g₁} {g₂ = g₂} mt₁ leq elem | inj₁ x' with ap-singleton x'
-  ∥-monotone-left {g₁ = g₁} {g₂ = g₂} mt₁ leq elem | inj₁ x' | _ , (loc , refl) =
-    merge-complete-left (list-ap-complete {fs = [ inj₁ ]} here (mt₁ leq loc))
-  ∥-monotone-left {g₁ = g₁} {g₂ = g₂} mt₁ leq elem | inj₂ y' with ap-singleton y'
-  ∥-monotone-left {g₁ = g₁} {g₂} mt₁ leq elem | inj₂ y' | fst , fst₁ , ()
+  ∥-monotone-left : ∀ {a t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen a t} {tg : 𝔾 t}
+                    → Depth-Monotone g₁ x tg
+                    → (∀ {n : ℕ} → x ∈ interpret g₂ tg n → ⊥)
+                    → Depth-Monotone (g₁ ∥ g₂) x tg
+  ∥-monotone-left mt₁ mt₂ z≤n ()
+  ∥-monotone-left {g₁ = g₁} {tg = tg} mt₁ mt₂ (s≤s leq) elem with merge-sound' elem
+  ... | inj₁ p = merge-complete-left (mt₁ (s≤s leq) p)
+  ... | inj₂ p = ⊥-elim (mt₂ {n = ≤-left (s≤s leq)} p)
+
+  ∥-monotone-right : ∀ {a t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen a t} {tg : 𝔾 t}
+                    → (∀ {n : ℕ} → x ∈ interpret g₁ tg n → ⊥)
+                    → Depth-Monotone g₂ x tg
+                    → Depth-Monotone (g₁ ∥ g₂) x tg
+  ∥-monotone-right mt₁ mt₂ z≤n ()
+  ∥-monotone-right mt₁ mt₂ (s≤s leq) elem with merge-sound' elem
+  ... | inj₁ p  = ⊥-elim (mt₁ {n = ≤-left (s≤s leq)} p)
+  ... | inj₂ p  = merge-complete-right (mt₂ (s≤s leq) p) 
+
+  ∥-inj₁-monotone-left : ∀ {a b t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen b t} {tg : 𝔾 t}
+                       → Depth-Monotone g₁ x tg
+                       → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₁ x) tg
+  ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂} {tg} mt₁ (s≤s leq) elem with
+    merge-sound' {ys = list-ap [ inj₂ ] (interpret g₂ tg (≤-left (s≤s leq)))} elem
+  ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂} {tg} mt₁ (s≤s leq) elem | inj₁ x' with ap-singleton x'
+  ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂} {tg} mt₁ (s≤s leq) elem | inj₁ x' | _ , (loc , refl) = 
+    merge-complete-left (list-ap-complete {fs = [ inj₁ ]} here (mt₁ (s≤s leq) loc))
+  ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂} mt₁ leq elem | inj₂ y' with ap-singleton y'
+  ∥-inj₁-monotone-left {g₁ = g₁} {g₂} mt₁ leq elem | inj₂ y' | fst , fst₁ , () 
+
   
-  ∥-monotone-right : ∀ {a b : Set} {y : b} {g₁ : ∀ {n : ℕ} → 𝔾 a n} { g₂ : ∀ {n : ℕ} → 𝔾 b n}
-                     → Depth-Monotone g₂ y
-                     → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₂ y)
-  ∥-monotone-right {g₁ = g₁} {g₂ = g₂} mt₁ leq elem with merge-sound' {xs = list-ap [ inj₁ ] (g₁ (≤-left leq , refl))} elem
-  ∥-monotone-right {g₁ = g₁} {g₂ = g₂} mt₁ leq elem | inj₁ x' with ap-singleton x'
-  ∥-monotone-right {g₁ = g₁} {g₂} mt₁ leq elem | inj₁ x' | _ , _ , ()
-  ∥-monotone-right {g₁ = g₁} {g₂ = g₂} mt₁ leq elem | inj₂ y' with ap-singleton y'
-  ∥-monotone-right {g₁ = g₁} {g₂} mt₁ leq elem | inj₂ y' | _ , (loc , refl) =
-    merge-complete-right (list-ap-complete {fs = [ inj₂ ]} here (mt₁ leq loc))
+  ∥-inj₂-monotone-right : ∀ {a b t : Set} {y : b} {g₁ : Gen a t} { g₂ : Gen b t} {tg : 𝔾 t}
+                          → Depth-Monotone g₂ y tg
+                          → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₂ y) tg
+  ∥-inj₂-monotone-right {g₁ = g₁} {g₂ = g₂} {tg} mt₁ (s≤s leq) elem with
+    merge-sound' {xs = list-ap [ inj₁ ] (interpret g₁ tg (≤-left (s≤s leq)))} elem
+  ∥-inj₂-monotone-right {g₁ = g₁} {g₂ = g₂} {tg}  mt₁ leq elem | inj₁ x' with ap-singleton x'
+  ∥-inj₂-monotone-right {g₁ = g₁} {g₂} mt₁ leq elem | inj₁ x' | _ , _ , ()
+  ∥-inj₂-monotone-right {g₁ = g₁} {g₂ = g₂} mt₁ (s≤s leq) elem | inj₂ y' with ap-singleton y'
+  ∥-inj₂-monotone-right {g₁ = g₁} {g₂} mt₁ (s≤s leq) elem | inj₂ y' | _ , (loc , refl) = 
+    merge-complete-right (list-ap-complete {fs = [ inj₂ ]} here (mt₁ (s≤s leq) loc)) 
+
+  `-monotone : ∀ {a t : Set} {tg : 𝔾 t} {gen : 𝔾 a} {x : a} → Depth-Monotone gen x gen → Depth-Monotone (` gen) x tg
+  `-monotone mt z≤n ()
+  `-monotone mt (s≤s leq) elem = mt (s≤s leq) elem
+
+  μ-monotone : ∀ {t : Set} {tg : 𝔾 t} {x : t} → Depth-Monotone tg x tg → Depth-Monotone μ x tg
+  μ-monotone mt z≤n ()
+  μ-monotone mt (s≤s leq) elem = mt leq elem 

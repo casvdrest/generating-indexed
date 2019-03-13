@@ -10,6 +10,8 @@ open import Data.Sum
 open import Data.Product
 open import Data.Bool
 
+open import Data.Fin
+
 open import Category.Functor
 open import Category.Monad
 
@@ -27,26 +29,9 @@ module src.Gen.Indexed.Generic where
     ⦇ (𝕌-gen u₁ m₁) , (𝕌-gen u₂ m₂) ⦈
   𝕌-gen (𝕂 x) (𝕂~ x₁) = ⟨ x₁ ⟩
 
-  Σ-gen : ∀ {a : Set} {P : a → Set} {n : ℕ}
-          → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ P ⟫ → 𝔾 (Σ[ x ∈ a ] P x) n
-  Σ-gen gₐ gₚ =
-    do x ← ⟨ gₐ ⟩
-       y ← ⟨ gₚ ⟩ᵢ x
-       return (x , y)
-
-  _~Π~_ : ∀ {a : Set} {P : a → Set} {n : ℕ}
-          → 𝔾 a n → (∀ {n : ℕ} → 𝔾ᵢ P n) → 𝔾 (Π[ a ] P) n
-  gₐ ~Π~ gₚ = {!!}
-
-  {-
   deriveGenᵢ : ∀ {i : Set} {Σ : Sig i} {n : ℕ}
                → ((x : i) → 𝕌~ (λ a → ⟪ 𝔾 a ⟫) (Sig.Op Σ x))
                → ((x : i) → (op : ⟦ Sig.Op Σ x ⟧ᵤ) → 𝕌~ (λ a → ⟪ 𝔾 a ⟫) (Sig.Ar Σ op))
                → (∀ {n : ℕ} → 𝔾ᵢ (⟦ Σ ⟧ (μ Σ)) n) → 𝔾ᵢ (⟦ Σ ⟧ (μ Σ)) n
-  deriveGenᵢ {Σ = Op ◃ Ar ∣ Ty} sig₁ sig₂ μ ind =
-    do op ← 𝕌-gen (Op ind) (sig₁ ind)
-       f  ← 𝕌-gen (Ar op) (sig₂ ind op) ~Π~ (λ ind → ⦇ `μ (μ (Ty ind)) ⦈)
-       return (op , f) 
-
-  -}
+  deriveGenᵢ {Σ = Op ◃ Ar ∣ Ty} sig₁ sig₂ μ ind = {!!} 
   

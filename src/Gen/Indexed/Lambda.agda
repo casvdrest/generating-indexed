@@ -1,7 +1,7 @@
 open import src.Data hiding (_∈_; Σ)
 open import src.Gen.Base
-open import src.Gen.Indexed.Examples
-open import src.Gen.Regular.Examples
+--open import src.Gen.Indexed.Examples
+--open import src.Gen.Regular.Examples
 
 open import Data.Nat hiding (_≟_)
 open import Data.List

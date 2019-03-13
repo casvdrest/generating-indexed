@@ -27,55 +27,72 @@ module src.Gen.Properties where
   -- Generator productivity: we say that a generator produces
   -- Some value 'x' if there is some n ∈ ℕ such that 'x' is in
   -- the list we get by applying 'n' to the generator. 
-  _↝_ : ∀ {a : Set} → (∀ {n : ℕ} → 𝔾 a n) → a → Set
-  f ↝ x = ∃[ n ] (x ∈ f (n , refl))
+  _∣_↝_ : ∀ {a t : Set} → Gen a t → 𝔾 t → a → Set
+  f ∣ tg ↝ x = ∃[ n ] (x ∈ interpret f tg n)
+  
 
   -- Completeness: A generator is complete if we can produce
   -- a productivity proof for all values of its type
-  Complete : ∀ {a : Set} → (∀ {n : ℕ} → 𝔾 a n) → Set
-  Complete {a} f = ∀ {x : a} → f ↝ x
+  Complete : ∀ {a t : Set} → Gen a t → 𝔾 t → Set
+  Complete {a} f tg = ∀ {x : a} → f ∣ tg ↝ x
+
+
+  -- Call to external generator completeness
+  `-complete : ∀ {a t : Set} {tg : 𝔾 t} {g : 𝔾 a} {x : a} → g ∣ g ↝ x → (` g) ∣ tg ↝ x
+  `-complete (suc n , elem) = suc n , elem
+
+  μ-complete : ∀ {a : Set} {tg : 𝔾 a} {x : a} → tg ∣ tg ↝ x → μ ∣ tg ↝ x
+  μ-complete (n , elem) = suc n , elem
 
   ------ Generator Choice ------
-  
+
+  pure-complete : ∀ {a t : Set} {tg : 𝔾 t} {x : a} → ⦇ x ⦈ ∣ tg ↝ x
+  pure-complete = 1 , here
+
   -- Choice between two generators produces an element, given that it is
   -- produced by its left option
-  ∥-complete-left : ∀ {a : Set} {x : a} {f g : ∀ {n : ℕ} → 𝔾 a n}
-                    → f ↝ x
+  ∥-complete-left : ∀ {a t : Set} {x : a} {f g : Gen a t} {tg : 𝔾 t}
+                    → f ∣ tg ↝ x
                     ------------------------------------
-                    → (f ∥ g) ↝ x
-  ∥-complete-left (n , p) = n , merge-complete-left p
+                    → (f ∥ g) ∣ tg ↝ x
+  ∥-complete-left (zero , ())
+  ∥-complete-left (suc n , p) = suc n , merge-complete-left p
+
 
   -- Choice between two generators produces an element, given that it is produced
   -- by its right option
-  ∥-complete-right : ∀ {a : Set} {x : a} {f g : ∀ {n : ℕ} → 𝔾 a n}
-                     → g ↝ x
+  ∥-complete-right : ∀ {a t : Set} {x : a} {f g : Gen a t} {tg : 𝔾 t}
+                     → g ∣ tg ↝ x
                      ------------------------------------
-                     → (f ∥ g) ↝ x
-  ∥-complete-right (n , p) = n , merge-complete-right p
+                     → (f ∥ g) ∣ tg ↝ x
+  ∥-complete-right (zero , ())
+  ∥-complete-right (suc n , p) = suc n , merge-complete-right p
+
 
   -- If an element is produced by choice between two generators, it is either
   -- produced by the left option or by the right option
-  ∥-sound : ∀ {a : Set} {x : a} {n : ℕ} → {f g : ∀ {n : ℕ} → 𝔾 a n}
-            → (f ∥ g) ↝ x
+  ∥-sound : ∀ {a t : Set} {x : a} {n : ℕ} → {f g : Gen a t} {tg : 𝔾 t}
+            → (f ∥ g) ∣ tg ↝ x
             ------------------------------------
-            → (f ↝ x) ⊕ (g ↝ x)
-  ∥-sound (n , prf) = ⊕-bimap (λ x → n , x) (λ y → n , y) (merge-sound prf)
+            → (f ∣ tg ↝ x) ⊕ (g ∣ tg ↝ x)
+  ∥-sound (zero , ())
+  ∥-sound (suc n , prf) = ⊕-bimap (λ x → suc n , x) (λ y → suc n , y) (merge-sound prf)
 
+  
   ------ Generator Product ------
 
-  depth : ∀ {a : Set} {n : ℕ} → 𝔾 a n → ℕ
-  depth {n = n} _ = n
-
+  
   -- Applying a constructor to a generator does not affect
   -- its production
-  constr-preserves-elem : ∀ {a b : Set} {f : a → b}
-                            {g : ∀ {n : ℕ} → 𝔾 a n} {x : a}
-                          → g ↝ x
+  constr-preserves-elem : ∀ {a b t : Set} {f : a → b}
+                            {g : Gen a t} {tg : 𝔾 t} {x : a}
+                          → g ∣ tg ↝ x
                           ---------------------------
-                          → ⦇ f g ⦈ ↝ f x
-  constr-preserves-elem {f = f} (p , elem) =
-    p , list-ap-complete {fs = f ∷ []} here elem
-
+                          → ⦇ f g ⦈ ∣ tg ↝ f x
+  constr-preserves-elem (zero , ())
+  constr-preserves-elem {f = f} (suc n , elem) =
+    suc n , list-ap-complete {fs = [ f ]} here elem 
+  
   max : ℕ → ℕ → ℕ
   max zero m = m
   max (suc n) zero = suc n
@@ -102,28 +119,31 @@ module src.Gen.Properties where
   lemma-max₂ : ∀ {n m : ℕ} → m ≤ max n m
   lemma-max₂ {n} {m} rewrite max-sym {n} {m} = lemma-max₁ 
 
+  
   -- If f produces x and g produces y, then ⦇ C f g ⦈, where C is any
   -- 2-arity constructor, produces C x y
-  ⊛-complete : ∀ {a b c : Set} {x : a} {y : b}
-                 {f : ∀ {n : ℕ} → 𝔾 a n} {g : ∀ {n : ℕ} → 𝔾 b n} {C : a → b → c}
-               → (p₁ : f ↝ x) → (p₂ : g ↝ y)
-               → Depth-Monotone f x → Depth-Monotone g y
+  ⊛-complete : ∀ {a b c t : Set} {x : a} {y : b} {tg : 𝔾 t}
+                 {f : Gen a t} {g : Gen b t} {C : a → b → c}
+               → (p₁ : f ∣ tg ↝ x) → (p₂ : g ∣ tg ↝ y)
+               → Depth-Monotone f x tg → Depth-Monotone g y tg
                -------------------------------------
-               → ⦇ C f g ⦈ ↝ C x y
-  ⊛-complete {a} {b} {c} {f = f} {g = g} {C = C} (n , snd₁) (m , snd₂) mt₁ mt₂  =
-    max n m , list-ap-constr {a = a} {b = b} {c = c} {xs = f ((max n m) , refl)}
-    (mt₁ (lemma-max₁ {n = n} {m = m}) snd₁)
-    (mt₂ (lemma-max₂ {n = n} {m = m}) snd₂)
+               → ⦇ C f g ⦈ ∣ tg ↝ C x y
+  ⊛-complete {a} {b} {c} {f = f} {g = g} {C = C} ((suc n) , snd₁) ((suc m) , snd₂) mt₁ mt₂  =  
+    max (suc n) (suc m) , list-ap-constr {C = C}
+      (mt₁ (lemma-max₁ {n = suc n} {m = suc m}) snd₁)
+      (mt₂ (lemma-max₂ {n = suc n} {m = suc m}) snd₂) 
 
+  
   ------ Combinator Completeness ------
 
   -- Completeness of the ∥ combinator, using coproducts to unify
   -- option types
-  ∥-Complete : ∀ {a b : Set} {f : ∀ {n : ℕ} → 𝔾 a n} {g : ∀ {n : ℕ} → 𝔾 b n}
-               → Complete f → Complete g
+  ∥-Complete : ∀ {a b t : Set} {f : Gen a t} {g : Gen b t} {tg : 𝔾 t}
+               → Complete f tg → Complete g tg
                ------------------------------------
-               → Complete (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈)
+               → Complete (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈) tg
   ∥-Complete {f = f} {g = g} p₁ p₂ {inj₁ x} =
     ∥-complete-left {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈} (constr-preserves-elem {g = f} p₁)
   ∥-Complete {f = f} {g = g} p₁ p₂ {inj₂ y} =
     ∥-complete-right {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈} (constr-preserves-elem {g = g} p₂)
+

@@ -1,7 +1,7 @@
 open import src.Data
 open import src.Gen.Base
-open import src.Gen.Regular.Examples
-open import src.Gen.Indexed.Examples
+--open import src.Gen.Regular.Examples
+--open import src.Gen.Indexed.Examples
 open import src.Gen.Indexed.Regex
 open import src.Gen.Indexed.Lambda
 

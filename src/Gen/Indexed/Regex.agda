@@ -5,8 +5,8 @@ open import Data.Product using (Σ; Σ-syntax; _,_)
 
 open import src.Data using (_⊗_; _,_; fst; snd)
 open import src.Gen.Base
-open import src.Gen.Indexed.Examples
-open import src.Gen.Regular.Examples
+--open import src.Gen.Indexed.Examples
+--open import src.Gen.Regular.Examples
 
 open import Category.Functor
 open import Category.Applicative

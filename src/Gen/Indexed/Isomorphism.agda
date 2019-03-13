@@ -37,15 +37,15 @@ module src.Gen.Indexed.Isomorphism where
 
   ------ Naturals ------
 
-  fromℕ : ℕ → μ Σ-nat tt
+  fromℕ : ℕ → Fix Σ-nat tt
   fromℕ zero =
-    `μ (inj₁ tt , λ())
+    In (inj₁ tt , λ())
   fromℕ (suc n) =
-    `μ ((inj₂ tt) , (λ { tt → fromℕ n }))
+    In ((inj₂ tt) , (λ { tt → fromℕ n }))
 
-  toℕ : μ Σ-nat tt → ℕ
-  toℕ (`μ (inj₁ tt , _)) = zero
-  toℕ (`μ (inj₂ tt , snd)) =
+  toℕ : Fix Σ-nat tt → ℕ
+  toℕ (In (inj₁ tt , _)) = zero
+  toℕ (In (inj₂ tt , snd)) =
     suc (toℕ (snd tt))
 
   ℕ-iso₁ : ∀ {n : ℕ} → toℕ (fromℕ n) ≡ n
@@ -53,15 +53,15 @@ module src.Gen.Indexed.Isomorphism where
   ℕ-iso₁ {suc n} =
     cong suc ℕ-iso₁
 
-  ℕ-iso₂ : ∀ {nf : μ Σ-nat tt} → fromℕ (toℕ nf) ≡ nf
-  ℕ-iso₂ {`μ (inj₁ tt , snd)} rewrite
-    ⊥-funeq {b = μ Σ-nat tt}
+  ℕ-iso₂ : ∀ {nf : Fix Σ-nat tt} → fromℕ (toℕ nf) ≡ nf
+  ℕ-iso₂ {In (inj₁ tt , snd)} rewrite
+    ⊥-funeq {b = Fix Σ-nat tt}
             {f = snd} {g = λ()}
     = refl 
-  ℕ-iso₂ {`μ (inj₂ tt , snd)} =
-    cong (λ x → `μ (inj₂ tt , λ {tt → x})) ℕ-iso₂
+  ℕ-iso₂ {In (inj₂ tt , snd)} =
+    cong (λ x → In (inj₂ tt , λ {tt → x})) ℕ-iso₂
 
-  ℕ≅Σ-nat : ℕ ≅ μ Σ-nat tt
+  ℕ≅Σ-nat : ℕ ≅ Fix Σ-nat tt
   ℕ≅Σ-nat = record { from = fromℕ
                    ; to = toℕ
                    ; iso₁ = ℕ-iso₁
@@ -70,16 +70,16 @@ module src.Gen.Indexed.Isomorphism where
 
   ------ Finite Sets ------
 
-  fromFin : ∀ {n : ℕ} → Fin n → μ Σ-fin n
+  fromFin : ∀ {n : ℕ} → Fin n → Fix Σ-fin n
   fromFin zero =
-    `μ (inj₁ tt , λ())
+    In (inj₁ tt , λ())
   fromFin (suc f) =
-    `μ (inj₂ tt , λ {tt → fromFin f})
+    In (inj₂ tt , λ {tt → fromFin f})
 
-  toFin : ∀ {n : ℕ} → μ Σ-fin n → Fin n
-  toFin {zero} (`μ (() , snd))
-  toFin {suc n} (`μ (inj₁ tt , snd)) = zero
-  toFin {suc n} (`μ (inj₂ tt , snd)) =
+  toFin : ∀ {n : ℕ} → Fix Σ-fin n → Fin n
+  toFin {zero} (In (() , snd))
+  toFin {suc n} (In (inj₁ tt , snd)) = zero
+  toFin {suc n} (In (inj₂ tt , snd)) =
     suc (toFin (snd tt))
 
   Fin-iso₁ : ∀ {n : ℕ} {f : Fin n} → toFin (fromFin f) ≡ f
@@ -88,51 +88,47 @@ module src.Gen.Indexed.Isomorphism where
   Fin-iso₁ {suc n} {suc f} =
     cong suc Fin-iso₁
 
-  Fin-iso₂ : ∀ {n : ℕ} {f : μ Σ-fin n} → fromFin (toFin f) ≡ f
-  Fin-iso₂ {zero} {`μ (() , snd)}
-  Fin-iso₂ {suc n} {`μ (inj₁ tt , snd)} rewrite
+  Fin-iso₂ : ∀ {n : ℕ} {f : Fix Σ-fin n} → fromFin (toFin f) ≡ f
+  Fin-iso₂ {zero} {In (() , snd)}
+  Fin-iso₂ {suc n} {In (inj₁ tt , snd)} rewrite
     funext' {a = ⊥} {f = snd} {g = λ()}
             (λ {x} → ⊥-elim x)
     = refl
-  Fin-iso₂ {suc n} {`μ (inj₂ tt , snd)} =
-    cong (λ x → `μ ((inj₂ tt) , λ {tt → x})) Fin-iso₂
+  Fin-iso₂ {suc n} {In (inj₂ tt , snd)} =
+    cong (λ x → In ((inj₂ tt) , λ {tt → x})) Fin-iso₂
 
-  Fin≅Σ-fin : ∀ {n : ℕ} → Fin n ≅ μ Σ-fin n
+  Fin≅Σ-fin : ∀ {n : ℕ} → Fin n ≅ Fix Σ-fin n
   Fin≅Σ-fin = record { from = fromFin
                      ; to   = toFin
                      ; iso₁ = Fin-iso₁
                      ; iso₂ = Fin-iso₂ 
                      }
 
-  fin : ⟪ 𝔾ᵢ (μ Σ-fin) ⟫
-  fin μ zero = uninhabited
-  fin μ (suc n) = ⦇ (λ x → `μ (inj₁ tt , λ())) (μ n) ⦈
-
   ------ Well-Scoped Lambda Terms ------
 
-  fromTerm : ∀ {n : ℕ} → Term n → μ Σ-Term n
+  fromTerm : ∀ {n : ℕ} → Term n → Fix Σ-Term n
   fromTerm {zero} (Abs t) =
-    `μ (inj₁ tt , λ { tt → fromTerm t })
+    In (inj₁ tt , λ { tt → fromTerm t })
   fromTerm {zero} (App t t₁) =
-    `μ (inj₂ tt , λ { (inj₁ tt) → fromTerm t ; (inj₂ tt) → fromTerm t₁ })
+    In (inj₂ tt , λ { (inj₁ tt) → fromTerm t ; (inj₂ tt) → fromTerm t₁ })
   fromTerm {zero} (Var ())
   fromTerm {suc n} (Abs t) =
-    `μ ((inj₁ tt) , λ { tt → fromTerm t })
+    In ((inj₁ tt) , λ { tt → fromTerm t })
   fromTerm {suc n} (App t t₁) =
-    `μ ((inj₂ (inj₁ tt)) , (λ { (inj₁ tt) → fromTerm t ; (inj₂ tt) → fromTerm t₁ }))
+    In ((inj₂ (inj₁ tt)) , (λ { (inj₁ tt) → fromTerm t ; (inj₂ tt) → fromTerm t₁ }))
   fromTerm {suc n} (Var x) =
-    `μ ((inj₂ (inj₂ x)) , λ())
+    In ((inj₂ (inj₂ x)) , λ())
 
-  toTerm : ∀ {n : ℕ} → μ Σ-Term n → Term n
-  toTerm {zero} (`μ (inj₁ tt , snd)) =
+  toTerm : ∀ {n : ℕ} → Fix Σ-Term n → Term n
+  toTerm {zero} (In (inj₁ tt , snd)) =
     Abs (toTerm (snd tt))
-  toTerm {zero} (`μ (inj₂ tt , snd)) =
+  toTerm {zero} (In (inj₂ tt , snd)) =
     App (toTerm (snd (inj₁ tt))) (toTerm (snd (inj₂ tt)))
-  toTerm {suc n} (`μ (inj₁ tt , snd)) =
+  toTerm {suc n} (In (inj₁ tt , snd)) =
     Abs (toTerm (snd tt))
-  toTerm {suc n} (`μ (inj₂ (inj₁ tt) , snd)) =
+  toTerm {suc n} (In (inj₂ (inj₁ tt) , snd)) =
     App (toTerm (snd (inj₁ tt))) (toTerm (snd (inj₂ tt)))
-  toTerm {suc n} (`μ (inj₂ (inj₂ y) , snd)) =
+  toTerm {suc n} (In (inj₂ (inj₂ y) , snd)) =
     Var y
 
   ,-eq : ∀ {a b} {x₁ x₂ : a} {y₁ y₂ : b}
@@ -151,21 +147,21 @@ module src.Gen.Indexed.Isomorphism where
     cong (uncurry App) (,-eq Term-iso₁ Term-iso₁)
   Term-iso₁ {suc n} {Var x} = refl
 
-  Term-iso₂ : ∀ {n : ℕ} {t : μ Σ-Term n} → fromTerm (toTerm t) ≡ t
-  Term-iso₂ {zero} {`μ (inj₁ tt , snd)} =
-    cong (`μ ∘ λ x → inj₁ tt , x) (funext Term-iso₂)
-  Term-iso₂ {zero} {`μ (inj₂ tt , snd)} =
-    cong (`μ ∘ λ x → inj₂ tt , x) (
+  Term-iso₂ : ∀ {n : ℕ} {t : Fix Σ-Term n} → fromTerm (toTerm t) ≡ t
+  Term-iso₂ {zero} {In (inj₁ tt , snd)} =
+    cong (In ∘ λ x → inj₁ tt , x) (funext Term-iso₂)
+  Term-iso₂ {zero} {In (inj₂ tt , snd)} =
+    cong (In ∘ λ x → inj₂ tt , x) (
       funext' λ { {inj₁ x} → Term-iso₂ ; {inj₂ y} → Term-iso₂ })
-  Term-iso₂ {suc n} {`μ (inj₁ tt , snd)} =
-    cong (`μ ∘ λ x → (inj₁ tt) , x) (funext Term-iso₂)
-  Term-iso₂ {suc n} {`μ (inj₂ (inj₁ tt) , snd)} =
-    cong (`μ ∘ λ x → (inj₂ (inj₁ tt)) , x)
+  Term-iso₂ {suc n} {In (inj₁ tt , snd)} =
+    cong (In ∘ λ x → (inj₁ tt) , x) (funext Term-iso₂)
+  Term-iso₂ {suc n} {In (inj₂ (inj₁ tt) , snd)} =
+    cong (In ∘ λ x → (inj₂ (inj₁ tt)) , x)
       (funext' λ { {inj₁ tt} → Term-iso₂ ; {inj₂ tt} → Term-iso₂ })
-  Term-iso₂ {suc n} {`μ (inj₂ (inj₂ y) , snd)} =
-    cong (`μ ∘ λ x → (inj₂ (inj₂ y)) , x) (funext' λ {x} → ⊥-elim x)
+  Term-iso₂ {suc n} {In (inj₂ (inj₂ y) , snd)} =
+    cong (In ∘ λ x → (inj₂ (inj₂ y)) , x) (funext' λ {x} → ⊥-elim x)
 
-  Term≅Σ-Term : ∀ {n : ℕ} → Term n ≅ μ Σ-Term n
+  Term≅Σ-Term : ∀ {n : ℕ} → Term n ≅ Fix Σ-Term n
   Term≅Σ-Term = record { from = fromTerm
                        ; to   = toTerm
                        ; iso₁ = Term-iso₁
@@ -175,15 +171,15 @@ module src.Gen.Indexed.Isomorphism where
   
   ------ Lists ------
 
-  fromList : ∀ {a : Set} → List a → μ (Σ-list a) tt
+  fromList : ∀ {a : Set} → List a → Fix (Σ-list a) tt
   fromList [] =
-    `μ (inj₁ tt , λ ())
+    In (inj₁ tt , λ ())
   fromList (x ∷ xs) =
-    `μ (inj₂ x , λ {tt → fromList xs})
+    In (inj₂ x , λ {tt → fromList xs})
 
-  toList : ∀ {a : Set} → μ ((Σ-list a)) tt → List a
-  toList (`μ (inj₁ tt , snd)) = []
-  toList (`μ (inj₂ y , snd)) =
+  toList : ∀ {a : Set} → Fix ((Σ-list a)) tt → List a
+  toList (In (inj₁ tt , snd)) = []
+  toList (In (inj₂ y , snd)) =
     y ∷ toList (snd tt)
   
   List-iso₁ : ∀ {a : Set} {xs : List a} → toList (fromList xs) ≡ xs
@@ -191,16 +187,16 @@ module src.Gen.Indexed.Isomorphism where
   List-iso₁ {xs = x ∷ xs} =
     cong (_∷_ x) List-iso₁
 
-  List-iso₂ : ∀ {a : Set} {xs : μ (Σ-list a) tt } → fromList (toList xs) ≡ xs
-  List-iso₂ {a} {xs = `μ (inj₁ tt , snd)} rewrite
-    ⊥-funeq {b = μ (Σ-list a) tt}
+  List-iso₂ : ∀ {a : Set} {xs : Fix (Σ-list a) tt } → fromList (toList xs) ≡ xs
+  List-iso₂ {a} {xs = In (inj₁ tt , snd)} rewrite
+    ⊥-funeq {b = Fix (Σ-list a) tt}
             {f = snd} {g = λ()}
     = refl
-  List-iso₂ {xs = `μ (inj₂ y , snd)} =
-    cong (λ x → `μ (inj₂ y , x))
+  List-iso₂ {xs = In (inj₂ y , snd)} =
+    cong (λ x → In (inj₂ y , x))
          (funext List-iso₂)
 
-  List≅Σ-list : ∀ {a : Set} → List a ≅ μ (Σ-list a) tt
+  List≅Σ-list : ∀ {a : Set} → List a ≅ Fix (Σ-list a) tt
   List≅Σ-list = record { from = fromList
                        ; to   = toList
                        ; iso₁ = List-iso₁
@@ -210,15 +206,15 @@ module src.Gen.Indexed.Isomorphism where
   
   ------ Vectors ------
 
-  fromVec : ∀ {a : Set} {n : ℕ} → Vec a n → μ (Σ-vec a) n
+  fromVec : ∀ {a : Set} {n : ℕ} → Vec a n → Fix (Σ-vec a) n
   fromVec {n = 0}     []       =
-    `μ (tt , λ())
+    In (tt , λ())
   fromVec {n = suc n} (x ∷ xs) =
-    `μ (x , λ { tt → fromVec xs })
+    In (x , λ { tt → fromVec xs })
 
-  toVec : ∀ {a : Set} {n : ℕ} → μ (Σ-vec a) n → Vec a n
-  toVec {n = zero} (`μ (tt , snd)) = []
-  toVec {n = suc n} (`μ (x , snd)) =
+  toVec : ∀ {a : Set} {n : ℕ} → Fix (Σ-vec a) n → Vec a n
+  toVec {n = zero} (In (tt , snd)) = []
+  toVec {n = suc n} (In (x , snd)) =
     x ∷ toVec (snd tt)
 
   Vec-iso₁ : ∀ {a : Set} {n : ℕ} {xs : Vec a n} → toVec (fromVec xs) ≡ xs
@@ -226,52 +222,47 @@ module src.Gen.Indexed.Isomorphism where
   Vec-iso₁ {xs = x ∷ xs} =
     cong (_∷_ x) Vec-iso₁
 
-  Vec-iso₂ : ∀ {a : Set} {n : ℕ} {xs : μ (Σ-vec a) n} → fromVec (toVec xs) ≡ xs
-  Vec-iso₂ {n = zero}  {`μ (tt , snd)} rewrite
+  Vec-iso₂ : ∀ {a : Set} {n : ℕ} {xs : Fix (Σ-vec a) n} → fromVec (toVec xs) ≡ xs
+  Vec-iso₂ {n = zero}  {In (tt , snd)} rewrite
     funext' {a = ⊥} {f = snd} {g = λ()}
             (λ {x} → ⊥-elim x)
     = refl
-  Vec-iso₂ {n = suc n} {`μ (fst , snd)} = cong (λ x → `μ (fst , x)) (funext Vec-iso₂)
+  Vec-iso₂ {n = suc n} {In (fst , snd)} = cong (λ x → In (fst , x)) (funext Vec-iso₂)
 
-  Vec≅Σ-vec : ∀ {a : Set} {n : ℕ} → Vec a n ≅ μ (Σ-vec a) n
+  Vec≅Σ-vec : ∀ {a : Set} {n : ℕ} → Vec a n ≅ Fix (Σ-vec a) n
   Vec≅Σ-vec = record { from = fromVec
                      ; to   = toVec
                      ; iso₁ = Vec-iso₁
                      ; iso₂ = Vec-iso₂
                      }
-
-  vec : ∀ {a : Set} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ (μ (Σ-vec a)) ⟫
-  vec a μ zero    = ⦇ (`μ (tt , λ())) ⦈
-  vec a μ (suc n) = ⦇ (λ x y → `μ (x , λ { tt → y })) (⟨ a ⟩) (μ n) ⦈ 
-
   
   ------ LEQ ------
   
-  from≤ : ∀ {idx : ℕ × ℕ} → (proj₁ idx) ≤ (proj₂ idx) → μ Σ-≤ idx 
-  from≤ z≤n = `μ (tt , λ())
+  from≤ : ∀ {idx : ℕ × ℕ} → (proj₁ idx) ≤ (proj₂ idx) → Fix Σ-≤ idx 
+  from≤ z≤n = In (tt , λ())
   from≤ (s≤s p) =
-    `μ (tt , λ { tt → from≤ p })
+    In (tt , λ { tt → from≤ p })
   
-  to≤ : ∀ {idx : ℕ × ℕ} → μ Σ-≤ idx → proj₁ idx ≤ proj₂ idx
-  to≤ {zero , snd₁} (`μ (tt , snd)) = z≤n
-  to≤ {suc fst₁ , zero} (`μ (() , snd))
-  to≤ {suc fst₁ , suc snd₁} (`μ (tt , snd)) =
+  to≤ : ∀ {idx : ℕ × ℕ} → Fix Σ-≤ idx → proj₁ idx ≤ proj₂ idx
+  to≤ {zero , snd₁} (In (tt , snd)) = z≤n
+  to≤ {suc fst₁ , zero} (In (() , snd))
+  to≤ {suc fst₁ , suc snd₁} (In (tt , snd)) =
     s≤s (to≤ (snd tt))
 
   ≤-iso₁ : ∀ {idx : ℕ × ℕ} {p : proj₁ idx ≤ proj₂ idx} → to≤ (from≤ p) ≡ p
   ≤-iso₁ {.0 , snd} {z≤n} = refl
   ≤-iso₁ {.(suc _) , .(suc _)} {s≤s p} = cong s≤s ≤-iso₁
 
-  ≤-iso₂ : ∀ {idx : ℕ × ℕ} {p : μ Σ-≤ idx} → from≤ (to≤ p) ≡ p
-  ≤-iso₂ {zero , snd₁} {`μ (tt , snd)} rewrite
+  ≤-iso₂ : ∀ {idx : ℕ × ℕ} {p : Fix Σ-≤ idx} → from≤ (to≤ p) ≡ p
+  ≤-iso₂ {zero , snd₁} {In (tt , snd)} rewrite
     funext' {a = ⊥} {f = snd}
             {g = λ()} (λ {x} → ⊥-elim x)
     = refl
-  ≤-iso₂ {suc fst₁ , zero} {`μ (() , snd)}
-  ≤-iso₂ {suc fst₁ , suc snd₁} {`μ (fst , snd)} =
-    cong (λ x → `μ (fst , x)) (funext ≤-iso₂)
+  ≤-iso₂ {suc fst₁ , zero} {In (() , snd)}
+  ≤-iso₂ {suc fst₁ , suc snd₁} {In (fst , snd)} =
+    cong (λ x → In (fst , x)) (funext ≤-iso₂)
 
-  ≤≅Σ-≤ : ∀ {idx : ℕ × ℕ} → (proj₁ idx ≤ proj₂ idx) ≅ μ Σ-≤ idx
+  ≤≅Σ-≤ : ∀ {idx : ℕ × ℕ} → (proj₁ idx ≤ proj₂ idx) ≅ Fix Σ-≤ idx
   ≤≅Σ-≤ = record { from = from≤
                  ; to   = to≤
                  ; iso₁ = ≤-iso₁
@@ -281,17 +272,17 @@ module src.Gen.Indexed.Isomorphism where
 
   ------ Sorted ------
 
-  fromSorted : ∀ {xs : List ℕ} → Sorted xs → μ Σ-Sorted xs
-  fromSorted nil = `μ (tt , λ())
+  fromSorted : ∀ {xs : List ℕ} → Sorted xs → Fix Σ-Sorted xs
+  fromSorted nil = In (tt , λ())
   fromSorted single =
-    `μ (tt , λ())
+    In (tt , λ())
   fromSorted (step' x₁ p) =
-    `μ (x₁ , λ { tt → fromSorted p } )
+    In (x₁ , λ { tt → fromSorted p } )
 
-  toSorted : ∀ {xs : List ℕ} → μ Σ-Sorted xs → Sorted xs
-  toSorted {[]} (`μ (tt , snd)) = nil
-  toSorted {x ∷ []} (`μ (tt , snd)) = single
-  toSorted {x ∷ x₁ ∷ xs} (`μ (fst , snd)) =
+  toSorted : ∀ {xs : List ℕ} → Fix Σ-Sorted xs → Sorted xs
+  toSorted {[]} (In (tt , snd)) = nil
+  toSorted {x ∷ []} (In (tt , snd)) = single
+  toSorted {x ∷ x₁ ∷ xs} (In (fst , snd)) =
     step' fst (toSorted (snd tt))
 
   Sorted-iso₁ : ∀ {xs : List ℕ} {p : Sorted xs} → toSorted (fromSorted p) ≡ p
@@ -300,22 +291,22 @@ module src.Gen.Indexed.Isomorphism where
   Sorted-iso₁ {x ∷ x₁ ∷ xs} {step' x₂ p} =
     cong (step' x₂) Sorted-iso₁
 
-  Sorted-iso₂ : ∀ {xs : List ℕ} {p : μ Σ-Sorted xs} → fromSorted (toSorted p) ≡ p
-  Sorted-iso₂ {[]} {`μ (tt , snd)} rewrite
+  Sorted-iso₂ : ∀ {xs : List ℕ} {p : Fix Σ-Sorted xs} → fromSorted (toSorted p) ≡ p
+  Sorted-iso₂ {[]} {In (tt , snd)} rewrite
     funext' {a = ⊥} {f = snd}
             {g = λ()} (λ {x} → ⊥-elim x)
     = refl
-  Sorted-iso₂ {x ∷ []} {`μ (tt , snd)} rewrite
+  Sorted-iso₂ {x ∷ []} {In (tt , snd)} rewrite
     funext' {a = ⊥} {f = snd}
             {g = λ()} (λ{x} → ⊥-elim x)
     = refl
-  Sorted-iso₂ {x ∷ x₁ ∷ xs} {`μ (fst , snd)} =
-    cong (λ x → `μ (fst , x)) (funext Sorted-iso₂)
+  Sorted-iso₂ {x ∷ x₁ ∷ xs} {In (fst , snd)} =
+    cong (λ x → In (fst , x)) (funext Sorted-iso₂)
 
-  Sorted≅Σ-Sorted : ∀ {xs : List ℕ} → Sorted xs ≅ μ Σ-Sorted xs
+  Sorted≅Σ-Sorted : ∀ {xs : List ℕ} → Sorted xs ≅ Fix Σ-Sorted xs
   Sorted≅Σ-Sorted = record { from = fromSorted
                            ; to   = toSorted
                            ; iso₁ = Sorted-iso₁
                            ; iso₂ = Sorted-iso₂
                            }
-
+                           
