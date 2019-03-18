@@ -76,7 +76,7 @@ module src.Gen.Regular.Isomorphism where
              → RegInfo co𝔾 (getPf p) → co𝔾 a
   isoCogen a ⦃ record { W = f , iso } ⦄ reginfo {b} gₐ =
     ⦇ (λ f → f ∘ (λ { (In x) → x }) ∘ _≅_.from iso)
-      (` deriveCogen {g = f} {a = b} reginfo gₐ) ⦈
+      (` deriveCogen {g = f} reginfo gₐ) ⦈
   
   ℕF : Reg
   ℕF = U ⊕ I

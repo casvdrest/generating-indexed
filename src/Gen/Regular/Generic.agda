@@ -25,6 +25,7 @@ module src.Gen.Regular.Generic where
   open RawMonad ⦃...⦄ using (_⊛_; pure)
 
   data Reg : Set where
+    Z   : Reg
     U   : Reg 
     _⊕_ : Reg → Reg → Reg
     _⊗_ : Reg → Reg → Reg
@@ -32,6 +33,7 @@ module src.Gen.Regular.Generic where
     K   : Set → Reg
 
   data RegInfo (P : Set → Set) : Reg → Set where
+    Z~   : RegInfo P Z
     U~   : RegInfo P U
     
     _⊕~_ : ∀ {f₁ f₂ : Reg}
@@ -52,6 +54,7 @@ module src.Gen.Regular.Generic where
   map-reginfo f (ri ⊗~ ri₁) = map-reginfo f ri ⊗~ map-reginfo f ri₁
   map-reginfo f I~ = I~
   map-reginfo f (K~ x) = K~ (f x)
+  map-reginfo f (Z~)   = Z~
     
   ⟦_⟧ : Reg → Set → Set
   ⟦ U           ⟧ r = ⊤
@@ -59,6 +62,7 @@ module src.Gen.Regular.Generic where
   ⟦ reg₁ ⊗ reg₂ ⟧ r = ⟦ reg₁ ⟧ r × ⟦ reg₂ ⟧ r 
   ⟦ I           ⟧ r = r
   ⟦ K a         ⟧ r = a
+  ⟦ Z           ⟧ r = ⊥
   
   data Fix (f : Reg) : Set where
     In : ⟦ f ⟧ (Fix f) → Fix f
@@ -74,9 +78,11 @@ module src.Gen.Regular.Generic where
   deriveGen : ∀ {f g : Reg}
               → RegInfo 𝔾 f
               → Gen (⟦ f ⟧ (Fix g)) (⟦ g ⟧ (Fix g))
-  deriveGen {U}       {g} c = pure tt
-  deriveGen {f₁ ⊕ f₂}  {g} (c₁ ⊕~ c₂) = ⦇ inj₁ (deriveGen c₁) ⦈ ∥ ⦇ inj₂ (deriveGen c₂) ⦈
-    
-  deriveGen {f₁ ⊗ f₂}  {g} (c₁ ⊗~ c₂) = ⦇ (deriveGen c₁) , (deriveGen c₂) ⦈
-  deriveGen {I}       {g} c  = ⦇ In μ ⦈
+  deriveGen {U} {g} c = pure tt
+  deriveGen {f₁ ⊕ f₂}  {g} (c₁ ⊕~ c₂) =
+    ⦇ inj₁ (deriveGen c₁) ⦈ ∥ ⦇ inj₂ (deriveGen c₂) ⦈
+  deriveGen {f₁ ⊗ f₂}  {g} (c₁ ⊗~ c₂) =
+    ⦇ (deriveGen c₁) , (deriveGen c₂) ⦈
+  deriveGen {I} {g} c   = ⦇ In μ ⦈
   deriveGen {K a} {g} (K~ gₖ) = ` gₖ
+  deriveGen {Z} Z~ = None

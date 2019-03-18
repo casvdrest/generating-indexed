@@ -8,15 +8,13 @@ open import Data.Bool
 open import Data.List hiding (fromMaybe)
 open import Data.Maybe hiding (fromMaybe; map)
 open import Data.Empty
-open import Data.Product using (uncurry; _,_; ∃; ∃-syntax)
+open import Data.Product using (uncurry; _,_; ∃; ∃-syntax; _×_; Σ; Σ-syntax)
 
 import Relation.Binary.PropositionalEquality as Eq'
 open Eq' using (_≡_; refl; cong; sym; trans)
 open Eq'.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
 
-open import src.Data
 open import src.Gen.Base
---open import src.Gen.Regular.Examples using (bool)
 
 open import Function
 
@@ -26,24 +24,34 @@ module src.Gen.Indexed.Examples where
 
   open RawMonad ⦃...⦄ using (_⊛_; pure; _>>=_; return)
   
-  fin : ⟪ 𝔾ᵢ Fin ⟫
-  fin _ zero    = uninhabited
-  fin μ (suc n) = ⦇ zero      ⦈
-                ∥ ⦇ suc (μ n) ⦈
+  fin : 𝔾ᵢ Fin
+  fin zero    = None
+  fin (suc n) = ⦇ zero          ⦈
+              ∥ ⦇ suc (` fin n) ⦈
 
-  ≤m : ⟪ 𝔾ᵢ (uncurry _≤_) ⟫ 
-  ≤m μ (zero  , m    ) = ⦇ z≤n ⦈
-  ≤m μ (n     , zero ) = uninhabited
-  ≤m μ (suc n , suc m) = ⦇ s≤s (μ (n , m)) ⦈
+  prop : ⟨ fin 5 ⟩ 10 ≡
+    zero ∷
+    suc zero ∷
+    suc (suc zero) ∷
+    suc (suc (suc zero)) ∷ suc (suc (suc (suc zero))) ∷ []
+  prop = refl
 
+  
+  ≤m : 𝔾ᵢ (uncurry _≤_)
+  ≤m (zero  , m    ) = ⦇ z≤n ⦈
+  ≤m (suc n , zero ) = None
+  ≤m (suc n , suc m) = ⦇ s≤s (` ≤m (n , m)) ⦈
+  
   ≤-suc : ∀ {n m : ℕ} → n ≤ m → n ≤ suc m
   ≤-suc z≤n = z≤n
   ≤-suc (s≤s p) = s≤s (≤-suc p)
 
-  ≤n+k : ⟪ 𝔾ᵢ (λ p → fst p ≤ snd p + fst p) ⟫
-  ≤n+k μ (n , zero ) = ⦇ (≤-reflexive refl) ⦈
-  ≤n+k μ (n , suc k) = ⦇ ≤-suc (μ (n , k))  ⦈
+  {-
+  ≤n+k : 𝔾ᵢ (λ p → fst p ≤ snd p + fst p)
+  ≤n+k (n , zero ) = ⦇ (≤-reflexive refl)      ⦈
+  ≤n+k (n , suc k) = ⦇ ≤-suc (` ≤n+k (n , k))  ⦈
 
+  
   vec : ∀ {a : Set} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ (Vec a) ⟫
   vec a μ zero    = ⦇ []            ⦈
   vec a μ (suc n) = ⦇ ⟨ a ⟩ ∷ (μ n) ⦈
@@ -53,6 +61,7 @@ module src.Gen.Indexed.Examples where
     single : ∀ {n : ℕ} → Sorted (n ∷ [])
     step   : ∀ {n m : ℕ} {xs : List ℕ} → n ≤ m → Sorted {ℓ} (m ∷ xs) → Sorted {ℓ} (n ∷ m ∷ xs)
 
+  
   n≤m? : (n m : ℕ) → Maybe (n ≤ m)
   n≤m? zero m          = just z≤n
   n≤m? n zero          = nothing
@@ -159,3 +168,4 @@ module src.Gen.Indexed.Examples where
   foo μ zero    = ⦇ bar ⦈ ∥ ⦇ baz (μ 0) (μ 0) ⦈
   foo μ (suc n) = ⦇ baz (μ {!!}) (μ {!!}) ⦈
 
+-}

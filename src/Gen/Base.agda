@@ -15,6 +15,8 @@ open import Category.Functor
 open import Category.Applicative
 open import Category.Monad
 
+open import Codata.Musical.Notation
+
 open import Function
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -38,15 +40,17 @@ module src.Gen.Base where
     -- Monadic bind for generators
     Bind  : ∀ {b t : Set} → Gen b t → (b → Gen a t) → Gen a t
 
-    -- Generator that produces no elements at all. 
+      -- Generator that produces no elements at all. 
     None  : ∀ {t : Set} → Gen a t
 
     -- Marks a recursive positions
     μ     : Gen a a
 
+    μ'    : ∀ {t : Set} {b : Set} → (Σ[ x ∈ b ] ((Σ[ y ∈ b ] y ≡ x) → Gen a a)) → Gen a t
+
     -- Call to an external generator. Using this constructor is
     -- only different from including the generator itself if the
-    -- called generator itself contains one or more recursive
+    -- called generator contains one or more recursive
     -- positions. 
     `_    : ∀ {t : Set} → Gen a a → Gen a t
 
@@ -55,6 +59,9 @@ module src.Gen.Base where
   𝔾 : Set → Set
   𝔾 a = Gen a a
 
+  𝔾ᵢ : ∀ {i : Set} → (i → Set) → Set
+  𝔾ᵢ {i} f = (x : i) → 𝔾 (f x)
+  
   -- Type synonym for 'closed' generators for function types
   co𝔾 : Set → Set
   co𝔾 a = ∀ {b : Set} → 𝔾 b → 𝔾 (a → b)
@@ -62,7 +69,7 @@ module src.Gen.Base where
   -- 'Functor' instance for the generator type
   instance
     Gen-functor : ∀ {t : Set} → RawFunctor (λ a → Gen a t)
-    Gen-functor = record { _<$>_ = Ap ∘ Pure }
+    Gen-functor = record { _<$>_ = Gen.Ap ∘ Pure }
 
   -- 'Applicative' instance for the generator type
   instance
@@ -108,11 +115,22 @@ module src.Gen.Base where
     interpret tg tg n
   interpret (` g       ) tg (suc n) =
     interpret g g (suc n)
+  interpret (μ' (x , f)) tg (suc n) = interpret (f (x , refl)) (f (x , refl)) n
+
+  Mu : ∀ {i t : Set} {f : i → Set } → ((x : i) → Gen (f x) (f x)) → (x : i) → Gen (f x) t
+  Mu f x = μ' (x , λ { (x , refl) → f x })
+
+  infix 3 Mu-syntax
+
+  Mu-syntax : ∀ {i t : Set} {f : i → Set } → ((x : i) → Gen (f x) (f x)) → (x : i) → Gen (f x) t
+  Mu-syntax = Mu
+
+  syntax Mu-syntax f x = μ[ f , x ]
 
   -- Interpret a closed generator as a function from `ℕ` to `List a`
   ⟨_⟩ : ∀ {a : Set} → Gen a a → ℕ → List a
   ⟨ g ⟩ = interpret g g
-  
+
 {-
   infix 3 〖_
   infix 1 _〗

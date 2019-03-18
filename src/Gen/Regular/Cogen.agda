@@ -39,15 +39,14 @@ module src.Gen.Regular.Cogen where
   ⊗-Cogen cg₁ cg₂ gₐ = ⦇ uncurry (` cg₁ (cg₂ gₐ)) ⦈ 
  
   deriveCogen :
-    ∀ {f g : Reg} {a : Set}
-    → RegInfo co𝔾 f
-    → 𝔾 a → 𝔾 (⟦ f ⟧ (Fix g) → a)
+    ∀ {f g : Reg} → RegInfo co𝔾 f → co𝔾 (⟦ f ⟧ (Fix g))
   deriveCogen {U} {g} info gₐ = U-Cogen {f = g} gₐ
-  
   deriveCogen {f₁ ⊕ f₂} {g} (iₗ ⊕~ iᵣ) = 
     ⊕-Cogen {f₁} {f₂} (deriveCogen iₗ ) (deriveCogen iᵣ )
   deriveCogen {f₁ ⊗ f₂} {g} (iₗ ⊗~ iᵣ) =
     ⊗-Cogen {f₁} {f₂} {g} (deriveCogen iₗ) (deriveCogen iᵣ)
   deriveCogen {I} I~ _ = μ 
   deriveCogen {K x} {g} (K~ cg) = cg
+  deriveCogen {Z} Z~ = λ _ → Pure λ()
+  
 

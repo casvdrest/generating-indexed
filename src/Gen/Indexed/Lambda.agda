@@ -30,9 +30,10 @@ module src.Gen.Indexed.Lambda where
     `ℕ    : Ty
     _`→_  : Ty → Ty → Ty
 
-  type : ⟪ 𝔾 Ty ⟫
-  type μ = ⦇ `ℕ ⦈ ∥ ⦇ μ `→ μ ⦈
+  type : 𝔾 Ty
+  type = ⦇ `ℕ ⦈ ∥ ⦇ μ `→ μ ⦈
 
+  
   →-left-neq : ∀ {τ₁ τ₂ τ₃ τ₄ : Ty} → ¬ τ₁ ≡ τ₂
                --------------------------------
                → ¬ τ₁ `→ τ₃ ≡ τ₂ `→ τ₄
@@ -53,6 +54,7 @@ module src.Gen.Indexed.Lambda where
   ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄)) | yes p | no ¬p = no (→-right-neq ¬p)
   ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄)) | no ¬p = no (→-left-neq ¬p)
 
+  
   data Env : Set where
     ∅     : Env
     _,_∶_ : Env → Id → Ty → Env
@@ -67,7 +69,7 @@ module src.Gen.Indexed.Lambda where
           ---------------------------------                              
         → (Γ , β ∶ σ) [ α ↦ τ ] 
 
-
+  
   data Tm : Set where
     $_  : Id → Tm
     Λ_⇒_ : Id → Tm → Tm
@@ -96,6 +98,7 @@ module src.Gen.Indexed.Lambda where
         → Γ ⊢ let` α := t₁ in` t₂ ∶ σ
           
 
+  {-
   Γ-match : (τ : Ty) → ⟪ 𝔾ᵢ (λ Γ → Σ[ α ∈ Id ] Γ [ α ↦ τ ]) ⟫
   Γ-match τ μ ∅ = uninhabited
   Γ-match τ μ (Γ , α ∶ σ) with τ ≟ σ
@@ -167,3 +170,4 @@ module src.Gen.Indexed.Lambda where
           `LET μ _ = uninhabited
  
 
+-}
