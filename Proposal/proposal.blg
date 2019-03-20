@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2018/Arch Linux)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: proposal.aux
+The style file: acm.bst
+Database file #1: references.bib
+Warning--can't use both volume and number fields in runciman2008smallcheck
+Warning--can't use both volume and number fields in yakushev2009generic
+Warning--can't use both volume and number fields in yorgey2010species
+You've used 31 entries,
+            2253 wiz_defined-function locations,
+            702 strings with 8829 characters,
+and the built_in function-call counts, 10942 in all, are:
+= -- 1076
+> -- 427
+< -- 0
++ -- 180
+- -- 146
+* -- 785
+:= -- 1675
+add.period$ -- 94
+call.type$ -- 31
+change.case$ -- 163
+chr.to.int$ -- 0
+cite$ -- 34
+duplicate$ -- 483
+empty$ -- 953
+format.name$ -- 146
+if$ -- 2373
+int.to.chr$ -- 0
+int.to.str$ -- 31
+missing$ -- 30
+newline$ -- 159
+num.names$ -- 62
+pop$ -- 197
+preamble$ -- 1
+purify$ -- 134
+quote$ -- 0
+skip$ -- 333
+stack$ -- 0
+substring$ -- 670
+swap$ -- 157
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 122
+warning$ -- 3
+while$ -- 117
+width$ -- 33
+write$ -- 327
+(There were 3 warnings)
