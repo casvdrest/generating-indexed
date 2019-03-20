@@ -1,11 +1,8 @@
-marco/
-model/
-colloqium/
 *.agdai
 *.agda~
 #*
 '#*
-src/Proposal/*
-!src/Proposal/*.bib
-!src/Proposal/*.lagda
-!src/Proposal/*.pdf
+Proposal/*
+Proposal/*.bib
+!Proposal/*.lagda
+!Proposal/*.pdf
