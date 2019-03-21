@@ -8,7 +8,7 @@ open import AgdaGen.ListProperties
 open import AgdaGen.Regular.Cogen
 open import AgdaGen.Regular.Properties
 open import AgdaGen.Monotonicity
-open import AgdaGen.Indexed.Isomorphism
+open import AgdaGen.Indexed.Isomorphism hiding (cong₂)
 
 open import Relation.Binary.PropositionalEquality
 
@@ -50,9 +50,26 @@ module AgdaGen.Indexed.Properties where
         (∀ {n m : ℕ} → n ≤ m → f' ∈ ⟨ cg (proj₁ σ) ⟩ n
          → f' ∈ ⟨ cg (proj₁ σ) ⟩ m) × f' ≡ f )
 
+  `-Monotone :
+    ∀ {a t : Set} {g : Gen a a} {tg : Gen t t} {x : a}
+    → Depth-Monotone g x g → Depth-Monotone (` g) x tg
+  `-Monotone mt z≤n () 
+  `-Monotone mt (s≤s leq) elem = mt (s≤s leq) elem
+
+  Z-Cogen-Monotone :
+    ∀ {g : Reg} → CoMonotone (deriveCogen {g = g} Z~)
+  Z-Cogen-Monotone σ {f} = (λ()) , (λ leq elem → pure-monotone leq elem) , funext λ { {()} }
+
   U-Cogen-Monotone :
     ∀ {g : Reg} → CoMonotone (deriveCogen {g = g} U~)
-  U-Cogen-Monotone = {!!}
+  U-Cogen-Monotone σ {f}  with ⊤-split f
+  ... | x , eq rewrite
+    sym eq with proj₂ σ {x}
+  ... | mt = (λ { tt → x })
+      , constr-monotone {C = λ x → λ { tt → x}}
+        (λ {x} {y} → λ { eq → cong (λ f → f tt) eq })
+        (`-Monotone mt)
+      , funext λ {x} → refl
 
   U-Cogen-Complete :
     ∀ {g : Reg} → CoComplete (deriveCogen {g = g} U~)
@@ -64,6 +81,49 @@ module AgdaGen.Indexed.Properties where
     list-ap-complete {b = ⊤ → b} {fs = (λ x → λ { tt → x }) ∷ []} here elem
   ... | elem'  =
     (λ { tt → x }) , ((suc n) , elem') , funext (λ { {x} → refl} )
+
+  eq→ext : ∀ {a b : Set} {f g : a → b} → f ≡ g → ∀ {x} → f x ≡ g x
+  eq→ext refl = refl
+
+  ⊎-funeq-left :
+    ∀ {a b c : Set} {f₁ f₂ : a → c} {g₁ g₂ : b → c}
+    → (∀ {x} → ⊎lift f₁ g₁ (inj₁ x) ≡ ⊎lift f₂ g₂ (inj₁ x)) → (∀ {x} → f₁ x ≡ f₂ x)
+  ⊎-funeq-left eq {x} rewrite eq {x} = refl
+
+  ⊎-funeq-right :
+    ∀ {a b c : Set} {f₁ f₂ : a → c} {g₁ g₂ : b → c}
+    → (∀ {y} → ⊎lift f₁ g₁ (inj₂ y) ≡ ⊎lift f₂ g₂ (inj₂ y)) → ∀ {y} → g₁ y ≡ g₂ y
+  ⊎-funeq-right eq {y} rewrite eq {y} = refl
+
+  ⊎-funeq : ∀ {a b c : Set} {f₁ f₂ : a → c} {g₁ g₂ : b → c} → ⊎lift f₁ g₁ ≡ ⊎lift f₂ g₂ → f₁ ≡ f₂ × g₁ ≡ g₂
+  ⊎-funeq {f₁ = f₁} {f₂} {g₁} {g₂} eq 
+    = funext (λ {x} → ⊎-funeq-left  {g₁ = g₁} {g₂ = g₂} λ {x} → eq→ext eq {inj₁ x})
+    , funext (λ {y} → ⊎-funeq-right {f₁ = f₁} {f₂ = f₂} λ {y} → eq→ext eq {inj₂ y})
+
+  ⊕-Cogen-Monotone :
+    ∀ {f₁ f₂ g : Reg}
+    → ((i : RegInfo (λ a → Σ[ cg ∈ co𝔾 a ] (∀ {b : Set} {gen : 𝔾 b}
+          → Complete (cg gen) (cg gen) ×
+            (∀ {fₐ : a → b} → Depth-Monotone (cg gen) fₐ (cg gen)))
+        ) f₁) → CoMonotone (deriveCogen {g = g} (map-reginfo proj₁ i)))
+    → ((i : RegInfo (λ a → Σ[ cg ∈ co𝔾 a ] (∀ {b : Set} {gen : 𝔾 b}
+          → Complete (cg gen) (cg gen) ×
+            (∀ {fₐ : a → b} → Depth-Monotone (cg gen) fₐ (cg gen)))
+        ) f₂) → CoMonotone (deriveCogen {g = g} (map-reginfo proj₁ i)))
+    → (i : RegInfo (λ a → Σ[ cg ∈ co𝔾 a ] (∀ {b : Set} {gen : 𝔾 b}
+         → Complete (cg gen) (cg gen) ×
+           (∀ {fₐ : a → b} → Depth-Monotone (cg gen) fₐ (cg gen)))) (f₁ ⊕ f₂))
+    → CoMonotone (deriveCogen {g = g} (map-reginfo proj₁ i))
+  ⊕-Cogen-Monotone {f₁} {f₂} {gᵣ} pₗ pᵣ (iₗ ⊕~ iᵣ) {b} σ {h} with ⊎-split h
+  ... | f , g , eq rewrite
+    sym eq with pₗ iₗ σ {f}
+  ... | .f , mtₗ , refl
+    with pᵣ iᵣ σ {g}
+  ... | .g , mtᵣ , refl
+    with ⊛-monotone {t = ⟦ f₁ ⊕ f₂ ⟧ (Fix gᵣ) → b}
+      {tg = deriveCogen (map-reginfo proj₁ (iₗ ⊕~ iᵣ)) (proj₁ σ)}
+      {C = ⊎lift} ⊎-funeq (`-Monotone mtₗ) (`-Monotone mtᵣ)
+  ... | mt₊ = ⊎lift f g , mt₊ , funext λ { {inj₁ x} → refl ; {inj₂ y} → refl }
 
   ⊕-Cogen-Complete :
     ∀ {f₁ f₂ g : Reg}
@@ -91,7 +151,41 @@ module AgdaGen.Indexed.Properties where
     , ∈x-rewr apE (funext λ { {inj₁ x} → refl ; {inj₂ y} → refl }))
     , funext λ { {inj₁ x} → refl ; {inj₂ y} → refl }
 
-  cc→c : ∀ {a b : Set} → {cg : co𝔾 a} → (σ : Σ[ g ∈ 𝔾 b ] Complete g g)
+  cm→mt : ∀ {a b : Set} → {cg : co𝔾 a}
+          → (σ : Σ[ g ∈ 𝔾 b ] (∀ {y : b} → Depth-Monotone g y g))
+          → CoMonotone cg
+          → ∀ {f : a → b} → Depth-Monotone (cg (proj₁ σ)) f (cg (proj₁ σ))
+  cm→mt σ cm {f} with cm σ {f}
+  cm→mt σ cm {.f'} | f' , fst , refl =
+    λ leq elem → fst leq elem
+
+  ⊗-Cogen-Monotone :
+    ∀ {f₁ f₂ g : Reg}
+    → ((i : RegInfo (λ a → Σ[ cg ∈ co𝔾 a ] (∀ {b : Set} {gen : 𝔾 b}
+          → Complete (cg gen) (cg gen) ×
+            (∀ {fₐ : a → b} → Depth-Monotone (cg gen) fₐ (cg gen)))
+        ) f₁) → CoMonotone (deriveCogen {g = g} (map-reginfo proj₁ i)))
+    → ((i : RegInfo (λ a → Σ[ cg ∈ co𝔾 a ] (∀ {b : Set} {gen : 𝔾 b}
+          → Complete (cg gen) (cg gen) ×
+            (∀ {fₐ : a → b} → Depth-Monotone (cg gen) fₐ (cg gen)))
+        ) f₂) → CoMonotone (deriveCogen {g = g} (map-reginfo proj₁ i)))
+    → (i : RegInfo (λ a → Σ[ cg ∈ co𝔾 a ] (∀ {b : Set} {gen : 𝔾 b} 
+          → Complete (cg gen) (cg gen) ×
+          (∀ {fₐ : a → b} → Depth-Monotone (cg gen) fₐ (cg gen)))
+        ) (f₁ ⊗ f₂)) → CoMonotone (deriveCogen {g = g} (map-reginfo proj₁ i))
+  ⊗-Cogen-Monotone {f₁} {f₂} {gᵣ} pₗ pᵣ (iₗ ⊗~ iᵣ) {b} σ {h} with
+    pₗ iₗ (deriveCogen {f = f₂} {g = gᵣ}
+      (map-reginfo proj₁ iᵣ) (proj₁ σ)
+    , cm→mt σ (pᵣ iᵣ)) {curry h}
+  ... | .(curry h) , mt , refl =
+    h , ( λ {  z≤n ()
+            ; (s≤s leq) elem →
+                list-ap-complete {fs = uncurry  ∷ []} here
+                  (mt (s≤s leq) let h' , (elem , eq) = (ap-singleton elem) in
+                  ∈x-rewr elem (funext λ {x} → cong (λ f y → f (x , y)) eq))
+            }) , refl
+
+  cc→c : ∀ {a b : Set} {cg : co𝔾 a} → (σ : Σ[ g ∈ 𝔾 b ] Complete g g)
          → CoComplete cg → Complete (cg (proj₁ σ)) (cg (proj₁ σ))
   cc→c σ cp {f} with cp σ {f}
   cc→c σ cp {f} | .f , elem , refl = elem 
@@ -119,10 +213,20 @@ module AgdaGen.Indexed.Properties where
           → Complete (cg gen) (cg gen) ×
             (∀ {fₐ : a → b} → Depth-Monotone (cg gen) fₐ (cg gen)))
         ) f)
-    → ∀ {b : Set} {gen : 𝔾 b} {fᵣ : ⟦ f ⟧ (Fix g) → b}
-        → Depth-Monotone (deriveCogen {g = g} (map-reginfo proj₁ i₂) gen)
-            fᵣ (deriveCogen (map-reginfo proj₁ i₂) gen)
-  deriveCogen-Monotone i₁ i₂ = {!!}
+    → ∀ {b : Set} {gen : 𝔾 b}
+        → CoMonotone (deriveCogen {g = g} (map-reginfo proj₁ i₂))
+  deriveCogen-Monotone {Z} {g} i₁ Z~ = Z-Cogen-Monotone {g = g}
+  deriveCogen-Monotone {U} {g} i₁ i₂ = U-Cogen-Monotone {g = g}
+  deriveCogen-Monotone {f₁ ⊕ f₂} {g} i₁ (iₗ ⊕~ iᵣ) {b} {gen} =
+    ⊕-Cogen-Monotone
+      (λ i σ → deriveCogen-Monotone i₁ i {b} {gen} σ)
+      (λ i σ → deriveCogen-Monotone i₁ i {b} {gen} σ) (iₗ ⊕~ iᵣ)
+  deriveCogen-Monotone {f₁ ⊗ f₂} {g} i₁ (iₗ ⊗~ iᵣ) {b} {gen} =
+    ⊗-Cogen-Monotone
+      (λ i σ → deriveCogen-Monotone i₁ i {b} {gen} σ)
+      (λ i σ → deriveCogen-Monotone i₁ i {b} {gen} σ) (iₗ ⊗~ iᵣ)
+  deriveCogen-Monotone {I} {g} i₁ i₂ σ = {!!} , {!!}
+  deriveCogen-Monotone {K x} {g} i₁ (K~ x₁) = {!!}
 
   deriveCogen-Complete :
     ∀ {f g : Reg} → (i₁ : RegInfo co𝔾 g) → (i₂ : RegInfo co𝔾 f) → CoComplete (deriveCogen {g = g} i₂)
