@@ -50,4 +50,3 @@ module Vec where
   eval (Add e1 e2) = eval e1 + eval e2
   eval (LTE e1 e2) = eval e1 < eval e2 
   eval (Con x)     = x
-  
