@@ -35,6 +35,9 @@ module AgdaGen.Indexed.Properties where
   ⊤-split : ∀ {a : Set} → (h : ⊤ → a) → Σ[ x ∈ a ] (λ { tt → x }) ≡ h
   ⊤-split h = (h tt) , refl
 
+  I-split : ∀ {a : Set} {g : Reg} → (h : Fix g → a) → Σ[ h' ∈ (⟦ g ⟧ (Fix g) → a) ] (λ { (In x) → h' x }) ≡ h
+  I-split h = h ∘ In , funext' λ { {In x} → refl }
+
   _∘↝_ : ∀ {a : Set} → 𝔾 a → a → Set
   g ∘↝ x = g ∣ g ↝ x
 
@@ -49,7 +52,6 @@ module AgdaGen.Indexed.Properties where
     → ∀ {f : a → b} → Σ[ f' ∈ (a → b) ] (
         (∀ {n m : ℕ} → n ≤ m → f' ∈ ⟨ cg (proj₁ σ) ⟩ n
          → f' ∈ ⟨ cg (proj₁ σ) ⟩ m) × f' ≡ f )
-
 
   `-Monotone :
     ∀ {a t : Set} {g : Gen a a} {tg : Gen t t} {x : a}
@@ -268,10 +270,11 @@ module AgdaGen.Indexed.Properties where
         (λ i → deriveCogen-Monotone i₁ i {b} {gen}
              , deriveCogen-Complete i₁ i
         ) (iₗ ⊗~ iᵣ)
-    deriveCogen-Monotone {I} {g} i₁ i₂ σ {f} = {!!}
+        
+    deriveCogen-Monotone {I} {g} i₁ I~ {gen = gen} σ {f} = {!!}
     deriveCogen-Monotone {K x} {g} i₁ (K~ (_ , snd)) σ  with snd {gen = proj₁ σ}
     deriveCogen-Monotone {K x} {g} i₁ (K~ (_ , snd)) σ {fₐ} | _ , prf = fₐ , prf , refl
-
+    
     deriveCogen-Complete :
       ∀ {f g : Reg}
       → (i₁ : RegInfo (λ a → Σ[ cg ∈ co𝔾 a ] (∀ {b : Set} {gen : 𝔾 b}
@@ -299,7 +302,6 @@ module AgdaGen.Indexed.Properties where
         (λ i → deriveCogen-Complete i₁ i
              , deriveCogen-Monotone i₁ i {gen = proj₁ σ}
         ) (iₗ ⊗~ iᵣ) σ
-    deriveCogen-Complete {I} {g} i₁ i₂ σ = {!!}
+    deriveCogen-Complete {I} {g} i₁ I~ σ = {!!}
     deriveCogen-Complete {K x} {g} i₁ (K~ (_ , snd)) σ {f} with snd {gen = proj₁ σ}
     ... | cp , _ = f , cp , refl
-

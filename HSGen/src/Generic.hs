@@ -1,70 +1,119 @@
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE PartialTypeSignatures #-}
-{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE MonoLocalBinds #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Generic where 
 
+  import Gen
+
+  import GHC.Generics
   import Data.Proxy
 
-  data Regular where 
-    Z :: Regular 
-    U :: Regular 
-    (:+:) :: Regular -> Regular -> Regular
-    (:*:) :: Regular -> Regular -> Regular 
-    I :: Regular 
-    K :: (a :: *) -> Regular
+  import Control.Applicative
+ 
+  data Nat = Z | S Nat deriving (Show, Generic)
 
-  data Empty where
+  data Bit = I | O deriving (Show, Generic)
 
-  data Unit where 
-    TT :: Unit
+  class GGeneratable f g where 
+    ggen :: G g (f a)
 
-  type family   Inp (f :: Regular) (r :: *) :: *
-  type instance Inp Z r = Empty
-  type instance Inp U r = Unit
-  type instance Inp (f :+: g) r = Either (Inp f r) (Inp g r)  
-  type instance Inp (f :*: g) r = (Inp f r, Inp g r)
-  type instance Inp I r = r
-  type instance Inp (K a) r = a
+  class GCoGeneratable f g where 
+    gcogen :: (Generatable b) => G (g -> b) (f a -> b)
 
-  data Fix (f :: Regular) where 
-    In :: Inp f (Fix f) -> Fix f
+  instance GGeneratable V1 g where 
+    ggen = empty 
 
-  data a :~: b where 
-    Refl :: forall a . a :~: a 
+  instance GCoGeneratable V1 g where 
+    gcogen = empty
 
-  data Nat = Ze | Su Nat deriving Show
+  instance GGeneratable U1 g where 
+    ggen = pure U1
 
-  type NatF = Fix (U :+: I) 
+  instance GCoGeneratable U1 g where 
+    gcogen = (\x U1 -> x) <$> call 
+  
+  instance (GGeneratable f1 g, GGeneratable f2 g) 
+      => GGeneratable (f1 :+: f2) g where
+    ggen  =  L1 <$> ggen
+         <|> R1 <$> ggen
 
-  fromNat :: Nat -> NatF
-  fromNat Ze = In (Left TT)
-  fromNat (Su n) = In (Right (fromNat n))
+  instance (GCoGeneratable f1 g, GCoGeneratable f2 g)
+      => GCoGeneratable (f1 :+: f2) g where 
+    gcogen = toF <$> gcogen <*> gcogen
+      where toF :: (f1 a -> b) -> (f2 a -> b) 
+                -> (f1 :+: f2) a -> b
+            toF fx fy (L1 v) = fx v 
+            toF fx fy (R1 v) = fy v
 
-  type family Cong (f :: a -> b) (eq :: x :~: y) :: f x :~: f y
-  type instance Cong f Refl = Refl
+  instance (GGeneratable f1 g, GGeneratable f2 g) 
+      => GGeneratable (f1 :*: f2) g where 
+    ggen = (:*:) <$> ggen  <*> ggen
 
-  type family Sym (eq :: x :~: y) :: y :~: x 
-  type instance Sym Refl = Refl
+  uc :: (f1 a -> f2 a -> b) -> (f1 :*: f2) a -> b
+  uc f (x :*: y) = f x y 
 
-  type family   FromNat (n :: Nat) :: NatF
-  type instance FromNat Ze = In (Left TT)
-  type instance FromNat (Su n) = In (Right (FromNat n))
+  instance (GCoGeneratable f1 g, GCoGeneratable f2 g)
+      => GCoGeneratable (f1 :*: f2) g where 
+    gcogen = uc <$> undefined
 
-  type family   ToNat (n :: NatF) :: Nat 
-  type instance ToNat (In (Left TT)) = Ze
-  type instance ToNat (In (Right n)) = Su (ToNat n)
+  instance {-# OVERLAPPING #-} GGeneratable (Rec0 f) f where 
+    ggen = K1 <$> mu
 
-  type family NatEqFrom (n :: Nat) :: ToNat (FromNat n) :~: n
-  type instance NatEqFrom Ze = Refl
-  type instance NatEqFrom (Su n) = Cong Su (NatEqFrom n)
+  instance {-# OVERLAPPING #-} GCoGeneratable (Rec0 f) f where 
+    gcogen = toF <$> mu'
+      where toF :: (f -> b) -> (Rec0 f a -> b)
+            toF f (K1 x) = f x 
 
-  type family NatEqTo (n :: NatF) :: FromNat (ToNat n) :~: n 
-  type instance NatEqTo (In (Left TT)) = Refl
-  type instance NatEqTo (In (Right n)) = Cong n (NatEqTo n)
+  instance {-# OVERLAPPABLE #-} Generatable c 
+      => GGeneratable (K1 i c) a where 
+    ggen = K1 <$> call
+
+  instance {-# OVERLAPPABLE #-} CoGeneratable c 
+      => GCoGeneratable (K1 i c) a where 
+    gcogen = toF <$> call' 
+      where toF :: (c -> b) -> (K1 i c a -> b)
+            toF f (K1 x) = f x
+
+  instance (Datatype d, GGeneratable f g) 
+      => GGeneratable (D1 d f) g where 
+    ggen = M1 <$> ggen
+
+  instance (Datatype d, GCoGeneratable f g)
+      => GCoGeneratable (D1 d f) g where 
+    gcogen = toF <$> gcogen 
+      where toF :: (f a -> b) -> (D1 d f a -> b)
+            toF f (M1 x) = f x
+
+  instance (Constructor c, GGeneratable f g) 
+      => GGeneratable (C1 c f) g where 
+    ggen = M1 <$> ggen
+
+  instance (Constructor c, GCoGeneratable f g)
+      => GCoGeneratable (C1 c f) g where 
+    gcogen = toF <$> gcogen 
+      where toF :: (f a -> b) -> (C1 c f a -> b)
+            toF f (M1 x) = f x
+
+  instance (Selector s, GGeneratable f g) 
+      => GGeneratable (S1 s f) g where 
+    ggen = M1 <$> ggen 
+
+  instance (Selector s, GCoGeneratable f g)
+      => GCoGeneratable (S1 s f) g where 
+    gcogen = toF <$> gcogen 
+      where toF :: (f a -> b) -> (S1 c f a -> b)
+            toF f (M1 x) = f x
+
+  instance (Generic a, GGeneratable (Rep a) a) 
+      => Generatable a where 
+    gen = to <$> ggen
+
+  instance (Generic a, GCoGeneratable (Rep a) a)
+      => CoGeneratable a where 
+    cogen = (. from) <$> gcogen
