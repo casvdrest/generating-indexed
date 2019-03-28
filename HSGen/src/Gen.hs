@@ -1,7 +1,12 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Gen where 
+
+  import Depth
+  import GHC.Generics
 
   import Control.Applicative
 
@@ -12,7 +17,7 @@ module Gen where
     Ap    :: Gen (b -> a) t -> Gen b t -> Gen a t
     Bind  :: Gen a t -> (a -> Gen b t) -> Gen b t
     Mu    :: Gen a a
-    CoMu  :: Generatable b => Gen (a -> b) (a -> b)
+    CoMu  :: (Generatable b) => Gen (a -> b) (a -> b)
     Call  :: Gen a a -> Gen a t
 
   merge :: [a] -> [a] -> [a] 
@@ -20,7 +25,7 @@ module Gen where
   merge (x:xs) ys = x : merge ys xs
 
   (.~.) :: (Gen a t, Gen t t) -> Int -> [a]
-  (CoMu  , tg) .~. 0    = [ \_ -> x | x <- run gen 0]
+  (CoMu , tg) .~. 0    = [ \_ -> x | x <- run gen 0]
   (Pure x, tg) .~. 0    = [x] 
   (Mu    , tg) .~. 0    = []
   (gen, tg)  .~. n = 
@@ -58,19 +63,28 @@ module Gen where
     gen :: G a a
 
   class CoGeneratable a where 
-    cogen :: Generatable b => G (a -> b) (a -> b)
+    cogen :: (Generatable b) => G (a -> b) (a -> b)
 
   mu :: G t t 
   mu = G Mu
 
-  mu' :: Generatable b => G (a -> b) (a -> b)
+  mu' :: (Generatable b) => G (a -> b) (a -> b)
   mu' = G CoMu
 
   call :: Generatable a => G t a
   call = G (Call (unG gen))
 
-  call' :: (CoGeneratable a , Generatable b) => G t (a -> b)
+  c :: G a a -> G t a 
+  c gen = G (Call (unG gen))
+
+  call' :: (CoGeneratable a, Generatable b) => G t (a -> b)
   call' = G (Call (unG cogen))
 
   run :: G a a -> Int -> [a]
   run (G gen) n = (gen, gen) .~. n
+
+  data Nat = Z | S Nat deriving (Eq, Show, Generic, DepthCalc)
+
+  data Bin a = Node (Bin a) a (Bin a)
+              | Leaf 
+              deriving Show

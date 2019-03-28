@@ -1,27 +1,21 @@
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
+-- | Contains a couple of manually defined instances of 'Generatable', 
+-- demonstrating how generator definitions arise from the structure of
+-- the type they're designed for. 
 module Instances where 
 
   import Gen
+  import Depth
   import Control.Applicative
-
-  data Nat = Z | S Nat deriving Show
-
-  toInt :: Nat -> Int 
-  toInt Z     = 0
-  toInt (S n) = 1 + toInt n
-
-  data Bin a = Node (Bin a) a (Bin a)
-              | Leaf 
-              deriving Show
 
   instance (CoGeneratable a, Generatable b) => Generatable (a -> b) where 
     gen = cogen
-
+  
   instance Generatable Nat where 
     gen  =  pure Z 
-        <|> (S <$> mu)
+        <|> (S <$> mu) 
 
   instance CoGeneratable Nat where 
     cogen = toF <$> call <*> mu'
@@ -78,9 +72,10 @@ module Instances where
   instance (Generatable a) => Generatable (Bin a) where  
     gen  =  pure Leaf 
         <|> Node <$> mu <*> call <*> mu
-
+ 
   instance (CoGeneratable a) => CoGeneratable (Bin a) where 
     cogen = toF <$> call <*> call' 
       where toF :: b -> ((Bin a, (a, Bin a)) -> b) -> Bin a -> b
             toF x fy Leaf         = x
             toF x fy (Node l v r) = fy (l, (v, r))
+            

@@ -5,7 +5,8 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE MonoLocalBinds #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Generic where 
 
@@ -15,10 +16,6 @@ module Generic where
   import Data.Proxy
 
   import Control.Applicative
- 
-  data Nat = Z | S Nat deriving (Show, Generic)
-
-  data Bit = I | O deriving (Show, Generic)
 
   class GGeneratable f g where 
     ggen :: G g (f a)
@@ -55,20 +52,15 @@ module Generic where
       => GGeneratable (f1 :*: f2) g where 
     ggen = (:*:) <$> ggen  <*> ggen
 
-  uc :: (f1 a -> f2 a -> b) -> (f1 :*: f2) a -> b
-  uc f (x :*: y) = f x y 
-
   instance (GCoGeneratable f1 g, GCoGeneratable f2 g)
       => GCoGeneratable (f1 :*: f2) g where 
-    gcogen = uc <$> undefined
+    gcogen = undefined
 
   instance {-# OVERLAPPING #-} GGeneratable (Rec0 f) f where 
     ggen = K1 <$> mu
 
   instance {-# OVERLAPPING #-} GCoGeneratable (Rec0 f) f where 
-    gcogen = toF <$> mu'
-      where toF :: (f -> b) -> (Rec0 f a -> b)
-            toF f (K1 x) = f x 
+    gcogen = undefined -- (. unK1) <$> mu'
 
   instance {-# OVERLAPPABLE #-} Generatable c 
       => GGeneratable (K1 i c) a where 
@@ -76,9 +68,7 @@ module Generic where
 
   instance {-# OVERLAPPABLE #-} CoGeneratable c 
       => GCoGeneratable (K1 i c) a where 
-    gcogen = toF <$> call' 
-      where toF :: (c -> b) -> (K1 i c a -> b)
-            toF f (K1 x) = f x
+    gcogen = (. unK1) <$> call' 
 
   instance (Datatype d, GGeneratable f g) 
       => GGeneratable (D1 d f) g where 
@@ -86,9 +76,7 @@ module Generic where
 
   instance (Datatype d, GCoGeneratable f g)
       => GCoGeneratable (D1 d f) g where 
-    gcogen = toF <$> gcogen 
-      where toF :: (f a -> b) -> (D1 d f a -> b)
-            toF f (M1 x) = f x
+    gcogen = (. unM1) <$> gcogen 
 
   instance (Constructor c, GGeneratable f g) 
       => GGeneratable (C1 c f) g where 
@@ -96,9 +84,7 @@ module Generic where
 
   instance (Constructor c, GCoGeneratable f g)
       => GCoGeneratable (C1 c f) g where 
-    gcogen = toF <$> gcogen 
-      where toF :: (f a -> b) -> (C1 c f a -> b)
-            toF f (M1 x) = f x
+    gcogen = (. unM1) <$> gcogen 
 
   instance (Selector s, GGeneratable f g) 
       => GGeneratable (S1 s f) g where 
@@ -106,14 +92,12 @@ module Generic where
 
   instance (Selector s, GCoGeneratable f g)
       => GCoGeneratable (S1 s f) g where 
-    gcogen = toF <$> gcogen 
-      where toF :: (f a -> b) -> (S1 c f a -> b)
-            toF f (M1 x) = f x
+    gcogen = (. unM1) <$> gcogen 
 
   instance (Generic a, GGeneratable (Rep a) a) 
       => Generatable a where 
     gen = to <$> ggen
-
+  
   instance (Generic a, GCoGeneratable (Rep a) a)
       => CoGeneratable a where 
-    cogen = (. from) <$> gcogen
+    cogen = (. from) <$> gcogen 
