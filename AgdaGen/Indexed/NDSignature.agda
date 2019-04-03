@@ -19,7 +19,7 @@ open import Relation.Nullary
 
 open import Function
 
-module AgdaGen.Indexed.Oracle where
+module AgdaGen.Indexed.NDSignature where
 
   data SizedTree : ℕ → Set where 
     Leaf : SizedTree 0
