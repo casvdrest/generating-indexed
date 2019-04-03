@@ -178,3 +178,5 @@ module AgdaGen.Indexed.NDSignature where
            ; iso₁ = LEQ-iso₁
            ; iso₂ = LEQ-iso₂
            }
+
+  
