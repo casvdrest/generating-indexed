@@ -45,10 +45,10 @@ module AgdaGen.Indexed.Isomorphism where
     ⦇ (_≅_.to iso ∘ Inₛ) (` deriveGenᵢ sig₁ sig₂ x) ⦈ 
       
    -- Function exensionality
-  postulate funext : ∀ {ℓ} {a b : Set ℓ} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
+  postulate funext : ∀ {a b : Set} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
 
   -- Variation on function extensionality for dependent functions (Π-types). 
-  postulate funext' : ∀ {ℓ} {a : Set ℓ} {b : a → Set ℓ} {f g : Π a b} → (∀ {x} → f x ≡ g x) → f ≡ g 
+  postulate funext' : ∀ {a : Set} {b : a → Set} {f g : Π a b} → (∀ {x} → f x ≡ g x) → f ≡ g 
 
   -- Functions with an empty domain are, by function extensionality,
   -- allways equal (provided that they have the same codomain)

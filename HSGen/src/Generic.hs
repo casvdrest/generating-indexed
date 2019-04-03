@@ -21,41 +21,46 @@ module Generic where
     ggen :: G g (f a)
 
   class GCoGeneratable f g where 
-    gcogen :: (Generatable b) => G (g -> b) (f a -> b)
+    gcogen :: G b b -> G g (f a -> b)
 
   instance GGeneratable V1 g where 
     ggen = empty 
 
   instance GCoGeneratable V1 g where 
-    gcogen = empty
+    gcogen _ = empty
 
   instance GGeneratable U1 g where 
     ggen = pure U1
 
   instance GCoGeneratable U1 g where 
-    gcogen = (\x U1 -> x) <$> call 
+    gcogen g = (\x U1 -> x) <$> (G $ Call (unG g)) 
   
+    
   instance (GGeneratable f1 g, GGeneratable f2 g) 
       => GGeneratable (f1 :+: f2) g where
     ggen  =  L1 <$> ggen
          <|> R1 <$> ggen
 
+  
   instance (GCoGeneratable f1 g, GCoGeneratable f2 g)
       => GCoGeneratable (f1 :+: f2) g where 
-    gcogen = toF <$> gcogen <*> gcogen
+    gcogen gen = toF <$> gcogen gen <*> gcogen gen
       where toF :: (f1 a -> b) -> (f2 a -> b) 
                 -> (f1 :+: f2) a -> b
             toF fx fy (L1 v) = fx v 
             toF fx fy (R1 v) = fy v
-
+        
   instance (GGeneratable f1 g, GGeneratable f2 g) 
       => GGeneratable (f1 :*: f2) g where 
     ggen = (:*:) <$> ggen  <*> ggen
-
+        
   instance (GCoGeneratable f1 g, GCoGeneratable f2 g)
       => GCoGeneratable (f1 :*: f2) g where 
-    gcogen = undefined
+    gcogen gen = uncur <$> undefined
+      where uncur :: (f1 a -> f2 a -> b) -> (f1 :*: f2) a -> b 
+            uncur = undefined
 
+  {-
   instance {-# OVERLAPPING #-} GGeneratable (Rec0 f) f where 
     ggen = K1 <$> mu
 
@@ -101,3 +106,4 @@ module Generic where
   instance (Generic a, GCoGeneratable (Rep a) a)
       => CoGeneratable a where 
     cogen = (. from) <$> gcogen 
+    -}
