@@ -1,7 +1,6 @@
 open import AgdaGen.Data hiding (_∈_; Σ)
 open import AgdaGen.Base
---open import Gen.Indexed.Examples
---open import src.Gen.Regular.Examples
+open import AgdaGen.Combinators
 
 open import Data.Nat hiding (_≟_)
 open import Data.List
@@ -17,11 +16,9 @@ open import Relation.Binary
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Function
+open import Level hiding (suc; zero)
 
 module AgdaGen.Indexed.Lambda where
-
-  open RawFunctor ⦃...⦄ using (_<$>_)
-  open RawMonad ⦃...⦄ using (_>>_; _>>=_; return; pure)
 
   Id : Set
   Id = ℕ

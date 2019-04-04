@@ -1,7 +1,6 @@
-{-# OPTIONS --type-in-type #-}
-
 open import AgdaGen.Indexed.Signature
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 open import AgdaGen.Regular.Isomorphism 
 open import AgdaGen.Regular.Generic
 open import AgdaGen.Indexed.Generic
@@ -17,20 +16,17 @@ open import Data.Fin using (Fin; suc; zero)
 open import Data.List using (List; []; _∷_)
 open import Data.Vec using (Vec; []; _∷_)
 
-open import Category.Applicative
-
 open import Function
+open import Level hiding (suc; zero)
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
 module AgdaGen.Indexed.Isomorphism where
 
-  open RawApplicative ⦃...⦄ using (_⊛_; pure)
-
   triv : (a : Set) → ⊤ → Set
   triv a tt = a
 
-  record MultiSorted {i : Set} (a : i → Set) : Set where
+  record MultiSorted {i : Set} (a : i → Set) : Set₁ where
     field
       Wᵢ : Σ[ Σ ∈ Sig i ] (∀ {x : i} → a x ≅ Fixₛ Σ x)
 
@@ -45,17 +41,17 @@ module AgdaGen.Indexed.Isomorphism where
     ⦇ (_≅_.to iso ∘ Inₛ) (` deriveGenᵢ sig₁ sig₂ x) ⦈ 
       
    -- Function exensionality
-  postulate funext : ∀ {a b : Set} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
+  postulate funext : ∀ {ℓ} {a b : Set ℓ} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
 
   -- Variation on function extensionality for dependent functions (Π-types). 
   postulate funext' : ∀ {a : Set} {b : a → Set} {f g : Π a b} → (∀ {x} → f x ≡ g x) → f ≡ g 
 
   -- Functions with an empty domain are, by function extensionality,
   -- allways equal (provided that they have the same codomain)
-  ⊥-funeq : ∀ {ℓ} {b : Set ℓ} {f g : ⊥ → b} → f ≡ g
+  ⊥-funeq : ∀ {b : Set} {f g : ⊥ → b} → f ≡ g
   ⊥-funeq = funext λ { {()} }
 
-  Fix-⊥-eq : ∀ {b : Fix Z → Set} {f g : Π (Fix Z) b} → f ≡ g
+  Fix-⊥-eq : ∀ {b : Fix {0ℓ} Z → Set} {f g : Π (Fix Z) b} → f ≡ g
   Fix-⊥-eq = funext' λ { {In ()} }
 
   cong₂ : ∀ {a b c : Set} {x₁ x₂ : a} {y₁ y₂ : b} → (f : a → b → c) → x₁ ≡ x₂ → y₁ ≡ y₂ → f x₁ y₁ ≡ f x₂ y₂ 

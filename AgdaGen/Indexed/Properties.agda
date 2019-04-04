@@ -1,5 +1,3 @@
-{-# OPTIONS --type-in-type #-}
-
 open import AgdaGen.Base
 open import AgdaGen.Properties
 open import AgdaGen.Data using (_∈_; here; there)
@@ -21,6 +19,7 @@ open import Data.Unit hiding (_≤_)
 open import Data.List
 
 open import Function
+open import Level hiding (suc ;zero)
 
 open import Category.Monad
 
@@ -35,7 +34,7 @@ module AgdaGen.Indexed.Properties where
   ⊤-split : ∀ {a : Set} → (h : ⊤ → a) → Σ[ x ∈ a ] (λ { tt → x }) ≡ h
   ⊤-split h = (h tt) , refl
 
-  I-split : ∀ {a : Set} {g : Reg} → (h : Fix g → a) → Σ[ h' ∈ (⟦ g ⟧ (Fix g) → a) ] (λ { (In x) → h' x }) ≡ h
+  I-split : ∀ {a : Set} {g : Reg {0ℓ}} → (h : Fix g → a) → Σ[ h' ∈ (⟦ g ⟧ (Fix g) → a) ] (λ { (In x) → h' x }) ≡ h
   I-split h = h ∘ In , funext' λ { {In x} → refl }
 
   _∘↝_ : ∀ {a : Set} → 𝔾 a → a → Set
@@ -43,11 +42,11 @@ module AgdaGen.Indexed.Properties where
 
   open RawMonad ⦃...⦄ using (_⊛_; pure)
 
-  CoComplete : ∀ {a : Set} → co𝔾 a → Set
+  CoComplete : ∀ {a : Set} → co𝔾 a → Set₁
   CoComplete {a} cg = ∀ {b : Set} → (σ : Σ[ g ∈ 𝔾 b ] Complete g g × (∀ {x : b} → Depth-Monotone g x g))
     → ∀ {f : a → b} → Σ[ f' ∈ (a → b) ] (cg (proj₁ σ) ∘↝ f') × (f' ≡ f)
 
-  CoMonotone : ∀ {a : Set} → co𝔾 a → Set
+  CoMonotone : ∀ {a : Set} → co𝔾 a → Set₁
   CoMonotone {a} cg = ∀ {b : Set} → (σ : Σ[ g ∈ 𝔾 b ] Complete g g × (∀ {y : b} → Depth-Monotone g y g))
     → ∀ {f : a → b} → Σ[ f' ∈ (a → b) ] (
         (∀ {n m : ℕ} → n ≤ m → f' ∈ ⟨ cg (proj₁ σ) ⟩ n

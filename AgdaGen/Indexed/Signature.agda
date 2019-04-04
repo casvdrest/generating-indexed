@@ -1,5 +1,3 @@
-{-# OPTIONS --type-in-type #-}
-
 import Level as L
 open import Data.Nat hiding (_≤_)
 open import Data.Fin using (Fin; suc; zero)
@@ -37,8 +35,8 @@ module AgdaGen.Indexed.Signature where
   record Sig {ℓ} (i : Set ℓ) : Set (L.suc ℓ) where
     constructor _◃_∣_
     field
-      Op : i → Reg
-      Ar : ∀ {x} → Fix (Op x) → Reg
+      Op : i → Reg {ℓ}
+      Ar : ∀ {x} → Fix (Op x) → Reg {ℓ}
       Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i
 
   ⟦_⟧ₛ : ∀ {i : Set} → Sig i → (x : i → Set) → (i → Set)
@@ -47,11 +45,11 @@ module AgdaGen.Indexed.Signature where
   data Fixₛ {i : Set} (Σ : Sig i) (x : i) : Set where
     Inₛ : ⟦ Σ ⟧ₛ (Fixₛ Σ) x → Fixₛ Σ x
 
-  Op-vec : ∀ {a : Set} → ℕ → Reg
+  Op-vec : ∀ {a : Set} → ℕ → Reg {L.0ℓ} {L.0ℓ}
   Op-vec zero = U
   Op-vec {a} (suc n) = K a
 
-  Ar-vec : ∀ {a : Set} → (n : ℕ) → Fix (Op-vec {a} n) → Reg
+  Ar-vec : ∀ {a : Set} → (n : ℕ) → Fix (Op-vec {a} n) → Reg {L.0ℓ} {L.0ℓ}
   Ar-vec zero x = Z
   Ar-vec (suc n) op = U
 
@@ -65,10 +63,10 @@ module AgdaGen.Indexed.Signature where
 
   ------ Lists ------
 
-  Op-list : ∀ {a : Set} → ⊤ → Reg
+  Op-list : ∀ {a : Set} → ⊤ → Reg {L.0ℓ} {L.0ℓ}
   Op-list {a} tt = U ⊕ K a
   
-  Ar-list : ∀ {a : Set} → ⊤ → Fix (Op-list {a} tt) → Reg
+  Ar-list : ∀ {a : Set} → ⊤ → Fix (Op-list {a} tt) → Reg {L.0ℓ} {L.0ℓ}
   Ar-list tt (In (inj₁ tt)) = Z
   Ar-list tt (In (inj₂ y))  = U
   
@@ -81,10 +79,10 @@ module AgdaGen.Indexed.Signature where
 
   ------ Naturals ------
 
-  Op-nat : ⊤ → Reg
+  Op-nat : ⊤ → Reg {L.0ℓ} {L.0ℓ}
   Op-nat tt = U ⊕ U
 
-  Ar-nat : Fix (Op-nat tt) → Reg
+  Ar-nat : Fix (Op-nat tt) → Reg {L.0ℓ} {L.0ℓ}
   Ar-nat (In (inj₁ tt)) = Z
   Ar-nat (In (inj₂ tt)) = U
 
@@ -98,11 +96,11 @@ module AgdaGen.Indexed.Signature where
 
   ------ Finite Sets ------
 
-  Op-fin : ℕ → Reg
+  Op-fin : ℕ → Reg {L.0ℓ} {L.0ℓ}
   Op-fin zero = Z
   Op-fin (suc t) = U ⊕ U
 
-  Ar-fin : (n : ℕ) → Fix (Op-fin n) → Reg
+  Ar-fin : (n : ℕ) → Fix (Op-fin n) → Reg {L.0ℓ} {L.0ℓ}
   Ar-fin zero (In ())
   Ar-fin (suc n) (In (inj₁ tt)) = Z
   Ar-fin (suc n) (In (inj₂ tt)) = U
@@ -120,13 +118,13 @@ module AgdaGen.Indexed.Signature where
     base : ∀ {n : ℕ} → (0 , n) ≤
     step : ∀ {n m : ℕ} → (n , m) ≤ → (suc n , suc m) ≤ 
 
-  Op-≤ : ℕ × ℕ → Reg
+  Op-≤ : ℕ × ℕ → Reg {L.0ℓ} {L.0ℓ}
   Op-≤ (zero , snd) = U
   Op-≤ (suc fst , zero) = Z
   Op-≤ (suc fst , suc snd) = U
 
   
-  Ar-≤ : ∀ {idx : ℕ × ℕ} → Fix (Op-≤ idx) → Reg
+  Ar-≤ : ∀ {idx : ℕ × ℕ} → Fix (Op-≤ idx) → Reg {L.0ℓ} {L.0ℓ}
   Ar-≤ {zero , snd} (In tt) = Z
   Ar-≤ {suc fst , zero} (In ())
   Ar-≤ {suc fst , suc snd} (In tt) = U
@@ -144,12 +142,12 @@ module AgdaGen.Indexed.Signature where
     single : ∀ {x : ℕ} → Sorted [ x ]
     step'  : ∀ {x y : ℕ} {xs : List ℕ} → (x , y) ≤ → Sorted (y ∷ xs) → Sorted (x ∷ y ∷ xs)  
 
-  Op-Sorted : List ℕ → Reg
+  Op-Sorted : List ℕ → Reg {L.0ℓ} {L.0ℓ}
   Op-Sorted [] = U
   Op-Sorted (x ∷ []) = U
   Op-Sorted (x ∷ y ∷ xs) = K ((x , y) ≤)
 
-  Ar-Sorted : ∀ {xs : List ℕ} → Fix (Op-Sorted xs) → Reg
+  Ar-Sorted : ∀ {xs : List ℕ} → Fix (Op-Sorted xs) → Reg {L.0ℓ} {L.0ℓ}
   Ar-Sorted {[]} (In tt) = Z
   Ar-Sorted {x ∷ []} (In tt) = Z
   Ar-Sorted {x ∷ x₁ ∷ xs} op = U
@@ -168,11 +166,11 @@ module AgdaGen.Indexed.Signature where
     App : ∀ {n : ℕ} → Term n → Term n → Term n
     Var : ∀ {n : ℕ} → Fin n → Term n
 
-  Op-Term : ℕ → Reg
+  Op-Term : ℕ → Reg {L.0ℓ} {L.0ℓ}
   Op-Term zero = U ⊕ U
   Op-Term (suc n) = U ⊕ (U ⊕ K (Fin (suc n)))
 
-  Ar-Term : (n : ℕ) → Fix (Op-Term n) → Reg
+  Ar-Term : (n : ℕ) → Fix (Op-Term n) → Reg {L.0ℓ} {L.0ℓ}
   Ar-Term zero (In (inj₁ tt)) = U 
   Ar-Term zero (In (inj₂ tt)) = U ⊕ U
   Ar-Term (suc n) (In (inj₁ tt)) = U
@@ -197,11 +195,11 @@ module AgdaGen.Indexed.Signature where
     Leaf : Perfect a 0
     Node : ∀ {n : ℕ} → a → Perfect a n → Perfect a n → Perfect a (suc n)
 
-  Op-Perfect : ∀ {a : Set} → ℕ → Reg
+  Op-Perfect : ∀ {a : Set} → ℕ → Reg {L.0ℓ} {L.0ℓ}
   Op-Perfect zero = U
   Op-Perfect {a} (suc n) = K a 
 
-  Ar-Perfect : ∀ {a : Set} → (n : ℕ) → Fix (Op-Perfect {a} n) → Reg
+  Ar-Perfect : ∀ {a : Set} → (n : ℕ) → Fix (Op-Perfect {a} n) → Reg {L.0ℓ} {L.0ℓ}
   Ar-Perfect zero (In tt) = Z
   Ar-Perfect (suc n) (In x) = U ⊕ U
 

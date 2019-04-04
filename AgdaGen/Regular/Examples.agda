@@ -1,4 +1,5 @@
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 open import AgdaGen.Data using (here; there; _∈_; merge)
 open import AgdaGen.Regular.Isomorphism
 open import AgdaGen.Regular.Generic
@@ -16,14 +17,11 @@ open import Data.Product
 open import Data.Sum
 open import Data.Empty
 
-open import Category.Applicative
-open import Category.Functor
-
 open import Relation.Binary.PropositionalEquality
 
-module AgdaGen.Regular.Examples where
+open import Level hiding (suc; zero)
 
-  open RawApplicative ⦃...⦄ using (_⊛_; pure)
+module AgdaGen.Regular.Examples where
   
 
   ------ Bool -----
@@ -145,7 +143,7 @@ module AgdaGen.Regular.Examples where
   
   ------ Pairs ------
 
-  pair : ∀ {a b} → 𝔾 a → 𝔾 b → 𝔾 (a × b)
+  pair : ∀ {a b} → 𝔾 {0ℓ} a → 𝔾 b → 𝔾 (a × b)
   pair a b = ⦇ ` a , ` b ⦈
 
   pair' : ∀ {a b : Set} → 𝔾 a → 𝔾 b → 𝔾 (a × b)
@@ -170,7 +168,7 @@ module AgdaGen.Regular.Examples where
 
   ------ Either ------
 
-  either : ∀ {a b} → 𝔾 a → 𝔾 b → 𝔾 (a ⊎ b)
+  either : ∀ {a b} → 𝔾 {0ℓ} a → 𝔾 b → 𝔾 (a ⊎ b)
   either a b = ⦇ inj₁ (` a) ⦈
              ∥ ⦇ inj₂ (` b) ⦈  
 

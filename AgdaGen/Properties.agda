@@ -1,4 +1,5 @@
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 open import AgdaGen.Regular.Isomorphism
 open import AgdaGen.Data using (_∈_; here; _⊕_; inl; inr; there; merge)
 
@@ -19,8 +20,6 @@ open import Category.Applicative
 open import Category.Monad
 
 module AgdaGen.Properties where
-
-  open RawApplicative ⦃...⦄
 
   ------ General Properties ------
 

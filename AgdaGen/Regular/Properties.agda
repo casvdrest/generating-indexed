@@ -1,4 +1,5 @@
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 open import AgdaGen.Monotonicity
 open import AgdaGen.ListProperties
 open import AgdaGen.Properties
@@ -15,6 +16,7 @@ open import Data.List
 open import Data.Maybe using (just; nothing; Maybe)
 
 open import Function
+open import Level hiding (suc; zero)
 
 open import Category.Monad
 
@@ -23,11 +25,9 @@ open Relation.Binary.PropositionalEquality.≡-Reasoning
 
 module AgdaGen.Regular.Properties where
 
-  open RawMonad ⦃...⦄ using (_⊛_; pure)
-
   ------ U Combinator (Unit) ------
 
-  ugen-monotone : ∀ {g : Reg} {x : ⟦ U ⟧ (Fix g)} {gi : RegInfo 𝔾 g}
+  ugen-monotone : ∀ {g : Reg} {x : ⟦_⟧ {0ℓ} U (Fix g)} {gi : RegInfo 𝔾 g}
                   → Depth-Monotone (deriveGen {g = g} U~) x (deriveGen gi)
   ugen-monotone = pure-monotone
 
@@ -40,7 +40,7 @@ module AgdaGen.Regular.Properties where
   
   ------ ⊕ combinator (Coproduct) ------
 
-  ⊕gen-monotone-left : ∀ {f₁ f₂ g : Reg} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
+  ⊕gen-monotone-left : ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
                          {x : ⟦ f₁ ⟧ (Fix g)}
                          {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                          {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
@@ -50,7 +50,7 @@ module AgdaGen.Regular.Properties where
   ⊕gen-monotone-left {g₁ = g₁} {g₂ = g₂} = ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂}
 
   
-  ⊕gen-monotone-right : ∀ {f₁ f₂ g : Reg} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
+  ⊕gen-monotone-right : ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
                           {y : ⟦ f₂ ⟧ (Fix g)}
                           {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                           {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
@@ -62,7 +62,7 @@ module AgdaGen.Regular.Properties where
   
   -- If 'x' is produced by a generator, 'inj₁ x' is produced by generator derived
   -- from the coproduct of that generator with any other generator
-  ⊕gen-complete-left : ∀ {f₁ f₂ g : Reg} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
+  ⊕gen-complete-left : ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
                          {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                          {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                          {x : ⟦ f₁ ⟧ (Fix g)} → g₁ ∣ tg  ↝ x
@@ -75,7 +75,7 @@ module AgdaGen.Regular.Properties where
   
   -- If 'y' is produced by a generator, 'inj₂ y' is produced by the generator
   -- derived from the coproduct of any generator with that generator. 
-  ⊕gen-complete-right : ∀ {f₁ f₂ g : Reg} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
+  ⊕gen-complete-right : ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
                           {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                           {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                         → {y : ⟦ f₂ ⟧ (Fix g)} → g₂ ∣ tg ↝ y
@@ -92,7 +92,7 @@ module AgdaGen.Regular.Properties where
   ,-inv refl = refl , refl
 
     
-  ⊗gen-monotone : ∀ {f₁ f₂ g : Reg} {x  : ⟦ f₁ ⟧ (Fix g)}
+  ⊗gen-monotone : ∀ {f₁ f₂ g : Reg {0ℓ}} {x  : ⟦ f₁ ⟧ (Fix g)}
                     {y : ⟦ f₂ ⟧ (Fix g)} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
                     {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                     {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
@@ -104,7 +104,7 @@ module AgdaGen.Regular.Properties where
   
   -- If both operands are complete, the generator derived from a product
   -- is complete as well. 
-  ⊗gen-complete : ∀ {f₁ f₂ g : Reg} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
+  ⊗gen-complete : ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (⟦ g ⟧ (Fix g))}
                     {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                     {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (⟦ g ⟧ (Fix g))}
                     {x : ⟦ f₁ ⟧ (Fix g)} {y : ⟦ f₂ ⟧ (Fix g)}
@@ -116,7 +116,7 @@ module AgdaGen.Regular.Properties where
     ⊛-complete {f = g₁} {g = g₂} p1 p2 mt₁ mt₂
 
   
-  In-elem : ∀ {f : Reg} {x : ⟦ f ⟧ (Fix f)} {xs : List (⟦ f ⟧ (Fix f))} → In {f = f} x ∈ map In xs → x ∈ xs
+  In-elem : ∀ {f : Reg {0ℓ}} {x : ⟦ f ⟧ (Fix f)} {xs : List (⟦ f ⟧ (Fix f))} → In {f = f} x ∈ map In xs → x ∈ xs
   In-elem {xs = []} ()
   In-elem {xs = x ∷ xs} here = here
   In-elem {xs = x ∷ xs} (there elem) = there (In-elem elem)
@@ -199,7 +199,7 @@ module AgdaGen.Regular.Properties where
   ------ Completeness theorem for generators derived from isomorphism ------
   --======================================================================--
 
-  In⁻¹ : ∀ {f : Reg} → Fix f → ⟦ f ⟧ (Fix f)
+  In⁻¹ : ∀ {f : Reg {0ℓ}} → Fix f → ⟦ f ⟧ (Fix f)
   In⁻¹ (In x) = x
 
   μ-iso₂ : ∀ {f : Reg} {y : Fix f} → In (In⁻¹ y) ≡ y

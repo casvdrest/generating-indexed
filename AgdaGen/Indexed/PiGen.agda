@@ -1,6 +1,5 @@
-{-# OPTIONS --type-in-type #-}
-
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 open import AgdaGen.Regular.Cogen
 open import AgdaGen.Regular.Generic
 
@@ -8,18 +7,15 @@ open import Data.Unit
 open import Data.Sum
 open import Data.Product
 
-open import Category.Monad
-
 open import Function
+open import Level
 
 module AgdaGen.Indexed.PiGen where
 
-  open RawMonad ⦃...⦄ using (_⊛_; pure; _>>=_; return)
-
-  Π𝔾 : Set → Set
+  Π𝔾 : Set → Set₁
   Π𝔾 a = ∀ {P : a → Set} → 𝔾ᵢ P → 𝔾 ((x : a) → P x)
 
-  U-PiGen : ∀ {g : Reg} → Π𝔾 (⟦ U ⟧ ((Fix g)))
+  U-PiGen : ∀ {g : Reg {0ℓ}} → Π𝔾 (⟦_⟧ {0ℓ} U ((Fix g)))
   U-PiGen gₐ = (` gₐ tt) >>= λ x → Pure λ { tt → x }
 
   ⊕sl : ∀ {a b : Set} {P : a ⊎ b → Set} → 𝔾ᵢ P → 𝔾ᵢ λ x → P (inj₁ x)
@@ -29,7 +25,7 @@ module AgdaGen.Indexed.PiGen where
   ⊕sr g y = g (inj₂ y)
 
   ⊕-PiGen :
-    ∀ {f₁ f₂ g : Reg} → Π𝔾 (⟦ f₁ ⟧ (Fix g)) → Π𝔾 (⟦ f₂ ⟧ (Fix g))
+    ∀ {f₁ f₂ g : Reg {0ℓ}} → Π𝔾 (⟦ f₁ ⟧ (Fix g)) → Π𝔾 (⟦ f₂ ⟧ (Fix g))
     → Π𝔾 (⟦ f₁ ⊕ f₂ ⟧ (Fix g))
   ⊕-PiGen cg₁ cg₂ gₐ =
     (` cg₁ (λ x → gₐ (inj₁ x))) >>= (λ f →
@@ -37,9 +33,9 @@ module AgdaGen.Indexed.PiGen where
     Pure λ { (inj₁ x) → f x ; (inj₂ y) → g y } ))
 
   ⊗-PiGen :
-    ∀ {f₁ f₂ g : Reg} → Π𝔾 (⟦ f₁ ⟧ (Fix g)) → Π𝔾 (⟦ f₂ ⟧ (Fix g))
+    ∀ {f₁ f₂ g : Reg {0ℓ}} → Π𝔾 (⟦ f₁ ⟧ (Fix g)) → Π𝔾 (⟦ f₂ ⟧ (Fix g))
     → Π𝔾 (⟦ f₁ ⊗ f₂ ⟧ (Fix g))
-  ⊗-PiGen cg₁ cg₂ gₐ = (` cg₁ λ x → cg₂ λ y → gₐ (x , y)) >>= Pure ∘ uncurry
+  ⊗-PiGen cg₁ cg₂ gₐ = (` cg₁ (λ x → cg₂ λ y → gₐ (x , y))) >>= (Pure ∘ uncurry)
   
   derivePiGen :
     ∀ {f g : Reg} → RegInfo Π𝔾 f → Π𝔾 (⟦ f ⟧ (Fix g))

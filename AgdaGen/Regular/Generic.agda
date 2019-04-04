@@ -1,9 +1,7 @@
-
-{-# OPTIONS --type-in-type #-}
-
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 
-open import Data.Nat
+open import Data.Nat hiding (_⊔_)
 open import Data.Unit
 open import Data.Empty
 open import Data.Bool
@@ -17,22 +15,22 @@ open import Data.Sum
 open import Function
 
 open import Size
+open import Level
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 module AgdaGen.Regular.Generic where
 
-  open RawMonad ⦃...⦄ using (_⊛_; pure)
-
-  data Reg : Set where
+  data Reg {ℓ} {k} : Set (Level.suc k ⊔ Level.suc ℓ) where
     Z   : Reg
     U   : Reg 
-    _⊕_ : Reg → Reg → Reg
-    _⊗_ : Reg → Reg → Reg
+    _⊕_ : Reg {ℓ} {k} → Reg {ℓ} {k} → Reg
+    _⊗_ : Reg {ℓ} {k} → Reg {ℓ} {k} → Reg
     I   : Reg
-    K   : Set → Reg
+    K   : Set k → Reg
 
-  data RegInfo (P : Set → Set) : Reg → Set where
+  
+  data RegInfo {ℓ} (P : Set ℓ → Set (Level.suc ℓ)) : Reg {ℓ} → Set (Level.suc ℓ) where
     Z~   : RegInfo P Z
     U~   : RegInfo P U
     
@@ -46,17 +44,17 @@ module AgdaGen.Regular.Generic where
            
     I~   : RegInfo P I
     
-    K~   : ∀ {a : Set} → P a → RegInfo P (K a)
-
-  map-reginfo : ∀ {f : Reg} {P Q : Set → Set} → (∀ {a : Set} → P a → Q a) → RegInfo P f → RegInfo Q f
+    K~   : ∀ {a : Set ℓ} → P a → RegInfo P (K a)
+  
+  map-reginfo : ∀ {ℓ} {f : Reg {ℓ}} {P Q : Set ℓ → Set (Level.suc ℓ)} → (∀ {a : Set ℓ} → P a → Q a) → RegInfo P f → RegInfo Q f
   map-reginfo f U~ = U~
   map-reginfo f (ri ⊕~ ri₁) = map-reginfo f ri ⊕~ map-reginfo f ri₁
   map-reginfo f (ri ⊗~ ri₁) = map-reginfo f ri ⊗~ map-reginfo f ri₁
   map-reginfo f I~ = I~
   map-reginfo f (K~ x) = K~ (f x)
   map-reginfo f (Z~)   = Z~
-    
-  ⟦_⟧ : Reg → Set → Set
+  
+  ⟦_⟧ : ∀ {ℓ} → Reg {ℓ} → Set → Set
   ⟦ U           ⟧ r = ⊤
   ⟦ reg₁ ⊕ reg₂ ⟧ r = ⟦ reg₁ ⟧ r ⊎ ⟦ reg₂ ⟧ r
   ⟦ reg₁ ⊗ reg₂ ⟧ r = ⟦ reg₁ ⟧ r × ⟦ reg₂ ⟧ r 
@@ -64,10 +62,10 @@ module AgdaGen.Regular.Generic where
   ⟦ K a         ⟧ r = a
   ⟦ Z           ⟧ r = ⊥
   
-  data Fix (f : Reg) : Set where
+  data Fix {ℓ} (f : Reg {ℓ}) : Set where
     In : ⟦ f ⟧ (Fix f) → Fix f
-
-  mapᵣ : ∀ {a b : Set} → (f : Reg) → (a → b) → ⟦ f ⟧ a → ⟦ f ⟧ b
+  
+  mapᵣ : ∀ {ℓ} {a b : Set} → (f : Reg {ℓ}) → (a → b) → ⟦ f ⟧ a → ⟦ f ⟧ b
   mapᵣ U f tt = tt
   mapᵣ (pf₁ ⊕ pf₂) f (inj₁ x) = inj₁ (mapᵣ pf₁ f x)
   mapᵣ (pf₁ ⊕ pf₂) f (inj₂ y) = inj₂ (mapᵣ pf₂ f y)
@@ -76,7 +74,7 @@ module AgdaGen.Regular.Generic where
   mapᵣ (K x) f i = i
   
   deriveGen : ∀ {f g : Reg}
-              → RegInfo 𝔾 f
+              → RegInfo  𝔾 f
               → Gen (⟦ f ⟧ (Fix g)) (⟦ g ⟧ (Fix g))
   deriveGen {U} {g} c = pure tt
   deriveGen {f₁ ⊕ f₂}  {g} (c₁ ⊕~ c₂) =

@@ -1,6 +1,6 @@
 open import Data.Product
 
-module src.Gen.Misc where
+module AgdaGen.Misc where
 
   Σ-map : ∀ {a : Set} {P Q : a → Set}
           → (∀ {y : a} → (P y → Q y))

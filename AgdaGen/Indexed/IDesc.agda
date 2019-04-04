@@ -8,8 +8,14 @@ module AgdaGen.Indexed.IDesc where
   open import Data.Nat hiding (_⊔_)
   open import Data.Fin hiding (lift; _+_)
   open import Data.Product
+  
+  open import Data.Bool
+  open import Data.List
 
   open import Relation.Binary.PropositionalEquality
+
+  open import AgdaGen.Base hiding (μ ; ⟨_⟩)
+  open import AgdaGen.Combinators
 
   infixr 5 _⇒_
 
@@ -22,9 +28,6 @@ module AgdaGen.Indexed.IDesc where
   data _⁻¹_ {ℓ : Level}{A B : Set ℓ}(f : A → B) : Pow B where
     inv : (a : A) → f ⁻¹ (f a)
 
-  T : ∀{ℓ}{I : Set ℓ} → I → Set ℓ
-  T {ℓ} _ =  Lift ℓ ⊤
-
   infixr 30 _`×_
 
   data IDesc {k : Level}(ℓ : Level)(I : Set k) : Set (k ⊔ (sucL ℓ)) where
@@ -33,7 +36,24 @@ module AgdaGen.Indexed.IDesc where
     _`×_ : (A B : IDesc ℓ I) → IDesc ℓ I
     `σ : (n : ℕ)(T : Fin n → IDesc ℓ I) → IDesc ℓ I
     `Σ : (S : Set ℓ)(T : S → IDesc ℓ I) → IDesc ℓ I
-    `Π : (S : Set ℓ)(T : S → IDesc ℓ I) → IDesc ℓ I
+
+  data IDescM {k : Level} {ℓ : Level} {I : Set k} (P : Set ℓ → Set ℓ)
+       : IDesc ℓ I → Set (k ⊔ (sucL ℓ)) where
+  
+    `var~ : ∀ {i : I} → IDescM P (`var i)
+    
+    `1~ : IDescM P `1
+    
+    _`×~_ : ∀ {d₁ d₂ : IDesc ℓ I} → IDescM P d₁
+          → IDescM P d₂ → IDescM P (d₁ `× d₂)
+    
+    `σ~ : ∀ {n : ℕ} {T : Fin n → IDesc ℓ I}
+        → ((fn : Fin n) → IDescM P (T fn))
+        → IDescM P (`σ n T)
+        
+    `Σ~ : ∀ {S : Set ℓ} {T : S → IDesc ℓ I} → P S
+        → ((s : S) → IDescM P (T s))
+        → IDescM P (`Σ S T)
 
   ⟦_⟧ : ∀{k ℓ}{I : Set k} → IDesc ℓ I → (I → Set ℓ) → Set ℓ
   ⟦ `var i ⟧ X = X i
@@ -41,7 +61,6 @@ module AgdaGen.Indexed.IDesc where
   ⟦ A `× B ⟧ X = ⟦ A ⟧ X × ⟦ B ⟧ X
   ⟦ `σ n T ⟧ X = Σ[ k ∈ Fin n ] ⟦ T k ⟧ X
   ⟦ `Σ S T ⟧ X = Σ[ s ∈ S ] ⟦ T s ⟧ X
-  ⟦ `Π S T ⟧ X = (s : S) → ⟦ T s ⟧ X
 
   ⟦_⟧map : ∀{ℓ I X Y} → (D : IDesc ℓ I) → (f : X ⇒ Y) →  ⟦ D ⟧ X → ⟦ D ⟧ Y
   ⟦_⟧map (`var i) f xs = f xs
@@ -49,7 +68,6 @@ module AgdaGen.Indexed.IDesc where
   ⟦_⟧map (A `× B) f (a , b) = ⟦ A ⟧map f a , ⟦ B ⟧map f b
   ⟦_⟧map (`σ n T) f (k , xs) = k , ⟦ T k ⟧map f xs
   ⟦_⟧map (`Σ S T) f (s , xs) = s , ⟦ T s ⟧map f xs
-  ⟦_⟧map (`Π S T) f xs = λ s → ⟦ T s ⟧map f (xs s)
 
   record func {k : Level}(ℓ : Level)(I J : Set k) : Set (k ⊔ (sucL ℓ)) where
     constructor mk
@@ -71,15 +89,31 @@ module AgdaGen.Indexed.IDesc where
             ; (suc zero) → `1 
             ; (suc (suc ())) }) }
 
-  Bool : Set 
-  Bool = μ BoolD tt
+  Bool' : Set 
+  Bool' = μ BoolD tt
 
-  true : Bool
-  true = ⟨ zero , lift tt ⟩
+  `σ-gen : ∀ {ℓ} {i : Set} {dsc : i → IDesc ℓ i} {n : ℕ} {sl : Fin n → IDesc ℓ i} → 𝔾 {ℓ} (⟦ `σ n sl ⟧ (μ (mk dsc)))
+  `σ-gen {n = n} = {!!}
+  
+  boolGen : 𝔾 Bool'
+  boolGen = ⦇ ⟨_⟩ (` (⦇ (zero , lift tt) ⦈ ∥ ⦇ ((suc zero) , lift tt) ⦈)) ⦈
 
-  false : Bool
-  false = ⟨ suc zero ,  lift tt ⟩
+  fromBool : Bool → Bool'
+  fromBool false = ⟨ (zero , (lift tt)) ⟩
+  fromBool true = ⟨ ((suc zero) , (lift tt)) ⟩
 
+  toBool : Bool' → Bool
+  toBool ⟨ zero , snd ⟩ = false
+  toBool ⟨ suc zero , snd ⟩ = true
+  toBool ⟨ suc (suc ()) , snd ⟩
+
+  bool : 𝔾 Bool
+  bool = ⦇ toBool (` boolGen) ⦈
+
+  prop : interpret bool bool 4 ≡ false ∷ true ∷ []
+  prop = refl
+
+  
   NatD : func zeroL ⊤ ⊤
   NatD = func.mk λ { tt →
     `σ 2 (λ { zero       → `1
@@ -379,3 +413,4 @@ module AgdaGen.Indexed.IDesc where
   ⊢-iso₂ {t = t ∙ t₁} {τ} {⟨ zero , σ , jd₁ , jd₂ ⟩} =
     cong₂ (λ x y → ⟨ (zero , σ , (x , y)) ⟩) ⊢-iso₂ ⊢-iso₂
   ⊢-iso₂ {t = t ∙ t₁} {τ} {⟨ suc () , snd ⟩}
+

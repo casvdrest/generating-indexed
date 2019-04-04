@@ -15,14 +15,13 @@ open Eq' using (_≡_; refl; cong; sym; trans)
 open Eq'.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
 
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 
 open import Function
 
 open import Category.Monad
 
 module AgdaGen.Indexed.Examples where 
-
-  open RawMonad ⦃...⦄ using (_⊛_; pure; _>>=_; return)
   
   fin : 𝔾ᵢ Fin
   fin zero    = None

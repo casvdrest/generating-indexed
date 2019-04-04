@@ -38,7 +38,7 @@ module AgdaGen.Indexed.NDSignature where
   record NDSig {ℓ} (i : Set ℓ) : Set (L.suc ℓ) where
     constructor _◂_∣_
     field
-      Opₙ : i → Reg
+      Opₙ : i → Reg {ℓ}
       Arₙ : ∀ {x} → Fix (Opₙ x) → ℕ
       Ivₙ : ∀ {x} {op : Fix (Opₙ x)} → Σ[ f ∈ (Vec i (Arₙ op) → i) ] Invertible f
 
@@ -58,7 +58,7 @@ module AgdaGen.Indexed.NDSignature where
   index : ∀ {i : Set} {f : i → Set} {x : i} → f x → i
   index {x = x} _ = x
 
-  Opₙ-Sized : ℕ → Reg
+  Opₙ-Sized : ℕ → Reg {L.0ℓ} {L.0ℓ}
   Opₙ-Sized zero = U
   Opₙ-Sized (suc n) = U
 
@@ -120,7 +120,7 @@ module AgdaGen.Indexed.NDSignature where
     z≤s : ∀ {m : ℕ} → LEQ (0 , m)
     s≤s : ∀ {n m : ℕ} → LEQ (n , m) → LEQ (suc n , suc m)
 
-  Opₙ-LEQ : ℕ × ℕ → Reg
+  Opₙ-LEQ : ℕ × ℕ → Reg {L.0ℓ} {L.0ℓ}
   Opₙ-LEQ (zero  , m    ) = U
   Opₙ-LEQ (suc n , zero ) = Z
   Opₙ-LEQ (suc n , suc m) = U

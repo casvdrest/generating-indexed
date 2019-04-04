@@ -1,5 +1,3 @@
-{-#  OPTIONS --type-in-type #-}
-
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
 open import Data.Product using (Σ; _,_; Σ-syntax; _×_; proj₁; proj₂)
@@ -10,17 +8,15 @@ open import Data.Unit
 open import Data.List
 open import Data.Maybe
 
-open import Category.Monad
-
 open import Function
+open import Level hiding (zero; suc)
 
 open import AgdaGen.Base
+open import AgdaGen.Combinators
 open import AgdaGen.Regular.Generic
 open import AgdaGen.Regular.Cogen
 
 module AgdaGen.Regular.Isomorphism where
-
-  open RawMonad ⦃...⦄ using (_⊛_; pure)
 
   record _≅_ (a b : Set) : Set where
     field
@@ -58,7 +54,7 @@ module AgdaGen.Regular.Isomorphism where
            }
 
   
-  record Regular (a : Set) : Set where
+  record Regular (a : Set) : Set₁ where
     field
       W : Σ[ f ∈ Reg ] (a ≅ Fix f)
 
@@ -78,7 +74,7 @@ module AgdaGen.Regular.Isomorphism where
     ⦇ (λ f → f ∘ (λ { (In x) → x }) ∘ _≅_.from iso)
       (` deriveCogen {g = f} reginfo gₐ) ⦈
   
-  ℕF : Reg
+  ℕF : Reg {0ℓ} {0ℓ}
   ℕF = U ⊕ I
 
   ℕ→ℕF : ℕ → Fix ℕF
@@ -111,7 +107,7 @@ module AgdaGen.Regular.Isomorphism where
   prop : ⟨ isoGen ℕ (U~ ⊕~ I~) ⟩ 10 ≡ zero ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ 7 ∷ 8 ∷ 9 ∷ []
   prop = refl
 
-  BoolF : Reg
+  BoolF : Reg {0ℓ} {0ℓ}
   BoolF = U ⊕ U
 
   Bool→BoolF : Bool → Fix BoolF
@@ -141,7 +137,7 @@ module AgdaGen.Regular.Isomorphism where
     Bool-Regular : Regular Bool
     Bool-Regular = record { W = BoolF , Bool≅BoolF }
 
-  ListF : Set → Reg
+  ListF : Set → Reg {0ℓ} {0ℓ}
   ListF a = U ⊕ (K a ⊗ I)
 
   List→ListF : ∀ {a : Set} → List a → Fix (ListF a)
@@ -172,7 +168,7 @@ module AgdaGen.Regular.Isomorphism where
     List-Regular : ∀ {a : Set} → Regular (List a)
     List-Regular {a} = record { W = ListF a , List≅ListF }
   
-  _⊎F_ : Set → Set → Reg
+  _⊎F_ : Set → Set → Reg {0ℓ} {0ℓ}
   a ⊎F b = K a ⊕ K b
 
   ⊎→⊎F : ∀ {a b} → a ⊎ b → Fix (a ⊎F b)
@@ -203,7 +199,7 @@ module AgdaGen.Regular.Isomorphism where
     ⊎-Regular {a} {b} = record { W = a ⊎F b , ⊎≅⊎F }
 
   
-  _×F_ : Set → Set → Reg
+  _×F_ : Set → Set → Reg {0ℓ} {0ℓ}
   a ×F b = K a ⊗ K b
 
   ×→×F : ∀ {a b} → a × b → Fix (a ×F b)
@@ -230,7 +226,7 @@ module AgdaGen.Regular.Isomorphism where
     ×-Regular {a} {b} = record { W = a ×F b , ×≅×F }
 
   
-  MaybeF : Set → Reg
+  MaybeF : Set → Reg {0ℓ} {0ℓ}
   MaybeF a = K a ⊕ U
 
   Maybe→MaybeF : ∀ {a : Set} → Maybe a → Fix (MaybeF a)

@@ -6,11 +6,7 @@ open import Function
 open import AgdaGen.Base
 open import AgdaGen.Properties
 
-open import Category.Applicative
-
 module AgdaGen.Equivalence where
-
-  open RawApplicative ⦃...⦄
 
   -- Equivalence between generators: g₁ and g₂ are equivalent if
   -- for every x, if g₁ produces x, then g₂ produces x as well,
