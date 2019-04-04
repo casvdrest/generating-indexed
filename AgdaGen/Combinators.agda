@@ -27,6 +27,9 @@ module AgdaGen.Combinators where
   pure : ∀ {ℓ} {a t : Set ℓ} → a → Gen a t
   pure = genPure
 
+  infixl 30 _>>=_
+  infixl 20 _>>_
+
   _>>=_ : ∀ {ℓ} {a b t : Set ℓ} → Gen a t → (a → Gen b t) → Gen b t
   _>>=_ = genBind
 
