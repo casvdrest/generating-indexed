@@ -1,4 +1,3 @@
-import Level as L
 open import Data.Nat hiding (_≤_)
 open import Data.Fin using (Fin; suc; zero)
 open import Data.List
@@ -11,12 +10,13 @@ open import Data.Empty
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Function
+import Level as L
 
 open import AgdaGen.Base
-open import AgdaGen.Regular.Isomorphism using (_≅_)
-open import AgdaGen.Regular.Generic
+open import AgdaGen.Generic.Isomorphism using (_≅_)
+open import AgdaGen.Generic.Regular.Universe
 
-module AgdaGen.Indexed.Signature where
+module AgdaGen.Generic.Indexed.MultisortedSignatures.Signature where
 
   ------ Syntax for Π Types ------
   

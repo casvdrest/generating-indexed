@@ -1,24 +1,27 @@
 open import AgdaGen.Base
 open import AgdaGen.Combinators
-open import AgdaGen.Regular.Isomorphism
-open import AgdaGen.ListProperties
-open import AgdaGen.Data using (_∈_; here; _⊕_; inl; inr; there; merge)
+open import AgdaGen.Generic.Isomorphism
+open import AgdaGen.Properties.General
+open import AgdaGen.Data
+  using (_∈_; here; _⊕_; inl; inr; there; merge)
 
-open import Data.Product using (Σ; Σ-syntax; ∃; ∃-syntax; _×_; _,_; proj₁; proj₂)
+open import Data.Product
+  using (Σ; Σ-syntax; ∃; ∃-syntax; _×_; _,_; proj₁; proj₂)
 open import Data.Sum hiding (map)
 open import Data.List
 open import Data.Nat
 open import Data.Nat.Properties
 open import Data.Empty
 
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
+open import Relation.Binary.PropositionalEquality
+  using (_≡_; refl; cong; sym)
 open Relation.Binary.PropositionalEquality.≡-Reasoning
 
 open import Category.Functor
 open import Category.Applicative
 open import Category.Monad
 
-module AgdaGen.Monotonicity where
+module AgdaGen.Properties.Monotonicity where
 
   ------ Monotonicity definition ------
 
@@ -160,23 +163,27 @@ module AgdaGen.Monotonicity where
     | inj₂ elem' | (f' , x') , (loc₁ , loc₂) , refl =
       (f' , x') , (there loc₁ , loc₂) , refl 
 
-  ∈x-rewr : ∀ {a : Set} {x y : a} {xs : List a} → x ∈ xs → x ≡ y → y ∈ xs
+  ∈x-rewr :
+    ∀ {a : Set} {x y : a} {xs : List a}
+    → x ∈ xs → x ≡ y → y ∈ xs
   ∈x-rewr elem refl = elem
  
-  constr-monotone : ∀ {a b t : Set} {g : Gen a t} 
-                      {C : a → b} {x : a} {tg : 𝔾 t}
-                    → (∀ {x y : a} → C x ≡ C y → x ≡ y) 
-                    → Depth-Monotone g x tg
-                    → Depth-Monotone ⦇ C g ⦈ (C x) tg
+  constr-monotone :
+    ∀ {a b t : Set} {g : Gen a t} 
+      {C : a → b} {x : a} {tg : 𝔾 t}
+    → (∀ {x y : a} → C x ≡ C y → x ≡ y) 
+    → Depth-Monotone g x tg
+    → Depth-Monotone ⦇ C g ⦈ (C x) tg
   constr-monotone {g = g} {C} {x} inv p (s≤s leq) elem with ap-singleton elem
   constr-monotone {g = g} {C} {x} inv p (s≤s leq) elem | val , (loc , eq) =
     list-ap-complete {fs = [ C ]} here (p (s≤s leq) (∈x-rewr loc (inv eq))) 
   
-  ⊛-monotone : ∀ {a b c t : Set} {x : a} {y : b} {g₁ : Gen a t}
-                 {g₂ : Gen b t} {tg : 𝔾 t} {C : a → b → c}
-               → (∀ {x₁ x₂ : a} {y₁ y₂ : b} → C x₁ y₁ ≡ C x₂ y₂ → x₁ ≡ x₂ × y₁ ≡ y₂)
-               → Depth-Monotone g₁ x tg → Depth-Monotone g₂ y tg
-               → Depth-Monotone ⦇ C g₁ g₂ ⦈ (C x y) tg
+  ⊛-monotone :
+    ∀ {a b c t : Set} {x : a} {y : b} {g₁ : Gen a t}
+      {g₂ : Gen b t} {tg : 𝔾 t} {C : a → b → c}
+    → (∀ {x₁ x₂ : a} {y₁ y₂ : b} → C x₁ y₁ ≡ C x₂ y₂ → x₁ ≡ x₂ × y₁ ≡ y₂)
+    → Depth-Monotone g₁ x tg → Depth-Monotone g₂ y tg
+    → Depth-Monotone ⦇ C g₁ g₂ ⦈ (C x y) tg
   ⊛-monotone {g₁ = g₁} {g₂ = g₂} {tg} {C} inv p₁ p₂ (s≤s leq) elem with
     ap-inv {fs = list-ap [ C ] (interpret g₁ tg (≤-left (s≤s leq)))}
            {xs = interpret g₂ tg (≤-left (s≤s leq))} elem
@@ -188,36 +195,44 @@ module AgdaGen.Monotonicity where
       (p₂ (s≤s leq) (∈x-rewr (proj₂ loc₁) (proj₂ (inv eq))
     )) 
   
-  map-inv : ∀ {a b : Set} {y : b} {xs : List a} {f : a → b} → y ∈ map f xs → Σ[ x ∈ a ] f x ∈ map f xs × f x ≡ y
+  map-inv :
+    ∀ {a b : Set} {y : b} {xs : List a} {f : a → b}
+    → y ∈ map f xs → Σ[ x ∈ a ] f x ∈ map f xs × f x ≡ y
   map-inv {xs = []} ()
   map-inv {xs = x ∷ xs} here = x , (here , refl)
   map-inv {xs = x ∷ xs} (there elem) with map-inv elem
-  map-inv {y = _} {x ∷ xs} (there elem) | x' , elem' , eq = x' , ((there elem') , eq)
+  map-inv {y = _} {x ∷ xs} (there elem) | x' , elem' , eq =
+    x' , ((there elem') , eq)
 
   lemma : ∀ {a b : Set} {f : a → b} → map f [] ≡ []
   lemma = refl
 
-  ∥-monotone-left : ∀ {a t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen a t} {tg : 𝔾 t}
-                    → Depth-Monotone g₁ x tg
-                    → (∀ {n : ℕ} → x ∈ interpret g₂ tg n → ⊥)
-                    → Depth-Monotone (g₁ ∥ g₂) x tg
+  ∥-monotone-left :
+    ∀ {a t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen a t} {tg : 𝔾 t}
+    → Depth-Monotone g₁ x tg
+    → (∀ {n : ℕ} → x ∈ interpret g₂ tg n → ⊥)
+    → Depth-Monotone (g₁ ∥ g₂) x tg
   ∥-monotone-left mt₁ mt₂ z≤n ()
   ∥-monotone-left {g₁ = g₁} {tg = tg} mt₁ mt₂ (s≤s leq) elem with merge-sound' elem
   ... | inj₁ p = merge-complete-left (mt₁ (s≤s leq) p)
   ... | inj₂ p = ⊥-elim (mt₂ {n = ≤-left (s≤s leq)} p)
 
-  ∥-monotone-right : ∀ {a t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen a t} {tg : 𝔾 t}
-                    → (∀ {n : ℕ} → x ∈ interpret g₁ tg n → ⊥)
-                    → Depth-Monotone g₂ x tg
-                    → Depth-Monotone (g₁ ∥ g₂) x tg
+  ∥-monotone-right :
+    ∀ {a t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen a t} {tg : 𝔾 t}
+    → (∀ {n : ℕ} → x ∈ interpret g₁ tg n → ⊥)
+    → Depth-Monotone g₂ x tg
+    → Depth-Monotone (g₁ ∥ g₂) x tg
   ∥-monotone-right mt₁ mt₂ z≤n ()
   ∥-monotone-right mt₁ mt₂ (s≤s leq) elem with merge-sound' elem
-  ... | inj₁ p  = ⊥-elim (mt₁ {n = ≤-left (s≤s leq)} p)
-  ... | inj₂ p  = merge-complete-right (mt₂ (s≤s leq) p) 
+  ... | inj₁ p  =
+    ⊥-elim (mt₁ {n = ≤-left (s≤s leq)} p)
+  ... | inj₂ p  =
+    merge-complete-right (mt₂ (s≤s leq) p) 
 
-  ∥-inj₁-monotone-left : ∀ {a b t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen b t} {tg : 𝔾 t}
-                       → Depth-Monotone g₁ x tg
-                       → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₁ x) tg
+  ∥-inj₁-monotone-left :
+    ∀ {a b t : Set} {x : a} {g₁ : Gen a t} {g₂ : Gen b t} {tg : 𝔾 t}
+    → Depth-Monotone g₁ x tg
+    → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₁ x) tg
   ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂} {tg} mt₁ (s≤s leq) elem with
     merge-sound' {ys = list-ap [ inj₂ ] (interpret g₂ tg (≤-left (s≤s leq)))} elem
   ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂} {tg} mt₁ (s≤s leq) elem | inj₁ x' with ap-singleton x'
@@ -225,11 +240,11 @@ module AgdaGen.Monotonicity where
     merge-complete-left (list-ap-complete {fs = [ inj₁ ]} here (mt₁ (s≤s leq) loc))
   ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂} mt₁ leq elem | inj₂ y' with ap-singleton y'
   ∥-inj₁-monotone-left {g₁ = g₁} {g₂} mt₁ leq elem | inj₂ y' | fst , fst₁ , () 
-
   
-  ∥-inj₂-monotone-right : ∀ {a b t : Set} {y : b} {g₁ : Gen a t} { g₂ : Gen b t} {tg : 𝔾 t}
-                          → Depth-Monotone g₂ y tg
-                          → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₂ y) tg
+  ∥-inj₂-monotone-right :
+    ∀ {a b t : Set} {y : b} {g₁ : Gen a t} { g₂ : Gen b t} {tg : 𝔾 t}
+    → Depth-Monotone g₂ y tg
+    → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (inj₂ y) tg
   ∥-inj₂-monotone-right {g₁ = g₁} {g₂ = g₂} {tg} mt₁ (s≤s leq) elem with
     merge-sound' {xs = list-ap [ inj₁ ] (interpret g₁ tg (≤-left (s≤s leq)))} elem
   ∥-inj₂-monotone-right {g₁ = g₁} {g₂ = g₂} {tg}  mt₁ leq elem | inj₁ x' with ap-singleton x'
@@ -238,10 +253,18 @@ module AgdaGen.Monotonicity where
   ∥-inj₂-monotone-right {g₁ = g₁} {g₂} mt₁ (s≤s leq) elem | inj₂ y' | _ , (loc , refl) = 
     merge-complete-right (list-ap-complete {fs = [ inj₂ ]} here (mt₁ (s≤s leq) loc)) 
 
-  `-monotone : ∀ {a t : Set} {tg : 𝔾 t} {gen : 𝔾 a} {x : a} → Depth-Monotone gen x gen → Depth-Monotone (` gen) x tg
+  `-monotone :
+    ∀ {a t : Set} {tg : 𝔾 t} {gen : 𝔾 a} {x : a}
+    → Depth-Monotone gen x gen
+    → Depth-Monotone (` gen) x tg
   `-monotone mt z≤n ()
-  `-monotone mt (s≤s leq) elem = mt (s≤s leq) elem
+  `-monotone mt (s≤s leq) elem =
+    mt (s≤s leq) elem
 
-  μ-monotone : ∀ {t : Set} {tg : 𝔾 t} {x : t} → Depth-Monotone tg x tg → Depth-Monotone μ x tg
+  μ-monotone :
+    ∀ {t : Set} {tg : 𝔾 t} {x : t}
+    → Depth-Monotone tg x tg
+    → Depth-Monotone μ x tg
   μ-monotone mt z≤n ()
-  μ-monotone mt (s≤s leq) elem = mt leq elem 
+  μ-monotone mt (s≤s leq) elem =
+    mt leq elem 

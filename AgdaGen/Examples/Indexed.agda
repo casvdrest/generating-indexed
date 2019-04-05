@@ -21,7 +21,7 @@ open import Function
 
 open import Category.Monad
 
-module AgdaGen.Indexed.Examples where 
+module AgdaGen.Examples.Indexed where 
   
   fin : 𝔾ᵢ Fin
   fin zero    = None

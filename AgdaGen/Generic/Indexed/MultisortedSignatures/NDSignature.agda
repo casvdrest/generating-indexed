@@ -8,18 +8,18 @@ open import Data.Unit hiding (_≤_)
 open import Data.Vec
 open import Data.Fin using (Fin; suc; zero)
 
-open import AgdaGen.Regular.Generic
+open import AgdaGen.Generic.Regular.Universe
 open import AgdaGen.Data using (_∈_; here; there)
-open import AgdaGen.Indexed.Isomorphism
-open import AgdaGen.Regular.Isomorphism
-open import AgdaGen.Indexed.Lambda
+open import AgdaGen.Generic.Indexed.MultisortedSignatures.Instances
+open import AgdaGen.Generic.Isomorphism
+open import AgdaGen.Examples.Lambda
 
-open import Relation.Binary.PropositionalEquality hiding (cong₂)
+open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary
 
 open import Function
 
-module AgdaGen.Indexed.NDSignature where
+module AgdaGen.Generic.Indexed.MultisortedSignatures.NDSignature where
 
   data SizedTree : ℕ → Set where 
     Leaf : SizedTree 0

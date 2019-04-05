@@ -1,9 +1,10 @@
-open import AgdaGen.Indexed.Signature
-open import AgdaGen.Regular.Generic
-open import AgdaGen.Regular.Isomorphism 
+open import AgdaGen.Generic.Indexed.MultisortedSignatures.Signature
+open import AgdaGen.Generic.Regular.Universe
+open import AgdaGen.Generic.Isomorphism
+open import AgdaGen.Generic.Regular.Generator
 open import AgdaGen.Base
 open import AgdaGen.Combinators
-open import AgdaGen.Indexed.PiGen
+open import AgdaGen.Generic.Indexed.PiGen
 
 open import Data.Unit
 open import Data.Empty
@@ -24,7 +25,7 @@ open import Codata.Musical.Notation
 open import Function
 open import Level
 
-module AgdaGen.Indexed.Generic where
+module AgdaGen.Generic.Indexed.MultisortedSignatures.Generator where
 
   Gen-Σ : ∀ {i : Set} {P : i → Set} → 𝔾 i → 𝔾ᵢ P → 𝔾 (Σ[ x ∈ i ] P x)
   Gen-Σ g₁ g₂ = (` g₁) >>= λ x → (` g₂ x) >>= λ y → Pure (x , y)

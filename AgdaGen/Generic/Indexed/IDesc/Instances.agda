@@ -1,6 +1,6 @@
 open import AgdaGen.Base hiding (⟨_⟩; μ)
 open import AgdaGen.Combinators
-open import AgdaGen.Indexed.IDesc
+open import AgdaGen.Generic.Indexed.IDesc.Universe
 
 open import Data.Product
 open import Data.Sum
@@ -17,7 +17,10 @@ open import Level
 
 open import Relation.Binary.PropositionalEquality
 
-module AgdaGen.Indexed.IDescExamples where
+module AgdaGen.Generic.Indexed.IDesc.Instances where
+
+
+  ------ Booleans ------
 
   BoolD : func zeroL ⊤ ⊤
   BoolD = func.mk λ { tt → 
@@ -49,7 +52,10 @@ module AgdaGen.Indexed.IDescExamples where
   Bool-iso₂ : ∀ {b : Bool'} → fromBool (toBool b) ≡ b
   Bool-iso₂ {⟨ ∙      , lift tt ⟩} = refl
   Bool-iso₂ {⟨ ▻ ∙    , lift tt ⟩} = refl
-  
+
+
+  ------ Natural numbers ------
+
   NatD : func zeroL ⊤ ⊤
   NatD = func.mk λ { tt →
     `σ 2 (λ {  ∙     → `1
@@ -81,6 +87,9 @@ module AgdaGen.Indexed.IDescExamples where
   Nat-iso₂ {⟨ ∙   , snd ⟩} = refl
   Nat-iso₂ {⟨ ▻ ∙ , snd ⟩} = cong (λ x → ⟨ ▻ ∙ , x ⟩) Nat-iso₂
 
+
+  ------ Maybe / Option ------
+
   OptionD : (a : Set) → func zeroL ⊤ ⊤
   OptionD a = func.mk λ { tt →
     `σ 2 λ {  ∙    → `1
@@ -111,6 +120,9 @@ module AgdaGen.Indexed.IDescExamples where
   Maybe-iso₂ : ∀ {a : Set} {o : Option a} → fromMaybe (toMaybe o) ≡ o
   Maybe-iso₂ {_} {⟨ ∙       , lift tt ⟩} = refl
   Maybe-iso₂ {_} {⟨ ▻ ∙ , x , lift tt ⟩} = refl
+
+
+  ------ Finite Sets ------
 
   FinD : func zeroL ℕ ℕ
   FinD = func.mk
@@ -146,6 +158,8 @@ module AgdaGen.Indexed.IDescExamples where
   Fin'-iso₂ {suc n} {⟨ ∙   , lift tt ⟩} = refl
   Fin'-iso₂ {suc n} {⟨ ▻ ∙ , rec     ⟩} =
     cong (λ x → ⟨ (▻ ∙ , x) ⟩) Fin'-iso₂
+
+  ------ Sized trees (i.e. indedexed w/ the number of nodes ------
 
   data STree : ℕ → Set where
     Leaf : STree 0

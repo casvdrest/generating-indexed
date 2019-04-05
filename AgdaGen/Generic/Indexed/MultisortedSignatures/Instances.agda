@@ -1,11 +1,12 @@
-open import AgdaGen.Indexed.Signature
+open import AgdaGen.Generic.Indexed.MultisortedSignatures.Signature
 open import AgdaGen.Base
 open import AgdaGen.Combinators
-open import AgdaGen.Regular.Isomorphism 
-open import AgdaGen.Regular.Generic
-open import AgdaGen.Indexed.Generic
-open import AgdaGen.Regular.Cogen
-open import AgdaGen.Indexed.PiGen
+open import AgdaGen.Generic.Isomorphism 
+open import AgdaGen.Generic.Regular.Universe
+open import AgdaGen.Generic.Indexed.MultisortedSignatures.Signature
+open import AgdaGen.Generic.Indexed.MultisortedSignatures.Generator
+open import AgdaGen.Generic.Regular.Cogen
+open import AgdaGen.Generic.Indexed.PiGen
 
 open import Data.Empty
 open import Data.Nat
@@ -19,9 +20,9 @@ open import Data.Vec using (Vec; []; _∷_)
 open import Function
 open import Level hiding (suc; zero)
 
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; cong₂)
 
-module AgdaGen.Indexed.Isomorphism where
+module AgdaGen.Generic.Indexed.MultisortedSignatures.Instances where
 
   triv : (a : Set) → ⊤ → Set
   triv a tt = a
@@ -53,9 +54,6 @@ module AgdaGen.Indexed.Isomorphism where
 
   Fix-⊥-eq : ∀ {b : Fix {0ℓ} Z → Set} {f g : Π (Fix Z) b} → f ≡ g
   Fix-⊥-eq = funext' λ { {In ()} }
-
-  cong₂ : ∀ {a b c : Set} {x₁ x₂ : a} {y₁ y₂ : b} → (f : a → b → c) → x₁ ≡ x₂ → y₁ ≡ y₂ → f x₁ y₁ ≡ f x₂ y₂ 
-  cong₂ f refl refl = refl
   
    ------ Naturals ------
 

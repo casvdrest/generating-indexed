@@ -1,5 +1,5 @@
 open import AgdaGen.Base
-open import AgdaGen.Regular.Examples
+open import AgdaGen.Examples.Regular
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -8,7 +8,7 @@ open import Data.Nat
 open import Data.Bool
 open import Data.Maybe using (just; nothing)
 
-module AgdaGen.Regular.Test where
+module AgdaGen.Generic.Regular.Test where
 
   prop1 : ⟨ nat ⟩ 10 ≡ 0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ 7 ∷ 8 ∷ 9 ∷ []
   prop1 = refl
@@ -24,4 +24,3 @@ module AgdaGen.Regular.Test where
  
   prop4 : ⟨ (list nat) ⟩ 3 ≡ [] ∷ (0 ∷ []) ∷ (0 ∷ 0 ∷ []) ∷ (0 ∷ 1 ∷ []) ∷ (1 ∷ []) ∷ (1 ∷ 0 ∷ []) ∷ (1 ∷ 1 ∷ []) ∷ (2 ∷ []) ∷ (2 ∷ 0 ∷ []) ∷ (2 ∷ 1 ∷ []) ∷ []
   prop4 = refl
-

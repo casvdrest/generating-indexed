@@ -18,7 +18,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Function
 open import Level hiding (suc; zero)
 
-module AgdaGen.Indexed.Lambda where
+module AgdaGen.Examples.Lambda where
 
   Id : Set
   Id = ℕ
@@ -29,7 +29,6 @@ module AgdaGen.Indexed.Lambda where
 
   type : 𝔾 Ty
   type = ⦇ `ℕ ⦈ ∥ ⦇ μ `→ μ ⦈
-
   
   →-left-neq : ∀ {τ₁ τ₂ τ₃ τ₄ : Ty} → ¬ τ₁ ≡ τ₂
                --------------------------------

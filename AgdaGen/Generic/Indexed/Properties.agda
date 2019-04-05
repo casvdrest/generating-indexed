@@ -1,12 +1,13 @@
 open import AgdaGen.Base
-open import AgdaGen.Properties
-open import AgdaGen.Data using (_∈_; here; there)
-open import AgdaGen.Regular.Generic
-open import AgdaGen.ListProperties
-open import AgdaGen.Regular.Cogen
-open import AgdaGen.Regular.Properties
-open import AgdaGen.Monotonicity
-open import AgdaGen.Indexed.Isomorphism hiding (cong₂)
+open import AgdaGen.Data using (_∈_; here; there; Π)
+
+open import AgdaGen.Properties.General
+open import AgdaGen.Properties.Monotonicity
+open import AgdaGen.Properties.Completeness
+
+open import AgdaGen.Generic.Regular.Cogen
+open import AgdaGen.Generic.Regular.Properties
+open import AgdaGen.Generic.Regular.Universe
 
 open import Relation.Binary.PropositionalEquality
 
@@ -17,13 +18,28 @@ open import Data.Bool
 open import Data.List
 open import Data.Unit hiding (_≤_)
 open import Data.List
+open import Data.Empty
 
 open import Function
 open import Level hiding (suc ;zero)
 
 open import Category.Monad
 
-module AgdaGen.Indexed.Properties where
+module AgdaGen.Generic.Indexed.Properties where
+
+   -- Function exensionality
+  postulate funext : ∀ {ℓ} {a b : Set ℓ} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
+
+  -- Variation on function extensionality for dependent functions (Π-types). 
+  postulate funext' : ∀ {a : Set} {b : a → Set} {f g : Π a b} → (∀ {x} → f x ≡ g x) → f ≡ g 
+
+  -- Functions with an empty domain are, by function extensionality,
+  -- allways equal (provided that they have the same codomain)
+  ⊥-funeq : ∀ {b : Set} {f g : ⊥ → b} → f ≡ g
+  ⊥-funeq = funext λ { {()} }
+
+  Fix-⊥-eq : ∀ {b : Fix {0ℓ} Z → Set} {f g : Π (Fix Z) b} → f ≡ g
+  Fix-⊥-eq = funext' λ { {In ()} }
 
   ⊎-split : ∀ {a b c : Set} → (h : a ⊎ b → c)
               → Σ[ f ∈ (a → c) ] Σ[ g ∈ (b → c) ]

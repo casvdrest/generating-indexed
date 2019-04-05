@@ -18,7 +18,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym 
 
 open import Function
 
-module AgdaGen.Indexed.Regex where
+module AgdaGen.Examples.Regex where
 
   open RawFunctor ⦃...⦄ using (_<$>_)
   open RawMonad ⦃...⦄ using (_>>_; _>>=_; return; pure)
@@ -28,7 +28,7 @@ module AgdaGen.Indexed.Regex where
 
   ε : String
   ε = []
-
+  {-
   char : ⟪ 𝔾 Char ⟫
   char _ _ = 'a' ∷ 'b' ∷ 'c' ∷ 'd' ∷ 'e' ∷ 'f' ∷ 'g' ∷ 's' ∷ []
 
@@ -234,3 +234,4 @@ module AgdaGen.Indexed.Regex where
                          char-ap : ∀ {n : ℕ} → (c : Char) → (s : String) → 𝔾 (Σ[ r ∈ Regex ] ((c ∷ s) ∈ L[ r ])) n
                          char-ap c [] = pure (`c c , CHAR)
                          char-ap c (x ∷ s) = uninhabited
+-}

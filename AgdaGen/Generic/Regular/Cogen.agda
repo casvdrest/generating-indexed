@@ -1,6 +1,6 @@
 open import AgdaGen.Base
 open import AgdaGen.Combinators
-open import AgdaGen.Regular.Generic
+open import AgdaGen.Generic.Regular.Universe
 
 open import Data.Nat
 open import Data.Product
@@ -17,12 +17,17 @@ open import Level
 
 open import Category.Monad
 
-module AgdaGen.Regular.Cogen where
+module AgdaGen.Generic.Regular.Cogen where
 
-  U-Cogen : ∀ {ℓ} {f : Reg {ℓ}} {a : Set ℓ} → Gen a a → 𝔾 (⟦_⟧ {ℓ} U (Fix f) → a) 
+  U-Cogen :
+    ∀ {ℓ} {f : Reg {ℓ}} {a : Set ℓ}
+    → Gen a a → 𝔾 (⟦_⟧ {ℓ} U (Fix f) → a) 
   U-Cogen gen = ⦇ (λ x → λ { tt → x }) (` gen) ⦈
 
-  ⊎lift : ∀ {ℓ} {a b c : Set ℓ} → (a → c) → (b → c) → a ⊎ b → c
+  ⊎lift :
+    ∀ {ℓ} {a b c : Set ℓ}
+    → (a → c) → (b → c)
+    → a ⊎ b → c
   ⊎lift fx fy (inj₁ x) = fx x
   ⊎lift fx fy (inj₂ y) = fy y
 
@@ -42,7 +47,8 @@ module AgdaGen.Regular.Cogen where
   ⊗-Cogen cg₁ cg₂ gₐ = ⦇ uncurry (` cg₁ (cg₂ gₐ)) ⦈ 
   
   deriveCogen :
-    ∀ {f g : Reg {Level.zero}} → RegInfo co𝔾 f → co𝔾 (⟦_⟧ {Level.zero} f (Fix g)) 
+    ∀ {f g : Reg {Level.zero}}
+    → RegInfo co𝔾 f → co𝔾 (⟦_⟧ {Level.zero} f (Fix g)) 
   deriveCogen {U} {g} info gₐ = U-Cogen {f = g} gₐ 
   deriveCogen {f₁ ⊕ f₂} {g} (iₗ ⊕~ iᵣ) = 
     ⊕-Cogen {f₁ = f₁} {f₂} (deriveCogen  iₗ ) (deriveCogen  iᵣ ) 
