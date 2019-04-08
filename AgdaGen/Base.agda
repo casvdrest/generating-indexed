@@ -9,8 +9,6 @@ open import Data.Unit
 open import Data.Fin hiding (lift)
 open import Data.Maybe using (Maybe; just; nothing)
 
-open import Codata.Musical.Notation
-
 open import Function
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -52,9 +50,6 @@ module AgdaGen.Base where
   -- positions refer to the same type as the generator as a whole. 
   𝔾 : ∀ {ℓ} → Set ℓ → Set (Level.suc ℓ)
   𝔾 a = Gen a a
-  
-  𝔾ᵢ : ∀ {k} {ℓ} {i : Set k} → (i → Set ℓ) → Set (k ⊔ (Level.suc ℓ))
-  𝔾ᵢ {i = i} f = (x : i) → 𝔾 (f x)
   
   -- Type synonym for 'closed' generators for function types
   co𝔾 : ∀ {ℓ} → Set ℓ → Set (Level.suc ℓ)
