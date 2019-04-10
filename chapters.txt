@@ -1,0 +1,17 @@
+* Introduction 
+  - Introduction 
+  - Problem Statement
+  - Motivation
+  - Contributions
+  - Methodology
+  - Thesis Overview
+* Literature review
+* A Combinator Library for Generators
+  - The Generator Type 
+  - Relevant Properties
+* Regular Types
+* Indexed Containers 
+* Application to real things 
+* Haskell Stuff
+* Conclusion & Further Work
+* Bibliography 

@@ -1,5 +1,6 @@
 open import AgdaGen.Base
 open import AgdaGen.Combinators
+open import AgdaGen.Enumerate
 open import AgdaGen.Data using (_∈_; here; there; Π)
 
 open import AgdaGen.Properties.Monotonicity

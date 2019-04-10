@@ -113,7 +113,7 @@ module AgdaGen.Examples.Lambda where
             
     [App] : ∀ {τ σ} → Γ ⊢ σ `→ τ → Γ ⊢ σ
             ----------------------------
-            → Γ ⊢ τ
+            → Γ ⊢ τ 
 
   -- Generates all type correct terms for a given 
   -- input context and type

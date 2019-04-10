@@ -1,5 +1,7 @@
 open import AgdaGen.Base
 open import AgdaGen.Combinators
+open import AgdaGen.Enumerate
+
 open import AgdaGen.Generic.Isomorphism
 open import AgdaGen.Properties.General
 open import AgdaGen.Data

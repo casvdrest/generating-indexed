@@ -1,5 +1,6 @@
 open import AgdaGen.Base
 open import AgdaGen.Combinators
+open import AgdaGen.Enumerate
 open import AgdaGen.Generic.Isomorphism
 open import AgdaGen.Data using (_∈_; here; _⊕_; inl; inr; there; merge)
 

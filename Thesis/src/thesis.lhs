@@ -1,21 +1,14 @@
-\documentclass[10pt,a4paper,msc]{uustthesis}
+\documentclass[10pt,a4paper,msc,twosized=semi]{uustthesis}
 
+\usepackage{cleveref}
 \usepackage{lipsum}
+\usepackage{textgreek}
 
-\title{Testing A Large Title YAY}
-\titleDUTCH{Same title in Dutch}
+\title{Thesis title}
 
-\author{Victor Cacciari Miraldo}
+\author{C.R. van der Rest}
 
-\promotor{Prof.dr. J.T. Jeuring}
-\copromotor{Dr. W. Swierstra}
-
-\NWOproject{nwo project name here}
-\NWOgrantnumber{111.111.111}
-
-\defensedate{hopefuly, in the future!}
-\authorbirthdate{october 16, 1991}
-\authorbirthplace{S\~{a}o Paulo, Brasil}
+\supervisor{Dr. W.S. Swierstra \\ Dr. M.M.T. Chakravarty \\ Dr. A. Serrano Mena }
 
 %include lhs2TeX.fmt
 \begin{document}
@@ -29,16 +22,7 @@
 Thanks to family, supervisor, friends and hops!
 
 \chapter{Abstract}
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
-Some amazing abstract should come here.
+Abstract
 
 %% Starts the mainmatter
 \mainmatter
@@ -46,8 +30,12 @@ Some amazing abstract should come here.
 \chapter{Introduction}
 %include src/chap01.lhs
 
-\chapter{Conclusion}
-\input{src/chap02}
+\chapter{Generator Definitions}
+
+\chapter{Regular Datatypes}
+
+\chapter{By the way ...}
+%include src/chap03.lagda
 
 \appendix
 \chapter{Some Formulas}

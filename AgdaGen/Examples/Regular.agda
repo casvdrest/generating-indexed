@@ -1,5 +1,6 @@
 open import AgdaGen.Base
 open import AgdaGen.Combinators
+open import AgdaGen.Enumerate
 open import AgdaGen.Data
   using (here; there; _∈_; merge)
   
@@ -216,7 +217,6 @@ module AgdaGen.Examples.Regular where
     (`-complete (proj₁ (proj₂ sig₂)))
     (`-monotone (proj₂ (proj₂ sig₁)))
     (`-monotone (proj₂ (proj₂ sig₂)))
-
   
   pair∼pair' :
    ∀ {a b : Set}

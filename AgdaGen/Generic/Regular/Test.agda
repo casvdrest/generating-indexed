@@ -1,4 +1,5 @@
 open import AgdaGen.Base
+open import AgdaGen.Enumerate
 open import AgdaGen.Examples.Regular
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
