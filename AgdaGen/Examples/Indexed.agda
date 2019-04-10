@@ -16,25 +16,53 @@ open Eq'.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
 
 open import AgdaGen.Base
 open import AgdaGen.Combinators
+open import AgdaGen.Examples.Lambda
 
 open import Function
 
 open import Category.Monad
 
-module AgdaGen.Examples.Indexed where 
-  
-  fin : 𝔾ᵢ Fin
-  fin zero    = None
-  fin (suc n) = ⦇ zero          ⦈
-              ∥ ⦇ suc (` fin n) ⦈
+module AgdaGen.Examples.Indexed where
 
+  open GApplicative ⦃...⦄
+  open GNullable    ⦃...⦄
+  open GAlternative ⦃...⦄
+  
+  fin : (n : ℕ) → 𝔾ᵢ Fin n
+  fin zero    = empty
+  fin (suc n) = ⦇ zero       ⦈
+              ∥ ⦇ suc (μᵢ n) ⦈
+
+  vec : ∀ {a : Set} → 𝔾 a → (n : ℕ) → 𝔾ᵢ (Vec a) n
+  vec a zero    = ⦇ [] ⦈
+  vec a (suc n) = ⦇ (Call {x = n} a) ∷ (μᵢ n) ⦈
+
+  data Λ : ℕ → Set where
+    Abs : ∀ {n : ℕ} → Λ (suc n) → Λ n
+    App : ∀ {n : ℕ} → Λ n → Λ n → Λ n
+    Var : ∀ {n : ℕ} → Fin n → Λ n
+
+  term : (n : ℕ) → 𝔾ᵢ Λ n
+  term n = ⦇ Abs (μᵢ (suc n))          ⦈
+         ∥ ⦇ App (μᵢ n) (μᵢ n)         ⦈
+         ∥ ⦇ Var (Callᵢ {x = n} fin n) ⦈
+
+  id' : 𝔾 Id
+  id' = ⦇ zero  ⦈
+      ∥ ⦇ suc μ ⦈
+
+  term' : 𝔾 Tm
+  term' = ⦇ $ (` id')     ⦈
+        ∥ ⦇ Λ (` id') ⇒ μ ⦈
+        ∥ ⦇ μ ⊚ μ         ⦈
+
+{-
   prop : ⟨ fin 5 ⟩ 10 ≡
     zero ∷
     suc zero ∷
     suc (suc zero) ∷
     suc (suc (suc zero)) ∷ suc (suc (suc (suc zero))) ∷ []
   prop = refl
-
   
   ≤m : 𝔾ᵢ (uncurry _≤_)
   ≤m (zero  , m    ) = ⦇ z≤n ⦈
@@ -45,15 +73,10 @@ module AgdaGen.Examples.Indexed where
   ≤-suc z≤n = z≤n
   ≤-suc (s≤s p) = s≤s (≤-suc p)
 
-  {-
+  
   ≤n+k : 𝔾ᵢ (λ p → fst p ≤ snd p + fst p)
   ≤n+k (n , zero ) = ⦇ (≤-reflexive refl)      ⦈
   ≤n+k (n , suc k) = ⦇ ≤-suc (` ≤n+k (n , k))  ⦈
-
-  
-  vec : ∀ {a : Set} → ⟪ 𝔾 a ⟫ → ⟪ 𝔾ᵢ (Vec a) ⟫
-  vec a μ zero    = ⦇ []            ⦈
-  vec a μ (suc n) = ⦇ ⟨ a ⟩ ∷ (μ n) ⦈
 
   data Sorted {ℓ} : List ℕ → Set ℓ where
     nil    : Sorted []

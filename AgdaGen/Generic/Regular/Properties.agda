@@ -30,6 +30,9 @@ open Relation.Binary.PropositionalEquality.≡-Reasoning
 
 module AgdaGen.Generic.Regular.Properties where
 
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
+
   ------ U Combinator (Unit) ------
 
   ugen-monotone :

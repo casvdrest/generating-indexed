@@ -19,14 +19,19 @@ open import Category.Functor
 open import Category.Applicative
 open import Category.Monad
 
+open import Level renaming (zero to zeroL ; suc to sucL)
+
 module AgdaGen.Properties.Completeness where
+
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
 
   ------ General Properties ------
 
   -- Generator productivity: we say that a generator produces
   -- Some value 'x' if there is some n ∈ ℕ such that 'x' is in
   -- the list we get by applying 'n' to the generator. 
-  _∣_↝_ : ∀ {a t : Set} → Gen a t → 𝔾 t → a → Set
+  _∣_↝_ : ∀ {a t : Set} → Gen {k = 0ℓ} a t → 𝔾 t → a → Set
   f ∣ tg ↝ x = ∃[ n ] (x ∈ interpret f tg n)
 
   -- Completeness: A generator is complete if we can produce

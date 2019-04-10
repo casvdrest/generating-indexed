@@ -6,3 +6,7 @@ Proposal/*
 Proposal/*.bib
 !Proposal/*.lagda
 !Proposal/*.pdf
+
+Thesis/*
+!Thesis/src/*.lagda
+!Thesis/dist/*.pdf

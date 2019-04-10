@@ -13,7 +13,7 @@ module AgdaGen.Properties.General where
   ------ List Merge ------
 
   list-ap :
-    ∀ {a b : Set} → List (a → b) → List a → List b
+    ∀ {ℓ} {a b : Set ℓ} → List (a → b) → List a → List b
   list-ap fs xs = concatMap (λ f → map f xs) fs
 
   -- If two lists are equal, we can rewrite elemental proofs about them
@@ -125,7 +125,7 @@ module AgdaGen.Properties.General where
     cong (_∷_ x) (++-right-ident {xs = xs})
 
   map-++-ident :
-    ∀ {a b : Set} {f : a → b} {y : b} {xs : List a}
+    ∀ {ℓ} {a b : Set ℓ} {f : a → b} {y : b} {xs : List a}
     → y ∈ ((map f (xs)) ++ []) → y ∈ map f xs
   map-++-ident {xs = []} ()
   map-++-ident {xs = x ∷ xs} here = here
@@ -142,7 +142,7 @@ module AgdaGen.Properties.General where
 
   -- The 'list-ap' function does indeed produce all combinations
   list-ap-complete :
-    ∀ {a b : Set} {f : a → b} {x : a}
+    ∀ {ℓ} {a b : Set ℓ} {f : a → b} {x : a}
       {fs : List (a → b)} {xs : List a} 
     → f ∈ fs → x ∈ xs
     → f x ∈ list-ap fs xs
@@ -153,7 +153,7 @@ module AgdaGen.Properties.General where
 
   -- pure f <*> xs ≡ map f xs
   ap-pure-is-map :
-    ∀ {a b : Set} {xs : List a} {C : a → b}
+    ∀ {ℓ} {a b : Set ℓ} {xs : List a} {C : a → b}
     → map C xs ≡ list-ap [ C ] xs
   ap-pure-is-map {xs = xs} {C = C} =
     begin
@@ -167,7 +167,7 @@ module AgdaGen.Properties.General where
   -- Applying a constructor of arity 2 over two lists yields all
   -- possible combination of elements applied to that constructor
   list-ap-constr :
-    ∀ {a b c : Set} {x : a} {y : b}
+    ∀ {ℓ} {a b c : Set ℓ} {x : a} {y : b}
       {xs : List a} {ys : List b} {C : a → b → c}
     → x ∈ xs → y ∈ ys
     → C x y ∈ (list-ap (list-ap [ C ] xs) ys)

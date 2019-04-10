@@ -21,19 +21,19 @@ module AgdaGen.Generic.Indexed.IDesc.Universe where
   infixr 5  ▻_
 
   -- Universe polymorphic version of 'Fin'
-  data Sl {ℓ} : ℕ → Set ℓ where
-    ∙  : ∀ {n} → Sl (suc n)
-    ▻_ : ∀ {n} → Sl {ℓ} n → Sl (suc n)
+  data Sl {ℓ} : Lift ℓ ℕ → Set ℓ where
+    ∙  : ∀ {n} → Sl (lift (suc n))
+    ▻_ : ∀ {n} → Sl {ℓ} (lift n) → Sl (lift (suc n))
 
   -- Descriptions of indexed datatypes
   --
   -- We purposefully leave out the '`Π' combinator, as it is not needed to
   -- describe any of our example datatypes..
-  data IDesc {k : Level}(ℓ : Level)(I : Set k) : Set (k ⊔ (sucL ℓ)) where
+  data IDesc {k : Level}(ℓ : Level)(I : Set k) : Set ((sucL k) ⊔ (sucL ℓ)) where
     `var : (i : I) → IDesc ℓ I
     `1 : IDesc ℓ I
     _`×_ : (A B : IDesc ℓ I) → IDesc ℓ I
-    `σ : (n : ℕ)(T : Sl {ℓ} n → IDesc ℓ I) → IDesc ℓ I
+    `σ : (n : ℕ)(T : Sl {ℓ} (lift n) → IDesc ℓ I) → IDesc ℓ I
     `Σ : (S : Set ℓ)(T : S → IDesc ℓ I) → IDesc ℓ I
 
   -- Metadata structure containing additional information about the
@@ -43,7 +43,7 @@ module AgdaGen.Generic.Indexed.IDesc.Universe where
   -- hence we likely need to be able to supply additional information
   -- about these nodes when defining generic functions for the IDesc
   -- datatype. 
-  data IDescM {k : Level} {ℓ : Level} {I : Set k} (P : Set ℓ → Set ℓ)
+  data IDescM {k : Level} {ℓ : Level} {I : Set k} (P : Set ℓ → Set (sucL ℓ))
        : IDesc ℓ I → Set (k ⊔ (sucL ℓ)) where
   
     `var~ : ∀ {i : I} → IDescM P (`var i)
@@ -53,8 +53,8 @@ module AgdaGen.Generic.Indexed.IDesc.Universe where
     _`×~_ : ∀ {d₁ d₂ : IDesc ℓ I} → IDescM P d₁
           → IDescM P d₂ → IDescM P (d₁ `× d₂)
     
-    `σ~ : ∀ {n : ℕ} {T : Sl n → IDesc ℓ I}
-        → ((fn : Sl n) → IDescM P (T fn))
+    `σ~ : ∀ {n : ℕ} {T : Sl (lift n) → IDesc ℓ I}
+        → ((fn : Sl (lift n)) → IDescM P (T fn))
         → IDescM P (`σ n T)
         
     `Σ~ : ∀ {S : Set ℓ} {T : S → IDesc ℓ I} → P S
@@ -62,24 +62,24 @@ module AgdaGen.Generic.Indexed.IDesc.Universe where
         → IDescM P (`Σ S T)
 
   -- Interpretation of Indexed descriptions 
-  ⟦_⟧ : ∀{k ℓ}{I : Set k} → IDesc ℓ I → (I → Set ℓ) → Set ℓ
+  ⟦_⟧ : ∀{k ℓ}{I : Set k} → IDesc ℓ I → (I → Set (ℓ ⊔ k)) → Set (ℓ ⊔ k)
   ⟦ `var i ⟧ X = X i
-  ⟦_⟧ {ℓ = ℓ} `1 X = Lift ℓ ⊤
+  ⟦_⟧ {k} {ℓ} `1 X = Lift (k ⊔ ℓ) ⊤
   ⟦ A `× B ⟧ X = ⟦ A ⟧ X × ⟦ B ⟧ X
-  ⟦ `σ n T ⟧ X = Σ[ k ∈ Sl n ] ⟦ T k ⟧ X
+  ⟦ `σ n T ⟧ X = Σ[ k ∈ Sl (lift n) ] ⟦ T k ⟧ X
   ⟦ `Σ S T ⟧ X = Σ[ s ∈ S ] ⟦ T s ⟧ X
 
   -- 
-  record func {k : Level}(ℓ : Level)(I J : Set k) : Set (k ⊔ (sucL ℓ)) where
+  record func {k : Level}(ℓ : Level)(I J : Set k) : Set (sucL k ⊔ (sucL ℓ)) where
     constructor mk
     field
       out : J → IDesc ℓ I
 
   -- Lift the interpretation function to values of 'func'
-  ⟦_⟧func : ∀{k ℓ}{I J : Set k} → func ℓ I J → (I → Set ℓ) → (J → Set ℓ)
+  ⟦_⟧func : ∀{k ℓ}{I J : Set k} → func ℓ I J → (I → Set (ℓ ⊔ k)) → (J → Set (ℓ ⊔ k))
   ⟦ D ⟧func X j = ⟦ func.out D j ⟧ X 
 
   -- Fixed-point combinator for interpretations of indexed
   -- descriptions
-  data μ {ℓ} {I : Set} (D : func ℓ I I)(i : I) : Set ℓ where
+  data μ {ℓ k} {I : Set k} (D : func ℓ I I)(i : I) : Set (ℓ ⊔ k) where
     ⟨_⟩ : ⟦ D ⟧func (μ D) i → μ D i

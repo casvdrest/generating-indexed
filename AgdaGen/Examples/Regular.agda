@@ -29,7 +29,10 @@ open import Relation.Binary.PropositionalEquality
 open import Level hiding (suc; zero)
 
 module AgdaGen.Examples.Regular where
-  
+
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
+
   ------ Bool -----
 
   bool : 𝔾 Bool

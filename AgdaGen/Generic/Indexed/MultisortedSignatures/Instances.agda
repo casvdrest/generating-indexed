@@ -24,6 +24,9 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym;
 
 module AgdaGen.Generic.Indexed.MultisortedSignatures.Instances where
 
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
+
   triv : (a : Set) → ⊤ → Set
   triv a tt = a
 
@@ -37,9 +40,9 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Instances where
   isoGenᵢ : ∀ {i : Set} {a : i → Set} → ⦃ p : MultiSorted a ⦄
            → ((x : i) → RegInfo (λ op → 𝔾 op × Π𝔾 op) (Sig.Op (getΣ p) x))
            → ((x : i) → (op : Fix (Sig.Op (getΣ p) x))
-                 → RegInfo (λ op → 𝔾 op × Π𝔾 op) (Sig.Ar (getΣ p) op)) → 𝔾ᵢ a
+                 → RegInfo (λ op → 𝔾 op × Π𝔾 op) (Sig.Ar (getΣ p) op)) → (x : i) → 𝔾ᵢ a x
   isoGenᵢ ⦃ p = record { Wᵢ = Σ , iso } ⦄ sig₁ sig₂ x =
-    ⦇ (_≅_.to iso ∘ Inₛ) (` deriveGenᵢ sig₁ sig₂ x) ⦈ 
+    ⦇ (_≅_.to iso ∘ Inₛ) (Call {x = x} (deriveGenᵢ sig₁ sig₂ x)) ⦈ 
       
    -- Function exensionality
   postulate funext : ∀ {ℓ} {a b : Set ℓ} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g

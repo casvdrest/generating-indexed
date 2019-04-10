@@ -69,7 +69,7 @@ module AgdaGen.Generic.Indexed.Properties where
          → f' ∈ ⟨ cg (proj₁ σ) ⟩ m) × f' ≡ f )
 
   `-Monotone :
-    ∀ {a t : Set} {g : Gen a a} {tg : Gen t t} {x : a}
+    ∀ {a t : Set} {g : Gen a a} {tg : Gen  {0ℓ} {0ℓ} t t} {x : a}
     → Depth-Monotone g x g → Depth-Monotone (` g) x tg
   `-Monotone mt z≤n () 
   `-Monotone mt (s≤s leq) elem = mt (s≤s leq) elem

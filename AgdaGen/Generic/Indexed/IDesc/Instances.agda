@@ -18,7 +18,9 @@ open import Level
 open import Relation.Binary.PropositionalEquality
 
 module AgdaGen.Generic.Indexed.IDesc.Instances where
-
+  
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
 
   ------ Booleans ------
 

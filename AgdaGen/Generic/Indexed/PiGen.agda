@@ -9,21 +9,19 @@ open import Data.Sum
 open import Data.Product
 
 open import Function
-open import Level
+open import Level renaming (zero to zeroL ; suc to sucL)
 
 module AgdaGen.Generic.Indexed.PiGen where
 
-  Π𝔾 : Set → Set₁
-  Π𝔾 a = ∀ {P : a → Set} → 𝔾ᵢ P → 𝔾 ((x : a) → P x)
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
+  open GMonad       ⦃...⦄
 
+  Π𝔾 : ∀ {ℓ k} → Set k → Set (sucL ℓ ⊔ sucL k)
+  Π𝔾 {ℓ} {k} a = ∀ {P : a → Set ℓ} → ((x : a) → 𝔾 {ℓ} {k} (P x)) → 𝔾 {ℓ ⊔ k} {k} ((x : a) → P x)
+  
   U-PiGen : ∀ {g : Reg {0ℓ}} → Π𝔾 (⟦_⟧ {0ℓ} U ((Fix g)))
-  U-PiGen gₐ = (` gₐ tt) >>= λ x → Pure λ { tt → x }
-
-  ⊕sl : ∀ {a b : Set} {P : a ⊎ b → Set} → 𝔾ᵢ P → 𝔾ᵢ λ x → P (inj₁ x)
-  ⊕sl g x = g (inj₁ x)
-
-  ⊕sr : ∀ {a b : Set} {P : a ⊎ b → Set} → 𝔾ᵢ P → 𝔾ᵢ λ x → P (inj₂ x)
-  ⊕sr g y = g (inj₂ y)
+  U-PiGen gₐ = (` gₐ tt) >>= λ x → Pure {0ℓ} λ { tt → x }
 
   ⊕-PiGen :
     ∀ {f₁ f₂ g : Reg {0ℓ}}
@@ -32,10 +30,10 @@ module AgdaGen.Generic.Indexed.PiGen where
   ⊕-PiGen cg₁ cg₂ gₐ =
     (` cg₁ (λ x → gₐ (inj₁ x))) >>= (λ f →
     (` cg₂ (λ y → gₐ (inj₂ y))) >>= (λ g →
-    Pure λ { (inj₁ x) → f x ; (inj₂ y) → g y } ))
+    Pure {0ℓ} λ { (inj₁ x) → f x ; (inj₂ y) → g y } ))
 
   ⊗-PiGen :
-    ∀ {f₁ f₂ g : Reg {0ℓ}} → Π𝔾 (⟦ f₁ ⟧ (Fix g)) → Π𝔾 (⟦ f₂ ⟧ (Fix g))
+    ∀ {f₁ f₂ g : Reg {0ℓ}} → Π𝔾 {0ℓ} {0ℓ} (⟦ f₁ ⟧ (Fix g)) → Π𝔾 {0ℓ} {0ℓ} (⟦ f₂ ⟧ (Fix g))
     → Π𝔾 (⟦ f₁ ⊗ f₂ ⟧ (Fix g))
   ⊗-PiGen cg₁ cg₂ gₐ =
     (` cg₁ (λ x → cg₂ λ y → gₐ (x , y))) >>= (Pure ∘ uncurry)

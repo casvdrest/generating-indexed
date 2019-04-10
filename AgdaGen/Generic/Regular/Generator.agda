@@ -15,6 +15,9 @@ open import Function
 
 module AgdaGen.Generic.Regular.Generator where
 
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
+
   deriveGen :
     ∀ {f g : Reg}
     → RegInfo 𝔾 f

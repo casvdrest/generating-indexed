@@ -1,6 +1,6 @@
+open import AgdaGen.Base
 open import AgdaGen.Data hiding (_∈_; Σ)
-open import AgdaGen.BaseI
---open import AgdaGen.Combinators
+open import AgdaGen.Combinators
 
 open import Data.Nat hiding (_≟_)
 open import Data.List
@@ -21,6 +21,10 @@ open import Level hiding (suc; zero)
 
 module AgdaGen.Examples.Lambda where
 
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
+  open GMonad       ⦃...⦄
+
   -- Variable names are natural numbers
   Id : Set
   Id = ℕ
@@ -32,12 +36,12 @@ module AgdaGen.Examples.Lambda where
 
   -- Generator for types
   type : ⊤ → 𝔾ᵢ (λ { tt → Ty }) tt
-  type tt = ⦇ `ℕ ⦈ ∥ᵢ ⦇ (μᵢ tt) `→ (μᵢ tt) ⦈
+  type tt = ⦇ `ℕ ⦈ ∥ ⦇ (μᵢ tt) `→ (μᵢ tt) ⦈
 
   -- Generator for identifiers
   ident : ⊤ → 𝔾ᵢ (λ { tt → Id }) tt
   ident tt = ⦇ zero ⦈
-           ∥ᵢ (⦇ suc (μᵢ tt) ⦈)
+           ∥ (⦇ suc (μᵢ tt) ⦈)
 
   -- Decidable equality for types
   _≟_ : Decidable {A = Ty} _≡_
@@ -45,10 +49,14 @@ module AgdaGen.Examples.Lambda where
   `ℕ ≟ (τ₂ `→ τ₃) = no λ()
   (τ₁ `→ τ₃) ≟ `ℕ = no λ()
   (τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄) with τ₁ ≟ τ₂
-  ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄)) | yes p with τ₃ ≟ τ₄
-  ((τ₁ `→ τ₃) ≟ (.τ₁ `→ .τ₃)) | yes refl | yes refl = yes refl
-  ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄)) | yes p | no ¬p = no λ { refl → ¬p refl }
-  ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄)) | no ¬p = no λ { refl → ¬p refl }
+  ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄))
+    | yes p with τ₃ ≟ τ₄
+  ((τ₁ `→ τ₃) ≟ (.τ₁ `→ .τ₃))
+    | yes refl | yes refl = yes refl
+  ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄))
+    | yes p | no ¬p = no λ { refl → ¬p refl }
+  ((τ₁ `→ τ₃) ≟ (τ₂ `→ τ₄))
+    | no ¬p = no λ { refl → ¬p refl }
 
   -- λ-term context
   data Ctx : Set where
@@ -75,8 +83,8 @@ module AgdaGen.Examples.Lambda where
   ∋-gen (∅ , τ) = Noneᵢ
   ∋-gen ((Γ , α ∶ σ) , τ) with τ ≟ σ
   ∋-gen ((Γ , α ∶ σ) , .σ) | yes refl =
-       ⦇ [Top] ⦈
-    ∥ᵢ ⦇ [Pop] (μᵢ (Γ , σ)) ⦈
+      ⦇ [Top] ⦈
+    ∥ ⦇ [Pop] (μᵢ (Γ , σ)) ⦈
   ∋-gen ((Γ , α ∶ σ) , τ)  | no ¬p    =
     ⦇ [Pop] (μᵢ (Γ , τ)) ⦈
 
@@ -110,22 +118,23 @@ module AgdaGen.Examples.Lambda where
   -- Generates all type correct terms for a given 
   -- input context and type
   ⊢-gen : (ix : Ctx × Ty)
-        → 𝔾ᵢ (λ { ( Γ , τ ) → Γ ⊢ τ }) ix
+        → 𝔾ᵢ (λ { ( Γ , τ ) → Γ ⊢ τ }) ix 
   ⊢-gen (Γ , `ℕ) =
        ⦇ [Var] (Callᵢ {x = Γ , `ℕ} ∋-gen (Γ , `ℕ)) ⦈
-    ∥ᵢ ( do σ ← Callᵢ {x = Γ , `ℕ} type tt
-            t₁ ← μᵢ (Γ , (σ `→ `ℕ))
-            t₂ ← μᵢ (Γ , σ)
-            pure ([App] t₁ t₂) )
+    ∥ ( do σ ← Callᵢ {x = Γ , `ℕ} type tt
+           t₁ ← μᵢ (Γ , (σ `→ `ℕ))
+           t₂ ← μᵢ (Γ , σ)
+           pure ([App] t₁ t₂) )
   ⊢-gen (Γ , (τ `→ τ₁)) =
     ( do α ← Callᵢ {x = Γ , (τ `→ τ₁)} ident tt
          t ← μᵢ ((Γ , α ∶ τ) , τ₁)
          pure ([Abs] t)
-    ) ∥ᵢ
+    ) ∥
     ( ⦇ [Var] (Callᵢ {x = Γ , τ `→ τ₁ } ∋-gen (Γ , (τ `→ τ₁))) ⦈ )
 
   -- Convert a typing judgement to its corresponding term
   ⊢→Tm : ∀ {Γ : Ctx} {τ : Ty} → Γ ⊢ τ → Tm
   ⊢→Tm ([Var] x)     = $ ∋→Id x
   ⊢→Tm ([Abs] {α} p) = Λ α ⇒ ⊢→Tm p
-  ⊢→Tm ([App] p₁ p₂) = ⊢→Tm p₁ ⊚ ⊢→Tm p₂
+  ⊢→Tm ([App] p₁ p₂) = ⊢→Tm p₁ ⊚ ⊢→Tm p₂ 
+

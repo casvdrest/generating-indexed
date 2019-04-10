@@ -1,51 +1,134 @@
 open import AgdaGen.Base
-open import Level renaming (zero to zeroL; suc to sucL)
 
+open import Data.Unit
+
+open import Level renaming (suc to sucL; zero to zeroL)
+
+-- Contains some basic combinators for generators.
+--
+-- Unfortunately, the Gen and Genᵢ type do not fit into the
+-- existing functionality of the standard library, but we can still
+-- utilize do-notatino and idiom brackets by overloading the
+-- necessary operators. 
 module AgdaGen.Combinators where
-  
 
-  -- 'Functor' instance for the 'Gen' type
-  genMap : ∀ {ℓ} {a b t : Set ℓ} → (a → b) → Gen a t → Gen b t
+  genMap :
+    ∀ {ℓ k} {a b t : Set ℓ}
+    → (a → b) → Gen {ℓ} {k} a t → Gen {ℓ} {k} b t
   genMap f g = Ap (Pure f) g
 
-  -- 'Applicative' instance for the 'Gen' type
-  genPure : ∀ {ℓ} {a t : Set ℓ} → a → Gen a t
-  genPure = Pure
+  genMapᵢ :
+    ∀ {ℓ k} {i : Set k} {a b t : i → Set ℓ} {x : i}
+    → (a x → b x) → Genᵢ a t x → Genᵢ b t x
+  genMapᵢ f g = Apᵢ (Pureᵢ f) g
 
-  genAp : ∀ {ℓ} {a b t : Set ℓ} → Gen (a → b) t → Gen a t → Gen b t
-  genAp = Ap
+  record GFunctor {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
+         Set (sucL ℓ ⊔ sucL k) where
+    field _<$>_ : ∀ {a b : i → Set ℓ} {x : i}
+                → (a x → b x) → f a x → f b x
 
-  -- 'Monad' instance for the 'Gen' type
-  genBind : ∀ {ℓ} {a b t : Set ℓ} → Gen a t → (a → Gen b t) → Gen b t
-  genBind = Bind
+  record GApplicative {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
+         Set (sucL ℓ ⊔ sucL k) where
+    field pure  : ∀ {a : i → Set ℓ} {x : i}
+                → a x → f a x
+    field _<*>_ : ∀ {a b : i → Set ℓ} {x y : i}
+                → f (λ _ → a y → b x) x → f a y → f b x 
 
-  record Functor {ℓ} (f : Set ℓ → Set (sucL ℓ)) : Set (sucL ℓ) where
-    field _<$>_ : ∀ {a b : Set ℓ} → (a → b) → f a → f b
-    
-  record Applicative {ℓ} (f : Set ℓ → Set (sucL ℓ)) : Set (sucL ℓ) where
-    field pure : ∀ {a : Set ℓ} → a → f a
-    field _<*>_ : ∀ {a b : Set ℓ} → f (a → b) → f a → f b
+  record GMonad {ℓ k} {i : Set k} (m : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
+         Set (sucL ℓ ⊔ sucL k) where
+    field _>>=_ : ∀ {a b : i → Set ℓ} {x y : i}
+                → m a y → (a y → m b x) → m b x
 
-  record Monad {ℓ} (m : Set ℓ → Set (sucL ℓ)) : Set (sucL ℓ) where
-    field _>>=_ : ∀ {a b : Set ℓ} → m a → (a → m b) → m b
+  record GAlternative {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k))
+         : Set (sucL ℓ ⊔ sucL k) where
+    infixr 20 _∥_
+    field _∥_ : ∀ {a : i → Set ℓ} {x : i}
+              → f a x → f a x → f a x 
+
+  record GNullable {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k))
+         : Set (sucL ℓ ⊔ sucL k) where
+    field empty : {a : i → Set ℓ} {x : i} → f a x
+
+  open GMonad ⦃...⦄
+
+  _>>_ :
+    ∀ {ℓ k} {i : Set k} {a b : i → Set ℓ}
+      {x y : i} {m : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)}
+      ⦃ _ : GMonad m ⦄
+    → m a y → m b x → m b x
+  f >> g = f >>= λ _ → g
+
+
+  ------- Non-indexed generators ------
 
   instance
-    Gen-Functor : ∀ {ℓ} {t : Set ℓ} → Functor λ a → Gen a t
-    Gen-Functor = record { _<$>_ = genMap }
+    Gen-Functor :
+      ∀ {ℓ} {t : Set ℓ}
+      → GFunctor λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+    Gen-Functor =
+      record { _<$>_ = genMap }
 
   instance
-    Gen-Applicative : ∀ {ℓ} {t : Set ℓ} → Applicative λ a → Gen a t
-    Gen-Applicative = record { pure = genPure ; _<*>_ = genAp }
+    Gen-Applicative :
+      ∀ {ℓ} {t : Set ℓ}
+      → GApplicative λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+    Gen-Applicative =
+      record { pure = Pure ; _<*>_ = Ap }
 
   instance
-    Gen-Monad : ∀ {ℓ} {t : Set ℓ} → Monad λ a → Gen a t
-    Gen-Monad = record { _>>=_ = genBind }
+    Gen-Monad :
+      ∀ {ℓ} {t : Set ℓ}
+      → GMonad λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+    Gen-Monad =
+      record { _>>=_ = Bind }
 
-  open Applicative ⦃...⦄
-  open Monad ⦃...⦄
+  instance 
+    Gen-Alternative :
+      ∀ {ℓ} {t : Set ℓ}
+      → GAlternative λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+    Gen-Alternative =
+      record { _∥_ = Or }
 
-  _⊛_ : ∀ {ℓ} {f : Set ℓ → Set (sucL ℓ)} ⦃ _ : Applicative f ⦄ { a b : Set ℓ} → f (a → b) → f a → f b
-  _⊛_ = _<*>_
+  instance
+    Gen-Nullable :
+      ∀ {ℓ} {t : Set ℓ}
+      → GNullable λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+    Gen-Nullable =
+      record { empty = None }
 
-  _>>_ : ∀ {ℓ} {m : Set ℓ → Set (sucL ℓ)} ⦃ _ : Monad m ⦄ {a b : Set ℓ} → m a → m b → m b 
-  f >> g = f >>= λ _ → g 
+  ------ Indexed generators ------
+
+  instance
+    Genᵢ-Functor :
+      ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
+      → GFunctor (λ a x → Genᵢ a t x)
+    Genᵢ-Functor =
+      record { _<$>_ = genMapᵢ } 
+
+  instance
+    Genᵢ-Applicative :
+      ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
+      → GApplicative λ a x → Genᵢ a t x
+    Genᵢ-Applicative =
+      record { pure = Pureᵢ ; _<*>_ = Apᵢ }
+
+  instance
+    Genᵢ-Monad :
+      ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
+      → GMonad λ a x → Genᵢ a t x
+    Genᵢ-Monad =
+      record { _>>=_ = Bindᵢ }
+
+  instance
+    Genᵢ-Alternative :
+      ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
+      → GAlternative λ a x → Genᵢ a t x
+    Genᵢ-Alternative =
+      record { _∥_ = Orᵢ }
+
+  instance
+    Genᵢ-Nullable :
+      ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
+      → GNullable λ a x → Genᵢ a t x
+    Genᵢ-Nullable =
+      record { empty = Noneᵢ }
