@@ -8,5 +8,5 @@ Proposal/*.bib
 !Proposal/*.pdf
 
 Thesis/*
-!Thesis/src/*.lagda
-!Thesis/dist/*.pdf
+!Thesis/src/*
+!Thesis/dist/thesis.pdf
