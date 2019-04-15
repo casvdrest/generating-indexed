@@ -166,6 +166,7 @@ module AgdaGen.Generic.Indexed.IDesc.Instances where
   Fin'-iso₂ {suc n} {⟨ ▻ ∙ , rec     ⟩} =
     cong (λ x → ⟨ (▻ ∙ , x) ⟩) Fin'-iso₂
 
+
   data _∈_ {a : Set} (x : a) : List a →  Set where
     here  : ∀ {xs : List a} → x ∈ (x ∷ xs)
     there : ∀ {y : a} {xs : List a} → x ∈ xs → x ∈ (y ∷ xs)
