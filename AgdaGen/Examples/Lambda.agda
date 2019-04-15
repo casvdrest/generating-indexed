@@ -138,3 +138,6 @@ module AgdaGen.Examples.Lambda where
   ⊢→Tm ([Abs] {α} p) = Λ α ⇒ ⊢→Tm p
   ⊢→Tm ([App] p₁ p₂) = ⊢→Tm p₁ ⊚ ⊢→Tm p₂ 
 
+  nat : 𝔾 ℕ
+  nat = ⦇ zero  ⦈
+      ∥ ⦇ suc μ ⦈

@@ -45,3 +45,4 @@ module AgdaGen.Properties.Equivalence where
     → g₁ ∼ g₃
   ~-transitive (f₁ , g₁) (f₂ , g₂) = f₂ ∘ f₁ , g₁ ∘ g₂
 
+  data Empty : Set where

@@ -1,8 +1,17 @@
 \documentclass[10pt,a4paper,msc,twosized=semi]{uustthesis}
 
-\usepackage{cleveref}
-\usepackage{lipsum}
-\usepackage{textgreek}
+\newcommand{\includeagda}[2]{\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}}
+
+%include polycode.fmt
+%include greek.fmt
+%include colorcode.fmt
+
+%include src/hsformat.lhs
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage{autofe}
+\usepackage{textcomp}
 
 \title{Thesis title}
 
@@ -28,14 +37,26 @@ Abstract
 \mainmatter
 
 \chapter{Introduction}
-%include src/chap01.lhs
 
-\chapter{Generator Definitions}
+\chapter{Background}
 
-\chapter{Regular Datatypes}
+\chapter{Literature Review}
 
-\chapter{By the way ...}
-%include src/chap03.lagda
+\chapter{A Combinator Library for Generators}
+%include src/chap04/body.lhs
+
+\chapter{Generic Generators for Regular types}
+%include src/chap05/body.lhs
+
+\chapter{Deriving Generators for Indexed Containers}\label{chap:derivingregular}
+
+\chapter{Deriving Generators for Indexed Descriptions}
+
+\chapter{Program Term Generation}
+
+\chapter{Implementation in Haskell}
+
+\chapter{Conclusion \& Further Work}
 
 \appendix
 \chapter{Some Formulas}

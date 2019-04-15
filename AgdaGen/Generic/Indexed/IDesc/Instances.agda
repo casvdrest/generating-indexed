@@ -1,6 +1,11 @@
-open import AgdaGen.Base hiding (⟨_⟩; μ)
+{-# OPTIONS --type-in-type #-}
+
+open import AgdaGen.Base hiding (μ)
 open import AgdaGen.Combinators
+open import AgdaGen.Enumerate hiding (⟨_⟩)
+open import AgdaGen.Generic.Isomorphism
 open import AgdaGen.Generic.Indexed.IDesc.Universe
+open import AgdaGen.Generic.Indexed.IDesc.Generator
 
 open import Data.Product
 open import Data.Sum
@@ -161,46 +166,6 @@ module AgdaGen.Generic.Indexed.IDesc.Instances where
   Fin'-iso₂ {suc n} {⟨ ▻ ∙ , rec     ⟩} =
     cong (λ x → ⟨ (▻ ∙ , x) ⟩) Fin'-iso₂
 
-  ------ Sized trees (i.e. indedexed w/ the number of nodes ------
-
-  data STree : ℕ → Set where
-    Leaf : STree 0
-    Node : ∀ {n m} → STree n → STree m → STree (suc (n + m))
-
-
-  STreeD : func zeroL ℕ ℕ
-  STreeD = func.mk
-    λ { zero    → `σ 1 λ { ∙ → `1 }
-      ; (suc n) → `σ 1 λ { ∙ → `Σ (ℕ × ℕ) λ { (l , r ) →
-          `Σ (l + r ≡ n) λ { refl → `var l `× `var r }} }
-      }
-
-  STree' : ℕ → Set
-  STree' n = μ STreeD n
-
-  size : ∀ {n : ℕ} → STree n → ℕ
-  size {n} _ = n
-  
-  fromSTree : ∀ {n : ℕ} → STree n → STree' n
-  fromSTree Leaf                 = ⟨ (∙ , lift tt) ⟩
-  fromSTree {suc n} (Node nₗ nᵣ) =
-    ⟨ (∙ , (size nₗ , size nᵣ) , refl , fromSTree nₗ , fromSTree nᵣ) ⟩
-
-  toSTree : ∀ {n : ℕ} → STree' n → STree n
-  toSTree {zero} ⟨ fst , snd ⟩                                = Leaf
-  toSTree {suc .(sl + sr)} ⟨ ∙ , (sl , sr) , refl , nₗ , nᵣ ⟩ =
-    Node (toSTree nₗ) (toSTree nᵣ)
-
-  STree-iso₁ : ∀ {n : ℕ} {t : STree n} → toSTree (fromSTree t) ≡ t
-  STree-iso₁ {zero } {Leaf}       = refl
-  STree-iso₁ {suc n} {Node nₗ nᵣ} =
-    cong₂ Node STree-iso₁ STree-iso₁
-
-  STree-iso₂ : ∀ {n : ℕ} {t : STree' n} → fromSTree (toSTree t) ≡ t
-  STree-iso₂ {zero} {⟨ ∙ , snd ⟩}                                  = refl
-  STree-iso₂ {suc .(sl + sr)} {⟨ ∙ , (sl , sr) , refl , nₗ , nᵣ ⟩} =
-    cong₂ (λ r₁ r₂ → ⟨ ∙ , (sl , sr) , refl , (r₁ , r₂) ⟩) STree-iso₂ STree-iso₂
-
   data _∈_ {a : Set} (x : a) : List a →  Set where
     here  : ∀ {xs : List a} → x ∈ (x ∷ xs)
     there : ∀ {y : a} {xs : List a} → x ∈ xs → x ∈ (y ∷ xs)
@@ -344,4 +309,6 @@ module AgdaGen.Generic.Indexed.IDesc.Instances where
     cong (λ x → ⟨ (∙ , x) ⟩) ⊢-iso₂
   ⊢-iso₂ {t = t ⊚ t₁ } {τ      } {⟨ ∙ , σ , jd₁ , jd₂ ⟩} =
     cong₂ (λ x y → ⟨ (∙ , σ , (x , y)) ⟩) ⊢-iso₂ ⊢-iso₂
+
+  
 

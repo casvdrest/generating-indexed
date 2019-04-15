@@ -38,7 +38,7 @@ module AgdaGen.Enumerate where
     interpretᵢ :
       ∀ {ℓ k} {i : Set k} {a t : i → Set ℓ}
       → ((y : i) → Genᵢ t t y) → (x : i) → Genᵢ a t x → ℕ → List (a x)
-    interpretᵢ tg x g                    zero = []
+    interpretᵢ tg x g                    zero   = []
     interpretᵢ tg x (Noneᵢ )            (suc n) = []
     interpretᵢ tg x (Pureᵢ v)           (suc n) = [ v ]
     interpretᵢ tg x (Apᵢ {y = y} g₁ g₂) (suc n) =

@@ -21,9 +21,10 @@ module AgdaGen.Combinators where
     ∀ {ℓ k} {i : Set k} {a b t : i → Set ℓ} {x : i}
     → (a x → b x) → Genᵢ a t x → Genᵢ b t x
   genMapᵢ f g = Apᵢ (Pureᵢ f) g
-
+  
   record GFunctor {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
          Set (sucL ℓ ⊔ sucL k) where
+    infix 30 _<$>_
     field _<$>_ : ∀ {a b : i → Set ℓ} {x : i}
                 → (a x → b x) → f a x → f b x
 
@@ -131,4 +132,4 @@ module AgdaGen.Combinators where
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
       → GNullable λ a x → Genᵢ a t x
     Genᵢ-Nullable =
-      record { empty = Noneᵢ }
+      record { empty = Noneᵢ } 

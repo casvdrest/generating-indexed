@@ -48,7 +48,7 @@ module AgdaGen.Base where
       ⟨_`_⟩ : ∀ {i : Set k} {p : i → Set ℓ} {t : Set ℓ} → (x : i) → ((x : i) → Genᵢ p p x) → Gen (p x) t
 
 
-    data Genᵢ {ℓ k} {i : Set k} :
+    data Genᵢ {ℓ k} {i : Set k} : 
       (i → Set ℓ) → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where
 
       -- Lifts values into the Genᵢ type
@@ -76,7 +76,7 @@ module AgdaGen.Base where
       Call  : ∀ {t : i → Set ℓ} {x : i} {b : Set ℓ} → Gen {ℓ} {k} b b → Genᵢ (λ _ → b) t x
 
       -- Call to external indexed generator
-      Callᵢ : ∀ {t : i → Set ℓ} {x : i} {j : Set ℓ} {s : j → Set ℓ}
+      Callᵢ : ∀ {t : i → Set ℓ} {j : Set k} {s : j → Set ℓ} {x : i}
             → ((y : j) → Genᵢ s s y) → (y : j) → Genᵢ (λ _ → s y) t x
 
   -- Type synonym for 'closed' generators, e.g. generators whose recursive
@@ -98,8 +98,20 @@ module AgdaGen.Base where
 
   record ⟦Generator⟧ {ℓ k} (T : Set ℓ → Set ℓ) : Set (sucL k ⊔ sucL ℓ) where
     field
-      ⟦_⟧gen  : ∀ {a : Set ℓ} → 𝔾 {ℓ} {k} a → T a
+      ⟦_⟧gen  : ∀ {A : Set ℓ} → 𝔾 {ℓ} {k} A → T A
     field
       ⟦_⟧genᵢ : ∀ {I : Set k} {P : I → Set ℓ} → ((i : I) → 𝔾ᵢ P i) → (i : I) → T (P i)
 
+  run :
+    ∀ {ℓ k} {A : Set ℓ} {T : Set ℓ → Set ℓ}
+      ⦃ it : ⟦Generator⟧ {ℓ} {k} T ⦄
+    → 𝔾 {ℓ} {k} A → T A
+  run ⦃ it = record { ⟦_⟧gen = ⟦_⟧gen ; ⟦_⟧genᵢ = _} ⦄ g =
+    ⟦ g ⟧gen
 
+  runᵢ :
+    ∀ {ℓ k} {I : Set k} {T : Set ℓ → Set ℓ}
+      ⦃ it : ⟦Generator⟧ {ℓ} {k} T ⦄ {P : I → Set ℓ}
+    → ((i : I) → 𝔾ᵢ P i) → (i : I) → T (P i)
+  runᵢ ⦃ it = record { ⟦_⟧gen = _ ; ⟦_⟧genᵢ = ⟦_⟧genᵢ } ⦄ g =
+    ⟦ g ⟧genᵢ

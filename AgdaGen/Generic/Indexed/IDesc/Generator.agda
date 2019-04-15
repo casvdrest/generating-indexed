@@ -1,12 +1,11 @@
 {-# OPTIONS --type-in-type #-}
 
-open import AgdaGen.Base renaming (μ to μBase; ⟨_⟩ to ⟨_⟩Base)
+open import AgdaGen.Base renaming (μ to μBase)
 open import AgdaGen.Combinators
 
 open import AgdaGen.Generic.Isomorphism
 
 open import AgdaGen.Generic.Indexed.IDesc.Universe
-open import AgdaGen.Generic.Indexed.IDesc.Instances
 
 open import Data.Unit
 open import Data.Product
@@ -31,54 +30,44 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   Sl-gen (lift (suc n)) = ⦇ ▻_ (μᵢ (lift n)) ⦈
                         ∥ ⦇ ∙         ⦈
 
+  ⟦⟧subst : ∀ {ℓ} {I : Set} {φ φ' : func ℓ I I} {δ : IDesc ℓ I} {ix i : I} → func.out φ ix ≡ δ →  ⟦ δ ⟧ (μ φ') → ⟦ func.out φ ix ⟧ (μ φ')
+  ⟦⟧subst p rewrite p = λ x → x
+
   -- Generic generator for the IDesc type
   IDesc-gen :
     ∀ {ℓ} {I : Set}
     
       -- Current description
-      {δ : IDesc ℓ I}
+      {φ₁ : func ℓ I I}
 
       -- Top level description
-      {φ : func ℓ I I}
+      {φ₂ : func ℓ I I}
 
       -- Selected index
-    → (x : I)
+    → (ix : I)
 
       -- Metadata for the current description
-    → IDescM (𝔾 {ℓ} {0ℓ}) δ
+    → IDescM (𝔾 {ℓ} {0ℓ}) (func.out φ₁ ix)
 
       -- Returns a generator producting values of the fixed point of
       -- the interpreted description
-    → Genᵢ {ℓ} (λ ix → ⟦ δ ⟧ (μ φ)) (λ ix → ⟦ func.out φ ix ⟧ (μ φ)) x
-
-  -- For recursive positions, simply return a recursive generator indexed with
-  -- the index stored in by the `var constructor, and wrap into the μ type
-  IDesc-gen {δ = `var i} {φ} x m = ⦇ ⟨ (μᵢ i) ⟩ ⦈
-
-  -- Return a single value of type ⊤ for `1
-  IDesc-gen {δ = `1} {φ} x m = ⦇ (lift tt) ⦈
-
-  -- product (`x). Recurse on left and right subtree and combine
-  -- results using product
-  IDesc-gen {δ = δₗ `× δᵣ} {d₂} x (Mₗ `×~ Mᵣ) =
-    ⦇ (IDesc-gen {δ = δₗ} x Mₗ ) , (IDesc-gen {δ = δᵣ} x Mᵣ ) ⦈
-
-  -- Generalized coproduct. Recurse on selected subtree and
-  -- return result in a Σ type
-  IDesc-gen {ℓ} {k} {δ = `σ n T  } {φ} x (`σ~ Mₛ) =
-    do sl ← Callᵢ {x = x} Sl-gen (lift n)
-       r  ← IDesc-gen {δ = T sl} x (Mₛ sl) 
-       pure (sl , r)
-
-  -- Dependent pairs. Use metadata structure to generate
-  -- the first element of the pair, and recurse accordingly
-  -- to find the second element. 
-  IDesc-gen {δ = `Σ S T} {φ} x (`Σ~ Mₚ Mₛ) =
-    do sl ← Call {x = x} Mₚ
-       r  ← IDesc-gen x (Mₛ sl) 
-       pure (sl , r)
-
-  
+    → Genᵢ {ℓ} (λ x → ⟦ func.out φ₁ x ⟧ (μ φ₂)) (λ x → ⟦ func.out φ₂ x ⟧ (μ φ₂)) ix 
+  IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix m with func.out φ₁ ix | inspect (func.out φ₁) ix
+  ... | `var i | [ φout≡`var ] =
+    ⦇ (λ x → ⟦⟧subst {φ = φ₁} {φ' = φ₂} {i = i} φout≡`var ⟨ x ⟩) (μᵢ i) ⦈
+  ... | `1     | [ φout≡`1 ] =
+    ⦇ (⟦⟧subst {φ = φ₁} {φ' = φ₂} {i = ix} φout≡`1 (lift tt)) ⦈
+  IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (m₁ `×~ m₂) | δ₁ `× δ₂ | [ φout≡`× ] =
+    ⦇ (λ l r → ⟦⟧subst {φ = φ₁} {ix = ix} {i = ix}  φout≡`× (l , r)) (IDesc-gen ix m₁) (IDesc-gen ix m₂) ⦈
+  IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (`σ~ mₛ) | `σ n T | [ φout≡`σ ] =
+    do sl ← Callᵢ {x = ix} Sl-gen (lift n)
+       r  ← IDesc-gen ix (mₛ sl)
+       pure (⟦⟧subst {φ = φ₁} {ix = ix} {i = ix} φout≡`σ (sl , r))
+  IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (`Σ~ mₛ mₜ) | `Σ S T | [ φout≡`Σ ] =
+    do sl ← Call {x = ix} mₛ
+       r  ← IDesc-gen ix (mₜ sl) 
+       pure (⟦⟧subst {φ = φ₁} {ix = ix} {i = ix} φout≡`Σ (sl , r))
+       
   infix 30 _⇑_
 
   -- Infix notation for 'Lift'
@@ -90,5 +79,11 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
     field
       W : Σ[ φ ∈ func ℓ I I ] ∀ {x : I} → P x ⇑ (ℓ ⊔ k) ≅ μ φ x
 
-  IDesc-isoGen : ∀ {ℓ} {I : Set} {P : I → Set ℓ} ⦃ p : ≅IDesc P ⦄ → (ix : I) → 𝔾ᵢ {ℓ} {0ℓ} (λ ix → P ix ⇑ ℓ) ix
-  IDesc-isoGen ⦃ p = record { W = φ , iso } ⦄ ix = ⦇ (λ x → (_≅_.to iso ⟨ x ⟩)) (Callᵢ {x = ix} (λ x → IDesc-gen {δ = func.out ({!φ!}) x} {φ = φ} x {!!}) ix) ⦈ 
+  getφ : ∀ {ℓ} {I : Set} {P : I → Set ℓ} → ≅IDesc P → func ℓ I I
+  getφ record { W = φ , iso } = φ
+  
+  IDesc-isoGen : ∀ {ℓ} {I : Set} {P : I → Set ℓ} ⦃ p : ≅IDesc P ⦄ → (ix : I) → ((ix : I) → IDescM 𝔾 (func.out (getφ p) ix)) → 𝔾ᵢ {ℓ} {0ℓ} (λ x → P x ⇑ ℓ) ix
+  IDesc-isoGen {I = I} ⦃ p = record { W = φ , iso  } ⦄ ix m =
+    ⦇ (λ v → _≅_.to iso ⟨ v ⟩) (Callᵢ {j = I} {x = ix} (λ y → IDesc-gen {φ₁ = φ} {φ₂ = φ} y (m y)) ix) ⦈
+
+ 

@@ -2,7 +2,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
 open import Data.Product using (Σ; _,_; Σ-syntax; _×_; proj₁; proj₂)
 open import Data.Sum
-open import Data.Nat
+open import Data.Nat hiding (_⊔_)
 open import Data.Bool
 open import Data.Unit
 open import Data.List
@@ -17,7 +17,7 @@ open import AgdaGen.Combinators
 module AgdaGen.Generic.Isomorphism where
 
   -- Captures an isomorphism/bijection between type a and b
-  record _≅_ {ℓ} (a b : Set ℓ) : Set ℓ where
+  record _≅_ {ℓ ℓ'} (a : Set ℓ) (b : Set ℓ') : Set (ℓ ⊔ ℓ') where
     field
       from : a → b
       to   : b → a
@@ -63,3 +63,6 @@ module AgdaGen.Generic.Isomorphism where
            ; iso₂ = ≅-distributes-over-∘ {a = c} {b = b} {c = a}
                                          {f₁ = _≅_.from i₂} {f₂ = _≅_.from i₁}
                                          (_≅_.iso₂ i₂) (_≅_.iso₂ i₁)}
+
+  ≅lift : ∀ {ℓ ℓ'} {a : Set ℓ} → a ≅ Lift ℓ' a
+  ≅lift = record { from = lift ; to = lower ; iso₁ = λ {x} → refl ; iso₂ = refl }

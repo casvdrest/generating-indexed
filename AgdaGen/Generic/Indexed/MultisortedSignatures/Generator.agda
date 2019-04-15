@@ -1,3 +1,5 @@
+{-# OPTIONS --type-in-type #-}
+
 open import AgdaGen.Generic.Indexed.MultisortedSignatures.Signature
 open import AgdaGen.Generic.Regular.Universe
 open import AgdaGen.Generic.Isomorphism
@@ -34,7 +36,8 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Generator where
     ∀ {i : Set} {Σ : Sig i}
     → ((x : i) → RegInfo (λ op → 𝔾 op × Π𝔾 op) (Sig.Op Σ x))
     → ((x : i) → (op : Fix (Sig.Op Σ x)) → RegInfo (λ ar → 𝔾 ar × Π𝔾 ar) (Sig.Ar Σ op))
-    → (x : i) → 𝔾 (⟦ Σ ⟧ₛ (Fixₛ Σ) x)
+    → (x : i) → 𝔾ᵢ (λ x → ⟦ Σ ⟧ₛ (Fixₛ Σ) x) x
   deriveGenᵢ {i} {Op ◃ Ar ∣ Ty} sig₁ sig₂ x =
-    Gen-Σ (⦇ In (` deriveGen {f = Op x} {g = Op x} (map-reginfo proj₁ (sig₁ x))) ⦈)
-      λ { (In op) → ⦇ (λ { π (In y) → π y }) (Call {x = In op} (derivePiGen (map-reginfo proj₂ (sig₂ x (In op))) λ ar → ⦇ Inₛ (` deriveGenᵢ sig₁ sig₂ (Ty (In ar))) ⦈)) ⦈ }
+    do op ← Call {x = x} (deriveGen (map-reginfo proj₁ (sig₁ x)))
+       ar ← Call {x = x} (derivePiGen (map-reginfo proj₂ (sig₂ x (In op))) λ ar → ⦇ Inₛ ⟨ Ty (In ar) ` deriveGenᵢ sig₁ sig₂ ⟩ ⦈)
+       pure (In op , λ { (In x) → ar x })
