@@ -12,6 +12,7 @@ open import Data.Sum hiding (map)
 open import Data.List
 open import Data.Nat
 open import Data.Nat.Properties
+open import Data.Unit hiding (_≤_)
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 open Relation.Binary.PropositionalEquality.≡-Reasoning
@@ -35,10 +36,16 @@ module AgdaGen.Properties.Completeness where
   _∣_↝_ : ∀ {a t : Set} → Gen {k = 0ℓ} a t → 𝔾 t → a → Set
   f ∣ tg ↝ x = ∃[ n ] (x ∈ interpret f tg n)
 
+  _∣ᵢ_↝_ : ∀ {I : Set} {a t : I → Set} {i : I} → Genᵢ a t i → ((i : I) → 𝔾ᵢ t i) → a i → Set
+  _∣ᵢ_↝_ {i = i} g tg x = ∃[ n ] (x ∈ interpretᵢ tg i g n)
+
   -- Completeness: A generator is complete if we can produce
   -- a productivity proof for all values of its type
   Complete : ∀ {a t : Set} → Gen a t → 𝔾 t → Set
   Complete {a} f tg = ∀ {x : a} → f ∣ tg ↝ x
+
+  Completeᵢ : ∀ {I : Set} {a t : I → Set} {i : I} → Genᵢ a t i  → ((i : I) → 𝔾ᵢ t i) → Set
+  Completeᵢ {a = a} {i = i} g tg = ∀ {x : a i} → g ∣ᵢ tg  ↝ x 
 
   -- Call to external generator completeness
   `-complete :
@@ -47,16 +54,39 @@ module AgdaGen.Properties.Completeness where
   `-complete (suc n , elem) =
     suc n , elem
 
+  Call-complete :
+    ∀ {I : Set} {a : ⊤ → Set} {t : I → Set} {i : I}
+      {x : a tt} {tg : (i : I) → 𝔾ᵢ t i} {g : 𝔾 (a tt)}
+    → g ∣ g ↝ x
+    → _∣ᵢ_↝_ {i = i} (Call g) tg x
+  Call-complete (suc n , elem) =
+    suc n , elem
+
+  -- recursive positions
   μ-complete :
     ∀ {a : Set} {tg : 𝔾 a} {x : a}
     → tg ∣ tg ↝ x → μ ∣ tg ↝ x
   μ-complete (n , elem) = suc n , elem
 
-  ------ Generator Choice ------
+  μᵢ-complete :
+    ∀ {I : Set} {a : I → Set}
+      {tg : (i : I) → 𝔾ᵢ a i} {i : I} {x : a i}
+    → tg i ∣ᵢ tg ↝ x → μᵢ i ∣ᵢ tg ↝ x
+  μᵢ-complete (n , elem) = (suc n) , elem  
 
+  
   pure-complete :
     ∀ {a t : Set} {tg : 𝔾 t} {x : a} → ⦇ x ⦈ ∣ tg ↝ x
   pure-complete = 1 , here
+
+  pureᵢ-complete :
+    ∀ {I : Set} {a t : I → Set}
+      {i : I} {tg : (i : I) → 𝔾ᵢ a i}  {x : a i}
+    → _∣ᵢ_↝_ {a = a} ⦇ x ⦈ tg x
+  pureᵢ-complete = 1 , here
+
+
+  ------ Generator Choice ------
 
   -- Choice between two generators produces an element, given that it is
   -- produced by its left option
@@ -64,10 +94,16 @@ module AgdaGen.Properties.Completeness where
     ∀ {a t : Set} {x : a} {f g : Gen a t} {tg : 𝔾 t}
     → f ∣ tg ↝ x
     → (f ∥ g) ∣ tg ↝ x
-  ∥-complete-left (zero , ())
   ∥-complete-left (suc n , p) =
     suc n , merge-complete-left p
 
+  ∥ᵢ-complete-left :
+    ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
+      {f g : Genᵢ a t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → f ∣ᵢ tg ↝ x
+    → (f ∥ g) ∣ᵢ tg ↝ x
+  ∥ᵢ-complete-left (suc n , p) =
+    (suc n) , merge-complete-left p
 
   -- Choice between two generators produces an element, given that it is produced
   -- by its right option
@@ -79,20 +115,33 @@ module AgdaGen.Properties.Completeness where
   ∥-complete-right (suc n , p) =
     suc n , merge-complete-right p
 
+  ∥ᵢ-complete-right :
+    ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
+      {f g : Genᵢ a t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → g ∣ᵢ tg ↝ x
+    → (f ∥ g) ∣ᵢ tg ↝ x
+  ∥ᵢ-complete-right (suc n , p) =
+    (suc n) , merge-complete-right p
 
   -- If an element is produced by choice between two generators, it is either
   -- produced by the left option or by the right option
   ∥-sound :
-    ∀ {a t : Set} {x : a} {n : ℕ} → {f g : Gen a t} {tg : 𝔾 t}
+    ∀ {a t : Set} {x : a} {n : ℕ} {f g : Gen a t} {tg : 𝔾 t}
     → (f ∥ g) ∣ tg ↝ x
     → (f ∣ tg ↝ x) ⊎ (g ∣ tg ↝ x)
   ∥-sound (zero , ())
-  ∥-sound (suc n , prf) =
-    ⊕-bimap (λ x → suc n , x) (λ y → suc n , y) (merge-sound prf)
+  ∥-sound (suc n , p) =
+    ⊕-bimap (λ x → suc n , x) (λ y → suc n , y) (merge-sound p)
 
+  ∥ᵢ-sound :
+    ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
+      {f g : Genᵢ a t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → (f ∥ g) ∣ᵢ tg ↝ x
+    → (f ∣ᵢ tg ↝ x) ⊎ (g ∣ᵢ tg ↝ x)
+  ∥ᵢ-sound (suc n , p) =
+    ⊕-bimap (λ x → suc n , x) (λ y → suc n , y) (merge-sound p)
   
   ------ Generator Product ------
-
   
   -- Applying a constructor to a generator does not affect
   -- its production
@@ -103,7 +152,15 @@ module AgdaGen.Properties.Completeness where
     → ⦇ f g ⦈ ∣ tg ↝ f x
   constr-preserves-elem (zero , ())
   constr-preserves-elem {f = f} (suc n , elem) =
-    suc n , list-ap-complete {fs = [ f ]} here elem 
+    suc n , list-ap-complete {fs = [ f ]} here elem
+
+  constrᵢ-preserves-elem :
+    ∀ {I : Set} {a b t : I → Set} {i₁ i₂ : I} {f : a i₁ → b i₂}
+      {g : Genᵢ a t i₁} {tg : (i : I) → 𝔾ᵢ t i} {x : a i₁}
+    →  g ∣ᵢ tg ↝ x
+    →  _∣ᵢ_↝_ {a = b} ⦇ f g ⦈ tg (f x)
+  constrᵢ-preserves-elem {f = f} (suc n , elem) = 
+    suc n , list-ap-complete {fs = [ f ]} here elem
   
   max : ℕ → ℕ → ℕ
   max zero m = m
@@ -130,7 +187,6 @@ module AgdaGen.Properties.Completeness where
   
   lemma-max₂ : ∀ {n m : ℕ} → m ≤ max n m
   lemma-max₂ {n} {m} rewrite max-sym {n} {m} = lemma-max₁ 
-
   
   -- If f produces x and g produces y, then ⦇ C f g ⦈, where C is any
   -- 2-arity constructor, produces C x y
@@ -144,8 +200,20 @@ module AgdaGen.Properties.Completeness where
     ((suc n) , snd₁) ((suc m) , snd₂) mt₁ mt₂  =  
     max (suc n) (suc m) , list-ap-constr {C = C}
       (mt₁ (lemma-max₁ {n = suc n} {m = suc m}) snd₁)
-      (mt₂ (lemma-max₂ {n = suc n} {m = suc m}) snd₂) 
+      (mt₂ (lemma-max₂ {n = suc n} {m = suc m}) snd₂)
 
+  ⊛-completeᵢ :
+    ∀ {I : Set} {a b c t : I → Set} {i₁ i₂ i₃ : I}
+      {x : a i₁} {y : b i₂} {tg : (i : I) → 𝔾ᵢ t i}
+      {f : Genᵢ a t i₁} {g : Genᵢ b t i₂} {C : a i₁ → b i₂ → c i₃}
+    → (p₁ : f ∣ᵢ tg ↝ x) → (p₂ : g ∣ᵢ tg ↝ y)
+    → Depth-Monotoneᵢ f tg x → Depth-Monotoneᵢ g tg y 
+    → _∣ᵢ_↝_ {a = c} ⦇ C f g ⦈ tg (C x y)
+  ⊛-completeᵢ {a} {b} {c} {f = f} {g = g} {C = C}
+    ((suc n) , snd₁) ((suc m) , snd₂) mt₁ mt₂  =  
+    max (suc n) (suc m) , list-ap-constr {C = C}
+      (mt₁ (lemma-max₁ {n = suc n} {m = suc m}) snd₁)
+      (mt₂ (lemma-max₂ {n = suc n} {m = suc m}) snd₂)
   
   ------ Combinator Completeness ------
 
@@ -161,5 +229,17 @@ module AgdaGen.Properties.Completeness where
   ∥-Complete {f = f} {g = g} p₁ p₂ {inj₂ y} =
     ∥-complete-right {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
     (constr-preserves-elem {g = g} p₂)
+
+  ∥-Completeᵢ :
+    ∀ {I : Set} {a b t : I → Set} {i : I} {f : Genᵢ a t i}
+      {g : Genᵢ b t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → Completeᵢ f tg → Completeᵢ g tg
+    → Completeᵢ {a = λ i → a i ⊎ b i} (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈) tg
+  ∥-Completeᵢ {f = f} {g = g} p₁ p₂ {inj₁ x} =
+    ∥ᵢ-complete-left {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
+    (constrᵢ-preserves-elem {g = f} p₁)
+  ∥-Completeᵢ {f = f} {g = g} p₁ p₂ {inj₂ y} =
+    ∥ᵢ-complete-right {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
+    (constrᵢ-preserves-elem {g = g} p₂)
 
   

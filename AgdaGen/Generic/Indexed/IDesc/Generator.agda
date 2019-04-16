@@ -30,7 +30,9 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   Sl-gen (lift (suc n)) = ⦇ ▻_ (μᵢ (lift n)) ⦈
                         ∥ ⦇ ∙         ⦈
 
-  ⟦⟧subst : ∀ {ℓ} {I : Set} {φ φ' : func ℓ I I} {δ : IDesc ℓ I} {ix i : I} → func.out φ ix ≡ δ →  ⟦ δ ⟧ (μ φ') → ⟦ func.out φ ix ⟧ (μ φ')
+  ⟦⟧subst :
+    ∀ {ℓ} {I : Set} {φ φ' : func ℓ I I} {δ : IDesc ℓ I} {ix i : I}
+    → func.out φ ix ≡ δ →  ⟦ δ ⟧ (μ φ') → ⟦ func.out φ ix ⟧ (μ φ')
   ⟦⟧subst p rewrite p = λ x → x
 
   -- Generic generator for the IDesc type
@@ -51,18 +53,29 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
 
       -- Returns a generator producting values of the fixed point of
       -- the interpreted description
-    → Genᵢ {ℓ} (λ x → ⟦ func.out φ₁ x ⟧ (μ φ₂)) (λ x → ⟦ func.out φ₂ x ⟧ (μ φ₂)) ix 
+    → Genᵢ {ℓ} (λ x → ⟦ func.out φ₁ x ⟧ (μ φ₂)) (λ x → ⟦ func.out φ₂ x ⟧ (μ φ₂)) ix
+
+  -- `var combinator (recursive positions)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix m with func.out φ₁ ix | inspect (func.out φ₁) ix
-  ... | `var i | [ φout≡`var ] =
+  IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix m | `var i | [ φout≡`var ] =
     ⦇ (λ x → ⟦⟧subst {φ = φ₁} {φ' = φ₂} {i = i} φout≡`var ⟨ x ⟩) (μᵢ i) ⦈
-  ... | `1     | [ φout≡`1 ] =
+
+  -- `1 combinator (unit)
+  IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix m | `1     | [ φout≡`1 ] =
     ⦇ (⟦⟧subst {φ = φ₁} {φ' = φ₂} {i = ix} φout≡`1 (lift tt)) ⦈
+
+  -- `× combinator (product)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (m₁ `×~ m₂) | δ₁ `× δ₂ | [ φout≡`× ] =
-    ⦇ (λ l r → ⟦⟧subst {φ = φ₁} {ix = ix} {i = ix}  φout≡`× (l , r)) (IDesc-gen ix m₁) (IDesc-gen ix m₂) ⦈
+    ⦇ (λ l r → ⟦⟧subst {φ = φ₁} {ix = ix} {i = ix}  φout≡`× (l , r))
+      (IDesc-gen ix m₁) (IDesc-gen ix m₂) ⦈
+
+  -- `σ combinator (generic coproduct)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (`σ~ mₛ) | `σ n T | [ φout≡`σ ] =
     do sl ← Callᵢ {x = ix} Sl-gen (lift n)
        r  ← IDesc-gen ix (mₛ sl)
        pure (⟦⟧subst {φ = φ₁} {ix = ix} {i = ix} φout≡`σ (sl , r))
+
+  -- `Σ combinator (dependent pairs)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (`Σ~ mₛ mₜ) | `Σ S T | [ φout≡`Σ ] =
     do sl ← Call {x = ix} mₛ
        r  ← IDesc-gen ix (mₜ sl) 
@@ -74,16 +87,22 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   _⇑_ : ∀ {k} → Set k → (ℓ : Level) → Set (ℓ ⊔ k)
   S ⇑ ℓ = Lift ℓ S
 
-  -- Captures those datatypes that may be described as the fixed point of some δ ∈ IDesc
+  -- Captures those datatypes that may be described as the fixed point of some φ ∈ func
   record ≅IDesc {ℓ k} {I : Set k} (P : I → Set ℓ) : Set (sucL ℓ ⊔ sucL k) where
     field
       W : Σ[ φ ∈ func ℓ I I ] ∀ {x : I} → P x ⇑ (ℓ ⊔ k) ≅ μ φ x
 
+  -- Extract the description from an isomorphism
   getφ : ∀ {ℓ} {I : Set} {P : I → Set ℓ} → ≅IDesc P → func ℓ I I
   getφ record { W = φ , iso } = φ
-  
-  IDesc-isoGen : ∀ {ℓ} {I : Set} {P : I → Set ℓ} ⦃ p : ≅IDesc P ⦄ → (ix : I) → ((ix : I) → IDescM 𝔾 (func.out (getφ p) ix)) → 𝔾ᵢ {ℓ} {0ℓ} (λ x → P x ⇑ ℓ) ix
+
+  -- Derive a generator for indexed datatypes based on an isomorphism with some description
+  IDesc-isoGen :
+    ∀ {ℓ} {I : Set} {P : I → Set ℓ} ⦃ p : ≅IDesc P ⦄
+    → (ix : I) → ((ix : I) → IDescM 𝔾 (func.out (getφ p) ix))
+    → 𝔾ᵢ {ℓ} {0ℓ} (λ x → P x ⇑ ℓ) ix
   IDesc-isoGen {I = I} ⦃ p = record { W = φ , iso  } ⦄ ix m =
-    ⦇ (λ v → _≅_.to iso ⟨ v ⟩) (Callᵢ {j = I} {x = ix} (λ y → IDesc-gen {φ₁ = φ} {φ₂ = φ} y (m y)) ix) ⦈
+    ⦇ (λ v → _≅_.to iso ⟨ v ⟩) (Callᵢ {j = I} {x = ix}
+      (λ y → IDesc-gen {φ₁ = φ} {φ₂ = φ} y (m y)) ix) ⦈
 
  

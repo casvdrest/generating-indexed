@@ -152,27 +152,48 @@ module AgdaGen.Generic.Indexed.IDesc.Lambda where
 
   instance
     ∋-≅IDesc : ≅IDesc (uncurry _∋_)
-    ∋-≅IDesc = record { W = ∋D , ≅-transitive (≅-symmetric ≅lift) (record { from = from∋ ; to = to∋ ; iso₁ = ∋-iso₁ ; iso₂ = ∋-iso₂ }) }
+    ∋-≅IDesc =
+      record { W = ∋D
+             , ≅-transitive (≅-symmetric ≅lift) (
+                 record { from = from∋
+                        ; to   = to∋
+                        ; iso₁ = ∋-iso₁
+                        ; iso₂ = ∋-iso₂
+                        })
+             }
 
-  gen∋ : ((ix : Ctx × Ty) → IDescM 𝔾 (func.out ∋D ix)) → (Γ : Ctx) → (τ : Ty) → 𝔾ᵢ (λ { ( Γ , τ ) → Lift 0ℓ (Γ ∋ τ) }) (Γ , τ)
+  gen∋ :
+    ((ix : Ctx × Ty) → IDescM 𝔾 (func.out ∋D ix))
+    → (Γ : Ctx) → (τ : Ty)
+    → 𝔾ᵢ (λ { ( Γ , τ ) → Lift 0ℓ (Γ ∋ τ) }) (Γ , τ)
   gen∋ m Γ τ = IDesc-isoGen (Γ , τ) m
 
   Ty≡ : (σ τ : Ty) → 𝔾 (σ ≡ τ)
   Ty≡ `τ `τ = pure refl
   Ty≡ `τ (τ `→ τ₁) = empty
   Ty≡ (σ `→ σ₁) `τ = empty
-  Ty≡ (σ₁ `→ σ₂) (τ₁ `→ τ₂) = ⦇ (cong₂ _`→_) (` Ty≡ σ₁ τ₁) (` Ty≡ σ₂ τ₂) ⦈
+  Ty≡ (σ₁ `→ σ₂) (τ₁ `→ τ₂) =
+    ⦇ (cong₂ _`→_) (` Ty≡ σ₁ τ₁) (` Ty≡ σ₂ τ₂) ⦈
 
   ∋M : (ix : Ctx × Ty) → IDescM 𝔾 (func.out ∋D ix)
   ∋M (∅ , τ) = `σ~ λ()
-  ∋M ((Γ , α ∶ σ) , τ) = `σ~ λ { ∙ → `Σ~ (Ty≡ τ σ) λ { refl → `1~ } ; (▻ ∙) → `var~ }
+  ∋M ((Γ , α ∶ σ) , τ) =
+    `σ~ λ { ∙ → `Σ~ (Ty≡ τ σ) λ { refl → `1~ } ; (▻ ∙) → `var~ }
 
   test : ⟨ uncurry (gen∋ ∋M) ⟩ᵢ ((∅ , 0 ∶ `τ) , 1 ∶ `τ , `τ) 10 ≡ lift ([Pop] [Top]) ∷ lift [Top]  ∷ []
   test = refl
 
   instance
     ⊢-≅IDesc : ≅IDesc (uncurry _⊢_)
-    ⊢-≅IDesc = record { W = ⊢D , ≅-transitive (≅-symmetric ≅lift) (record { from = from⊢ ; to = to⊢ ; iso₁ = ⊢-iso₁ ; iso₂ = ⊢-iso₂ }) }
+    ⊢-≅IDesc =
+      record { W = ⊢D
+             , ≅-transitive (≅-symmetric ≅lift) (
+               record { from = from⊢
+                      ; to   = to⊢
+                      ; iso₁ = ⊢-iso₁
+                      ; iso₂ = ⊢-iso₂
+                      }
+            )}
 
   genTy : 𝔾 Ty
   genTy = ⦇ `τ ⦈ ∥ ⦇ gμ `→ gμ ⦈
@@ -180,15 +201,24 @@ module AgdaGen.Generic.Indexed.IDesc.Lambda where
   genId : 𝔾 Id
   genId = ⦇ 0 ⦈ ∥ ⦇ suc gμ ⦈
 
-  gen⊢ : ((ix : Ctx × Ty) → IDescM 𝔾 (func.out ⊢D ix)) → (Γ : Ctx) → (τ : Ty) → 𝔾ᵢ (λ { ( Γ , τ ) → Lift 0ℓ (Γ ⊢ τ) }) (Γ , τ)
+  gen⊢ :
+    ((ix : Ctx × Ty) → IDescM 𝔾 (func.out ⊢D ix)) → (Γ : Ctx) → (τ : Ty)
+    → 𝔾ᵢ (λ { ( Γ , τ ) → Lift 0ℓ (Γ ⊢ τ) }) (Γ , τ)
   gen⊢ m Γ τ = IDesc-isoGen (Γ , τ) m
 
   gen∋' : (Γ : Ctx) → (τ : Ty) → 𝔾 (Γ ∋ τ)
   gen∋' Γ τ = ⦇ lower ⟨ Γ , τ ` (uncurry (gen∋ ∋M)) ⟩ ⦈
 
   ⊢M : (ix : Ctx × Ty) → IDescM 𝔾 (func.out ⊢D ix)
-  ⊢M (Γ , `τ)       = `σ~ (λ { ∙ → `Σ~ (gen∋' Γ `τ)  λ s → `1~ ; (▻ ∙) → `Σ~ genTy (λ s → `var~ `×~ `var~) })
-  ⊢M (Γ , (σ `→ τ)) = `σ~ (λ { ∙ → `Σ~ (gen∋' Γ (σ `→ τ)) λ s → `1~ ; (▻ ∙) → `Σ~ genId (λ s → `var~) ; (▻ ▻ ∙) → `Σ~ genTy (λ s → `var~ `×~ `var~) })
+  ⊢M (Γ , `τ) =
+    `σ~ (λ {  ∙    → `Σ~ (gen∋' Γ `τ)  λ s → `1~
+           ; (▻ ∙) → `Σ~ genTy (λ s → `var~ `×~ `var~)
+           })
+  ⊢M (Γ , (σ `→ τ)) =
+    `σ~ (λ {  ∙      → `Σ~ (gen∋' Γ (σ `→ τ)) λ s → `1~
+           ; (▻ ∙)   → `Σ~ genId (λ s → `var~)
+           ; (▻ ▻ ∙) → `Σ~ genTy (λ s → `var~ `×~ `var~)
+           })
 
   ∋-toId : ∀ {Γ τ} → Γ ∋ τ → Id
   ∋-toId {(_ , α ∶ _)} [Top] = α
