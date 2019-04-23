@@ -10,6 +10,8 @@ module Instances where
   import Depth
   import Control.Applicative
 
+  data Nat = Z | S Nat
+
   instance (CoGeneratable a, Generatable b) => Generatable (a -> b) where 
     gen = cogen
   
@@ -68,14 +70,4 @@ module Instances where
       where toF :: b -> ((a , [a]) -> b) -> [a] -> b 
             toF x fy []     = x 
             toF x fy (z:zs) = fy (z, zs)
-
-  instance (Generatable a) => Generatable (Bin a) where  
-    gen  =  pure Leaf 
-        <|> Node <$> mu <*> call <*> mu
- 
-  instance (CoGeneratable a) => CoGeneratable (Bin a) where 
-    cogen = toF <$> call <*> call' 
-      where toF :: b -> ((Bin a, (a, Bin a)) -> b) -> Bin a -> b
-            toF x fy Leaf         = x
-            toF x fy (Node l v r) = fy (l, (v, r))
             

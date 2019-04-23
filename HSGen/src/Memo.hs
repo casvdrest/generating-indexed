@@ -1,3 +1,5 @@
+{-# LANGUAGE UnicodeSyntax #-}
+
 module Memo where 
 
   -- Trees with stored size
@@ -19,5 +21,3 @@ module Memo where
 
   memoize :: (Int -> a) -> (Int -> a)
   memoize f = (map f [0 ..] !!)
-
-  

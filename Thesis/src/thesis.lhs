@@ -1,6 +1,44 @@
 \documentclass[10pt,a4paper,msc,twosized=semi]{uustthesis}
 
-\newcommand{\includeagda}[2]{\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}}
+\usepackage{framed}
+\usepackage{setspace}
+\setstretch{1.15}
+
+\renewcommand{\figurename}{Listing}
+\renewcommand{\listfigurename}{Code listings}
+
+%% Listings 
+\newenvironment{listing}[2] %% #1 = caption #2 = label
+{
+    \begin{figure}[h]
+      \label{#2}
+      \begin{framed}
+        \caption{#1}
+}
+{
+      \end{framed}
+    \end{figure}
+}
+
+%% Agda snippets 
+\newcommand{\includeagda}[2]{\begin{spacing}{1}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{spacing}}
+
+%% Agda listings
+\newcommand{\includeagdalisting}[4]{
+  \begin{listing}{#3}{#4} 
+    \includeagda{#1}{#2}
+  \end{listing} 
+}
+
+%% Agda snippets (appendices)
+\newcommand{\appincludeagda}[2]{\ExecuteMetaData[../src/app#1/latex/code.tex]{#2}}
+
+%% Agda listings (appendices)
+\newcommand{\appincludeagdalisting}[4]{
+  \begin{listing}{#3}{#4} 
+    \appincludeagda{#1}{#2}
+  \end{listing}
+}
 
 %include polycode.fmt
 %include greek.fmt
@@ -48,9 +86,10 @@ Abstract
 \chapter{Generic Generators for Regular types}
 %include src/chap05/body.lhs
 
-\chapter{Deriving Generators for Indexed Containers}\label{chap:derivingregular}
+\chapter{Deriving Generators for Indexed Containers}
 
 \chapter{Deriving Generators for Indexed Descriptions}
+%include src/chap07/body.lhs
 
 \chapter{Program Term Generation}
 
@@ -59,7 +98,8 @@ Abstract
 \chapter{Conclusion \& Further Work}
 
 \appendix
-\chapter{Some Formulas}
+\chapter{Datatype Definitions}
+%include src/appA/body.lhs
 
 \backmatter
 \listoffigures

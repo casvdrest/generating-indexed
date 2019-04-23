@@ -83,3 +83,10 @@ module AgdaGen.Generic.Indexed.IDesc.Universe where
   -- descriptions
   data μ {ℓ k} {I : Set k} (D : func ℓ I I)(i : I) : Set (ℓ ⊔ k) where
     ⟨_⟩ : ⟦ D ⟧func (μ D) i → μ D i
+
+  mapm : ∀ {ℓ k} {I : Set k} {δ : IDesc ℓ I} {P Q : Set ℓ → Set (sucL ℓ)} → (∀ {s : Set ℓ} → P s → Q s) → IDescM P δ → IDescM Q δ
+  mapm f `var~ = `var~
+  mapm f `1~ = `1~
+  mapm f (dₗ `×~ dᵣ) = (mapm f dₗ) `×~ mapm f dᵣ
+  mapm f (`σ~ fd) = `σ~ (mapm f ∘ fd)
+  mapm f (`Σ~ s fd) = `Σ~ (f s) (mapm f ∘ fd)
