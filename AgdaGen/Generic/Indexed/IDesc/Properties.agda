@@ -43,6 +43,15 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
   ℂ : ∀ {I : Set} {t : I → Set} → ((i : I) → 𝔾ᵢ t i) → Set
   ℂ {I} g = ∀ {i : I} → Completeᵢ (g i) g
 
+  proofM : ∀ {ℓ} {I : Set} → func ℓ I I → Set
+  proofM {I = I} φ =
+    (ix : I) →
+      IDescM (λ S →
+        Σ[ gen ∈ 𝔾 S ]
+          (Complete gen gen ×
+          (∀ {s : S} → Depth-Monotone gen s gen)))
+      (func.out φ ix)
+
   δsubst :
     ∀ {I : Set} {δ δ' : IDesc 0ℓ I} {P : Set → Set₁}
     → δ ≡ δ' → IDescM P δ → IDescM P δ'
@@ -124,9 +133,26 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
             (Complete gen gen ×
             (∀ {s : S} → Depth-Monotone gen s gen))))
         (func.out φ₂ ix)}
-    → Completeᵢ (IDesc-gen {φ₁ = mk λ _ → `1} {φ₂ = φ₂} i (mapm proj₁' `1~))
-    (λ ix → IDesc-gen {φ₁ = φ₂} ix (mapm (λ {s} → proj₁) (m₂ ix)))
+    → Completeᵢ
+        (IDesc-gen {φ₁ = mk λ _ → `1} {φ₂ = φ₂} i (mapm proj₁' `1~))
+        (λ ix → IDesc-gen {φ₁ = φ₂} ix (mapm (λ {s} → proj₁) (m₂ ix)))
   `1-gen-Complete = 1 , here
+
+  `×-gen-Complete :
+    ∀ {I : Set} {φ φₗ φᵣ : func 0ℓ I I} {i : I}
+      {mₗ : proofM φₗ} {mᵣ : proofM φᵣ} {m : proofM φ}
+    → Completeᵢ
+        (IDesc-gen {φ₁ = φₗ} {φ₂ = φ} i (mapm proj₁ (mₗ i)))
+        (λ ix → IDesc-gen {φ₁ = φ} ix (mapm proj₁ (m ix)))
+    → Completeᵢ
+        (IDesc-gen {φ₁ = φᵣ} {φ₂ = φ} i (mapm proj₁ (mᵣ i)))
+        (λ ix → IDesc-gen {φ₁ = φ} ix (mapm proj₁ (m ix)))
+    → Completeᵢ
+        (IDesc-gen
+          {φ₁ = mk (λ ix → func.out φₗ ix `× func.out φᵣ ix)} {
+          φ₂ = φ} i (mapm proj₁ (mₗ i `×~ mᵣ i)))
+        λ ix → IDesc-gen {φ₁ = φ} ix (mapm proj₁ (m ix))
+  `×-gen-Complete pₗ pᵣ = {!!} 
 
   inspectφ :
     ∀ {ℓ} {I : Set} {P : Set ℓ → Set (sucL ℓ)}
