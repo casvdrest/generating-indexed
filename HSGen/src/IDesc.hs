@@ -465,3 +465,114 @@ module IDesc where
   runWtTermGen :: (Ctx, Ty) -> Int -> [Term String]
   runWtTermGen = runI (unEx unsafeCoerce) (genDesc wtterm)
   
+  ----------------------------------------------------------------------------
+  -- Regular expressions
+  {-
+  data ∈ᵣ : Regex → Set where
+
+    [Char] : ∀ {c}
+             ----------
+           → ∈ᵣ (`c c)
+
+    [One] : ------
+            ∈ᵣ one
+
+    [Left] : ∀ {r r'} → ∈ᵣ r
+             ---------------
+           → ∈ᵣ (r `+ r')
+
+    [Right] : ∀ {r r'} → ∈ᵣ r'
+              ----------------
+            → ∈ᵣ (r `+ r')
+
+    [Seq] : ∀ {r r'} → ∈ᵣ r → ∈ᵣ r'
+            -----------------------
+          → ∈ᵣ (r `∙ r')
+
+    [Step] : ∀ {r} → ∈ᵣ r → ∈ᵣ (r *)
+             -----------------------
+           → ∈ᵣ (r *)
+
+    [Stop] : ----------------
+             ∀ {r} → ∈ᵣ (r *)
+
+  rD : func zeroL Regex Regex
+  rD = func.mk λ
+    { (`c x) → `1
+    ; zero → `σ 0 λ ()
+    ; one → `1
+    ; (r `+ r') →
+        `σ 2 λ 
+          { ∙     → `var r
+          ; (▻ ∙) → `var r' 
+          }
+    ; (r `∙ r') → `var r `× `var r' 
+    ; (r *) →
+        `σ 2 λ
+          { ∙     → `var r `× `var (r *)
+          ; (▻ ∙) → `1
+          }
+    }
+
+-}
+
+  data Regex = RChar Char
+             | RZero
+             | ROne
+             | RPlus Regex Regex
+             | RSeq Regex Regex
+             | RStar Regex
+
+  regexFunc :: Func String Regex
+  regexFunc (RChar c) = One
+  regexFunc (RZero) = Empty
+  regexFunc (ROne) = One
+  regexFunc (RPlus r r') =
+    SSuc (SSuc SZero) :+>
+      (   Var r
+      ::: Var r'
+      ::: VNil
+      )
+  regexFunc (RSeq r r') = Var r :*: Var r'
+  regexFunc (RStar r)  =
+    SSuc (SSuc SZero) :+>
+      (   Var r :*: Var (RStar r)
+      ::: One
+      ::: VNil
+      )
+
+  toRString :: Regex -> Ex -> String
+  toRString (RChar c) (Ex x) =
+    case asUnit x of
+      () -> [c]
+  toRString ROne (Ex x) =
+    case asUnit x of
+      () -> []
+  toRString (RPlus _ _) (Ex x) =
+    case asEither x of
+      (Left (ri , v)) -> toRString ri (Ex v)
+      (Right r) ->
+        case asEither r of
+          Left (ri , v) -> toRString ri (Ex v)
+  toRString (RSeq _ _) (Ex x) =
+    case asPair x of
+      ((ril , vl) , (rir, vr)) -> toRString ril (Ex vl) ++ toRString rir (Ex vr) 
+  toRString (RStar _) (Ex x) =
+    case asEither x of
+      (Left l) ->
+        case asPair l of
+          ((ril , vl) , (rir, vr)) -> toRString ril (Ex vl) ++ toRString rir (Ex vr) 
+      (Right r) ->
+        case asEither r of
+          Left () -> []
+
+  rstring :: Description String Regex
+  rstring = Description
+    { func = regexFunc
+    , to = toRString
+    , muConv = unEx unsafeCoerce
+    }
+
+  runRStringGen :: Regex -> Int -> [String]
+  runRStringGen = runI (unEx unsafeCoerce) (genDesc rstring)
+
