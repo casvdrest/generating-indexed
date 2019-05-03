@@ -93,5 +93,36 @@ module AgdaGen.Generic.Indexed.IDesc.STree where
     lift (Node (Node (Node Leaf Leaf) Leaf) Leaf) ∷ []
   prop = refl
 
+  data STree₂ : ℕ → Set where
+    Leaf₂ : STree₂ 1
+    Node₂ : ∀ {n m : ℕ} → STree₂ n → STree₂ m → STree₂ (n + m)
 
+  STree₂D : func 0ℓ ℕ ℕ
+  STree₂D = func.mk
+   λ n → `σ 2 λ
+     { ∙     → `Σ (n ≡ 1) λ { refl → `1 }
+     ; (▻ ∙) → `Σ (Σ (ℕ × ℕ) λ { (n' , m') → n ≡ n' + m' }) λ { ((n' , m') , refl) → `var n' `× `var m' }
+     }
 
+  size₂ : ∀ {n : ℕ} → STree₂ n → ℕ
+  size₂ {n} _ = n
+
+  fromSTree₂ : ∀ {n : ℕ} → STree₂ n → μ STree₂D n
+  fromSTree₂ {.1} Leaf₂ = ⟨ ∙ , refl , lift tt ⟩
+  fromSTree₂ {n} (Node₂ t₁ t₂) =
+    ⟨ ((▻ ∙) , ((size₂ t₁ , size₂ t₂) , refl) , fromSTree₂ t₁ , fromSTree₂ t₂) ⟩
+
+  toSTree₂ : ∀ {n : ℕ} → μ STree₂D n → STree₂ n
+  toSTree₂ {.1} ⟨ ∙ , refl , lift tt ⟩ = Leaf₂
+  toSTree₂ {.(n' + m')} ⟨ ▻ ∙ , ((n' , m') , refl) , t₁ , t₂ ⟩ =
+    Node₂ (toSTree₂ t₁)  (toSTree₂ t₂)
+
+  STree₂-iso₁ : ∀ {n : ℕ} {t : STree₂ n} → toSTree₂ (fromSTree₂ t) ≡ t
+  STree₂-iso₁ {.1} {Leaf₂} = refl
+  STree₂-iso₁ {n} {Node₂ t t₁} =
+    cong₂ Node₂ STree₂-iso₁ STree₂-iso₁
+
+  STree₂-iso₂ : ∀ {n : ℕ} {t : μ STree₂D n} → fromSTree₂ (toSTree₂ t) ≡ t
+  STree₂-iso₂ {.1} {⟨ ∙ , refl , lift tt ⟩} = refl
+  STree₂-iso₂ {.(n' + m')} {⟨ ▻ ∙ , ((n' , m') , refl) , fst , snd ⟩} =
+    cong₂ (λ x y → ⟨ ((▻ ∙) , ((n' , m') , refl) , x , y) ⟩) STree₂-iso₂ STree₂-iso₂
