@@ -10,20 +10,18 @@ module Instances where
   import Depth
   import Control.Applicative
 
-  data Nat = Z | S Nat
-
   instance (CoGeneratable a, Generatable b) => Generatable (a -> b) where 
     gen = cogen
   
   instance Generatable Nat where 
-    gen  =  pure Z 
-        <|> (S <$> mu) 
-
+    gen  =  pure Zero 
+        <|> (Suc <$> mu ()) 
+  {-
   instance CoGeneratable Nat where 
     cogen = toF <$> call <*> mu'
       where toF :: a -> (Nat -> a) -> Nat -> a
-            toF z _ Z     = z 
-            toF _ f (S n) = f n
+            toF z _ Zero     = z 
+            toF _ f (Suc n) = f n -}
 
   instance Generatable Bool where 
     gen  =  pure True 
@@ -63,7 +61,7 @@ module Instances where
 
   instance (Generatable a) => Generatable [a] where 
     gen  =  pure [] 
-        <|> (:) <$> call <*> mu
+        <|> (:) <$> call <*> mu ()
 
   instance (CoGeneratable a) => CoGeneratable [a] where 
     cogen = toF <$> call <*> (uncurry <$> call')

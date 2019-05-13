@@ -6,6 +6,7 @@ open import AgdaGen.Generic.Isomorphism
 open import AgdaGen.Generic.Regular.Generator
 open import AgdaGen.Base
 open import AgdaGen.Combinators
+open import AgdaGen.Generic.Regular.Cogen
 open import AgdaGen.Generic.Indexed.PiGen
 
 open import Data.Unit
@@ -30,6 +31,9 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Generator where
   
   Gen-Σ : ∀ {i : Set} {P : i → Set} → 𝔾 i → ((x : i) → 𝔾ᵢ P x) → 𝔾 (Σ[ x ∈ i ] P x)
   Gen-Σ g₁ g₂ = (` g₁) >>= λ x → ⟨ x ` g₂ ⟩ >>= λ y → Pure (x , y)
+
+  Gen-Π : ∀ {i : Set} {P : i → Set} → (∀ {a} → 𝔾 (i → a)) → ((x : i) → 𝔾 (P x)) → 𝔾 (Π i P)
+  Gen-Π g₁ g₂ = (` g₁) >>= λ x → pure (x {!!})
 
   {-# TERMINATING #-}
   deriveGenᵢ :

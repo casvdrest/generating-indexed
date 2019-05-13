@@ -9,10 +9,11 @@ open import Data.Unit hiding (_≟_)
 open import Relation.Nullary
 open import Relation.Binary.PropositionalEquality 
 
-open import Level
+open import Level renaming (suc to sucL ; zero to zeroL)
 
 open import AgdaGen.Base renaming (μ to μB)
 open import AgdaGen.Combinators
+open import AgdaGen.Enumerate hiding (⟨_⟩)
 
 open import AgdaGen.Generic.Isomorphism
 
@@ -34,11 +35,36 @@ module AgdaGen.Generic.Indexed.IDesc.SystemF where
     ``_  : Id → 𝕋
     _`→_ : 𝕋 → 𝕋 → 𝕋
     `∀_·_  : Id → 𝕋 → 𝕋
+
+  genId : 𝔾 Id
+  genId = ⦇ ℕ.zero ⦈ ∥ ⦇ (ℕ.suc ℕ.zero) ⦈
+
+  genId≡ : (α β : Id) → 𝔾 (α ≡ β)
+  genId≡ α β with α ≟ β
+  ... | yes α≡β = pure α≡β
+  ... | no ¬α≡β = empty
+
+  gen𝕋 : 𝔾 𝕋
+  gen𝕋 = ⦇ `` (` genId) ⦈
+        ∥ ⦇ μB `→ μB ⦈
+        ∥ ⦇ `∀ (` genId) · μB ⦈
+
+  𝕋≡ : (τ₁ : 𝕋) → (τ₂ : 𝕋) → 𝔾 (τ₁ ≡ τ₂)
+  𝕋≡ (`` x) (`` x₁) = ⦇ (cong ``_) (` genId≡ x x₁) ⦈
+  𝕋≡ (`` x) (τ₂ `→ τ₃) = empty
+  𝕋≡ (`` x) (`∀ x₁ · τ₂) = empty
+  𝕋≡ (τ₁ `→ τ₃) (`` x) = empty
+  𝕋≡ (τ₁ `→ τ₃) (τ₂ `→ τ₄) = ⦇ (cong₂ _`→_) (` 𝕋≡ τ₁ τ₂) (` 𝕋≡ τ₃ τ₄) ⦈ 
+  𝕋≡ (τ₁ `→ τ₃) (`∀ x · τ₂) = empty
+  𝕋≡ (`∀ x · τ₁) (`` x₁) = empty
+  𝕋≡ (`∀ x · τ₁) (τ₂ `→ τ₃) = empty
+  𝕋≡ (`∀ x · τ₁) (`∀ x₁ · τ₂) = ⦇ (cong₂ `∀_·_) (` genId≡ x x₁) (` 𝕋≡ τ₁ τ₂) ⦈
     
   data λ2 : Set where
     `_   : Id → λ2
     _·_  : λ2 → λ2 → λ2
     ƛ_⇒_ : Id → λ2 → λ2
+    _∶∶_ : λ2 → 𝕋 → λ2
  
   data Ctx : Set where
     ∅ : Ctx
@@ -62,6 +88,13 @@ module AgdaGen.Generic.Indexed.IDesc.SystemF where
         ; (▻ ∙) → `var (Γ , τ)
         }
     }
+
+  CtxM : (ix : Ctx × 𝕋) → IDescM 𝔾 (func.out CtxD ix)
+  CtxM (∅ , τ) = `σ~ (λ ())
+  CtxM (Γ , x ∶ σ , τ) = `σ~ (
+    λ { ∙     → `Σ~ (𝕋≡ σ τ) (λ { refl → `1~ })
+      ; (▻ ∙) → `var~
+      })
 
   fromCtx : ∀ {Γ τ} → Γ ∋ τ → μ CtxD (Γ , τ)
   fromCtx {.(_ , _ ∶ τ)} {τ} [Top]     = ⟨ (∙ , refl , lift tt) ⟩
@@ -119,6 +152,26 @@ module AgdaGen.Generic.Indexed.IDesc.SystemF where
         }
     }
 
+  Id≡ : (α : Id) → (β : Id) → 𝔾 (α ≡ β)
+  Id≡ α β with α ≟ β
+  Id≡ α β | yes p = pure p
+  Id≡ α β | no ¬p = empty
+
+  Id¬≡ : (α : Id) → (β : Id) → 𝔾 (¬ α ≡ β)
+  Id¬≡ α β with α ≟ β
+  Id¬≡ α β | yes p = empty
+  Id¬≡ α β | no ¬p = pure ¬p
+
+  ∌ₜM : (ix : 𝕋 × Id) → IDescM 𝔾 (func.out ∌ₜD ix)
+  ∌ₜM ((`` β) , α) =
+    `Σ~ (Id¬≡ α β) λ _ → `1~
+  ∌ₜM ((τ₁ `→ τ₂) , α) =
+    `var~ `×~ `var~
+  ∌ₜM ((`∀ β · τ) , α) =
+    `σ~ (λ { ∙     → `Σ~ (Id¬≡ α β) λ _ → `var~
+           ; (▻ ∙) → `Σ~ (Id≡ α β) λ { refl → `1~ }
+           })
+
   from∌ₜ : ∀ {τ α} → τ ∌ₜ α → μ ∌ₜD (τ , α)
   from∌ₜ {.(`` _)} {α} ([∌ₜ-var] x) =
     ⟨ x , lift tt ⟩
@@ -165,6 +218,10 @@ module AgdaGen.Generic.Indexed.IDesc.SystemF where
         ; iso₁ = ∌ₜ-iso₁
         ; iso₂ = ∌ₜ-iso₂ }) }
 
+  gen∌ₜ : ((ix : 𝕋 × Id) → IDescM 𝔾 (func.out ∌ₜD ix))
+       → (ix : 𝕋 × Id) → 𝔾ᵢ (λ { (τ , α) → Lift 0ℓ (τ ∌ₜ α) }) ix
+  gen∌ₜ m (τ , α) = IDesc-isoGen (τ , α) m
+
   data _∌_ : Ctx → Id → Set where
   
     [∌₁] : ∀ {α}
@@ -180,6 +237,10 @@ module AgdaGen.Generic.Indexed.IDesc.SystemF where
     { (∅ , α) → `1
     ; ((Γ , x ∶ τ) , α) → `Σ (τ ∌ₜ α) λ _ → `var (Γ , α)
     }
+
+  ∌M : (ix : Ctx × Id) → IDescM 𝔾 (func.out ∌D ix)
+  ∌M (∅ , α) = `1~
+  ∌M (Γ , x ∶ τ , α) = `Σ~ ⦇ lower ⟨ τ , α ` gen∌ₜ ∌ₜM ⟩ ⦈ λ _ → `var~
 
   from∌ : ∀ {Γ α} → Γ ∌ α → μ ∌D (Γ , α)
   from∌ {.∅} {α} [∌₁]                 = ⟨ lift tt ⟩
@@ -314,19 +375,61 @@ module AgdaGen.Generic.Indexed.IDesc.SystemF where
                })
      }
 
-  genId : 𝔾 Id
-  genId = ⦇ ℕ.zero ⦈ ∥ ⦇ ℕ.suc μB ⦈
+  gen∋ :
+    ((ix : Ctx × 𝕋) → IDescM 𝔾 (func.out CtxD ix))
+    → (Γ : Ctx) → (τ : 𝕋)
+    → 𝔾ᵢ (λ { ( Γ , τ ) → Lift 0ℓ (Γ ∋ τ) }) (Γ , τ)
+  gen∋ m Γ τ = IDesc-isoGen (Γ , τ) m
 
-  gen𝕋 : 𝔾 𝕋
-  gen𝕋 = ⦇ `` (` genId) ⦈
-        ∥ ⦇ μB `→ μB ⦈
-        ∥ ⦇ `∀ (` genId) · μB ⦈
+  gen∌ :
+    ((ix : Ctx × Id) → IDescM 𝔾 (func.out ∌D ix))
+    → (Γ : Ctx) → (α : Id)
+    → 𝔾ᵢ (λ { ( Γ , α ) → Lift 0ℓ (Γ ∌ α) }) (Γ , α)
+  gen∌ m Γ τ = IDesc-isoGen (Γ , τ) m
+
+  𝕋-as`→ : (τ : 𝕋) → 𝔾 (Σ (𝕋 × 𝕋) λ { (τ₁ , τ₂) → τ ≡ τ₁ `→ τ₂ })
+  𝕋-as`→ (`` x) = empty
+  𝕋-as`→ (τ₁ `→ τ₂) = pure ((τ₁ , τ₂) , refl)
+  𝕋-as`→ (`∀ x · τ) = empty
+
+  𝕋-as`∀ :(τ : 𝕋) → 𝔾 (Σ (Id × 𝕋) λ { (α , σ) → τ ≡ `∀ α · σ})
+  𝕋-as`∀ (`` x) = empty
+  𝕋-as`∀ (τ `→ τ₁) = empty
+  𝕋-as`∀ (`∀ α · σ) = pure ((α , σ) , refl)
+  
+  [:=]inv : (τ' : 𝕋) → 𝔾 (Σ (𝕋 × Id × 𝕋) λ { (σ , α , τ) → τ' ≡ σ [ α := τ ] })
+  [:=]inv τ' = pure (((`` ℕ.zero) , ℕ.zero , τ') , refl) ∥ pure (((`` 1) , 1 , τ') , refl)
 
   λ2M : (ix : Ctx × 𝕋) → IDescM 𝔾 (func.out λ2D ix)
   λ2M = λ { (Γ , τ) → `σ~ (
-    λ { ∙            → `Σ~ {!!} λ s → `1~
+    λ { ∙            → `Σ~ ⦇ lower ⟨ Γ , τ ` uncurry (gen∋ CtxM) ⟩ ⦈ λ s → `1~
        ; (▻ ∙)       → `Σ~ gen𝕋 λ s → `var~ `×~ `var~
-       ; (▻ ▻ ∙)     → `Σ~ {!!} λ { (_ , refl) → `Σ~ genId (λ _ → `var~) }
-       ; (▻ ▻ ▻ ∙)   → `Σ~ {!!} λ { (_ , refl) → `var~ }
-       ; (▻ ▻ ▻ ▻ ∙) → `Σ~ {!!} λ { (_ , refl) → `Σ~ {!!} λ _ → `var~ } 
+       ; (▻ ▻ ∙)     → `Σ~ (𝕋-as`→ τ) λ { (_ , refl) → `Σ~ genId (λ _ → `var~) }
+       ; (▻ ▻ ▻ ∙)   → `Σ~ ([:=]inv τ) λ { (_ , refl) → `var~ }
+       ; (▻ ▻ ▻ ▻ ∙) → `Σ~ (𝕋-as`∀ τ) λ { ((α , σ) , refl) → `Σ~ (⦇ lower ⟨ Γ , α ` uncurry (gen∌ ∌M) ⟩ ⦈) λ _ → `var~ } 
     })}
+
+  genλ2 : (ix : Ctx × 𝕋) → 𝔾ᵢ (λ { (Γ , τ) → Γ ⊢ τ }) ix
+  genλ2 (Γ , τ) = ⦇ lower (Callᵢ {x = Γ , τ} (λ ix → IDesc-isoGen ix λ2M) (Γ , τ)) ⦈ 
+
+  ctx1 : Ctx
+  ctx1 = ∅ , 0 ∶ (`` 0)
+
+  ty1 : 𝕋
+  ty1 = `∀ 1 · ((`` 1) `→ (`` 1))
+
+  toId : ∀ {Γ τ} → Γ ∋ τ → Id
+  toId {(_ , α ∶ _)} [Top] = α
+  toId {(Γ , _ ∶ _)} ([Pop] p) = toId p
+
+  toTerm : ∀ {Γ τ} → Γ  ⊢ τ → λ2
+  toTerm ([λ2-var] x) = ` toId x
+  toTerm ([λ2-app] p₁ p₂) = toTerm p₁ · toTerm p₂
+  toTerm ([λ2-abs] {x = x} p) = ƛ x ⇒ toTerm p
+  toTerm ([λ2-∀₁] p) = toTerm p
+  toTerm ([λ2-∀₂] {α = α} {σ = σ}  p x) = toTerm p ∶∶ (`∀ α · σ)
+
+  prop : (take 1 (⟨ genλ2 ⟩ᵢ (ctx1 , ty1) 4)) ≡ {!!} 
+  prop = {!refl!}
+
+  

@@ -64,7 +64,7 @@ module AgdaGen.Base where
 
       -- Choice between generators
       Orᵢ  : ∀ {a t : i → Set ℓ} {x : i}
-           → Genᵢ a t x → Genᵢ a t x → Genᵢ a t x
+             → Genᵢ a t x → Genᵢ a t x → Genᵢ a t x
 
       -- Recursive positions
       μᵢ    : ∀ {a : i → Set ℓ} (x : i) → Genᵢ a a x

@@ -129,7 +129,6 @@ module AgdaGen.Generic.Indexed.IDesc.Instances where
   Maybe-iso₂ {_} {⟨ ∙       , lift tt ⟩} = refl
   Maybe-iso₂ {_} {⟨ ▻ ∙ , x , lift tt ⟩} = refl
 
-
   ------ Finite Sets ------
 
   FinD : func zeroL ℕ ℕ
@@ -398,5 +397,9 @@ module AgdaGen.Generic.Indexed.IDesc.Instances where
     ('a' ∷ 'b' ∷ []) ∷ ('a' ∷ 'b' ∷ 'b' ∷ []) ∷ ('a' ∷ 'b' ∷ 'a' ∷ []) ∷ ('a' ∷ 'a' ∷ []) ∷
     ('a' ∷ 'a' ∷ 'b' ∷ []) ∷ ('a' ∷ 'a' ∷ 'a' ∷ []) ∷ []
   test = refl
+
+  vec : ∀ {ℓ} → Set → ℕ → IDesc ℓ ℕ
+  vec a zero    = `1
+  vec a (suc n) = `Σ a (λ _ → `var n)
 
   

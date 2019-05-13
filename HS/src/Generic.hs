@@ -17,7 +17,7 @@ module Generic where
   import Control.Applicative
 
   class GGeneratable f g where 
-    ggen :: G g (f a)
+    ggen :: G () g (f a)
 
   instance GGeneratable V1 g where 
     ggen = empty 
@@ -35,7 +35,7 @@ module Generic where
     ggen = (:*:) <$> ggen  <*> ggen
   
   instance {-# OVERLAPPING #-} GGeneratable (Rec0 f) f where 
-    ggen = K1 <$> mu
+    ggen = K1 <$> mu ()
 
   instance {-# OVERLAPPABLE #-} Generatable c 
       => GGeneratable (K1 i c) a where 

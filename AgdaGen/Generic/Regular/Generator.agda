@@ -11,6 +11,8 @@ open import Data.Unit
 open import Data.Sum
 open import Data.Product
 
+import Level
+
 open import Function
 
 module AgdaGen.Generic.Regular.Generator where
@@ -43,5 +45,3 @@ module AgdaGen.Generic.Regular.Generator where
   isoCogen a ⦃ record { W = f , iso } ⦄ reginfo {b} gₐ =
     ⦇ (λ f → f ∘ (λ { (In x) → x }) ∘ _≅_.from iso)
       (` deriveCogen {g = f} reginfo gₐ) ⦈
-
-  

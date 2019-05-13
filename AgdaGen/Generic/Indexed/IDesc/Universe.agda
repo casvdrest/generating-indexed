@@ -81,10 +81,14 @@ module AgdaGen.Generic.Indexed.IDesc.Universe where
 
   -- Fixed-point combinator for interpretations of indexed
   -- descriptions
-  data μ {ℓ k} {I : Set k} (D : func ℓ I I)(i : I) : Set (ℓ ⊔ k) where
-    ⟨_⟩ : ⟦ D ⟧func (μ D) i → μ D i
+  data μ {ℓ k} {I : Set k} (φ : func ℓ I I) (i : I) : Set (ℓ ⊔ k) where
+    ⟨_⟩ : ⟦ φ ⟧func (μ φ) i → μ φ i
 
-  mapm : ∀ {ℓ k} {I : Set k} {δ : IDesc ℓ I} {P Q : Set ℓ → Set (sucL ℓ)} → (∀ {s : Set ℓ} → P s → Q s) → IDescM P δ → IDescM Q δ
+  data Fix {ℓ k} {I : Set k} (φ : I → IDesc ℓ I) (i : I) : Set (ℓ ⊔ k) where
+    In : ⟦ φ i ⟧ (Fix φ) → Fix φ i
+
+  mapm : ∀ {ℓ k} {I : Set k} {δ : IDesc ℓ I} {P Q : Set ℓ → Set (sucL ℓ)}
+       → (∀ {s : Set ℓ} → P s → Q s) → IDescM P δ → IDescM Q δ
   mapm f `var~ = `var~
   mapm f `1~ = `1~
   mapm f (dₗ `×~ dᵣ) = (mapm f dₗ) `×~ mapm f dᵣ
