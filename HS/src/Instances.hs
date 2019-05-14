@@ -8,6 +8,7 @@ module Instances where
 
   import Gen
   import Depth
+  import Data
   import Control.Applicative
 
   instance (CoGeneratable a, Generatable b) => Generatable (a -> b) where 

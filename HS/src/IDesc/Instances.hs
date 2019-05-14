@@ -3,6 +3,10 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module IDesc.Instances where
 
@@ -10,131 +14,115 @@ module IDesc.Instances where
   import Gen
   import Enumerate
   import Depth
-  import Data.Singletons
   import Control.Applicative
   import Unsafe.Coerce
+  import Instances
   import qualified GHC.Generics as Generics
+
+  import Singleton 
+  import Data
 
   import IDesc.IDesc
 
   ----------------------------------------------------------------------------
   -- Finite sets
 
-  finFunc :: Func Nat Nat
-  finFunc Zero    = Empty
-  finFunc (Suc n) =
-    (SSuc (SSuc SZero)) :+>
-    (   One
-    ::: Var n
-    ::: VNil
-    )
+  type family FinDesc (n :: Nat) :: IDesc Nat Nat 
+  type instance FinDesc Zero    = Empty
+  type instance FinDesc (Suc n) = (SSuc (SSuc SZero)) :+> (One ::: Var n ::: VNil)
 
-  toFin :: Nat -> Anything -> Nat
-  toFin (Suc n) (Hidden x) = 
-    case asEither x of
-      (Left _) -> Zero
-      (Right x) ->
-        case asEither x of
-          (Left x) ->
-            case asPair x of
-              (n' , rc) -> Suc (toFin n' (Hidden rc))
+  type instance Desc T_FIN Nat Nat i = FinDesc i
 
-  fin :: Description Nat Nat
-  fin = Description
-    { func   = finFunc
-    , to     = toFin
-    }
+  finSDesc :: Proxy T_FIN -> Sing n -> SingIDesc (FinDesc n)
+  finSDesc _ SZero    = SEmpty 
+  finSDesc _ (SSuc n) = SSuc2 (SSuc2 SZero2) :+>~ (SOne :::~ SVar (demote n) :::~ SVNil)
 
-  instance IndexedGeneratable Nat Nat where
-    genIndexed   = genDesc fin
-    giMuConv   _ = unHidden asNat
+  toFin :: Proxy T_FIN -> Sing n -> Interpret (FinDesc n) -> Nat 
+  toFin _ (SSuc sn) (Left ()) = Zero 
+  toFin _ (SSuc sn) (Right n) = Suc n 
 
-  genFin :: Nat -> G Nat Nat Nat
-  genFin = genDesc fin
+  instance Describe T_FIN Nat Nat where 
+    sdesc = finSDesc
+    to    = toFin
+
+  genFin :: forall (n :: Nat) . Nat -> G Nat Nat Nat 
+  genFin n = 
+    case promote n of 
+      (Promoted sn) -> genDesc (Proxy :: Proxy T_FIN) sn
+
+  instance IndexedGeneratable Nat Nat where 
+    genIndexed = genFin
 
   ----------------------------------------------------------------------------
   -- Vectors
 
-  vecFunc :: Generatable a => Proxy a -> Func [a] Nat
-  vecFunc _ Zero    = One
-  vecFunc p (Suc n) = K p (const ()) :*: (Var n)
+  type family VecDesc (a :: *) (n :: Nat) :: IDesc [a] Nat
+  type instance VecDesc a Zero    = One
+  type instance VecDesc a (Suc n) = K ('Proxy :: Proxy a) '() :*: (Var n)
 
-  toVec :: Nat -> Anything -> [a]
-  toVec Zero (Hidden x) =
-    case asUnit x of
-      () -> []
-  toVec (Suc n) (Hidden x) = error "should redefine" {-
-    case asPair x of
-      (a , b) -> a : (toVec n (Hidden b)) -}
+  type instance Desc T_VEC [a] Nat i = VecDesc a i
 
-  vec :: Generatable a => Description [a] Nat
-  vec = Description
-    { func   = vecFunc Proxy
-    , to     = toVec
-    }
+  vecSDesc :: Generatable a => Proxy a -> Proxy T_VEC -> Sing n -> SingIDesc (VecDesc a n)
+  vecSDesc _ _ SZero    = SOne
+  vecSDesc p _ (SSuc n) = SK p SUnit_ :*:~ SVar (demote n)
+
+  toVec :: Generatable a => Proxy a -> Proxy T_VEC -> Sing n -> Interpret (VecDesc a n) -> [a]
+  toVec _ _ SZero ()          = []
+  toVec _ _ (SSuc n) (x , xs) = x : xs
+
+  instance Generatable a => Describe T_VEC [a] Nat where 
+    sdesc = vecSDesc Proxy
+    to    = toVec Proxy
+
+  genVec :: forall a (n :: Nat) . Generatable a => Nat -> G Nat [a] [a] 
+  genVec n = 
+    case promote n of 
+      (Promoted sn) -> genDesc (Proxy :: Proxy T_VEC) sn
 
   ----------------------------------------------------------------------------
   -- Well-scoped terms
-
+  
   instance DepthCalc () where
     depth () = 0
 
   data Term a = VarT a
-            | AbsT a (Term a)
-            | AppT (Term a) (Term a)
-            deriving (Show, Eq , Generics.Generic, DepthCalc)
+              | AbsT a (Term a)
+              | AppT (Term a) (Term a)
+              deriving (Show, Eq , Generics.Generic, DepthCalc)
 
-  termFunc :: Func (Term Nat) Nat
-  termFunc n =
-    SSuc (SSuc (SSuc SZero)) :+>
-    (   K (Proxy :: Proxy Nat) id
-    ::: Var (Suc n)
-    ::: Var n :*: Var n
-    ::: VNil
-    )
+  type family WSTermDesc (n :: Nat) :: IDesc (Term Nat) Nat
+  type instance WSTermDesc n = 
+    SSuc (SSuc (SSuc SZero)) :+> 
+    (   K ('Proxy :: Proxy Nat) n
+    ::: Var (Suc n) 
+    ::: Var n :*: Var n 
+    ::: VNil )
 
-  toTerm :: Nat -> Anything -> Term Nat
-  toTerm n (Hidden x) = 
-    case asEither x of
-      (Left a)  -> VarT (asNat a)
-      (Right b) ->
-        case asEither b of
-          (Left t') ->
-            case asPair t' of
-              (n' , r) -> AbsT Zero (toTerm n' (Hidden r))
-          (Right t') ->
-            case asEither t' of
-              (Left ts) ->
-                case asPair ts of
-                  (t1 , t2) ->
-                    let (n1 , r1) = asPair t1 in
-                    let (n2 , r2) = asPair t2 in 
-                    AppT (toTerm n1 (Hidden r1)) (toTerm n2 (Hidden r2)) 
+  type instance Desc T_WSTERM (Term Nat) Nat n = WSTermDesc n
 
-  term :: Description (Term Nat) Nat
-  term = Description
-     { func   = termFunc
-    , to     = toTerm
-    }
+  wsTermSDesc :: Proxy T_WSTERM -> Sing n -> SingIDesc (WSTermDesc n)
+  wsTermSDesc _ n = 
+    SSuc2 (SSuc2 (SSuc2 SZero2)) :+>~ 
+    (    SK Proxy n
+    :::~ SVar (Suc (demote n)) 
+    :::~ (SVar (demote n)) :*:~ (SVar (demote n)) 
+    :::~ SVNil )
 
-  termGen :: Nat -> G Nat (Term Nat) (Term Nat)
-  termGen i = genDesc term i
+  toTerm :: Proxy T_WSTERM -> Sing n -> Interpret (WSTermDesc n) -> Term Nat
+  toTerm _ n (Left x)                  = VarT x
+  toTerm _ n (Right (Left x))          = AbsT Zero x
+  toTerm _ n (Right (Right (t1 , t2))) = AppT t1 t2
 
-  runTermGen :: Nat -> Int -> [(Term Nat)]
-  runTermGen = run termGen
+  instance Describe T_WSTERM (Term Nat) Nat where 
+    sdesc = wsTermSDesc 
+    to    = toTerm
 
-  instance Ord Nat where
-    Zero <= n = True
-    (Suc n) <= Zero = False
-    (Suc n) <= Suc m = n <= m
+  genTerm :: Nat -> G Nat (Term Nat) (Term Nat)
+  genTerm n = 
+    case promote n of 
+      Promoted n' -> genDesc (Proxy :: Proxy T_WSTERM) n' 
 
-  well_scoped :: (Term Nat) -> Bool
-  well_scoped = well_scoped' Zero
-    where well_scoped' :: Nat -> (Term Nat) -> Bool
-          well_scoped' n (VarT n') = n' <= n
-          well_scoped' n (AbsT _ t) = well_scoped' (Suc n) t
-          well_scoped' n (AppT t1 t2) = well_scoped' n t1 && well_scoped' n t2
-
+{-
   ----------------------------------------------------------------------------
   -- Rose Trees
 
@@ -203,3 +191,4 @@ module IDesc.Instances where
 
   runTreeGen :: Nat -> Int -> [Tree]
   runTreeGen = run (genDesc tree)
+-} 

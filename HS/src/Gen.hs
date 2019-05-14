@@ -11,8 +11,6 @@ module Gen where
   import Control.Applicative
   import Unsafe.Coerce
 
-  data Nat = Zero | Suc Nat deriving (Show, Eq, Generic, DepthCalc)
-
   -- | The type of abstract generators 
   data Gen i a t where 
     None  :: Gen i a t 

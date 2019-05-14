@@ -1,13 +1,12 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module IDesc.IDesc where
 
@@ -15,153 +14,177 @@ module IDesc.IDesc where
   import Gen
   import Enumerate
   import Depth
-  import Data.Singletons
+  import Data
+  import Singleton
+
   import Control.Applicative
   import Unsafe.Coerce
   import qualified GHC.Generics as Generics
-
   import Debug.Trace
 
-  ----------------------------------------------------------------------------
-  -- Hide the type of a value
-  data Anything = forall a . Hidden a
+  ---------------------------------------------------------------------------
+  -- Singleton types
 
-  -- | Singleton instance for Nat, used for generalised coproducts. 
-  data instance Sing (n :: Nat) where
-    SZero :: Sing Zero
-    SSuc  :: Sing n -> Sing (Suc n)
-
-  -- | Finite sets
-  data Fin (n :: Nat) where
-    Fz :: Fin (Suc n)
-    Fs :: Fin n -> Fin (Suc n)
-
-  -- | Length-indexed lists (vectors)
-  data Vec (a :: *) :: Nat -> * where
-    VNil :: Vec a Zero
-    (:::) :: a -> Vec a n -> Vec a (Suc n)
-
-  infixr 5 :::
-  
-  ----------------------------------------------------------------------------
-  -- Generators for common types
-
-  genBool :: G () Bool Bool
-  genBool = pure True <|> pure False
-
-  genNat :: G () Nat Nat
-  genNat = pure Zero <|> Suc <$> mu ()
-
-  instance Generatable Bool where
-    gen = genBool
-
-  instance Generatable Nat where
-    gen = genNat
-
-  instance Generatable () where
-    gen = pure ()
-  
-  -- | Generation of indexed types
   class IndexedGeneratable a i where
     genIndexed :: i -> G i a a
 
-  -- | Generatable, non-indexed datatypes are also generatable 
-  --   indexed types (by trivially indexing them)
   instance Generatable a => IndexedGeneratable a () where
     genIndexed () = gen
 
-  -- | Function tags -> used to select the correct reversal when solving sigma's
   data FTag = Plus
             | Choose
             | Equal
  
-  -- | Functions (distinguished by FTag) of whom we can enumerate 
-  --   the set of arguments that map to a given result. 
   class (Show i , Show o) => Solve (t :: FTag) i o where
     solve :: Proxy t -> o -> G () i i
 
-  -- | Equality constraint. Yields a unit if the input values are equal, nothing otherwise
   instance (Show a , Eq a) => Solve Equal () (a,a) where
     solve _ (x, y) | x == y    = pure ()
                    | otherwise = empty
 
-  -- | Chooses a value of the given type
   instance (Show a , Eq a) => Solve Choose a a where
     solve _ x = pure x 
 
   --------------------------------------------------------------------------
-  -- Universe definition of indexed descriptions
+  -- Universe definition
   
   data IDesc (a :: *) (i :: *) where
     One    :: IDesc a i
     Empty  :: IDesc a i
     Var    :: i -> IDesc a i
     (:*:)  :: IDesc a i -> IDesc a i -> IDesc a i
-    (:+>)  :: Sing n -> Vec (IDesc a i) n -> IDesc a i
-    K      :: IndexedGeneratable s j => Proxy s -> (i -> j) -> IDesc a i
-    Sigma  :: forall it ot a i (s :: FTag) . Solve s it ot =>
-      Proxy s -> G () ot ot -> (it -> IDesc a i) -> IDesc a i 
+    (:+>)  :: SNat n -> Vec (IDesc a i) n -> IDesc a i
+    K      :: Proxy s -> j -> IDesc a i
+    Sigma  :: Proxy s -> IDesc a (s -> i) -> IDesc a i 
 
-  type Func a i = i -> IDesc a i
+  -- | Uncovers the type carried by a proxy  
+  type UnProxy (p :: Proxy a) = a
+
+  -- | Map a type to it's interpretation 
+  type family Interpret (d :: IDesc a i) :: *
+  type instance Interpret One                            = ()
+  type instance Interpret Empty                          = E
+  type instance Interpret (Var _ :: IDesc a i)           = a
+  type instance Interpret (dl :*: dr)                    = (Interpret dl , Interpret dr)
+  type instance Interpret (SZero :+> VNil)               = E
+  type instance Interpret (SSuc SZero :+> (x ::: VNil))  = Interpret x
+  type instance Interpret (SSuc (SSuc n) :+> (x ::: xs)) = Either (Interpret x) (Interpret (SSuc n :+> xs))
+  type instance Interpret (K p _)                        = UnProxy p
+  type instance Interpret (Sigma p fd)                   = (UnProxy p , Interpret fd)
+
+  --------------------------------------------------------------------------
+  -- Singleton Instance for Indexed Descriptions
+
+  -- | Singleton type for indexed descriptions
+  data SingIDesc (d :: IDesc a i) where 
+    SOne   :: SingIDesc One
+    SEmpty :: SingIDesc Empty 
+    SVar   :: forall (i' :: i) . i -> SingIDesc (Var i')  
+    (:*:~) :: SingIDesc l -> SingIDesc r -> SingIDesc (l :*: r)
+    (:+>~) :: SNat2 n -> SVec xs -> SingIDesc (n :+> xs)
+    SK     :: forall (j :: *) (j' :: j) . 
+     (IndexedGeneratable s j , Singleton j)
+      => Proxy s -> Sing j'
+      -> SingIDesc (K ('Proxy :: Proxy s) j')
+    SSigma :: SingGeneratable s 
+      => Proxy s -> SingIDesc d 
+      -> (Sing s' -> Interpret d :~: Interpret (Expand d s')) 
+      -> SingIDesc (Sigma ('Proxy :: Proxy s) d)  
+
+  -- | Demote a value of type SingIDesc d to some IDesc a i
+  demoteIDesc :: forall (d :: IDesc a i) . SingIDesc d -> IDesc a i 
+  demoteIDesc SOne                        = One
+  demoteIDesc SEmpty                      = Empty 
+  demoteIDesc (SVar x)                    = Var x
+  demoteIDesc (l :*:~ r)                  = demoteIDesc l :*: demoteIDesc r
+  demoteIDesc (SZero2 :+>~ SVNil)         = SZero :+> VNil 
+  demoteIDesc (SSuc2 sn :+>~ (x :::~ xs)) = 
+    case demoteIDesc (sn :+>~ xs) of 
+      (sn' :+> xs') -> 
+        (SSuc sn' :+> (demote x ::: xs'))
+  demoteIDesc (SK p p')                   = K p p'
+  demoteIDesc (SSigma p desc eq)          = Sigma p (demote desc)
+
+  instance Singleton (IDesc a i) where 
+    type Sing = SingIDesc
+    demote = demoteIDesc
+
+  --------------------------------------------------------------------------
+  -- Description Expansions 
+
+  -- | Map expansions over vectors
+  type family VExpand (sn :: SNat n) (xs :: Vec (IDesc a (s -> i)) n) (x :: s) :: Vec (IDesc a i) n
+  type instance VExpand SZero     VNil s       = VNil
+  type instance VExpand (SSuc sn) (x ::: xs) s = Expand x s ::: VExpand sn xs s
+
+  -- | Expand some description 'd :: IDesc a (s -> i)' to a "function" of type 
+  --   s -> IDesc a i. 
+  type family Expand (d :: IDesc a (s -> i)) (x :: s) :: IDesc a i
+  type instance Expand One         s = One
+  type instance Expand Empty       s = Empty 
+  type instance Expand (Var i)     s = Var (i s)
+  type instance Expand (dl :*: dr) s = (Expand dl s) :*: (Expand dr s)
+  type instance Expand (sn :+> xs) s = sn :+> VExpand sn xs s 
+  type instance Expand (K p sj)    s = K p sj
+  
+  -- | Map term level expansion over vectors
+  vexpand :: 
+    forall (s :: *) (s' :: s) (sn :: SNat n) (xs :: Vec (IDesc a (s -> i)) n) .  
+    (Singleton s) => SNat2 sn -> SVec xs -> Sing s' -> SVec (VExpand sn xs s')
+  vexpand SZero2     SVNil       s = SVNil 
+  vexpand (SSuc2 sn) (x :::~ xs) s = expand x s :::~ vexpand sn xs s
+
+  -- | Term level expansion of descriptions
+  expand :: 
+    forall (s :: *) (s' :: s) (d :: IDesc a (s -> i)) . (Singleton s) => 
+    SingIDesc d -> Sing s' -> SingIDesc (Expand d s') 
+  expand SOne         sv = SOne
+  expand SEmpty       sv = SEmpty
+  expand (SVar ix)    sv = SVar (ix (demote sv))
+  expand (dl :*:~ dr) sv = expand dl sv :*:~ expand dr sv
+  expand (sn :+>~ xs) sv = sn :+>~ vexpand sn xs sv
 
   ---------------------------------------------------------------------------
-  -- Generic generator for indexed descriptions
+  -- Generic generator 
 
-  idesc_gen :: IDesc a i -> i -> G i Anything Anything
-  idesc_gen One _ = pure (Hidden ())
-  idesc_gen Empty _ = G None
-  idesc_gen (Var i) _ = (\x (Hidden y) -> Hidden (x , y)) <$> pure i <*> G (Mu i)
-  idesc_gen (SZero :+> VNil) _= G None
-  idesc_gen (dl :*: dr) i =
-      (\(Hidden x) (Hidden y) -> Hidden (x , y)) <$>
-        idesc_gen dl i
-    <*> idesc_gen dr i
-  idesc_gen ((SSuc n) :+> (x ::: xs)) i =
-        ((\(Hidden x) -> Hidden $ Left x)  <$> idesc_gen x i)
-    <|> ((\(Hidden y) -> Hidden $ Right y) <$> idesc_gen (n :+> xs) i)
-  idesc_gen (K (Proxy :: Proxy s) (j :: i -> jTy)) i = Hidden <$> G (Call (unG . gen) (j i))
-    where gen :: jTy -> G jTy s s
-          gen = genIndexed
-  idesc_gen (Sigma ptag og f) i =
-    do v  <- G (Call (\() -> unG og) ())
-       iv <- G (Call (\() -> unG (solve ptag v)) ())
-       idesc_gen (f iv) i
+  -- | Derive a generator from a description
+  idesc_gen :: forall (d :: IDesc a i) . (Singleton i) => SingIDesc d -> G i a (Interpret d)
+  idesc_gen SOne                               = pure ()
+  idesc_gen SEmpty                             = G None
+  idesc_gen (SVar v)                           = mu v 
+  idesc_gen (dl :*:~ dr)                       = (,) <$> idesc_gen dl <*> idesc_gen dr
+  idesc_gen (SZero2 :+>~ SVNil)                = G None
+  idesc_gen (SSuc2 SZero2 :+>~ (d :::~ SVNil)) = idesc_gen d
+  idesc_gen (SSuc2 (SSuc2 n) :+>~ (d :::~ ds)) =
+        Left  <$> idesc_gen d 
+    <|> Right <$> idesc_gen (SSuc2 n :+>~ ds)
+  idesc_gen (SK (Proxy :: Proxy s) sj) = G (Call (unG . genIndexed) (demote sj))
+  idesc_gen (SSigma Proxy f eq)                = do 
+    x <- G (Call (\() -> unG genSing) ())
+    p <- idesc_gen (expand f x) 
+    pure (demote x , eqConv (sym (eq x)) p) 
 
-  -- | a type description consists of a function from index to description, and a 
-  --   conversion function that describes how we can convert to the goal type. 
-  data Description a i = Description
-    { func   :: Func a i
-    , to     :: i -> Anything -> a
-    }
-
-  -- | Composes a generator that generates all inhabitants of the fixed point of 
-  --   a given description, and applies the accompanying conversion function to 
-  --   those values. 
-  genDesc :: forall a i . Description a i -> i -> G i a a
-  genDesc desc x = to desc x <$> (G (Call (unG . genF) x))
-    where genF :: i -> G i Anything Anything
-          genF ix = idesc_gen (func desc ix) ix
-
+  -- | Tags used to tag various indexed datatypes. We need this to 
+  --   distinguish between different indexed datatypes that are mapped
+  --   to the same non-indexed datatype. 
+  data DataTag = T_FIN  
+               | T_VEC
+               | T_WSTERM 
+               | T_WTTERM 
   
-  ---------------------------------------------------------------------------
-  -- These are just there so that we purposefully convert to a certain goal 
-  -- type when invoking unsafeCoerce ...
+  -- | Maps a combination of tag, goal type and index to a description. 
+  type family Desc (t :: DataTag) (a :: *) (i :: *) (i' :: i) :: IDesc a i
+
+  -- | Class of types that can be described by an indexed description. 
+  -- 
+  --   Again, we carry around a 'DataTag' to disambiguate between indexed types
+  --   that share the same goal type. 
+  class Singleton i => Describe (t :: DataTag) (a :: *) (i :: *) where 
+    sdesc :: Proxy t -> Sing i' -> SingIDesc (Desc t a i i')
+    to    :: Proxy t -> Sing i' -> Interpret (Desc t a i i') -> a
   
-  asEither :: x -> Either a b
-  asEither = unsafeCoerce
-
-  asPair :: x -> (a , b)
-  asPair = unsafeCoerce
-
-  asUnit :: x -> ()
-  asUnit = unsafeCoerce
-
-  asNat :: x -> Nat
-  asNat = unsafeCoerce
-
-  asBool :: x -> Bool
-  asBool = unsafeCoerce
-
-  -- | Unpack a hidden value using a given conversion function. 
-  unHidden :: (forall a . a -> b) -> Anything -> b
-  unHidden f (Hidden x) = f x
+  -- | Derive generators for types that are members of the 'Describe' class by using their associated 
+  --   description to compose a generator. 
+  genDesc :: forall a i t (i' :: i) . (Singleton i , Describe t a i ) => Proxy t -> Sing i' -> G i a a
+  genDesc p (x :: Sing i') = 
+    (to p x) <$> idesc_gen (sdesc p x :: SingIDesc (Desc t a i i')) 
