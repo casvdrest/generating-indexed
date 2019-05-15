@@ -92,3 +92,5 @@ module Gen where
   -- | Lifts a value from a to () -> a 
   triv :: a -> () -> a 
   triv = const
+
+  
