@@ -127,6 +127,7 @@ module IDesc.IDesc where
   type instance Expand (dl :*: dr) s = (Expand dl s) :*: (Expand dr s)
   type instance Expand (sn :+> xs) s = sn :+> VExpand sn xs s 
   type instance Expand (K p sj)    s = K p sj
+  type instance Expand (Sigma p d) s = Sigma p (Expand d s)
   
   -- | Map term level expansion over vectors
   vexpand :: 

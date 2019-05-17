@@ -141,16 +141,11 @@ module IDesc.Instances where
   type instance Desc T_STREE Tree Nat n = STreeDesc n
 
   sTreeSDesc :: Proxy T_STREE -> Sing n -> SingIDesc (STreeDesc n)
-<<<<<<< HEAD
   sTreeSDesc _ SZero    = SOne
   sTreeSDesc _ (SSuc n) = 
      SSigma Proxy (Proxy :: Proxy GT_INVERSEPLUS) 
      (SVar (\(n , m) -> n) :*:~ SVar (\(n , m) -> m)) 
      (\_ -> Refl) (demote n)
-=======
-  sTreeSDesc _ SZero = SOne
-  sTreeSDesc _ (SSuc n) = SSigma Proxy (Proxy :: Proxy GT_INVERSEPLUS) (SVar (\(n , m) -> n) :*:~ SVar (\(n , m) -> m)) (\_ -> Refl) (demote n)
->>>>>>> b9a64864b5866d3cf501c224ab3b2259a941471d
  
   toTree :: Proxy T_STREE -> Sing n -> Interpret (STreeDesc n) -> Tree 
   toTree _ SZero ()               = Leaf
