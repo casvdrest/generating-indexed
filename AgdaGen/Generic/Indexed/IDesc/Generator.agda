@@ -22,7 +22,6 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
   open GMonad       ⦃...⦄
-  open GNullable    ⦃...⦄
 
   -- Generate selectors
   Sl-gen : ∀ {ℓ} (n : Lift ℓ ℕ) → 𝔾ᵢ {ℓ} Sl n
@@ -59,22 +58,18 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix m with func.out φ₁ ix | inspect (func.out φ₁) ix
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix `var~ | `var i | [ φout≡`var ] =
     ⦇ (λ x → ⟦⟧subst {φ = φ₁} {φ' = φ₂} φout≡`var ⟨ x ⟩) (μᵢ i) ⦈
-
   -- `1 combinator (unit)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix `1~ | `1     | [ φout≡`1 ] =
     ⦇ (⟦⟧subst {φ = φ₁} {φ' = φ₂} {ix = ix} φout≡`1 (lift tt)) ⦈
-
   -- `× combinator (product)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (m₁ `×~ m₂) | δ₁ `× δ₂ | [ φout≡`× ] =
     ⦇ (λ l r → ⟦⟧subst {φ = φ₁} {ix = ix}  φout≡`× (l , r))
       (IDesc-gen ix m₁) (IDesc-gen ix m₂) ⦈
-
   -- `σ combinator (generic coproduct)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (`σ~ mₛ) | `σ n T | [ φout≡`σ ] =
     do sl ← Callᵢ {x = ix} Sl-gen (lift n)
        r  ← IDesc-gen ix (mₛ sl)
        pure (⟦⟧subst {φ = φ₁} {ix = ix} φout≡`σ (sl , r))
-
   -- `Σ combinator (dependent pairs)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (`Σ~ mₛ mₜ) | `Σ S T | [ φout≡`Σ ] =
     do sl ← Call {x = ix} mₛ
@@ -104,5 +99,3 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   IDesc-isoGen {I = I} ⦃ p = record { W = φ , iso  } ⦄ ix m =
     ⦇ (λ v → _≅_.to iso ⟨ v ⟩) (Callᵢ {j = I} {x = ix}
       (λ y → IDesc-gen {φ₁ = φ} {φ₂ = φ} y (m y)) ix) ⦈
-
- 

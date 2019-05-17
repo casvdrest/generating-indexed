@@ -86,9 +86,10 @@ module IDesc.IDesc where
      (IndexedGeneratable s j , Singleton j)
       => Proxy s -> Sing j'
       -> SingIDesc (K ('Proxy :: Proxy s) j')
-    SSigma :: SingGeneratable s 
-      => Proxy s -> SingIDesc d 
-      -> (Sing s' -> Interpret d :~: Interpret (Expand d s')) 
+    SSigma :: TSingGeneratable t s 
+      => Proxy s -> Proxy t -> SingIDesc d 
+      -> (forall s' . Sing s' -> Interpret d :~: Interpret (Expand d s')) 
+      -> InputType ('Proxy :: Proxy t)
       -> SingIDesc (Sigma ('Proxy :: Proxy s) d)  
 
   -- | Demote a value of type SingIDesc d to some IDesc a i
@@ -103,7 +104,7 @@ module IDesc.IDesc where
       (sn' :+> xs') -> 
         (SSuc sn' :+> (demote x ::: xs'))
   demoteIDesc (SK p p')                   = K p p'
-  demoteIDesc (SSigma p desc eq)          = Sigma p (demote desc)
+  demoteIDesc (SSigma p p' desc eq _)          = Sigma p (demote desc)
 
   instance Singleton (IDesc a i) where 
     type Sing = SingIDesc
@@ -159,18 +160,10 @@ module IDesc.IDesc where
         Left  <$> idesc_gen d 
     <|> Right <$> idesc_gen (SSuc2 n :+>~ ds)
   idesc_gen (SK (Proxy :: Proxy s) sj) = G (Call (unG . genIndexed) (demote sj))
-  idesc_gen (SSigma Proxy f eq)                = do 
-    x <- G (Call (\() -> unG genSing) ())
+  idesc_gen (SSigma Proxy p f eq v)          = do 
+    (Promoted x) <- G (Call (\() -> unG (taggedGen p v)) ())
     p <- idesc_gen (expand f x) 
     pure (demote x , eqConv (sym (eq x)) p) 
-
-  -- | Tags used to tag various indexed datatypes. We need this to 
-  --   distinguish between different indexed datatypes that are mapped
-  --   to the same non-indexed datatype. 
-  data DataTag = T_FIN  
-               | T_VEC
-               | T_WSTERM 
-               | T_WTTERM 
   
   -- | Maps a combination of tag, goal type and index to a description. 
   type family Desc (t :: DataTag) (a :: *) (i :: *) (i' :: i) :: IDesc a i

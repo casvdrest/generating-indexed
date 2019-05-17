@@ -7,6 +7,9 @@
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module IDesc.Instances where
 
@@ -122,16 +125,65 @@ module IDesc.Instances where
     case promote n of 
       Promoted n' -> genDesc (Proxy :: Proxy T_WSTERM) n' 
 
-{-
   ----------------------------------------------------------------------------
-  -- Rose Trees
+  -- Sized Trees
+
+  data Tree = Leaf
+            | Node Tree Tree
+            deriving (Eq , Show)
+
+  type family I :: a -> b
+
+  type family STreeDesc (n :: Nat) :: IDesc Tree Nat
+  type instance STreeDesc Zero = One  
+  type instance STreeDesc (Suc n) = Sigma ('Proxy :: Proxy (Nat , Nat)) (Var I :*: Var I)
+
+  type instance Desc T_STREE Tree Nat n = STreeDesc n
+
+  sTreeSDesc :: Proxy T_STREE -> Sing n -> SingIDesc (STreeDesc n)
+  sTreeSDesc _ SZero    = SOne
+  sTreeSDesc _ (SSuc n) = 
+     SSigma Proxy (Proxy :: Proxy GT_INVERSEPLUS) 
+     (SVar (\(n , m) -> n) :*:~ SVar (\(n , m) -> m)) 
+     (\_ -> Refl) (demote n)
+ 
+  toTree :: Proxy T_STREE -> Sing n -> Interpret (STreeDesc n) -> Tree 
+  toTree _ SZero ()               = Leaf
+  toTree _ (SSuc n) (_ , (l , r)) = Node l r
+
+  instance Describe T_STREE Tree Nat where 
+    sdesc = sTreeSDesc
+    to    = toTree
+
+  genSTree :: Nat -> G Nat Tree Tree 
+  genSTree n =
+    case promote n of 
+      (Promoted n') -> genDesc (Proxy :: Proxy T_STREE) n' 
+
+  reversePlus :: Nat -> G () (Nat, Nat) (Nat , Nat)
+  reversePlus Zero = pure (Zero , Zero)
+  reversePlus (Suc n) =  pure (Suc n , Zero)
+                      <|> ((\(x, y) -> (x , Suc y)) <$> reversePlus n)
+
+  instance InType GT_INVERSEPLUS where
+    type InputType ('Proxy :: Proxy GT_INVERSEPLUS)= Nat
+
+  instance TSingGeneratable GT_INVERSEPLUS (Nat , Nat) where 
+    taggedGen Proxy n = do 
+      (n , m) <- G $ Call (\() -> unG $ reversePlus n) ()
+      case promote n of 
+        (Promoted n') -> 
+          case promote m of 
+            (Promoted m') -> 
+              pure (Promoted $ SPair n' m')
+
+            
+  ----------------------------------------------------------------------------
+  -- Rose Trees, poc for mutual recursion
 
   data Rose a = a :> [Rose a] deriving (Show)
 
   data RLabel = RL | RT
-
-  asLabel :: Anything -> RLabel
-  asLabel (Hidden x) = unsafeCoerce x
 
   data RoseTree' a = RoseNode' a (RoseTree' a)
                    | RoseNil'
@@ -153,42 +205,3 @@ module IDesc.Instances where
 
   runRoseGen :: Int -> [Rose Bool]
   runRoseGen = run genRose RT
-
-  ----------------------------------------------------------------------------
-  -- Sized Trees
-
-  data Tree = Leaf
-            | Node Tree Tree
-            deriving (Eq , Show)
-
-  treeFunc :: Func Tree Nat
-  treeFunc Zero    = One
-  treeFunc (Suc n) = Sigma (Proxy :: Proxy Plus) (pure n) (\(n' , m') -> Var n' :*: Var m') 
-
-  reversePlus :: Nat -> G () (Nat, Nat) (Nat , Nat)
-  reversePlus Zero = pure (Zero , Zero)
-  reversePlus (Suc n) =  pure (Suc n , Zero)
-                     <|> ((\(x, y) -> (x , Suc y)) <$> reversePlus n)
-
-  instance Solve Plus (Nat , Nat) Nat where
-    solve _ = reversePlus
-
-  toTree :: Nat -> Anything -> Tree
-  toTree Zero _ = Leaf
-  toTree (Suc n) (Hidden x) =
-    case asPair x of
-      (a , b) ->
-        case asPair a of
-          (ix1 , v1) -> 
-            case asPair b of
-              (ix2 , v2) -> Node (toTree ix1 (Hidden v1)) (toTree ix2 (Hidden v2))
-
-  tree :: Description Tree Nat
-  tree = Description
-    { func   = treeFunc
-    , to     = toTree
-    }
-
-  runTreeGen :: Nat -> Int -> [Tree]
-  runTreeGen = run (genDesc tree)
--} 

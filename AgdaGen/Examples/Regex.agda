@@ -17,7 +17,6 @@ module AgdaGen.Examples.Regex where
 
   open GAlternative ⦃...⦄
   open GApplicative ⦃...⦄
-  open GNullable    ⦃...⦄
 
   String : Set
   String = List Char

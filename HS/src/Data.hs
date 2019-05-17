@@ -37,22 +37,30 @@ module Data where
     VNil :: Vec a Zero
     (:::) :: a -> Vec a n -> Vec a (Suc n)
 
-  -- | Equality proofs
+  -- | Equality proofs (heterogeneous)
   -- 
-  --   'Refl :: a :~: b' is inhabited iff a ~ b 
-  --   Note: since ':~:' is kind-polymorphic, the kinds of 
-  --   respectively 'a' and 'b' need to be equal as well. 
-  --   In this case, polymorphic kinds are required to be 
-  --   able to construct equality proofs ranging over promoted
-  --   data constructors. 
+  --   'Refl :: a :~: b' is inhabited if a == b.
+  --   Note that such a proof can only exist if and only if  
+  --   both a and b have the same kind. 
+  -- 
+  --   > Refl :: 'True :~: 'True 
+  --   Where k1 == k2 == 'Bool
   data (:~:) (a :: k1) (b :: k2) where 
     Refl :: forall (k :: *) (ty :: k) . ty :~: ty  
   
   -- | Coerce values using an equality proof
-  eqConv :: a :~: b -> a -> b 
-  eqConv Refl x = x 
+  eqConv :: forall (a :: *) (b :: *)  . a :~: b -> (a -> b) 
+  eqConv Refl = id 
   
   -- | Equality symmetry
-  sym :: a :~: b -> b :~: a 
+  sym :: forall (a :: k) (b :: k) . a :~: b -> b :~: a 
   sym Refl = Refl
+
+  -- | Equality congruence
+  cong :: forall (a :: k) (b :: k) (f :: k -> *) . a :~: b -> f a :~: f b 
+  cong Refl = Refl
+
+  -- | Equality transitivity 
+  trans :: forall (a :: k) (b :: k) (c :: k) . a :~: b -> b :~: c -> a :~: c 
+  trans Refl Refl = Refl
   

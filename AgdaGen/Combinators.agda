@@ -12,22 +12,27 @@ open import Level renaming (suc to sucL; zero to zeroL)
 -- necessary operators. 
 module AgdaGen.Combinators where
 
+  -- 'map' for generators. We define this in terms of '<*>' and 'pure'
+  -- in order to limit the number of constructors exposed
   genMap :
     ∀ {ℓ k} {a b t : Set ℓ}
     → (a → b) → Gen {ℓ} {k} a t → Gen {ℓ} {k} b t
   genMap f g = Ap (Pure f) g
 
+  -- 'map', but for indexed generators
   genMapᵢ :
     ∀ {ℓ k} {i : Set k} {a b t : i → Set ℓ} {x : i}
     → (a x → b x) → Genᵢ a t x → Genᵢ b t x
   genMapᵢ f g = Apᵢ (Pureᵢ f) g
-  
+
+  -- Functor typeclass for generators 
   record GFunctor {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
          Set (sucL ℓ ⊔ sucL k) where
     infix 30 _<$>_
     field _<$>_ : ∀ {a b : i → Set ℓ} {x : i}
                 → (a x → b x) → f a x → f b x
 
+  -- Applicative typeclass for generators
   record GApplicative {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
          Set (sucL ℓ ⊔ sucL k) where
     field pure  : ∀ {a : i → Set ℓ} {x : i}
@@ -35,23 +40,24 @@ module AgdaGen.Combinators where
     field _<*>_ : ∀ {a b : i → Set ℓ} {x y : i}
                 → f (λ _ → a y → b x) x → f a y → f b x 
 
+  -- Applicative typeclass for generators
   record GMonad {ℓ k} {i : Set k} (m : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
          Set (sucL ℓ ⊔ sucL k) where
     field _>>=_ : ∀ {a b : i → Set ℓ} {x y : i}
                 → m a y → (a y → m b x) → m b x
 
+  -- Alternative typeclass for generators
   record GAlternative {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k))
          : Set (sucL ℓ ⊔ sucL k) where
     infixr 20 _∥_
     field _∥_ : ∀ {a : i → Set ℓ} {x : i}
-              → f a x → f a x → f a x 
-
-  record GNullable {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k))
-         : Set (sucL ℓ ⊔ sucL k) where
+              → f a x → f a x → f a x
     field empty : {a : i → Set ℓ} {x : i} → f a x
 
+  -- Expose the GMonad class
   open GMonad ⦃...⦄
 
+  -- We need to expose '>>' in order to be able to utilize do-notation
   _>>_ :
     ∀ {ℓ k} {i : Set k} {a b : i → Set ℓ}
       {x y : i} {m : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)}
@@ -60,7 +66,7 @@ module AgdaGen.Combinators where
   f >> g = f >>= λ _ → g
 
 
-  ------- Non-indexed generators ------
+  ------- Instances for non-indexed generators ------
 
   instance
     Gen-Functor :
@@ -88,14 +94,7 @@ module AgdaGen.Combinators where
       ∀ {ℓ} {t : Set ℓ}
       → GAlternative λ a _ → Gen {ℓ} {0ℓ} (a tt) t
     Gen-Alternative =
-      record { _∥_ = Or }
-
-  instance
-    Gen-Nullable :
-      ∀ {ℓ} {t : Set ℓ}
-      → GNullable λ a _ → Gen {ℓ} {0ℓ} (a tt) t
-    Gen-Nullable =
-      record { empty = None }
+      record { _∥_ = Or ; empty = None }
 
   ------ Indexed generators ------
 
@@ -125,11 +124,4 @@ module AgdaGen.Combinators where
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
       → GAlternative λ a x → Genᵢ a t x
     Genᵢ-Alternative =
-      record { _∥_ = Orᵢ }
-
-  instance
-    Genᵢ-Nullable :
-      ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
-      → GNullable λ a x → Genᵢ a t x
-    Genᵢ-Nullable =
-      record { empty = Noneᵢ } 
+      record { _∥_ = Orᵢ ; empty = Noneᵢ }

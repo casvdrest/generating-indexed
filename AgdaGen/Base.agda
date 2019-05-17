@@ -6,7 +6,7 @@ open import Data.Bool
 open import Data.List using (List; map; [_]; concatMap; []; _∷_; _++_)
 open import Data.Product using (Σ; Σ-syntax; _,_; _×_)
 open import Data.Unit
-open import Data.Fin hiding (lift)
+open import Data.Fin hiding (lift; _+_)
 open import Data.Maybe using (Maybe; just; nothing)
 
 open import Function
@@ -96,12 +96,15 @@ module AgdaGen.Base where
   co𝔾ᵢ : ∀ {ℓ k} {i : Set k} → (i → Set ℓ) → i →  Set (sucL k ⊔ (sucL ℓ))
   co𝔾ᵢ {ℓ} {k} f x = ∀ {b : Set ℓ} → 𝔾 {ℓ} {k} b → 𝔾ᵢ (λ x → f x → b) x
 
+  -- Generator interpretations. Map generators to any type, parameterized with
+  -- the type of values that are generated
   record ⟦Generator⟧ {ℓ k} (T : Set ℓ → Set ℓ) : Set (sucL k ⊔ sucL ℓ) where
     field
       ⟦_⟧gen  : ∀ {A : Set ℓ} → 𝔾 {ℓ} {k} A → T A
     field
       ⟦_⟧genᵢ : ∀ {I : Set k} {P : I → Set ℓ} → ((i : I) → 𝔾ᵢ P i) → (i : I) → T (P i)
 
+  -- Apply a mapping to a generator
   run :
     ∀ {ℓ k} {A : Set ℓ} {T : Set ℓ → Set ℓ}
       ⦃ it : ⟦Generator⟧ {ℓ} {k} T ⦄
@@ -109,6 +112,7 @@ module AgdaGen.Base where
   run ⦃ it = record { ⟦_⟧gen = ⟦_⟧gen ; ⟦_⟧genᵢ = _} ⦄ g =
     ⟦ g ⟧gen
 
+  -- Apply a mapping to an indexed generator
   runᵢ :
     ∀ {ℓ k} {I : Set k} {T : Set ℓ → Set ℓ}
       ⦃ it : ⟦Generator⟧ {ℓ} {k} T ⦄ {P : I → Set ℓ}

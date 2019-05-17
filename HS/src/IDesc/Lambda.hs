@@ -2,6 +2,11 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE RankNTypes #-}
 
 module IDesc.Lambda where
 
@@ -9,73 +14,20 @@ module IDesc.Lambda where
   import Gen
   import Enumerate
   import Depth
-  import Data.Singletons
+  import Singleton
+  import Data
   import Control.Applicative
   import Unsafe.Coerce
   import qualified GHC.Generics as Generics
 
   import IDesc.IDesc
   import IDesc.Instances
+  import IDesc.Context
 
   ----------------------------------------------------------------------------
   -- Well typed terms
 
-  type Id = String
-
-  data Ty = T | Ty :->: Ty deriving (Show , Eq)
-
-  data Ctx = CtxEmpty | CtxCons Id Ty Ctx deriving (Show , Eq)
-
-  ctxFromList :: [(Id , Ty)] -> Ctx
-  ctxFromList []           = CtxEmpty
-  ctxFromList ((id,ty):xs) = CtxCons id ty (ctxFromList xs)
-
-  (!!~) :: Ctx -> Nat -> (Id , Ty)
-  CtxEmpty            !!~ n       = error "cannot index empty context"
-  (CtxCons id ty ctx) !!~ Zero    = (id , ty)
-  (CtxCons id ty ctx) !!~ (Suc n) = ctx !!~ n
-
-  memFunc :: Func String (Ctx , Ty)
-  memFunc (CtxEmpty , ty) = Empty
-  memFunc (CtxCons id ty1 ctx , ty2) =
-    SSuc (SSuc SZero) :+>
-    (   Sigma (Proxy :: Proxy Equal) (pure (ty1 , ty2)) (\() -> One)
-    ::: Var (ctx , ty2)
-    ::: VNil
-    )
-
-  toId :: (Ctx , Ty) -> Anything -> String
-  toId (CtxCons id ty1 ctx , ty2) (Hidden x) =
-    case asEither x of
-      (Left l) ->
-        case asUnit l of
-          () -> id -- Top rule
-      (Right r) ->
-        case asEither r of
-          (Left l') ->
-            case asPair l' of
-              (ix' , rc) -> toId ix' (Hidden rc)
-
-  ctx1 :: Ctx
-  ctx1 = ctxFromList
-    [ ("a" , T :->: T)
-    , ("b" , T)
-    , ("c" , T :->: (T :->: T))
-    , ("d" , T)
-    ]
-
-  mem :: Description String (Ctx , Ty)
-  mem = Description
-    { func = memFunc
-    , to   = toId
-    }
-
-  instance IndexedGeneratable String (Ctx, Ty) where
-    genIndexed = genDesc mem
-    giMuConv _ = unHidden unsafeCoerce
-
-  runMemGen :: (Ctx, Ty) -> Int -> [String]
-  runMemGen = run (genDesc mem)
+{-
 
   tyGen :: () -> G () Ty Ty
   tyGen () = pure T <|> (:->:) <$> mu () <*> mu ()
@@ -145,3 +97,4 @@ module IDesc.Lambda where
 
   runWtTermGen :: (Ctx, Ty) -> Int -> [Term String]
   runWtTermGen = run (genDesc wtterm)
+  -}
