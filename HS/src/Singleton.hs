@@ -7,6 +7,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Singleton where
 
@@ -67,6 +68,13 @@ module Singleton where
   instance TSingGeneratable GT_EQUAL () where
     taggedGen _ (InPair' x y) | x == y    = pure (Promoted SUnit_)
                               | otherwise = empty
+
+  instance InType GT_CHOOSE where 
+    type InputType ('Proxy :: Proxy GT_CHOOSE) = ()
+
+  instance (Promote a , SingGeneratable a) 
+    => TSingGeneratable GT_CHOOSE a where 
+    taggedGen _ () = genSing
 
   -- | Singleton generator for natural numbers
   instance SingGeneratable Nat where

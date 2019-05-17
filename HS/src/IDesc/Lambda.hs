@@ -7,6 +7,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module IDesc.Lambda where
 
@@ -27,14 +28,50 @@ module IDesc.Lambda where
   ----------------------------------------------------------------------------
   -- Well typed terms
 
-{-
+
 
   tyGen :: () -> G () Ty Ty
   tyGen () = pure T <|> (:->:) <$> mu () <*> mu ()
 
-  idGen :: () -> G () Id Id
-  idGen () = pure "aa" <|> pure "bb" <|> pure "cc"
+  idGen :: G () Id Id
+  idGen = pure [Syma, Syma] <|> pure [Symb,  Symb] <|> pure [Symc , Symc]
 
+  instance Generatable Id where 
+    gen = idGen
+
+  type family WTTermDesc (i :: (Ctx, Ty)) :: IDesc (Term Id) (Ctx , Ty)
+  type instance WTTermDesc ('(,) ctx T) = 
+    SSuc (SSuc SZero) :+> 
+      (   K ('Proxy :: Proxy Id) '() 
+      ::: Sigma ('Proxy :: Proxy Ty) (Var I :*: Var I) 
+      ::: VNil )
+  type instance WTTermDesc ('(,) ctx (ty1 :->: ty2)) = 
+    SSuc (SSuc (SSuc SZero)) :+> 
+      (   K ('Proxy :: Proxy Id) '() 
+      ::: Sigma ('Proxy :: Proxy Id) (Var I)
+      ::: Sigma ('Proxy :: Proxy Ty) (Var I :*: Var I) 
+      ::: VNil ) 
+
+  type instance Desc T_WTTERM (Term Id) (Ctx , Ty) i = WTTermDesc i
+
+  wtTermSDesc :: Proxy T_WTTERM -> Sing i -> SingIDesc (WTTermDesc i)
+  wtTermSDesc _ (SPair sctx ST) = 
+    SSuc2 (SSuc2 SZero2) :+>~ 
+      (    SK (Proxy :: Proxy Id) SUnit_
+      :::~ SSigma (Proxy :: Proxy Ty) (Proxy :: Proxy GT_CHOOSE) 
+            (SVar (\ty' -> (demote sctx , ty' :->: T)) :*:~ SVar (\ty' -> (demote sctx , ty'))) 
+            (\_ -> Refl) () 
+      :::~ SVNil )
+  wtTermSDesc _ (SPair sctx (sty1 :->$ sty2)) = 
+    SSuc2 (SSuc2 (SSuc2 SZero2)) :+>~ 
+      (    SK (Proxy :: Proxy Id) SUnit_
+      :::~ SSigma (Proxy :: Proxy Id) (Proxy :: Proxy GT_CHOOSE) undefined undefined ()
+      :::~ SSigma (Proxy :: Proxy Ty) (Proxy :: Proxy GT_CHOOSE) 
+           (SVar (\ty' -> (demote sctx , ty' :->: (demote sty1 :->: demote sty2))) :*:~ SVar (\ty' -> (demote sctx , ty'))) 
+            (\_ -> Refl) () 
+      :::~ SVNil )
+
+{-
   wttermFunc :: Func (Term String) (Ctx , Ty)
   wttermFunc (ctx , T)          =
     SSuc (SSuc SZero) :+>

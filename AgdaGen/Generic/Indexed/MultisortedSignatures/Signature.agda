@@ -37,10 +37,11 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Signature where
     field
       Op : i → Reg {ℓ}
       Ar : ∀ {x} → Fix (Op x) → Reg {ℓ}
-      Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i
+      Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i 
 
   ⟦_⟧ₛ : ∀ {i : Set} → Sig i → (x : i → Set) → (i → Set)
-  ⟦ Op ◃ Ar ∣ Ty ⟧ₛ x = λ i → Σ[ op ∈ Fix (Op i) ] Π[ Fix (Ar op) ] x ∘ Ty
+  ⟦ Op ◃ Ar ∣ Ty ⟧ₛ x =
+    λ i → Σ[ op ∈ Fix (Op i) ] Π[ Fix (Ar op) ] x ∘ Ty 
 
   data Fixₛ {i : Set} (Σ : Sig i) (x : i) : Set where
     Inₛ : ⟦ Σ ⟧ₛ (Fixₛ Σ) x → Fixₛ Σ x
@@ -56,9 +57,6 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Signature where
   Ty-vec : ∀ {a : Set} → (n : ℕ) → (op : Fix (Op-vec {a} n)) → Fix (Ar-vec n op) → ℕ
   Ty-vec zero (In tt) (In ())
   Ty-vec (suc n) (In x) (In tt) = n
-  
-  Σ-vec : (a : Set) → Sig ℕ
-  Σ-vec a = Op-vec {a} ◃ (λ {n} → Ar-vec n) ∣ λ {n} {a} → Ty-vec n a 
 
 
   ------ Lists ------

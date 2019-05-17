@@ -60,9 +60,9 @@ module Instances where
             toF fx fy (Left x)  = fx x
             toF fx fy (Right y) = fy y
 
-  instance (Generatable a) => Generatable [a] where
+  {-instance (Generatable a) => Generatable [a] where
     gen  =  pure []
-        <|> (:) <$> call <*> mu ()
+        <|> (:) <$> call <*> mu () -}
 
   instance (CoGeneratable a) => CoGeneratable [a] where
     cogen = toF <$> call <*> (uncurry <$> call')

@@ -15,6 +15,8 @@ module IDesc.Context where
   import Data
   import Gen
 
+  import Control.Applicative
+
   data Symbol = Syma | Symb | Symc | Symd | Syme deriving (Eq)
 
   toChar :: Symbol -> Char 
@@ -52,6 +54,12 @@ module IDesc.Context where
     promote Symc = Promoted Sc 
     promote Symd = Promoted Sd 
 
+  instance Generatable Symbol where 
+    gen = pure Syma <|> pure Symb <|> pure Symc <|> pure Symd 
+
+  instance SingGeneratable Symbol where 
+    genSing = (\x -> Promoted x) <$> (G $ Call (\() -> unG gen) ())
+
   data Ty = T | Ty :->: Ty deriving (Show , Eq)
 
   data STy :: Ty -> * where 
@@ -68,6 +76,12 @@ module IDesc.Context where
     promote (t1 :->: t2) = 
       case (promote t1 , promote t2) of 
         (Promoted t1' , Promoted t2') -> Promoted (t1' :->$ t2')
+
+  instance SingGeneratable Ty where 
+    genSing  =  pure (Promoted ST)
+            <|> ( do (Promoted ty1) <- mu ()
+                     (Promoted ty2) <- mu ()
+                     return (Promoted (ty1 :->$ ty2)) )
 
   data Ctx = CtxEmpty | CtxCons Id Ty Ctx deriving (Show , Eq)
 
