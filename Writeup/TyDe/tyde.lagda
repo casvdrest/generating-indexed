@@ -52,8 +52,15 @@
 
 \setlength\mathindent{0.3cm}
 
-\title{Generic Generation of Indexed Datatypes}
-\author{C.R. van der Rest}
+\title{Generic Enumeration of Datatypes}
+\author{Cas van der Rest}
+\email{c.r.vanderrest@@students.uu.nl}
+\author{Wouter Swierstra}
+\email{w.s.swierstra@@uu.nl}
+\affiliation{
+\institution{Universiteit Utrecht}
+}
+
 
 % Remove auto-generated ACM copyright notice
 % \setcopyright{none}
@@ -62,50 +69,81 @@
 
 \maketitle
 
-  \section{Introduction} 
+% Wouter -- ik zou het hebben over enumeration ipv generation.  dan
+% maak je het nog duidelijker dat je geen random data genereert, maar
+% alle elementen probeert op te sommen.
+
+  \section*{Introduction} 
 
   Since the introduction of QuickCheck \cite{claessen2011quickcheck},
-  \textit{Property Based Testing} has proven to be effective for both
-  the discovery of bugs in programs (BRON), as well as providing
-  guidance to programmers in the process of formal verification
-  (BRON). However, crafting a set of suitable properties that covers
-  the desired domain is only part of the story; obtaining enough
-  suitable test data can be just as challenging (BRON). Especially in
-  the case of sparse preconditions (such as sortedness for lists),
-  simple rejection sampling will result only a few trivial test
-  cases. A special generator is required in order to find enough
-  suitable test cases. However, defining these generators becomes
-  difficult quickly once we require more complex test data.
+  \textit{property based testing} has proven to be effective for both
+  the discovery of bugs in programs (BRON). However, defining the
+  properties to test is only part of the story: it is equally
+  important to \emph{generate} suitable test data. In particular,
+  requiring random test data to satisfy arbitrary preconditions can
+  lead to skewed distributions---for example, naively generating
+  random sorted lists will typically lead to shorter lists. As a
+  result, developers need to design custom generators carefully---but
+  these generators can become arbitrarily complex. When testing a
+  compiler, for example, it can be quite challenging to define a good
+  generator that is guaranteed to produce well-formed programs.
 
-  We tackle this problem using the observation that constrained data
-  can often be modelled as a family of datatypes, indexed by the type
-  of values the desired precondition ranges over. By defining a
-  generic procedure for the generation of such indexed datatypes, we
-  obtain a way of generating constrained test data. We show that it is
-  possible to derive generators for many indexed datatypes by deriving
-  generators from codes representing these types.
+  In this brief, abstract we propose to address this problem using the
+  observation that well-formed inputs can often be described by
+  (indexed) inductive datatypes. By defining a \emph{generic}
+  procedure for \emph{enumerating} indexed datatypes, we can obtain a
+  way of safely generating precise test data. 
 
-  \subsection{Defining generators}
+  \section*{Defining generators}
 
-  We represent generators as a deep embedding of the combinators
-  exposed by the |Monad| and |Alternative| typeclasses, with
-  additional constructors for recursive positions, calls to other
-  generators and empty generators.
+  % Wouter: ik heb dit even in commentaar gezet -- hoewel
+  % dit interessant is, zou ik me hier beperken tot
+  % één interpretatie (lijsten) -- dat maakt het wat concreter.
+  % Deze diepe(re) embedding is handig, maar voor nu een implementatie
+  % detail.
 
-\begin{code}
-data Gen : (a : Set) → Set where
-  Or    : ∀ {a}     → Gen a → Gen a → Gen a
-  Pure  : ∀ {a}    → a → Gen a
-  Bind  : ∀ {a b}  → Gen b → (b → Gen a) → Gen a 
-  None  : ∀ {a}    → Gen a
-  μ     : ∀ {a}    → Gen a
-\end{code}
+  % We represent generators as a deep embedding of the combinators
+  % exposed by the |Monad| and |Alternative| typeclasses, with
+  % additional constructors for recursive positions, calls to other
+  % generators and empty generators.
 
-This results in a tree-like structure that can consequently be mapped
-to any desired interpretation.
+% \begin{code}
+% data Gen : (a : Set) → Set where
+%   Or    : ∀ {a}     → Gen a → Gen a → Gen a
+%   Pure  : ∀ {a}    → a → Gen a
+%   Bind  : ∀ {a b}  → Gen b → (b → Gen a) → Gen a 
+%   None  : ∀ {a}    → Gen a
+%   μ     : ∀ {a}    → Gen a
+% \end{code}
 
-  \section{Generation for regular types}
+% This results in a tree-like structure that can consequently be mapped
+% to any desired interpretation.
 
+  We will sketch how to define a generic enumerator for a collection
+  of datatypes in several steps:
+  \begin{itemize}
+  \item We begin by defining some universe of types |U| together with
+    its semantics |⟦_⟧ : U → Set|;
+  \item Next, we define a datatype generic function |generate : (u :
+    U) -> (n : ℕ) -> List ⟦ u ⟧|, that produces a list of elements,
+    bounded by some size parameter |n|;
+  \item Finally, we formulate the key \emph{completeness} property
+    that we expect of our enumerators:
+    \begin{code}
+    ∀ u -> (x : ⟦ u ⟧) → Σ[ n ∈ ℕ ] (x ∈ generate u n)      
+    \end{code}
+    Simply put, this property states that for each possible value |x|,
+    there is some size |n| such than |x| occurs in our enumeration.
+  \end{itemize}
+
+  We will now sketch three increasingly complex universes, together
+  with their associated enumeration.
+  
+  \section*{Enumeration of regular types}
+  % Wouter ik zou hier het data type voor Reg laten zien -- je mag
+  % aannemen dat de lezer iets van generiek programmeren weet --
+  % en kort uitleggen dat dit closed is under products, coproducts,
+  % enz.
   We can procedurally assemble generator for any type that is
   isomorphic to the fixed point of some pattern functor in two
   steps. First, we derive a generator based on the code the pattern
@@ -134,8 +172,11 @@ is the code we are currently inducting over, and |c'| the
 induct over codes without changing the type of recursive
 positions. Calling |deriveGen| with |c ≡ c'| allows us to leverage the
 appropriate isomorphisms to obtain a generator of the desired type.
+% zo'n technische detail zou ik dus weglaten -- laat op hoog niveau zien welke
+% universes je bestudeert en citeer desnoods de tutorial van Ulf Norell voor
+% de uitwerking
 
-  \subsection{Proving properties over generator interpretations}
+  \subsection*{Proving properties over generator interpretations}
 
   If we define a some generator interpretation |interpret : Gen a → T
   a|, we can use a similar approach to automatically construct a proof
@@ -156,30 +197,29 @@ appropriate isomorphisms to obtain a generator of the desired type.
 ∀ {x c} → Σ[ n ∈ ℕ ] (x ∈ interpret (deriveGen c) n)
 \end{code}
 
-We ignore isomorphisms for a moment, but intuitively it seems
-reasonable to assume that completeness is preserved when applying a
-bijection to the values produced by a generator. By explicitly
-supplying a top-level code to |deriveGen|, we can construct the
-desired proof by induction over |c|.
+% Wouter: deze sectie heb ik al kort toegelicht in hierboven en kan
+% (denk ik?) weg. Geef hooguit een bewijsschets voor een of twee
+% cases?
 
-  \section{Generation for Indexed Types}
+% Wouter: Weer een implementatiedetail -- dat je modulo isomorphisms werkt
+% begrijpen je lezers heus wel.
+% We ignore isomorphisms for a moment, but intuitively it seems
+% reasonable to assume that completeness is preserved when applying a
+% bijection to the values produced by a generator. By explicitly
+% supplying a top-level code to |deriveGen|, we can construct the
+% desired proof by induction over |c|.
+
+  \section*{Enumeration of Indexed Containers}
 
   We extend the approach used for regular types to indexed types by
-  applying the same techniques to two other type universes. First we
-  consider \textit{indexed containers} (BRON), that allow us to
-  describe a small subset of indexed types. Specifically, those types
-  of which the indices of recursive subtrees of a value are uniquely
-  determined by the index of the value itself. Subsequently we look at
-  the universe of \textit{indexed descriptions} (BRON), which exteds
-  the set of types we can describe by including a first-order
-  combinator for sigma types.
+  applying the same techniques to two other universes capable of
+  representing \emph{dependent} types. First we consider
+  \textit{indexed containers} (BRON). Crucially, these are defined by
+  induction over the index type.
 
-  \subsection{Indexed Containers}
-
-  Indexed containers (BRON) describe datatypes as a Signature, which
-  is a triple of \textit{operations}, \textit{arities} and
-  \textit{typing}:
-
+  Indexed containers consist of a a triple of \textit{operations},
+  \textit{arities} and \textit{typing}:
+  %Wouter: waarom geen Agda code? Hoeft niet volledig -- maar om een idee te geven?
     \begin{equation*}
      Sig\ I\ =\begin{cases}
                Op\ :\ I \rightarrow Set \\
@@ -199,27 +239,24 @@ desired proof by induction over |c|.
     need to lift |Fix| from |(Set → Set) → Set| to |((I → Set) → I →
     Set) → I → Set| as well.
     
-  \subsubsection{Representable datatypes}
-
   Many familiar indexed datatypes can be described using the universe
-  of indexed containers. Examples include (|Fin|), (|Vec|), and well
-  scoped lambda terms. However, indexed containers fall short once we
-  try to describe datatypes of which the indices of recursive subtrees
-  are not uniquely determined by the index of a value itself. An
-  example of such a type is the type of binary trees indexed by their
-  number of nodes:
-
+  of indexed containers. Examples include the finite types (|Fin|),
+  vectors (|Vec|), and the well-scoped lambda terms.
+  % Wouter: Kun je een voorbeeld geven van een van deze types
+  % (b.v. well-scoped lambda terms) als indexed container?
+  
+  Not all indexed families may be readily described in this
+  fashion. Consider, for example, the type of binary trees indexed by
+  their number of nodes:
 \begin{code}
   data Tree (a : Set) : ℕ → Set where
       Leaf :  Tree a 0
       Node :  ∀ {n m} → Tree a n → a → Tree a m 
               → Tree a (suc (n + m))
 \end{code}
+%Waarom is dit geen indexed container? (Leg dit uit)
 
-Both |n| and |m| depend on each other in this case, so we cannot
-describe them using a mapping from arity to index.
-
-  \subsubsection{Deriving generators for indexed containers}
+  \subsubsection*{Generic enumeration of  indexed containers}
 
   It is possible to derive generators for datatypes that are
   isomorphic to the fixed point of the interpretation of some
@@ -238,8 +275,10 @@ describe them using a mapping from arity to index.
     at our disposal to derive generators from signatures. By
     restricting operations and arities to regular types, we can simple
     reuse the existing machinery for regular types.
-
-  \subsection{Indexed Descriptions}
+    % Wouter: kun je hier code geven? Of iets meer details? Waarom
+    % hier pseudo-mathematische notatie en elders Agda code?
+    
+  \section*{Indexed Descriptions}
   The universe of indexed descriptions (BRON) makes two key
   modifications to the universe of regular types. Recursive positions
   get an additional field storing their index, and constants may have
@@ -249,7 +288,7 @@ describe them using a mapping from arity to index.
 `var : (i : I) → IDesc I
 `Σ : (S : Set)(T : S → IDesc I) → IDesc I
 \end{code}
-
+%Dit is niet de hele universe -- wil je die wel geven?
     Their interpretation is rather straightforward. 
 
 \begin{code}
@@ -274,7 +313,7 @@ tree a (suc n)  = `Σ (Σ (ℕ × ℕ) λ { (n' , m') → n' + m' ≡ n })
     λ { ((n , m) , refl) → `var n `× `Σ a (λ _ → `1) `× `var m }
 \end{code}
 
-  \subsubsection{Generating Indexed Descriptions}
+  \subsubsection*{Generating Indexed Descriptions}
 
   We can take most of the implementation of |deriveGen| for regular
   types to derive generators for indexed descriptions, provided we
@@ -300,7 +339,7 @@ this means that a programmer only needs to supply a generator that
 calculates all the inversions of |+| while |deriveGen| takes care of
 the rest.
 
-  \section{Conclusion \& future work}
+  \section*{Conclusion \& future work}
 
   Using the techniques here we may derive generators for a large class
   of indexed datatypes. Given the generic procedure to derive
