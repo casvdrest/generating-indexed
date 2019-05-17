@@ -2,6 +2,7 @@
 *.agda~
 #*
 '#*
+
 Writeup/Proposal/*
 Writeup/Proposal/*.bib
 !Writeup/Proposal/*.lagda
@@ -9,7 +10,7 @@ Writeup/Proposal/*.bib
 
 Writeup/Thesis/*
 !Writeup/Thesis/src/*
-!Writeup/Thesis/dist/thesis.pdf
+!Writeup/Thesis/dist/*.pdf
 
 Writeup/TyDe/*
 Writeup/TyDe/*.bib
