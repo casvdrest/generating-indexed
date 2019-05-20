@@ -170,15 +170,15 @@
 \end{code}
 
 The associated semantics, |⟦_⟧ : Reg -> Set -> Set|, maps values of
-|Reg| to a pattern functor. By taking the fixpoint of this pattern
-functor, we have a uniform representation of many recursive algebraic
-data types:
+type |Reg| to their corresponding pattern functor. By taking the
+fixpoint of such a pattern functor, we have a uniform representation
+of a wide class of (recursive) algebraic datatypes:
 \begin{code}
   data Fix (c : Reg) : Set where
     In : ⟦ c ⟧ (Fix c) → Fix c
 \end{code}
-Examples of regular types and their respective codes include natural
-numbers (|U ⊕ I|) or lists  (|U ⊕ (K a ⊗ I)|).
+% Examples of regular types and their respective codes include natural
+% numbers (|U ⊕ I|) or lists  (|U ⊕ (K a ⊗ I)|).
 
 It is reasonably straightforward to define a generic enumeration function:
 \begin{code}
@@ -279,16 +279,15 @@ The set |Op i| describes the set of available operations at index |i|;
 index corresponding to the recursive subtree at arity |ar|. Signatures
 are interpreted as a function from index to dependent pair, with the
 first element of the pair denoting a choice of constructor, and the
-second element being a function that describes, per arity, what the
-recursive subtrees of that operation look like.
+second element being a function that maps each recursive subtree to
+\todo{wat eigenlijk -- ik vind de code wat lastig te parsen...}
   
 \begin{code}
 ⟦ Op ◃ Ar ∣ Ty ⟧ x = 
   λ i → Σ[ op ∈ Fix (Op i) ] Π[ Fix (Ar op) ] x ∘ Ty
 \end{code}
-  
   Interpretations of signatures live in |I → Set|, hence we
-  need adapt |Fix| accordingly. 
+  also need adapt our fixpoint, |Fix|, accordingly. 
 \paragraph{Examples}    
   Many familiar indexed datatypes can be described using the universe
   of indexed containers, such as, the finite types (|Fin|), and
@@ -303,18 +302,6 @@ recursive subtrees of that operation look like.
   \end{code}
   \todo{Leg uit of haal weg -- anders voegt het weinig toe}
 
-  Not all indexed families may be readily described in this
-  fashion. Consider, for example, the type of binary trees indexed by
-  their number of nodes:
-\begin{code}
-  data Tree (a : Set) : ℕ → Set where
-      Leaf :  Tree a 0
-      Node :  ∀ {n m} → Tree a n → a → Tree a m 
-              → Tree a (suc (n + m))
-\end{code}
-Without introducing further equalities, it is hard to capture the
-decomposition of the index |suc (n + m)| into two subtrees of size |n|
-and |m|.
 
 \paragraph*{Generic enumerators}
 In the definition of indexed containers, we carefully restricted the
@@ -339,14 +326,28 @@ lists:
 Intuitively, this defines the enumeration of a signature as the union
 of the enumerations of its constructors.
     
-  \section*{Indexed Descriptions}
-  Finally, we consider the universe of indexed descriptions
-  \cite{dagand2013cosmology}, that is capable of representing
-  arbitrary indexed families. This makes two key modifications to the
-  universe of regular types: firstly, recursive positions are must
-  store an additional field storing corresponding to their index;
-  constants may have descriptions depend on them\todo{deze zin begrijp
-    ik niet -- bedoel je dat je sigmas gaat gebruiken ipv paren?}
+\section*{Indexed Descriptions}
+Not all indexed families may be readily described as indexed
+containers. Consider, for example, the type of binary trees indexed by
+their number of nodes:
+\begin{code}
+  data Tree (a : Set) : ℕ → Set where
+      Leaf :  Tree a 0
+      Node :  ∀ {n m} → Tree a n → a → Tree a m 
+              → Tree a (suc (n + m))
+\end{code}
+Without introducing further equalities, it is hard to capture the
+decomposition of the index |suc (n + m)| into two subtrees of size |n|
+and |m|.
+
+
+The universe of indexed descriptions, as defined in
+\cite{dagand2013cosmology}, is capable of representing arbitrary
+indexed families. This makes two key modifications to the universe of
+regular types: firstly, recursive positions are must store an
+additional field storing corresponding to their index; constants may
+have descriptions depend on them\todo{deze zin begrijp ik niet --
+  bedoel je dat je sigmas gaat gebruiken ipv paren?}
 \begin{code}
 `var : (i : I) → IDesc I
 `Σ : (S : Set)(T : S → IDesc I) → IDesc I
