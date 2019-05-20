@@ -58,7 +58,7 @@ module IDesc.Context where
     gen = pure Syma <|> pure Symb <|> pure Symc <|> pure Symd 
 
   instance SingGeneratable Symbol where 
-    genSing = (\x -> Promoted x) <$> (G $ Call (\() -> unG gen) ())
+    genSing = oneof [Promoted Sa , Promoted Sb , Promoted Sc , Promoted Sd]
 
   data Ty = T | Ty :->: Ty deriving (Show , Eq)
 

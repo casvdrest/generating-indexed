@@ -92,7 +92,7 @@ module IDesc.IDesc where
       -> InputType ('Proxy :: Proxy t)
       -> SingIDesc (Sigma ('Proxy :: Proxy s) d)  
 
-  -- | Demote a value of type SingIDesc d to some IDesc a i
+  -- | Demote a value of type SingIDesc d to (d :: IDesc a i)
   demoteIDesc :: forall (d :: IDesc a i) . SingIDesc d -> IDesc a i 
   demoteIDesc SOne                        = One
   demoteIDesc SEmpty                      = Empty 

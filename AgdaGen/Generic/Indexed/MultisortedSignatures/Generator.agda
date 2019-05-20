@@ -54,5 +54,7 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Generator where
 
   λ n → enumOp n >>= (λ op → op , enumAr n op)
 
-  ⟦ `var i ⟧ =
-  ⟦ `Σ s g ⟧ = 
+    generate : (δ : IDesc I) → I → ℕ → List ⟦ δ ⟧
+  generate (`Σ s g) i  = λ n → genS n  >>= (λ x → x , generate (g s) i n)
+
+    ℕ → List S

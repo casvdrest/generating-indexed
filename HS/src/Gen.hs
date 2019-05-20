@@ -93,4 +93,5 @@ module Gen where
   triv :: a -> () -> a 
   triv = const
 
-  
+  oneof :: [a] -> G i a a 
+  oneof = foldr1 (<|>) . map pure

@@ -93,6 +93,11 @@ module IDesc.Instances where
               | AppT (Term a) (Term a)
               deriving (Show, Eq , Generics.Generic, DepthCalc)
 
+  instance Functor Term where 
+    fmap f (VarT x) = VarT (f x) 
+    fmap f (AbsT x tm) = AbsT (f x) (fmap f tm)
+    fmap f (AppT t1 t2) = AppT (fmap f t1) (fmap f t2)
+
   type family WSTermDesc (n :: Nat) :: IDesc (Term Nat) Nat
   type instance WSTermDesc n = 
     SSuc (SSuc (SSuc SZero)) :+> 

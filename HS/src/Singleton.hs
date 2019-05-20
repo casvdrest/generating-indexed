@@ -90,6 +90,12 @@ module Singleton where
       Promoted y <- G $ Call (\() -> unG genSing) ()
       pure (Promoted (SPair x y))
 
+  -- | Singleton generators for lists 
+  instance SingGeneratable a => SingGeneratable [a] where 
+    genSing  =  pure (Promoted SNil) 
+            <|> ((\(Promoted x) (Promoted xs) -> Promoted (SCons x xs)) 
+                <$> (G $ Call (\() -> unG genSing) ()) <*> genSing)
+
   -- | Associated singleton type for natural numbers
   data SNat (n :: Nat) where
     SZero :: SNat Zero
