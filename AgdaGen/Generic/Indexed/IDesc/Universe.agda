@@ -94,5 +94,3 @@ module AgdaGen.Generic.Indexed.IDesc.Universe where
   mapm f (dₗ `×~ dᵣ) = (mapm f dₗ) `×~ mapm f dᵣ
   mapm f (`σ~ fd) = `σ~ (mapm f ∘ fd)
   mapm f (`Σ~ s fd) = `Σ~ (f s) (mapm f ∘ fd)
-
-  +⁻¹ : (n : ℕ) → ℕ → List (Σ (ℕ × ℕ) λ {(n' , m') → n' + m' ≡ n }) 

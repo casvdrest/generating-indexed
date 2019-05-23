@@ -54,8 +54,8 @@ module AgdaGen.Enumerate where
       interpretᵢ tg x (tg x) n
     interpretᵢ tg x (Call g)            (suc n) =
       interpret g g (suc n)
-    interpretᵢ tg x (Callᵢ g y)         (suc n) =
-      interpretᵢ g y (g y) (suc n)
+    interpretᵢ tg x (Callᵢ i g)         (suc n) =
+      interpretᵢ g i (g i) (suc n)
 
   -- Interpret a closed generator as a function from `ℕ` to `List a`
   ⟨_⟩ : ∀ {ℓ k} {a : Set ℓ} → Gen {ℓ} {k} a a → ℕ → List a

@@ -28,6 +28,8 @@
 \DeclareUnicodeCharacter{9656}{$\blacktriangleright$}
 \DeclareUnicodeCharacter{9667}{$\triangleleft$}
 \DeclareUnicodeCharacter{8347}{\textsubscript{s}}
+\DeclareUnicodeCharacter{120036}{$\mathcal{U}$}
+\DeclareUnicodeCharacter{120024}{$\mathcal{I}$}
 
 \usepackage[font=small,labelfont=bf]{caption}
 
@@ -103,7 +105,7 @@
   procedure for \emph{enumerating} indexed datatypes, we can obtain a
   way of safely generating precise test data. 
 
-  \paragraph*{Defining generators}
+  % \paragraph*{Defining generators}
 
   % Wouter: ik heb dit even in commentaar gezet -- hoewel
   % dit interessant is, zou ik me hier beperken tot
@@ -131,18 +133,19 @@
   We will sketch how to define a generic enumerator for a collection
   of datatypes in several steps:
   \begin{itemize}
-  \item We begin by defining some universe of types |U| together with
-    its semantics of the form |⟦_⟧ : U → Set|;
+  \item We define some universe of types |𝓤| together with
+    its semantics of the form |⟦_⟧ : 𝓤 → S|, where |S : Set₁| 
+    may vary across the different instantiations of |𝓤|. 
   \item Next, we define a datatype generic function
     \begin{code}
-    enumerate : (u : U) -> (n : ℕ) -> List ⟦ u ⟧
+    enumerate : (u : 𝓤) -> ℕ -> List ⟦ u ⟧
     \end{code}
     This function produces a list of elements,
     bounded by some size parameter |n|;
   \item Finally, we formulate the key \emph{completeness} property
     that we expect of our enumerators:
     \begin{code}
-      ∀ u -> (x : ⟦ u ⟧) →
+      ∀ {u : 𝓤}  -> (x : ⟦ u ⟧) →
         Σ[ n ∈ ℕ ] (x ∈ enumerate u n)      
     \end{code}
     This property states that for each possible |x|,
@@ -179,7 +182,7 @@
  
   It is reasonably straightforward to define a generic enumeration function:
   \begin{code}
-      enumerate : (c : Reg) -> (n : ℕ) -> List ⟦ Fix c ⟧  
+      enumerate : (c : Reg) -> ℕ -> List (⟦ c ⟧ (Fix c))  
   \end{code}
   For example, the enumeration of a coproduct of two codes is a fair merge of 
   the two recursive calls, and for products we enumerate all possible 
@@ -189,18 +192,17 @@
 
   What happens when we consider \emph{indexed} datatypes? Initially,
   we will consider \textit{indexed containers}
-  \cite{altenkirch2015indexed, dagand2017essence}, a subset of all
-  possible indexed types that are defined by induction over the index
-  type.
+  \cite{altenkirch2015indexed, dagand2017essence}: indexed types that 
+  are defined by induction over the index type |𝓘|.
 
   Following the presentation in \cite{dagand2017essence}, we define indexed
   containers as a triple of \textit{operations},
   \textit{arities} and \textit{typing}:
 
 \begin{code}
-Op : i → Reg 
+Op : 𝓘 → Reg 
 Ar : ∀ {x} → Fix (Op x) → Reg 
-Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i 
+Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → 𝓘 
 \end{code}
 
   The set |Op i| describes the set of available operations at index |i|;
@@ -217,7 +219,7 @@ Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i
   Σ[ op ∈ Fix (Op i) ] (ar : Fix (Ar op)) → x (Ty ar)
 \end{code}
 
-  Interpretations of signatures live in |I → Set|, hence we
+  Interpretations of signatures live in |𝓘 → Set|, hence we
   also need adapt our fixpoint, |Fix|, accordingly. 
   
 \paragraph{Examples}    
@@ -243,7 +245,7 @@ Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i
   %\todo{Leg uit of haal weg -- anders voegt het weinig toe}
 
 \paragraph*{Generic enumerators}
-  In the definition of indexed containers, we carefully restricted the
+  In the definition of indexed containers, we restricted the
   type of operations and arities to the universe of regular types. As a result,
   we can reuse the enumeration of regular types to write a generic enumerator 
   for indexed containers. The second component of a signature's interpretation is 
@@ -251,16 +253,16 @@ Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i
   SmallCheck \cite{runciman2008smallcheck} we can define such an enumerator: 
 
 \begin{code}
-cogenerate : 
-  (ℕ → List a) → (c : Reg) → ℕ → List (⟦ c ⟧ → a)
+co-enumerate : 
+  (ℕ → List a) → (c : Reg) → ℕ → List (Fix c → a)
 \end{code}
 
   This allows us to define enumerators for both components of the dependent pair:
 
 \begin{code}
-enumOp  : ∀ i →  ℕ → List ⟦ Op i ⟧
-enumAr  : ∀ i → (x : ⟦ Op i⟧) 
-        → ℕ → List ⟦ (y : Ar x) → r (Ty y) ⟧ 
+enumOp  : ∀ {i : 𝓘} →  ℕ → List (Fix (Op i))
+enumAr  : ∀ {i : 𝓘} {r : Set → Set} → (x : Fix (Op i)) 
+        → ℕ → List ((y : Fix (Ar x)) → r (Ty y))
 \end{code}
 
   We then sequence these operations using the monadic structure of
@@ -289,16 +291,16 @@ Without introducing further equalities, it is hard to capture the
 decomposition of the index |suc (n + m)| into two subtrees of size |n|
 and |m|.
 
-The universe of indexed descriptions, as defined in
+The universe of indexed descriptions, |IDesc 𝓘|, as defined in
 \cite{dagand2013cosmology}, is capable of representing arbitrary
-indexed families. This makes two key modifications to the universe of
-regular types: firstly, recursive positions must store an additional 
-field corresponding to their index. Secondly, a new combinator, |Σ| is 
+indexed families. This universe makes two key modifications to 
+the universe of regular types: recursive positions must store an additional 
+field corresponding to their index and a new combinator, |`Σ| is 
 added. 
   
 \begin{code}
-I    : (i : I) → IDesc I
-`Σ   : (S : Set) → (T : S → IDesc I) → IDesc I
+I    : (i : 𝓘) → IDesc 𝓘
+`Σ   : (S : Set) → (T : S → IDesc 𝓘) → IDesc 𝓘
 \end{code}
 
 Their interpretation is rather straightforward. 
@@ -309,9 +311,9 @@ Their interpretation is rather straightforward.
 With the added |`Σ| and |`var|, we can now describe the |Tree| datatype: 
 \begin{code}
 tree : Set → ℕ → IDesc ℕ
-tree a zero     = `1
-tree a (suc n)  = `Σ (Σ (ℕ × ℕ) λ { (n' , m') → n' + m' ≡ n })
-    λ { ((n , m) , refl) → I n ⊗ K a ⊗ I m }
+tree a zero      = `1
+tree a (suc n')  = `Σ (Σ[ (n , m) ∈ ℕ × ℕ ] n + m ≡ n')
+  λ { (n , m , refl) → I n ⊗ K a ⊗ I m }
 \end{code}
 The dependency between the indices of the left- and right subtrees of
 nodes is captured by having their description depend on a pair of
@@ -325,7 +327,7 @@ for the |`Σ| combinator. This is straightforward once we can enumerate
 its first component. 
 
 \begin{code}
-enumerate : (δ : IDesc I) → ℕ → List ⟦ δ ⟧
+enumerate : (δ : IDesc I) → ℕ → List (Fix δ)
 enumerate (`Σ s g) = 
   λ n → gen n >>= (λ x → x , enumerate (g s) n)  
 \end{code}
@@ -338,7 +340,7 @@ would be too difficult.
 
 In the case of the |Tree| datatype, we see that those elements that make 
 it hard to generically enumerate inhabitants of this datatype emerge 
-quite naturally; we merely need to supply a generator inverting addition:
+quite naturally; we merely need to supply an enumerator that inverts addition:
 
 \begin{code}
 +⁻¹  : (n : ℕ) → ℕ 
@@ -348,14 +350,25 @@ quite naturally; we merely need to supply a generator inverting addition:
 |enumerate| needs nothing beyond |+⁻¹| in order to be able to enumerate 
 inhabitants of |Tree|. 
 
-  \todo{Dit
-  is in zekere zin het meest interessante aan de hele abstract--leg
-  dit beter uit: omdat je moet Sigmas toestaat over een arbitrary set
-  (of is het niet beter om een expliciete constraint constructor toe
-  te voegen?), kun je geen generieke generator geven. Dus verwacht je
-  die van de gebruiker.}
+  %  \todo{Dit
+  %  is in zekere zin het meest interessante aan de hele abstract -- leg
+  %  dit beter uit: omdat je moet Sigmas toestaat over een arbitrary set
+  %  (of is het niet beter om een expliciete constraint constructor toe
+  %  te voegen?), kun je geen generieke generator geven. Dus verwacht je
+  %  die van de gebruiker.}
 
-\todo{Noem heel kort quickchick als alternatief}
+\paragraph{Application in Haskell}
+
+We have developed a prototype library in Haskell that implements 
+the generic enumerator for indexed descriptions. So far, we have 
+been able to show that the techniques described in this abstract 
+can be applied to enumerate well-typed lambda terms, and are working
+towards generation of well-formed terms in more complex programming 
+languages; specifically \textit{Plutus Core} \cite{plutusspec2019}, 
+which is used as the transaction validation language on the 
+Cardano blockchain.  
+
+% \todo{Noem heel kort quickchick als alternatief}
   
 \bibliographystyle{acm} % ACM-Reference-Format
 \bibliography{references}

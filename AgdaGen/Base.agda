@@ -55,8 +55,8 @@ module AgdaGen.Base where
       Pureᵢ : ∀ {a t : i → Set ℓ} {x : i} → a x → Genᵢ a t x
 
       -- Aplies the results of one generator to the results of another
-      Apᵢ   : ∀ {a b t : i → Set ℓ} {x : i} {y : i}
-            → Genᵢ (λ _ → b y → a x) t x → Genᵢ b t y → Genᵢ a t x
+      Apᵢ   : ∀ {a b t : i → Set ℓ} {x : i} {y : i} 
+            → Genᵢ (λ x → b y → a x) t x → Genᵢ b t y → Genᵢ a t x
 
       -- Monadic bind for generators
       Bindᵢ : ∀ {a b t : i → Set ℓ} {x : i} {y : i}
@@ -67,7 +67,7 @@ module AgdaGen.Base where
              → Genᵢ a t x → Genᵢ a t x → Genᵢ a t x
 
       -- Recursive positions
-      μᵢ    : ∀ {a : i → Set ℓ} (x : i) → Genᵢ a a x
+      μᵢ    : ∀ {a : i → Set ℓ} → (x : i) → Genᵢ a a x
 
       -- Empty generator
       Noneᵢ : ∀ {a t : i → Set ℓ} {x : i} → Genᵢ a t x
@@ -76,8 +76,11 @@ module AgdaGen.Base where
       Call  : ∀ {t : i → Set ℓ} {x : i} {b : Set ℓ} → Gen {ℓ} {k} b b → Genᵢ (λ _ → b) t x
 
       -- Call to external indexed generator
-      Callᵢ : ∀ {t : i → Set ℓ} {j : Set k} {s : j → Set ℓ} {x : i}
-            → ((y : j) → Genᵢ s s y) → (y : j) → Genᵢ (λ _ → s y) t x
+      Callᵢ : ∀ {j : Set k} {t : i → Set ℓ} {s : j → Set ℓ} {x : i} → (y : j) → ((y : j) → Genᵢ s s y) → Genᵢ (λ _ → s y) t x
+
+  fin : (n : ℕ) → Genᵢ Fin Fin n
+  fin zero = Noneᵢ
+  fin (suc n) = Orᵢ (Pureᵢ zero) (Apᵢ (Pureᵢ suc) (μᵢ n))
 
   -- Type synonym for 'closed' generators, e.g. generators whose recursive
   -- positions refer to the same type as the generator as a whole. 

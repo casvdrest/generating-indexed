@@ -30,7 +30,7 @@ module AgdaGen.Generic.Indexed.IDesc.Instances where
 
   ------ Booleans ------
 
-  BoolD : func zeroL ⊤ ⊤
+  BoolD : func zeroL ⊤ ⊤  
   BoolD = func.mk λ { tt → 
     `σ 2 (λ {  ∙    → `1 
             ; (▻ ∙) → `1

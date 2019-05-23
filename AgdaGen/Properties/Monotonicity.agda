@@ -361,7 +361,7 @@ module AgdaGen.Properties.Monotonicity where
     ∀ {ℓ k} {I : Set k} {a t : I → Set ℓ} {i : I} {x : a i}
       {tg : (i : I) → 𝔾ᵢ t i} {g :(i : I) → 𝔾ᵢ a i}
     → Depth-Monotoneᵢ (g i) g x
-    → Depth-Monotoneᵢ {i = i} (Callᵢ g i) tg x
+    → Depth-Monotoneᵢ {i = i} (Callᵢ i g) tg x
   Callᵢ-monotone mt (s≤s leq) elem =
     mt (s≤s leq) elem
 
