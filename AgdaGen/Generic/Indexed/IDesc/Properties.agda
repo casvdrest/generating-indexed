@@ -94,12 +94,3 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
   IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (x₁ `× x₃) x₂ = {!!}
   IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`σ n T) x₂ = {!!}
   IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`Σ S T) x₂ = {!!}
-        
-
-   
-    Set₁
-
-   tree : Set → ℕ → IDesc ℕ
-   tree a zero      = `1
-   tree a (suc n')  = `Σ (Σ[ (n , m) ∈ ℕ × ℕ ] n + m ≡ n')
-    λ { ((n , m) , refl) → I n ⊗ K a ⊗ I m }

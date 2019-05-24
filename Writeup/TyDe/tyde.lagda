@@ -58,7 +58,8 @@
 
 \setlength\mathindent{0.3cm}
 
-\title{Generic Enumerators}
+\title{Generic Enumerators (Extended Abstract)}
+
 \author{Cas van der Rest}
 \email{c.r.vanderrest@@students.uu.nl}
 \affiliation{
@@ -72,7 +73,7 @@
 \author{Manuel Chakravarty}
 \email{manuel.chakravarty@@iohk.io}
 \affiliation{
-\institution{...}
+\institution{Input Output HK}
 }
 
 
@@ -136,12 +137,11 @@
   \item We define some universe of types |𝓤| together with
     its semantics of the form |⟦_⟧ : 𝓤 → S|, where |S : Set₁| 
     may vary across the different instantiations of |𝓤|. 
-  \item Next, we define a datatype generic function
+  \item Next, we define a datatype generic function producing a 
+    list of elements, bounded by some size parameter |n|;
     \begin{code}
     enumerate : (u : 𝓤) -> ℕ -> List ⟦ u ⟧
     \end{code}
-    This function produces a list of elements,
-    bounded by some size parameter |n|;
   \item Finally, we formulate the key \emph{completeness} property
     that we expect of our enumerators:
     \begin{code}
@@ -193,11 +193,9 @@
   What happens when we consider \emph{indexed} datatypes? Initially,
   we will consider \textit{indexed containers}
   \cite{altenkirch2015indexed, dagand2017essence}: indexed types that 
-  are defined by induction over the index type |𝓘|.
-
-  Following the presentation in \cite{dagand2017essence}, we define indexed
-  containers as a triple of \textit{operations},
-  \textit{arities} and \textit{typing}:
+  are defined by induction over the index type |𝓘|.Following the 
+  presentation in \cite{dagand2017essence}, we define indexed containers 
+  as a triple of \textit{operations}, \textit{arities} and \textit{typing}:
 
 \begin{code}
 Op : 𝓘 → Reg 
@@ -207,12 +205,13 @@ Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → 𝓘
 
   The set |Op i| describes the set of available operations at index |i|;
   |Ar op| the arities of each constructor; finally, |Ty ar| gives the
-  index corresponding to the recursive subtree at arity |ar|. Signatures
-  are interpreted as a function from index to dependent pair, with the
-  first element of the pair denoting a choice of constructor, and the
-  second element being a function that maps each recursive subtree to
-  a value of the type that results from applying the recursive argument
-  with the index given by the typing discipline for that arity. 
+  index corresponding to the recursive subtree at arity |ar|. Together, 
+  they form a type's \emph{Signature}, and are interpreted as a function 
+  from index to dependent pair, with the first element of the pair denoting 
+  a choice of constructor, and the second element being a function that 
+  maps each recursive subtree to a value of the type that results from 
+  applying the recursive argument with the index given by the typing 
+  discipline for that arity. 
   
 \begin{code}
 ⟦ Op ◃ Ar ∣ Ty ⟧ x = λ i → 
@@ -236,11 +235,12 @@ Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → 𝓘
   \end{code}
 
   Each index is associated with a unique operation. We map |suc n| to a 
-  constant type in |op-vec|, since the |∷| constructor stores a value along 
-  its recursive subtree. The empty vector, |[]|, has no recursive subtrees, 
-  hence it arity is the empty type. Any non-empty vector has one subtree, so 
-  we assign its arity to be the unit type. This single subtree has an index 
-  that is one less than the original index, as described by |ty-vec|.  
+  \emph{constant type} in |op-vec|, since the |∷| constructor stores a 
+  value along  its recursive subtree. The empty vector, |[]|, has no recursive 
+  subtrees, hence it arity is the \emph{empty type}. Any non-empty vector 
+  has one subtree, so we assign its arity to be the \emph{unit type}. 
+  This single subtree has an index that is one less than the original index, 
+  as described by |ty-vec|.  
 
   %\todo{Leg uit of haal weg -- anders voegt het weinig toe}
 
@@ -250,7 +250,7 @@ Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → 𝓘
   we can reuse the enumeration of regular types to write a generic enumerator 
   for indexed containers. The second component of a signature's interpretation is 
   a function type, so we require an enumerator for function types. Inspired by 
-  SmallCheck \cite{runciman2008smallcheck} we can define such an enumerator: 
+  \emph{SmallCheck} \cite{runciman2008smallcheck} we can define such an enumerator: 
 
 \begin{code}
 co-enumerate : 
@@ -261,7 +261,7 @@ co-enumerate :
 
 \begin{code}
 enumOp  : ∀ {i : 𝓘} →  ℕ → List (Fix (Op i))
-enumAr  : ∀ {i : 𝓘} {r : Set → Set} → (x : Fix (Op i)) 
+enumAr  : ∀ {i : 𝓘} {r : 𝓘 → Set} → (x : Fix (Op i)) 
         → ℕ → List ((y : Fix (Ar x)) → r (Ty y))
 \end{code}
 
@@ -291,7 +291,7 @@ Without introducing further equalities, it is hard to capture the
 decomposition of the index |suc (n + m)| into two subtrees of size |n|
 and |m|.
 
-The universe of indexed descriptions, |IDesc 𝓘|, as defined in
+The universe of \emph{indexed descriptions}, |IDesc 𝓘|, as defined in
 \cite{dagand2013cosmology}, is capable of representing arbitrary
 indexed families. This universe makes two key modifications to 
 the universe of regular types: recursive positions must store an additional 

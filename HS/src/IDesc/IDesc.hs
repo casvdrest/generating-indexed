@@ -86,10 +86,9 @@ module IDesc.IDesc where
      (IndexedGeneratable s j , Singleton j)
       => Proxy s -> Sing j'
       -> SingIDesc (K ('Proxy :: Proxy s) j')
-    SSigma :: TSingGeneratable t s 
-      => Proxy s -> Proxy t -> SingIDesc d 
+    SSigma :: Promote s => SingIDesc d
+      -> G () s s
       -> (forall s' . Sing s' -> Interpret d :~: Interpret (Expand d s')) 
-      -> InputType ('Proxy :: Proxy t)
       -> SingIDesc (Sigma ('Proxy :: Proxy s) d)  
 
   -- | Demote a value of type SingIDesc d to (d :: IDesc a i)
@@ -102,13 +101,13 @@ module IDesc.IDesc where
   demoteIDesc (SSuc2 sn :+>~ (x :::~ xs)) = 
     case demoteIDesc (sn :+>~ xs) of 
       (sn' :+> xs') -> 
-        (SSuc sn' :+> (demote x ::: xs'))
+        (SSuc sn' :+> (dm x ::: xs'))
   demoteIDesc (SK p p')                   = K p p'
-  demoteIDesc (SSigma p p' desc eq _)          = Sigma p (demote desc)
+  demoteIDesc (SSigma desc gen eq)        = Sigma Proxy (dm desc)
 
   instance Singleton (IDesc a i) where 
     type Sing = SingIDesc
-    demote = demoteIDesc
+    dm = demoteIDesc
 
   --------------------------------------------------------------------------
   -- Description Expansions 
@@ -142,7 +141,7 @@ module IDesc.IDesc where
     SingIDesc d -> Sing s' -> SingIDesc (Expand d s') 
   expand SOne         sv = SOne
   expand SEmpty       sv = SEmpty
-  expand (SVar ix)    sv = SVar (ix (demote sv))
+  expand (SVar ix)    sv = SVar (ix (dm sv))
   expand (dl :*:~ dr) sv = expand dl sv :*:~ expand dr sv
   expand (sn :+>~ xs) sv = sn :+>~ vexpand sn xs sv
 
@@ -160,11 +159,11 @@ module IDesc.IDesc where
   idesc_gen (SSuc2 (SSuc2 n) :+>~ (d :::~ ds)) =
         Left  <$> idesc_gen d 
     <|> Right <$> idesc_gen (SSuc2 n :+>~ ds)
-  idesc_gen (SK (Proxy :: Proxy s) sj) = G (Call (unG . genIndexed) (demote sj))
-  idesc_gen (SSigma Proxy p f eq v)          = do 
-    (Promoted x) <- G (Call (\() -> unG (taggedGen p v)) ())
-    p <- idesc_gen (expand f x) 
-    pure (demote x , eqConv (sym (eq x)) p) 
+  idesc_gen (SK (Proxy :: Proxy s) sj) = G (Call (unG . genIndexed) (dm sj))
+  idesc_gen (SSigma desc gen eq)               = do 
+    (Promoted x) <- undefined
+    p <- idesc_gen (expand desc x) 
+    pure (dm x , eqConv (sym (eq x)) p) 
   
   -- | Maps a combination of tag, goal type and index to a description. 
   type family Desc (t :: DataTag) (a :: *) (i :: *) (i' :: i) :: IDesc a i

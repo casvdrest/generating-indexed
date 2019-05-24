@@ -27,6 +27,8 @@ module IDesc.Lambda where
   import IDesc.Instances
   import IDesc.Context
 
+  import Debug.Trace
+
   ----------------------------------------------------------------------------
   -- Well typed terms
 
@@ -58,15 +60,15 @@ module IDesc.Lambda where
   wtTermSDesc _ (SPair sctx ST) = 
     SSuc2 (SSuc2 SZero2) :+>~ 
       (    SK (Proxy :: Proxy Id) (SPair sctx ST)
-      :::~ SSigma (Proxy :: Proxy Ty) (Proxy :: Proxy GT_CHOOSE) 
-            (SVar (\ty' -> (demote sctx , ty' :->: T)) :*:~ SVar (\ty' -> (demote sctx , ty'))) 
-            (\_ -> Refl) () 
+      :::~ SSigma (SVar (\ty' -> (dm sctx , ty' :->: T)) :*:~ SVar (\ty' -> (dm sctx , ty'))) 
+            undefined
+            (\_ -> Refl) 
       :::~ SVNil )
   wtTermSDesc _ (SPair sctx (sty1 :->$ sty2)) = 
     SSuc2 (SSuc2 (SSuc2 SZero2)) :+>~ 
       (    SK (Proxy :: Proxy Id) (SPair sctx (sty1 :->$ sty2))
-      :::~ choose @Id (SVar (\id -> (CtxCons id (demote sty1) (demote sctx) , demote sty2))) (\_->Refl)
-      :::~ choose @Ty (SVar (\ty' -> (demote sctx , ty' :->: (demote sty1 :->: demote sty2))) :*:~ SVar (\ty' -> (demote sctx , ty'))) (\_->Refl)
+      :::~ SSigma (SVar (\id -> (CtxCons id (dm sty1) (dm sctx) , dm sty2))) undefined (\_-> Refl)
+      :::~ SSigma (SVar (\ty' -> (dm sctx , ty' :->: (dm sty1 :->: dm sty2))) :*:~ SVar (\ty' -> (dm sctx , ty'))) undefined (\_->Refl)
       :::~ SVNil )
 
   toWtTerm :: Proxy T_WTTERM -> Sing i -> Interpret (WTTermDesc i) -> Term Id 
@@ -75,12 +77,6 @@ module IDesc.Lambda where
   toWtTerm _ (SPair sctx (sty1 :->$ sty2)) (Left x) = VarT x 
   toWtTerm _ (SPair sctx (sty1 :->$ sty2)) (Right (Left (id, tm))) = AbsT id tm
   toWtTerm _ (SPair sctx (sty1 :->$ sty2)) (Right (Right (p , (t1 , t2)))) = AppT t1 t2 
-
-
-  choose :: forall a d . SingGeneratable a => SingIDesc d -> (forall s' . Sing s' -> Interpret d :~: Interpret (Expand d s')) -> SingIDesc (Sigma ('Proxy :: Proxy a) d) 
-  choose desc p = SSigma (Proxy :: Proxy a) (Proxy :: Proxy GT_CHOOSE) desc p ()
-    where tyProx :: Proxy a 
-          tyProx = Proxy
 
   instance Describe T_WTTERM (Term Id) (Ctx , Ty) where 
     sdesc = wtTermSDesc 

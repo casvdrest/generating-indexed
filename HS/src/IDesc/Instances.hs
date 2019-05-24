@@ -38,7 +38,7 @@ module IDesc.Instances where
 
   finSDesc :: Proxy T_FIN -> Sing n -> SingIDesc (FinDesc n)
   finSDesc _ SZero    = SEmpty 
-  finSDesc _ (SSuc n) = SSuc2 (SSuc2 SZero2) :+>~ (SOne :::~ SVar (demote n) :::~ SVNil)
+  finSDesc _ (SSuc n) = SSuc2 (SSuc2 SZero2) :+>~ (SOne :::~ SVar (dm n) :::~ SVNil)
 
   toFin :: Proxy T_FIN -> Sing n -> Interpret (FinDesc n) -> Nat 
   toFin _ (SSuc sn) (Left ()) = Zero 
@@ -67,7 +67,7 @@ module IDesc.Instances where
 
   vecSDesc :: Generatable a => Proxy a -> Proxy T_VEC -> Sing n -> SingIDesc (VecDesc a n)
   vecSDesc _ _ SZero    = SOne
-  vecSDesc p _ (SSuc n) = SK p SUnit_ :*:~ SVar (demote n)
+  vecSDesc p _ (SSuc n) = SK p SUnit_ :*:~ SVar (dm n)
 
   toVec :: Generatable a => Proxy a -> Proxy T_VEC -> Sing n -> Interpret (VecDesc a n) -> [a]
   toVec _ _ SZero ()          = []
@@ -112,8 +112,8 @@ module IDesc.Instances where
   wsTermSDesc _ n = 
     SSuc2 (SSuc2 (SSuc2 SZero2)) :+>~ 
     (    SK Proxy n
-    :::~ SVar (Suc (demote n)) 
-    :::~ (SVar (demote n)) :*:~ (SVar (demote n)) 
+    :::~ SVar (Suc (dm n)) 
+    :::~ (SVar (dm n)) :*:~ (SVar (dm n)) 
     :::~ SVNil )
 
   toTerm :: Proxy T_WSTERM -> Sing n -> Interpret (WSTermDesc n) -> Term Nat
@@ -148,9 +148,8 @@ module IDesc.Instances where
   sTreeSDesc :: Proxy T_STREE -> Sing n -> SingIDesc (STreeDesc n)
   sTreeSDesc _ SZero    = SOne
   sTreeSDesc _ (SSuc n) = 
-     SSigma Proxy (Proxy :: Proxy GT_INVERSEPLUS) 
-     (SVar (\(n , m) -> n) :*:~ SVar (\(n , m) -> m)) 
-     (\_ -> Refl) (demote n)
+     SSigma (SVar fst :*:~ SVar snd) (reversePlus (dm n))
+     (\_ -> Refl)
  
   toTree :: Proxy T_STREE -> Sing n -> Interpret (STreeDesc n) -> Tree 
   toTree _ SZero ()               = Leaf
@@ -169,19 +168,6 @@ module IDesc.Instances where
   reversePlus Zero = pure (Zero , Zero)
   reversePlus (Suc n) =  pure (Suc n , Zero)
                       <|> ((\(x, y) -> (x , Suc y)) <$> reversePlus n)
-
-  instance InType GT_INVERSEPLUS where
-    type InputType ('Proxy :: Proxy GT_INVERSEPLUS)= Nat
-
-  instance TSingGeneratable GT_INVERSEPLUS (Nat , Nat) where 
-    taggedGen Proxy n = do 
-      (n , m) <- G $ Call (\() -> unG $ reversePlus n) ()
-      case promote n of 
-        (Promoted n') -> 
-          case promote m of 
-            (Promoted m') -> 
-              pure (Promoted $ SPair n' m')
-
             
   ----------------------------------------------------------------------------
   -- Rose Trees, poc for mutual recursion
@@ -206,7 +192,7 @@ module IDesc.Instances where
   toRose' (RoseCons' x xs) = toRose x : toRose' xs
 
   genRose :: Generatable a => RLabel -> G RLabel (Rose a) (Rose a)
-  genRose l = toRose <$> (G (Call undefined RT))
+  genRose l = toRose <$> (G (Call (unG . genRose') RT))
 
   runRoseGen :: Int -> [Rose Bool]
   runRoseGen = run genRose RT

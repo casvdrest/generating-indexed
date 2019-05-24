@@ -1,4 +1,4 @@
-open import Level
+open import Level hiding (suc ; zero)
 
 open import Agda.Builtin.Size
 open import Codata.Colist hiding (_++_)
@@ -101,4 +101,6 @@ module AgdaGen.Data where
   xs ⊎ ys = interleave (map inl xs) (λ where .force → map inr ys)
 
   data ℚ : Set where
-    Q : ℕ ⊗ ℕ → ℚ
+    Q : ℕ ⊗ ℕ → ℚ  
+
+  
