@@ -43,10 +43,10 @@ module IDesc.Context where
 
   instance Singleton Symbol where 
     type Sing = SSymbol
-    demote Sa = Syma 
-    demote Sb = Symb 
-    demote Sc = Symc 
-    demote Sd = Symd
+    dm Sa = Syma 
+    dm Sb = Symb 
+    dm Sc = Symc 
+    dm Sd = Symd
 
   instance Promote Symbol where
     promote Syma = Promoted Sa 
@@ -58,7 +58,7 @@ module IDesc.Context where
     gen = pure Syma <|> pure Symb <|> pure Symc <|> pure Symd 
 
   instance SingGeneratable Symbol where 
-    genSing = (\x -> Promoted x) <$> (G $ Call (\() -> unG gen) ())
+    genSing = oneof [Promoted Sa , Promoted Sb , Promoted Sc , Promoted Sd]
 
   data Ty = T | Ty :->: Ty deriving (Show , Eq)
 
@@ -68,8 +68,8 @@ module IDesc.Context where
 
   instance Singleton Ty where 
     type Sing = STy
-    demote ST = T
-    demote (ty1 :->$ ty2) = demote ty1 :->: demote ty2
+    dm ST = T
+    dm (ty1 :->$ ty2) = dm ty1 :->: dm ty2
 
   instance Promote Ty where 
     promote T = Promoted ST 
@@ -91,8 +91,8 @@ module IDesc.Context where
 
   instance Singleton Ctx where 
     type Sing = SCtx 
-    demote SCtxEmpty            = CtxEmpty 
-    demote (SCtxCons id ty ctx) = CtxCons (demote id) (demote ty) (demote ctx)
+    dm SCtxEmpty            = CtxEmpty 
+    dm (SCtxCons id ty ctx) = CtxCons (dm id) (dm ty) (dm ctx)
 
   instance Promote Ctx where 
     promote CtxEmpty = Promoted SCtxEmpty 
@@ -117,21 +117,23 @@ module IDesc.Context where
     ::: VNil
     )
   
+  eq :: Eq a => a -> a -> G () () ()
+  eq x y | x == y    = pure () 
+         | otherwise = empty
+
   type instance Desc T_CTXMEM Id (Ctx , Ty) i = MemDesc i
 
   memSDesc :: Proxy T_CTXMEM -> SPair i -> SingIDesc (MemDesc i) 
   memSDesc _ (SPair SCtxEmpty                sty) = SEmpty
   memSDesc _ (SPair (SCtxCons sid sty' sctx) sty) = 
     SSuc2 (SSuc2 SZero2) :+>~
-    (    SSigma (Proxy :: Proxy ()) (Proxy :: Proxy GT_EQUAL) 
-                SOne (const Refl) 
-                (InPair' (demote sty') (demote sty)) 
-    :::~ SVar (demote sctx , demote sty) 
+    (    SSigma SOne (eq (dm sty') (dm sty)) (const Refl) 
+    :::~ SVar (dm sctx , dm sty) 
     :::~ SVNil
     )
   
   toMem :: Proxy T_CTXMEM -> Sing i -> Interpret (MemDesc i) -> Id
-  toMem _ (SPair (SCtxCons sid sty' sctx) sty) (Left (() , ())) = demote sid
+  toMem _ (SPair (SCtxCons sid sty' sctx) sty) (Left (() , ())) = dm sid
   toMem _ (SPair (SCtxCons sid sty' sctx) sty) (Right y)        = y
 
   instance Describe T_CTXMEM Id (Ctx , Ty) where 

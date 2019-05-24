@@ -45,14 +45,3 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Generator where
     do op ← Call {x = x} (deriveGen (map-reginfo proj₁ (sig₁ x)))
        ar ← Call {x = x} (derivePiGen (map-reginfo proj₂ (sig₂ x (In op))) λ ar → ⦇ Inₛ ⟨ Ty (In ar) ` deriveGenᵢ sig₁ sig₂ ⟩ ⦈)
        pure (In op , λ { (In x) → ar x })
-
-  enumOp : ∀ i → ℕ → List ⟦ Op i ⟧
-  enumAr : ∀ i → (x : ⟦ Op i⟧) → ℕ → List ⟦ (y : Ar x) → Ty y ⟧ 
-
-  enumOp : ∀ i → 𝔼 ⟦ Op i ⟧
-  enumAr : ∀ i → (x : ⟦ Op i⟧) → 𝔼 ⟦ (y : Ar x) → Ty y ⟧
-
-  λ n → enumOp n >>= (λ op → op , enumAr n op)
-
-  ⟦ `var i ⟧ =
-  ⟦ `Σ s g ⟧ = 

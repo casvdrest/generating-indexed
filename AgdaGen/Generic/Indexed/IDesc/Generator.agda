@@ -67,7 +67,7 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
       (IDesc-gen ix m₁) (IDesc-gen ix m₂) ⦈
   -- `σ combinator (generic coproduct)
   IDesc-gen {ℓ} {I} {φ₁} {φ₂} ix (`σ~ mₛ) | `σ n T | [ φout≡`σ ] =
-    do sl ← Callᵢ {x = ix} Sl-gen (lift n)
+    do sl ← Callᵢ {x = ix} (lift n) Sl-gen 
        r  ← IDesc-gen ix (mₛ sl)
        pure (⟦⟧subst {φ = φ₁} {ix = ix} φout≡`σ (sl , r))
   -- `Σ combinator (dependent pairs)
@@ -98,4 +98,4 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
     → 𝔾ᵢ {ℓ} {0ℓ} (λ x → P x ⇑ ℓ) ix
   IDesc-isoGen {I = I} ⦃ p = record { W = φ , iso  } ⦄ ix m =
     ⦇ (λ v → _≅_.to iso ⟨ v ⟩) (Callᵢ {j = I} {x = ix}
-      (λ y → IDesc-gen {φ₁ = φ} {φ₂ = φ} y (m y)) ix) ⦈
+      ix (λ y → IDesc-gen {φ₁ = φ} {φ₂ = φ} y (m y))) ⦈

@@ -9,17 +9,18 @@ open import AgdaGen.Properties.Monotonicity
 open import AgdaGen.Generic.Indexed.IDesc.Generator
 open import AgdaGen.Generic.Indexed.IDesc.Universe
 
-open import AgdaGen.Enumerate
+open import AgdaGen.Enumerate hiding (⟨_⟩)
 
 open import Data.Nat
 open import Data.List
 open import Data.Product
+open import Data.Unit
 
 open import Function
 open import Level renaming (zero to zeroL; suc to sucL)
 
 open import Relation.Binary.PropositionalEquality
-open Relation.Binary.PropositionalEquality.≡-Reasoning
+open import Relation.Binary.HeterogeneousEquality
 
 module AgdaGen.Generic.Indexed.IDesc.Properties where
 
@@ -51,44 +52,7 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
           (Complete gen gen ×
           (∀ {s : S} → Depth-Monotone gen s gen)))
       (func.out φ ix)
-
-  δsubst :
-    ∀ {I : Set} {δ δ' : IDesc 0ℓ I} {P : Set → Set₁}
-    → δ ≡ δ' → IDescM P δ → IDescM P δ'
-  δsubst refl δ = δ
-
-  postulate
-    ⟦P⟧subst :
-      ∀ {I : Set} {φ φ' : func 0ℓ I I} {δ : IDesc 0ℓ I}
-        {δm : IDescM ((λ S →
-          Σ[ gen ∈ 𝔾 S ]
-            (Complete gen gen ×
-            (∀ {s : S} → Depth-Monotone gen s gen))))
-          δ} {i : I}
-        {m₁ : (ix : I) →
-          IDescM (λ S →
-            Σ[ gen ∈ 𝔾 S ]
-              (Complete gen gen ×
-              (∀ {s : S} → Depth-Monotone gen s gen)))
-          (func.out φ ix)}
-        {m₂ : (ix : I) →
-          IDescM (λ S →
-            Σ[ gen ∈ 𝔾 S ]
-              (Complete gen gen ×
-              (∀ {s : S} → Depth-Monotone gen s gen)))
-          (func.out φ' ix)}
-        → (φout≡δ : func.out φ i ≡ δ)
-        → m₁ i ≡ δsubst (sym φout≡δ) δm
-        → Completeᵢ
-            (IDesc-gen {φ₁ = mk (λ _ → δ)} {φ₂ = φ'} i (mapm proj₁ δm))
-            ((λ ix → IDesc-gen {φ₁ = φ'} {φ₂ = φ'}
-              ix (mapm proj₁ (m₂ ix))))
-        → Completeᵢ
-            (IDesc-gen {φ₁ = φ} {φ₂ = φ'} i (mapm proj₁ (m₁ i)))
-            ((λ ix →
-              IDesc-gen {φ₁ = φ'} {φ₂ = φ'}
-                ix (mapm proj₁ (m₂ ix))))
-
+      
   proj₁' :
     ∀ {S : Set}
     → Σ[ gen ∈ 𝔾 S ]
@@ -104,94 +68,29 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
   fix-lemma {n = zero} = refl
   fix-lemma {n = suc n} = refl
 
-  `var-gen-Complete :
-    ∀ {I : Set} {φ₂ : func 0ℓ I I} {i i' : I}
-      {m₂ : (ix : I) →
-        IDescM (λ S →
-          Σ[ gen ∈ 𝔾 S ]
-            (Complete gen gen ×
-            (∀ {s : S} → Depth-Monotone gen s gen)))
-        (func.out φ₂ ix)}
-    → Completeᵢ
-        (IDesc-gen {φ₁ = φ₂} {φ₂ = φ₂} i' (mapm proj₁ (m₂ i')))
-        (λ ix → IDesc-gen {φ₁ = φ₂} ix (mapm proj₁ (m₂ ix)))
-    → Completeᵢ
-        (IDesc-gen {φ₁ = mk λ _ → `var i'} {φ₂ = φ₂} i (mapm proj₁' `var~))
-        λ ix → IDesc-gen {φ₁ = φ₂} ix (mapm proj₁ (m₂ ix))
-  `var-gen-Complete {φ₂ = φ₂} {i' = i'} {m₂} rec {μ.⟨ x ⟩} with rec {x}
-  ... | n , elem =
-    constrᵢ-preserves-elem {f = μ.⟨_⟩}
-      (suc n , ∈-rewr
-        (fix-lemma {g = λ i → IDesc-gen {φ₁ = φ₂}
-          i (mapm proj₁ (m₂ i))} {n = n}) elem)
-  
-  `1-gen-Complete :
-    ∀ {I : Set} {φ₂ : func 0ℓ I I} {i : I}
-      {m₂ : (ix : I) →
-        IDescM ((λ S →
-          Σ[ gen ∈ 𝔾 S ]
-            (Complete gen gen ×
-            (∀ {s : S} → Depth-Monotone gen s gen))))
-        (func.out φ₂ ix)}
-    → Completeᵢ
-        (IDesc-gen {φ₁ = mk λ _ → `1} {φ₂ = φ₂} i (mapm proj₁' `1~))
-        (λ ix → IDesc-gen {φ₁ = φ₂} ix (mapm (λ {s} → proj₁) (m₂ ix)))
-  `1-gen-Complete = 1 , here
+  splitφ : ∀ {I} → (φ : func 0ℓ I I) → (i : I) → Σ[ δ ∈ IDesc 0ℓ I ] func.out φ i ≡ δ
+  splitφ φ i = (func.out φ i) , refl
 
-  `×-gen-Complete :
-    ∀ {I : Set} {φ φₗ φᵣ : func 0ℓ I I} {i : I}
-      {mₗ : proofM φₗ} {mᵣ : proofM φᵣ} {m : proofM φ}
-    → Completeᵢ
-        (IDesc-gen {φ₁ = φₗ} {φ₂ = φ} i (mapm proj₁ (mₗ i)))
-        (λ ix → IDesc-gen {φ₁ = φ} ix (mapm proj₁ (m ix)))
-    → Completeᵢ
-        (IDesc-gen {φ₁ = φᵣ} {φ₂ = φ} i (mapm proj₁ (mᵣ i)))
-        (λ ix → IDesc-gen {φ₁ = φ} ix (mapm proj₁ (m ix)))
-    → Completeᵢ
-        (IDesc-gen
-          {φ₁ = mk (λ ix → func.out φₗ ix `× func.out φᵣ ix)} {
-          φ₂ = φ} i (mapm proj₁ (mₗ i `×~ mᵣ i)))
-        λ ix → IDesc-gen {φ₁ = φ} ix (mapm proj₁ (m ix))
-  `×-gen-Complete pₗ pᵣ = {!!} 
-
-  inspectφ :
-    ∀ {ℓ} {I : Set} {P : Set ℓ → Set (sucL ℓ)}
-    → (φ : func ℓ I I) → (m : (i : I) → IDescM P (func.out φ i)) → (i : I)
-    → Σ[ δ ∈ IDesc ℓ I ]
-        Σ[ δm ∈ IDescM P δ ]
-          Σ[ φout≡δ ∈ (func.out φ i ≡ δ) ] m i ≡ δsubst (sym φout≡δ) δm
-  inspectφ φ m i = (func.out φ i) , m i , refl , refl
+  data Cb (a b : Set) : Set where
+    comb : a → b → Cb a b
 
   IDesc-gen-Complete :
     ∀ {I : Set} {ix : I} {φ₁ φ₂  : func 0ℓ I I}
-    → (m₁ : (i : I) →
-        IDescM (λ S →
-          Σ[ gen ∈ 𝔾 S ]
-            (Complete gen gen ×
-            (∀ {s : S} → Depth-Monotone gen s gen)))
-          (func.out φ₁ i))
+      {x : ⟦ φ₁ ⟧func (μ φ₂) ix}
+    → (m₁ : IDescM (λ S →
+      Σ[ gen ∈ 𝔾 S ]
+         (Complete gen gen ×
+           (∀ {s : S} → Depth-Monotone gen s gen))) (func.out φ₁ ix))
     → (m₂ : (i : I) →
-        IDescM (λ S →
-          Σ[ gen ∈ 𝔾 S ]
-            (Complete gen gen ×
-            (∀ {s : S} → Depth-Monotone gen s gen)))
+      IDescM (λ S →
+             Σ[ gen ∈ 𝔾 S ]
+      (Complete gen gen ×
+        (∀ {s : S} → Depth-Monotone gen s gen)))
         (func.out φ₂ i))
-    → Completeᵢ
-        (IDesc-gen {φ₁ = φ₁} {φ₂ = φ₂} ix (mapm proj₁ (m₁ ix)))
-        (λ i → (IDesc-gen {φ₁ = φ₂} {φ₂ = φ₂} i (mapm proj₁ (m₂ i))))
-  IDesc-gen-Complete {I} {ix} {φ₁} {φ₂} m₁ m₂ {x} =
-    case inspectφ φ₁ m₁ ix of
-      λ { (`var i   , `var~       , φ≡`var , m≡`var~) →
-            ⟦P⟧subst {φ = φ₁} {φ' = φ₂}
-              {δ = `var i} {δm = `var~} {m₁ = m₁}
-              φ≡`var m≡`var~
-              (`var-gen-Complete {!!})
-        ; (`1       , `1~         , φ≡`1   , m≡`1~  ) →
-            ⟦P⟧subst {φ = φ₁} {φ' = φ₂}
-              {δ = `1} {δm = `1~} {m₁ = m₁}
-              φ≡`1 m≡`1~
-              (`1-gen-Complete {m₂ = m₂})
-        ; (δₗ `× δᵣ , (mₗ `×~ mᵣ) , φ≡`×   , m≡`×~  ) → {!!}
-        ; (`σ n T   , `σ~ x       , φ≡`σ   , m≡`σ~  ) → {!!}
-        ; (`Σ S T   , `Σ~ x x₁    , φ≡`Σ   , m≡`Σ~  ) → {!!}
-        }
+    → Σ ℕ (λ n → x ∈ interpretᵢ (λ y → IDesc-gen {φ₁ = φ₂} y (mapm proj₁ (m₂ y))) ix (IDesc-gen {φ₁ = φ₁} ix (mapm proj₁ m₁)) n)
+  IDesc-gen-Complete {ix = ix} {φ₁ = φ₁} {φ₂ = φ₂} {x} m₁ m₂ with comb (func.out φ₁ ix) x
+  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`var i) x₂ = {!!}
+  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb `1 x₂ = {!!}
+  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (x₁ `× x₃) x₂ = {!!}
+  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`σ n T) x₂ = {!!}
+  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`Σ S T) x₂ = {!!}

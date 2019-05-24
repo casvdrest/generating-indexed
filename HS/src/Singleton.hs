@@ -23,11 +23,11 @@ module Singleton where
   --
   --   The associated type 'Sing :: a -> *' is the singleton type
   --   of a.
-  --   'demote' describes how a value of type 'Sing x' can be converted
+  --   'dm' describes how a value of type 'Sing x' can be converted
   --   to a value of type 'a' , for all 'x :: a'
   class Singleton a where
     type Sing :: a -> *
-    demote :: forall (x :: a) . Sing x -> a
+    dm :: forall (x :: a) . Sing x -> a
 
   -- | The class of generatable singleton types
   --
@@ -90,6 +90,12 @@ module Singleton where
       Promoted y <- G $ Call (\() -> unG genSing) ()
       pure (Promoted (SPair x y))
 
+  -- | Singleton generators for lists 
+  instance SingGeneratable a => SingGeneratable [a] where 
+    genSing  =  pure (Promoted SNil) 
+            <|> ((\(Promoted x) (Promoted xs) -> Promoted (SCons x xs)) 
+                <$> (G $ Call (\() -> unG genSing) ()) <*> genSing)
+
   -- | Associated singleton type for natural numbers
   data SNat (n :: Nat) where
     SZero :: SNat Zero
@@ -98,8 +104,8 @@ module Singleton where
   -- | Singleton instance for natural numbers
   instance Singleton Nat where
     type Sing = SNat
-    demote SZero = Zero
-    demote (SSuc n) = Suc (demote n)
+    dm SZero = Zero
+    dm (SSuc n) = Suc (dm n)
 
   -- | Second order singleton instance for natural numbers
   data SNat2 (n :: SNat m) where
@@ -109,8 +115,8 @@ module Singleton where
   -- | Singleton instance for SNat
   instance Singleton (SNat n) where
     type Sing = SNat2
-    demote SZero2 = SZero
-    demote (SSuc2 n) = SSuc (demote n)
+    dm SZero2 = SZero
+    dm (SSuc2 n) = SSuc (dm n)
 
   -- | Singleton type for proxy's
   data SProxy (p :: Proxy a) where
@@ -155,7 +161,7 @@ module Singleton where
   -- | Singleton instance for unit/()
   instance Singleton () where
     type Sing = SUnit
-    demote SUnit_ = ()
+    dm SUnit_ = ()
 
   instance Promote () where
     promote () = Promoted SUnit_
@@ -167,7 +173,7 @@ module Singleton where
   -- | Singleton instance of pairs
   instance (Singleton a , Singleton b) => Singleton (a, b) where
     type Sing = SPair
-    demote (SPair x y) = (demote x , demote y)
+    dm (SPair x y) = (dm x , dm y)
 
   -- | Promote instance of pairs
   instance (Promote a , Promote b) => Promote (a, b) where
@@ -185,8 +191,8 @@ module Singleton where
   -- | Singleton instance for coproducts
   instance (Singleton a , Singleton b) => Singleton (Either a b) where
     type Sing = SEither
-    demote (SLeft  x) = Left  (demote x)
-    demote (SRight y) = Right (demote y)
+    dm (SLeft  x) = Left  (dm x)
+    dm (SRight y) = Right (dm y)
 
   -- | Promote instance for coproducts
   instance (Promote a , Promote b) => Promote (Either a b) where
@@ -205,8 +211,8 @@ module Singleton where
   -- | Singleton instance for lists
   instance Singleton a => Singleton [a] where
     type Sing = SList
-    demote SNil         = []
-    demote (SCons x xs) = demote x : demote xs
+    dm SNil         = []
+    dm (SCons x xs) = dm x : dm xs
 
   -- | Promote instance for lists
   instance Promote a => Promote [a] where
@@ -226,8 +232,8 @@ module Singleton where
   -- | Singleton instance for 'Maybe'
   instance Singleton a => Singleton (Maybe a) where
     type Sing = SMaybe
-    demote (SNothing) = Nothing
-    demote (SJust x)  = Just (demote x)
+    dm (SNothing) = Nothing
+    dm (SJust x)  = Just (dm x)
 
   -- | Promote instance for 'Maybe'
   instance Promote a => Promote (Maybe a) where

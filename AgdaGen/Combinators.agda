@@ -23,7 +23,7 @@ module AgdaGen.Combinators where
   genMapᵢ :
     ∀ {ℓ k} {i : Set k} {a b t : i → Set ℓ} {x : i}
     → (a x → b x) → Genᵢ a t x → Genᵢ b t x
-  genMapᵢ f g = Apᵢ (Pureᵢ f) g
+  genMapᵢ {x = x} f g = Apᵢ (Pureᵢ f) g
 
   -- Functor typeclass for generators 
   record GFunctor {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
@@ -38,7 +38,7 @@ module AgdaGen.Combinators where
     field pure  : ∀ {a : i → Set ℓ} {x : i}
                 → a x → f a x
     field _<*>_ : ∀ {a b : i → Set ℓ} {x y : i}
-                → f (λ _ → a y → b x) x → f a y → f b x 
+                → f (λ x → a y → b x) x → f a y → f b x 
 
   -- Applicative typeclass for generators
   record GMonad {ℓ k} {i : Set k} (m : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
