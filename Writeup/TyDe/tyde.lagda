@@ -149,7 +149,7 @@
         Σ[ n ∈ ℕ ] (x ∈ enumerate u n)      
     \end{code}
     This property states that for each possible |x|,
-    there is some size |n| such than |x| occurs in our enumeration.
+    there is some size |n| such that |x| occurs in our enumeration.
   \end{itemize}
 
   We will now sketch three increasingly complex universes, together
@@ -193,7 +193,7 @@
   What happens when we consider \emph{indexed} datatypes? Initially,
   we will consider \textit{indexed containers}
   \cite{altenkirch2015indexed, dagand2017essence}: indexed types that 
-  are defined by induction over the index type |𝓘|.Following the 
+  are defined by induction over the index type |𝓘|. Following the 
   presentation in \cite{dagand2017essence}, we define indexed containers 
   as a triple of \textit{operations}, \textit{arities} and \textit{typing}:
 
@@ -203,12 +203,12 @@ Ar : ∀ {x} → Fix (Op x) → Reg
 Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → 𝓘 
 \end{code}
 
-  The set |Op i| describes the set of available operations at index |i|;
-  |Ar op| the arities of each constructor; finally, |Ty ar| gives the
+  \noindent The set |Op i| describes the set of available operations at index |i|;
+  |Ar op| the arities of each constructor; and finally, |Ty ar| gives the
   index corresponding to the recursive subtree at arity |ar|. Together, 
   they form a type's \emph{Signature}, and are interpreted as a function 
-  from index to dependent pair, with the first element of the pair denoting 
-  a choice of constructor, and the second element being a function that 
+  from index to dependent pair. The first element of the pair denotes 
+  a choice of constructor, and the second element is a function that 
   maps each recursive subtree to a value of the type that results from 
   applying the recursive argument with the index given by the typing 
   discipline for that arity. 
@@ -234,17 +234,17 @@ Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → 𝓘
     in  op-vec ◃ ar-vec ∣ ty-vec
   \end{code}
 
-  Each index is associated with a unique operation. We map |suc n| to a 
+  \noindent Each index is associated with a unique operation. We map |suc n| to a 
   \emph{constant type} in |op-vec|, since the |∷| constructor stores a 
   value along  its recursive subtree. The empty vector, |[]|, has no recursive 
-  subtrees, hence it arity is the \emph{empty type}. Any non-empty vector 
+  subtrees; hence, its arity is the \emph{empty type}. Any non-empty vector 
   has one subtree, so we assign its arity to be the \emph{unit type}. 
   This single subtree has an index that is one less than the original index, 
   as described by |ty-vec|.  
 
   %\todo{Leg uit of haal weg -- anders voegt het weinig toe}
 
-\paragraph*{Generic enumerators}
+\paragraph*{Generic enumerators.}
   In the definition of indexed containers, we restricted the
   type of operations and arities to the universe of regular types. As a result,
   we can reuse the enumeration of regular types to write a generic enumerator 
@@ -257,7 +257,7 @@ co-enumerate :
   (ℕ → List a) → (c : Reg) → ℕ → List (Fix c → a)
 \end{code}
 
-  This allows us to define enumerators for both components of the dependent pair:
+  This enables us to define enumerators for both components of the dependent pair:
 
 \begin{code}
 enumOp  : ∀ {i : 𝓘} →  ℕ → List (Fix (Op i))
@@ -303,6 +303,7 @@ I    : (i : 𝓘) → IDesc 𝓘
 `Σ   : (S : Set) → (T : S → IDesc 𝓘) → IDesc 𝓘
 \end{code}
 
+\noindent
 Their interpretation is rather straightforward. 
 \begin{code}
 ⟦ I i     ⟧ r = r i
@@ -315,12 +316,12 @@ tree a zero      = `1
 tree a (suc n')  = `Σ (Σ[ (n , m) ∈ ℕ × ℕ ] n + m ≡ n')
   λ { (n , m , refl) → I n ⊗ K a ⊗ I m }
 \end{code}
-The dependency between the indices of the left- and right subtrees of
+The dependency between the indices of the left and right subtrees of
 nodes is captured by having their description depend on a pair of
-natural numbers together with a proof that they sum to the required
+natural numbers together with a proof that these numbers add up to the required
 index.
 
-\paragraph*{Enumerators for indexed descriptions}
+\paragraph*{Enumerators for indexed descriptions.}
 Since the |IDesc| universe largely exposes the same combinators as the
 universe of regular types, we only really need to define |enumerate|
 for the |`Σ| combinator. This is straightforward once we can enumerate 
@@ -347,7 +348,7 @@ quite naturally; we merely need to supply an enumerator that inverts addition:
      → List (Σ (ℕ × ℕ) λ {(n' , m') → n' + m' ≡ n }) 
 \end{code}
 
-|enumerate| needs nothing beyond |+⁻¹| in order to be able to enumerate 
+The function |enumerate| merely needs |+⁻¹| in order to be able to enumerate 
 inhabitants of |Tree|. 
 
   %  \todo{Dit
@@ -357,14 +358,14 @@ inhabitants of |Tree|.
   %  te voegen?), kun je geen generieke generator geven. Dus verwacht je
   %  die van de gebruiker.}
 
-\paragraph{Application in Haskell}
+\paragraph{Applying our approach in Haskell.}
 
-We have developed a prototype library in Haskell that implements 
+We developed a prototype library in Haskell that implements 
 the generic enumerator for indexed descriptions. So far, we have 
 been able to show that the techniques described in this abstract 
 can be applied to enumerate well-typed lambda terms, and are working
 towards generation of well-formed terms in more complex programming 
-languages; specifically \textit{Plutus Core} \cite{plutusspec2019}, 
+languages; specifically, \textit{Plutus Core} \cite{plutusspec2019}, 
 which is used as the transaction validation language on the 
 Cardano blockchain.  
 
