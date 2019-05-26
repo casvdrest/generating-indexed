@@ -184,9 +184,7 @@
   \begin{code}
       enumerate : (c : Reg) -> ℕ -> List (⟦ c ⟧ (Fix c))  
   \end{code}
-  For example, the enumeration of a coproduct of two codes is a fair merge of 
-  the two recursive calls, and for products we enumerate all possible 
-  combinations of values. 
+   For example, the enumeration of a coproduct is a fair merge of the left and right codes, and for products we take the cartesian product. 
 
   \section*{Enumeration of Indexed Containers}
 
@@ -194,7 +192,7 @@
   we will consider \textit{indexed containers}
   \cite{altenkirch2015indexed, dagand2017essence}: indexed types that 
   are defined by induction over the index type |𝓘|. Following the 
-  presentation in \cite{dagand2017essence}, we define indexed containers 
+  presentation by Dagand \cite{dagand2017essence}, we define indexed containers 
   as a triple of \textit{operations}, \textit{arities} and \textit{typing}:
 
 \begin{code}
@@ -291,11 +289,10 @@ Without introducing further equalities, it is hard to capture the
 decomposition of the index |suc (n + m)| into two subtrees of size |n|
 and |m|.
 
-The universe of \emph{indexed descriptions}, |IDesc 𝓘|, as defined in
-\cite{dagand2013cosmology}, is capable of representing arbitrary
+The universe of \emph{indexed descriptions}, |IDesc 𝓘|, as described by Dagand \cite{dagand2013cosmology}, is capable of representing arbitrary
 indexed families. This universe makes two key modifications to 
 the universe of regular types: recursive positions must store an additional 
-field corresponding to their index and a new combinator, |`Σ| is 
+field corresponding to their index and a new combinator, |`Σ|, is 
 added. 
   
 \begin{code}
@@ -345,11 +342,10 @@ quite naturally; we merely need to supply an enumerator that inverts addition:
 
 \begin{code}
 +⁻¹  : (n : ℕ) → ℕ 
-     → List (Σ (ℕ × ℕ) λ {(n' , m') → n' + m' ≡ n }) 
+     → List (Σ[ (n , m) ∈ ℕ × ℕ ] n + m ≡ n') 
 \end{code}
 
-The function |enumerate| merely needs |+⁻¹| in order to be able to enumerate 
-inhabitants of |Tree|. 
+Using this inversion, and the combinators we have seen previously, we can define a function |enumerate| that lists all inhabitants of |Tree|. 
 
   %  \todo{Dit
   %  is in zekere zin het meest interessante aan de hele abstract -- leg
