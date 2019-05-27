@@ -45,42 +45,38 @@ module AgdaGen.Base where
       -- positions. 
       `_    : ∀ {a t : Set ℓ} → Gen {ℓ} {k} a a → Gen a t
 
-      ⟨_`_⟩ : ∀ {i : Set k} {p : i → Set ℓ} {t : Set ℓ} → (x : i) → ((x : i) → Genᵢ p p x) → Gen (p x) t
+      ⟨_`_⟩ : ∀ {i : Set k} {p : i → Set ℓ} {t : Set ℓ} → (x : i) → ((x : i) → Genᵢ (p x) p x) → Gen (p x) t
 
 
     data Genᵢ {ℓ k} {i : Set k} : 
-      (i → Set ℓ) → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where
+      (Set ℓ) → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where
 
       -- Lifts values into the Genᵢ type
-      Pureᵢ : ∀ {a t : i → Set ℓ} {x : i} → a x → Genᵢ a t x
+      Pureᵢ : ∀ {a : Set ℓ} {t : i → Set ℓ} {x : i} → a → Genᵢ a t x
 
       -- Aplies the results of one generator to the results of another
-      Apᵢ   : ∀ {a b t : i → Set ℓ} {x : i} {y : i} 
-            → Genᵢ (λ x → b y → a x) t x → Genᵢ b t y → Genᵢ a t x
+      Apᵢ   : ∀ {a b : Set ℓ} {t : i → Set ℓ} {x : i} {y : i} 
+            → Genᵢ (b → a) t x → Genᵢ b t y → Genᵢ a t x
 
       -- Monadic bind for generators
-      Bindᵢ : ∀ {a b t : i → Set ℓ} {x : i} {y : i}
-            → Genᵢ a t y → (a y → Genᵢ b t x) → Genᵢ b t x
+      Bindᵢ : ∀ {a b : Set ℓ} {t : i → Set ℓ} {x : i} {y : i}
+            → Genᵢ a t y → (a → Genᵢ b t x) → Genᵢ b t x
 
       -- Choice between generators
-      Orᵢ  : ∀ {a t : i → Set ℓ} {x : i}
+      Orᵢ  : ∀ {a : Set ℓ} {t : i → Set ℓ} {x : i}
              → Genᵢ a t x → Genᵢ a t x → Genᵢ a t x
 
       -- Recursive positions
-      μᵢ    : ∀ {a : i → Set ℓ} → (x : i) → Genᵢ a a x
+      μᵢ    : ∀ {a : i → Set ℓ} → (x : i) → Genᵢ (a x) a x
 
       -- Empty generator
-      Noneᵢ : ∀ {a t : i → Set ℓ} {x : i} → Genᵢ a t x
+      Noneᵢ : ∀ {a : Set ℓ} {t : i → Set ℓ} {x : i} → Genᵢ a t x
 
       -- Call to external non-indexed generator
-      Call  : ∀ {t : i → Set ℓ} {x : i} {b : Set ℓ} → Gen {ℓ} {k} b b → Genᵢ (λ _ → b) t x
+      Call  : ∀ {t : i → Set ℓ} {x : i} {b : Set ℓ} → Gen {ℓ} {k} b b → Genᵢ b t x
 
       -- Call to external indexed generator
-      Callᵢ : ∀ {j : Set k} {t : i → Set ℓ} {s : j → Set ℓ} {x : i} → (y : j) → ((y : j) → Genᵢ s s y) → Genᵢ (λ _ → s y) t x
-
-  fin : (n : ℕ) → Genᵢ Fin Fin n
-  fin zero = Noneᵢ
-  fin (suc n) = Orᵢ (Pureᵢ zero) (Apᵢ (Pureᵢ suc) (μᵢ n))
+      Callᵢ : ∀ {j : Set k} {t : i → Set ℓ} {s : j → Set ℓ} {x : i} → (y : j) → ((y' : j) → Genᵢ (s y') s y') → Genᵢ (s y) t x
 
   -- Type synonym for 'closed' generators, e.g. generators whose recursive
   -- positions refer to the same type as the generator as a whole. 
@@ -89,7 +85,7 @@ module AgdaGen.Base where
 
   -- The type of closed indexed generators
   𝔾ᵢ : ∀ {ℓ k} {i : Set k} → (i → Set ℓ) → i → Set (sucL k ⊔ (sucL ℓ))
-  𝔾ᵢ f x = Genᵢ f f x
+  𝔾ᵢ f x = Genᵢ (f x) f x
   
   -- Type synonym for 'closed' generators for function types
   co𝔾 : ∀ {ℓ k} → Set ℓ → Set (sucL ℓ ⊔ sucL k)

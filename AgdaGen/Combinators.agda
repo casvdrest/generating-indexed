@@ -21,46 +21,46 @@ module AgdaGen.Combinators where
 
   -- 'map', but for indexed generators
   genMapᵢ :
-    ∀ {ℓ k} {i : Set k} {a b t : i → Set ℓ} {x : i}
-    → (a x → b x) → Genᵢ a t x → Genᵢ b t x
+    ∀ {ℓ k} {i : Set k} {a b : Set ℓ} {t : i → Set ℓ} {x : i}
+    → (a → b) → Genᵢ a t x → Genᵢ b t x
   genMapᵢ {x = x} f g = Apᵢ (Pureᵢ f) g
 
   -- Functor typeclass for generators 
-  record GFunctor {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
+  record GFunctor {ℓ k} {i : Set k} (f : Set ℓ → i → Set (sucL ℓ ⊔ sucL k)) :
          Set (sucL ℓ ⊔ sucL k) where
     infix 30 _<$>_
-    field _<$>_ : ∀ {a b : i → Set ℓ} {x : i}
-                → (a x → b x) → f a x → f b x
+    field _<$>_ : ∀ {a b : Set ℓ} {x : i}
+                → (a → b) → f a x → f b x
 
   -- Applicative typeclass for generators
-  record GApplicative {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
+  record GApplicative {ℓ k} {i : Set k} (f : Set ℓ → i → Set (sucL ℓ ⊔ sucL k)) :
          Set (sucL ℓ ⊔ sucL k) where
-    field pure  : ∀ {a : i → Set ℓ} {x : i}
-                → a x → f a x
-    field _<*>_ : ∀ {a b : i → Set ℓ} {x y : i}
-                → f (λ x → a y → b x) x → f a y → f b x 
+    field pure  : ∀ {a : Set ℓ} {x : i}
+                → a → f a x
+    field _<*>_ : ∀ {a b : Set ℓ} {x y : i}
+                → f (a → b) x → f a y → f b x 
 
   -- Applicative typeclass for generators
-  record GMonad {ℓ k} {i : Set k} (m : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)) :
+  record GMonad {ℓ k} {i : Set k} (m : Set ℓ → i → Set (sucL ℓ ⊔ sucL k)) :
          Set (sucL ℓ ⊔ sucL k) where
-    field _>>=_ : ∀ {a b : i → Set ℓ} {x y : i}
-                → m a y → (a y → m b x) → m b x
+    field _>>=_ : ∀ {a b : Set ℓ} {x y : i}
+                → m a y → (a → m b x) → m b x
 
   -- Alternative typeclass for generators
-  record GAlternative {ℓ k} {i : Set k} (f : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k))
+  record GAlternative {ℓ k} {i : Set k} (f : Set ℓ → i → Set (sucL ℓ ⊔ sucL k))
          : Set (sucL ℓ ⊔ sucL k) where
     infixr 20 _∥_
-    field _∥_ : ∀ {a : i → Set ℓ} {x : i}
+    field _∥_ : ∀ {a : Set ℓ} {x : i}
               → f a x → f a x → f a x
-    field empty : {a : i → Set ℓ} {x : i} → f a x
+    field empty : {a : Set ℓ} {x : i} → f a x
 
   -- Expose the GMonad class
   open GMonad ⦃...⦄
 
   -- We need to expose '>>' in order to be able to utilize do-notation
   _>>_ :
-    ∀ {ℓ k} {i : Set k} {a b : i → Set ℓ}
-      {x y : i} {m : (i → Set ℓ) → i → Set (sucL ℓ ⊔ sucL k)}
+    ∀ {ℓ k} {i : Set k} {a b : Set ℓ}
+      {x y : i} {m : Set ℓ → i → Set (sucL ℓ ⊔ sucL k)}
       ⦃ _ : GMonad m ⦄
     → m a y → m b x → m b x
   f >> g = f >>= λ _ → g
@@ -71,28 +71,28 @@ module AgdaGen.Combinators where
   instance
     Gen-Functor :
       ∀ {ℓ} {t : Set ℓ}
-      → GFunctor λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+      → GFunctor {i = Lift ℓ ⊤} λ a _ → Gen {ℓ} {0ℓ} a t
     Gen-Functor =
       record { _<$>_ = genMap }
 
   instance
     Gen-Applicative :
       ∀ {ℓ} {t : Set ℓ}
-      → GApplicative λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+      → GApplicative {i = Lift ℓ ⊤} λ a _ → Gen {ℓ} {0ℓ} a t
     Gen-Applicative =
       record { pure = Pure ; _<*>_ = Ap }
 
   instance
     Gen-Monad :
       ∀ {ℓ} {t : Set ℓ}
-      → GMonad λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+      → GMonad {i = Lift ℓ ⊤} λ a _ → Gen {ℓ} {0ℓ} a t
     Gen-Monad =
       record { _>>=_ = Bind }
 
   instance 
     Gen-Alternative :
       ∀ {ℓ} {t : Set ℓ}
-      → GAlternative λ a _ → Gen {ℓ} {0ℓ} (a tt) t
+      → GAlternative {k = ℓ} {i = Lift ℓ ⊤} λ a tt → Gen {ℓ} {0ℓ} a t
     Gen-Alternative =
       record { _∥_ = Or ; empty = None }
 
