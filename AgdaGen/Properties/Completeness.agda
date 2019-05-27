@@ -36,7 +36,7 @@ module AgdaGen.Properties.Completeness where
   _∣_↝_ : ∀ {a t : Set} → Gen {k = 0ℓ} a t → 𝔾 t → a → Set
   f ∣ tg ↝ x = ∃[ n ] (x ∈ interpret f tg n)
 
-  _∣ᵢ_↝_ : ∀ {I : Set} {a t : I → Set} {i : I} → Genᵢ a t i → ((i : I) → 𝔾ᵢ t i) → a i → Set
+  _∣ᵢ_↝_ : ∀ {I : Set} {a t : I → Set} {i : I} → Genᵢ (a i) t i → ((i : I) → 𝔾ᵢ t i) → a i → Set
   _∣ᵢ_↝_ {i = i} g tg x = ∃[ n ] (x ∈ interpretᵢ tg i g n)
 
   -- Completeness: A generator is complete if we can produce
@@ -44,8 +44,8 @@ module AgdaGen.Properties.Completeness where
   Complete : ∀ {a t : Set} → Gen a t → 𝔾 t → Set
   Complete {a} f tg = ∀ {x : a} → f ∣ tg ↝ x
 
-  Completeᵢ : ∀ {I : Set} {a t : I → Set} {i : I} → Genᵢ a t i  → ((i : I) → 𝔾ᵢ t i) → Set
-  Completeᵢ {a = a} {i = i} g tg = ∀ {x : a i} → g ∣ᵢ tg  ↝ x 
+  Completeᵢ : ∀ {I : Set} {a t : I → Set} {i : I} → Genᵢ (a i) t i  → ((i : I) → 𝔾ᵢ t i) → Set
+  Completeᵢ {a = a} {i = i} g tg = ∀ {x : a i} → _∣ᵢ_↝_ {a = a} g tg x 
 
   -- Call to external generator completeness
   `-complete :
@@ -71,9 +71,8 @@ module AgdaGen.Properties.Completeness where
   μᵢ-complete :
     ∀ {I : Set} {a : I → Set}
       {tg : (i : I) → 𝔾ᵢ a i} {i : I} {x : a i}
-    → tg i ∣ᵢ tg ↝ x → μᵢ i ∣ᵢ tg ↝ x
+    → _∣ᵢ_↝_ {a = a} (tg i) tg x → _∣ᵢ_↝_ {a = a} (μᵢ i) tg x
   μᵢ-complete (n , elem) = (suc n) , elem  
-
   
   pure-complete :
     ∀ {a t : Set} {tg : 𝔾 t} {x : a} → ⦇ x ⦈ ∣ tg ↝ x
@@ -99,9 +98,9 @@ module AgdaGen.Properties.Completeness where
 
   ∥ᵢ-complete-left :
     ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
-      {f g : Genᵢ a t i} {tg : (i : I) → 𝔾ᵢ t i}
-    → f ∣ᵢ tg ↝ x
-    → (f ∥ g) ∣ᵢ tg ↝ x
+      {f g : Genᵢ (a i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → _∣ᵢ_↝_ {a = a} f tg x
+    → _∣ᵢ_↝_ {a = a} (f ∥ g) tg x
   ∥ᵢ-complete-left (suc n , p) =
     (suc n) , merge-complete-left p
 
@@ -117,9 +116,9 @@ module AgdaGen.Properties.Completeness where
 
   ∥ᵢ-complete-right :
     ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
-      {f g : Genᵢ a t i} {tg : (i : I) → 𝔾ᵢ t i}
-    → g ∣ᵢ tg ↝ x
-    → (f ∥ g) ∣ᵢ tg ↝ x
+      {f g : Genᵢ (a i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → _∣ᵢ_↝_ {a = a} g tg x
+    → _∣ᵢ_↝_ {a = a} (f ∥ g) tg x
   ∥ᵢ-complete-right (suc n , p) =
     (suc n) , merge-complete-right p
 
@@ -135,9 +134,9 @@ module AgdaGen.Properties.Completeness where
 
   ∥ᵢ-sound :
     ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
-      {f g : Genᵢ a t i} {tg : (i : I) → 𝔾ᵢ t i}
-    → (f ∥ g) ∣ᵢ tg ↝ x
-    → (f ∣ᵢ tg ↝ x) ⊎ (g ∣ᵢ tg ↝ x)
+      {f g : Genᵢ (a i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → _∣ᵢ_↝_ {a = a} (f ∥ g) tg x
+    → (_∣ᵢ_↝_ {a = a} f tg x) ⊎ (_∣ᵢ_↝_ {a = a} g tg x)
   ∥ᵢ-sound (suc n , p) =
     ⊕-bimap (λ x → suc n , x) (λ y → suc n , y) (merge-sound p)
   
@@ -156,8 +155,8 @@ module AgdaGen.Properties.Completeness where
 
   constrᵢ-preserves-elem :
     ∀ {I : Set} {a b t : I → Set} {i₁ i₂ : I} {f : a i₁ → b i₂}
-      {g : Genᵢ a t i₁} {tg : (i : I) → 𝔾ᵢ t i} {x : a i₁}
-    →  g ∣ᵢ tg ↝ x
+      {g : Genᵢ (a i₁) t i₁} {tg : (i : I) → 𝔾ᵢ t i} {x : a i₁}
+    →  _∣ᵢ_↝_ {a = a} g tg x
     →  _∣ᵢ_↝_ {a = b} ⦇ f g ⦈ tg (f x)
   constrᵢ-preserves-elem {f = f} (suc n , elem) = 
     suc n , list-ap-complete {fs = [ f ]} here elem
@@ -205,8 +204,8 @@ module AgdaGen.Properties.Completeness where
   ⊛-completeᵢ :
     ∀ {I : Set} {a b c t : I → Set} {i₁ i₂ i₃ : I}
       {x : a i₁} {y : b i₂} {tg : (i : I) → 𝔾ᵢ t i}
-      {f : Genᵢ a t i₁} {g : Genᵢ b t i₂} {C : a i₁ → b i₂ → c i₃}
-    → (p₁ : f ∣ᵢ tg ↝ x) → (p₂ : g ∣ᵢ tg ↝ y)
+      {f : Genᵢ (a i₁) t i₁} {g : Genᵢ (b i₂) t i₂} {C : a i₁ → b i₂ → c i₃}
+    → (p₁ : _∣ᵢ_↝_ {a = a} f tg x) → (p₂ : _∣ᵢ_↝_ {a = b} g tg y)
     → Depth-Monotoneᵢ f tg x → Depth-Monotoneᵢ g tg y 
     → _∣ᵢ_↝_ {a = c} ⦇ C f g ⦈ tg (C x y)
   ⊛-completeᵢ {a} {b} {c} {f = f} {g = g} {C = C}
@@ -231,15 +230,15 @@ module AgdaGen.Properties.Completeness where
     (constr-preserves-elem {g = g} p₂)
 
   ∥-Completeᵢ :
-    ∀ {I : Set} {a b t : I → Set} {i : I} {f : Genᵢ a t i}
-      {g : Genᵢ b t i} {tg : (i : I) → 𝔾ᵢ t i}
-    → Completeᵢ f tg → Completeᵢ g tg
+    ∀ {I : Set} {a b t : I → Set} {i : I} {f : Genᵢ (a i) t i}
+      {g : Genᵢ (b i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+    → Completeᵢ {a = a} f tg → Completeᵢ {a = b} g tg
     → Completeᵢ {a = λ i → a i ⊎ b i} (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈) tg
-  ∥-Completeᵢ {f = f} {g = g} p₁ p₂ {inj₁ x} =
-    ∥ᵢ-complete-left {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
-    (constrᵢ-preserves-elem {g = f} p₁)
-  ∥-Completeᵢ {f = f} {g = g} p₁ p₂ {inj₂ y} =
-    ∥ᵢ-complete-right {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
-    (constrᵢ-preserves-elem {g = g} p₂)
+  ∥-Completeᵢ {a = a} {b = b} {f = f} {g = g} p₁ p₂ {inj₁ x} =
+    ∥ᵢ-complete-left {a = λ i → a i ⊎ b i} {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
+    (constrᵢ-preserves-elem {a = a} {b = λ i → a i ⊎ b i} {g = f} p₁)
+  ∥-Completeᵢ {a = a} {b = b} {f = f} {g = g} p₁ p₂ {inj₂ y} =
+    ∥ᵢ-complete-right {a = λ i → a i ⊎ b i} {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
+    (constrᵢ-preserves-elem {a = b} {b = λ i → a i ⊎ b i} {g = g} p₂)
 
   

@@ -1,5 +1,6 @@
 open import AgdaGen.Base
 open import AgdaGen.Data
+open import AgdaGen.Combinators
 
 open import Data.Nat hiding (_⊔_)
 open import Data.List
@@ -29,33 +30,28 @@ module AgdaGen.Enumerate where
     interpret (None      ) tg (suc n) = []
     interpret (μ         ) tg (suc n) =
       interpret tg tg n
-    interpret (` g       ) tg (suc n) =
+    interpret (` g       ) tg (suc n) = 
       interpret g g (suc n)
     interpret ⟨ x ` g ⟩ tg (suc n) =
       interpretᵢ g x (g x) (suc n)
 
+    
     -- Interpret a generator as a function from recursive depth to List of elements
     interpretᵢ :
-      ∀ {ℓ k} {i : Set k} {a t : i → Set ℓ}
-      → ((y : i) → Genᵢ t t y) → (x : i) → Genᵢ a t x → ℕ → List (a x)
-    interpretᵢ tg x g                    zero   = []
-    interpretᵢ tg x (Noneᵢ )            (suc n) = []
-    interpretᵢ tg x (Pureᵢ v)           (suc n) = [ v ]
+      ∀ {ℓ k} {i : Set k} {a : Set ℓ} {t : i → Set ℓ}
+      → ((y : i) → Genᵢ (t y) t y) → (x : i) → Genᵢ a t x → ℕ → List a
+    interpretᵢ tg x g zero = []
+    interpretᵢ tg x (Pureᵢ x₁) (suc n) = [ x₁ ]
     interpretᵢ tg x (Apᵢ {y = y} g₁ g₂) (suc n) =
-      concatMap (λ f → map f (interpretᵢ tg y g₂ (suc n) ))
-        (interpretᵢ tg x g₁ (suc n))
-    interpretᵢ tg x (Bindᵢ {y = y} g f) (suc n) =
-      concatMap (λ v → interpretᵢ tg x (f v) (suc n))
-        (interpretᵢ tg y g (suc n))
-    interpretᵢ tg x (Orᵢ g₁ g₂)         (suc n) =
-      merge (interpretᵢ tg x g₁ (suc n))
-        (interpretᵢ tg x g₂ (suc n))
-    interpretᵢ tg x (μᵢ .x)             (suc n) =
-      interpretᵢ tg x (tg x) n
-    interpretᵢ tg x (Call g)            (suc n) =
-      interpret g g (suc n)
-    interpretᵢ tg x (Callᵢ i g)         (suc n) =
-      interpretᵢ g i (g i) (suc n)
+      concatMap (λ f → map f (interpretᵢ tg y g₂ (suc n))) (interpretᵢ tg x g₁ (suc n))
+    interpretᵢ tg x (Bindᵢ {y = y} g₁ fg) (suc n) =
+      concatMap (λ v → interpretᵢ tg x (fg v) (suc n)) (interpretᵢ tg y g₁ (suc n))
+    interpretᵢ tg x (Orᵢ g₁ g₂) (suc n) =
+      merge (interpretᵢ tg x g₁ (suc n)) (interpretᵢ tg x g₂ (suc n))
+    interpretᵢ tg x (μᵢ .x) (suc n) = interpretᵢ tg x (tg x) n
+    interpretᵢ tg x Noneᵢ (suc n) = []
+    interpretᵢ tg x (Call g) (suc n) = interpret g g (suc n)
+    interpretᵢ tg x (Callᵢ y g) (suc n) = interpretᵢ g y (g y) (suc n)
 
   -- Interpret a closed generator as a function from `ℕ` to `List a`
   ⟨_⟩ : ∀ {ℓ k} {a : Set ℓ} → Gen {ℓ} {k} a a → ℕ → List a

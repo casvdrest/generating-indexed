@@ -20,7 +20,7 @@ open import Function
 open import Level renaming (zero to zeroL; suc to sucL)
 
 open import Relation.Binary.PropositionalEquality
-open import Relation.Binary.HeterogeneousEquality
+-- open import Relation.Binary.HeterogeneousEquality
 
 module AgdaGen.Generic.Indexed.IDesc.Properties where
 
@@ -29,68 +29,41 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
   postulate
    bind-Complete :
      ∀ {I : Set} {a t b : I → Set} {x y : I}
-       {g : Genᵢ a t x} {g' : a x → Genᵢ b t y}
+       {g : Genᵢ (a x) t x} {g' : a x → Genᵢ (b y) t y}
        {tg : (i : I) → 𝔾ᵢ t i}
-     → Completeᵢ g tg → ((v : a x) → Completeᵢ (g' v) tg)
-     → Completeᵢ (g >>= g') tg
+     → Completeᵢ {a = a} g tg → ((v : a x) → Completeᵢ {a = b} (g' v) tg)
+     → Completeᵢ {a = b} (g >>= g') tg
 
   -- The selector's generator is complete
-  sl-gen-Complete : ∀ {n : ℕ} → Completeᵢ (Sl-gen (lift n)) Sl-gen
+  sl-gen-Complete : ∀ {n : ℕ} → Completeᵢ {a = Sl} (Sl-gen (lift n)) Sl-gen
+  sl-gen-Complete {zero} {()}
   sl-gen-Complete {suc n} {∙} = 1 , here
   sl-gen-Complete {suc n} {▻ x} with sl-gen-Complete {n} {x}
-  ... | depth , elem  =
-    ∥ᵢ-complete-left (constrᵢ-preserves-elem ((suc depth) , elem))
+  sl-gen-Complete {suc n} {▻ x} | n' , elem =
+    ∥ᵢ-complete-left {a = Sl} (constrᵢ-preserves-elem {a = Sl} {b = Sl} (suc n' , elem))
 
   ℂ : ∀ {I : Set} {t : I → Set} → ((i : I) → 𝔾ᵢ t i) → Set
-  ℂ {I} g = ∀ {i : I} → Completeᵢ (g i) g
-
-  proofM : ∀ {ℓ} {I : Set} → func ℓ I I → Set
-  proofM {I = I} φ =
-    (ix : I) →
-      IDescM (λ S →
-        Σ[ gen ∈ 𝔾 S ]
-          (Complete gen gen ×
-          (∀ {s : S} → Depth-Monotone gen s gen)))
-      (func.out φ ix)
-      
-  proj₁' :
-    ∀ {S : Set}
-    → Σ[ gen ∈ 𝔾 S ]
-        (Complete gen gen ×
-        (∀ {s : S} → Depth-Monotone gen s gen))
-    → 𝔾 S
-  proj₁' (x , _) = x
-
-  fix-lemma :
-    ∀ {I : Set} {t : I → Set} {i : I}
-      {g : (i : I) → 𝔾ᵢ t i} {n : ℕ}
-    → interpretᵢ g i (g i) n ≡ interpretᵢ g i (μᵢ i) (suc n)
-  fix-lemma {n = zero} = refl
-  fix-lemma {n = suc n} = refl
-
-  splitφ : ∀ {I} → (φ : func 0ℓ I I) → (i : I) → Σ[ δ ∈ IDesc 0ℓ I ] func.out φ i ≡ δ
-  splitφ φ i = (func.out φ i) , refl
-
-  data Cb (a b : Set) : Set where
-    comb : a → b → Cb a b
+  ℂ {I} {t} g = ∀ {i : I} → Completeᵢ {a = t} (g i) g
 
   IDesc-gen-Complete :
-    ∀ {I : Set} {ix : I} {φ₁ φ₂  : func 0ℓ I I}
-      {x : ⟦ φ₁ ⟧func (μ φ₂) ix}
+    ∀ {I : Set} {ix : I} {δ : IDesc 0ℓ I} {φ  : func 0ℓ I I}
+      {x : ⟦ δ ⟧ (μ φ)}
     → (m₁ : IDescM (λ S →
       Σ[ gen ∈ 𝔾 S ]
          (Complete gen gen ×
-           (∀ {s : S} → Depth-Monotone gen s gen))) (func.out φ₁ ix))
+           (∀ {s : S} → Depth-Monotone gen s gen))) δ) 
     → (m₂ : (i : I) →
       IDescM (λ S →
              Σ[ gen ∈ 𝔾 S ]
       (Complete gen gen ×
         (∀ {s : S} → Depth-Monotone gen s gen)))
-        (func.out φ₂ i))
-    → Σ ℕ (λ n → x ∈ interpretᵢ (λ y → IDesc-gen {φ₁ = φ₂} y (mapm proj₁ (m₂ y))) ix (IDesc-gen {φ₁ = φ₁} ix (mapm proj₁ m₁)) n)
-  IDesc-gen-Complete {ix = ix} {φ₁ = φ₁} {φ₂ = φ₂} {x} m₁ m₂ with comb (func.out φ₁ ix) x
-  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`var i) x₂ = {!!}
-  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb `1 x₂ = {!!}
-  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (x₁ `× x₃) x₂ = {!!}
-  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`σ n T) x₂ = {!!}
-  IDesc-gen-Complete {ix = ix} {φ₁} {φ₂} {x} m₁ m₂ | comb (`Σ S T) x₂ = {!!}
+        (func.out φ i))
+    → Σ ℕ (λ n → x ∈ interpretᵢ (λ y → IDesc-gen y (mapm proj₁ (m₂ y))) ix (IDesc-gen ix (mapm proj₁ m₁)) n)
+  IDesc-gen-Complete {δ = `var i} {φ} {⟨ x ⟩} m₁ m₂
+    with IDesc-gen-Complete {ix = i} {δ = func.out φ i} {φ = φ} {x = x} (m₂ i) m₂
+  IDesc-gen-Complete {ix = _} {`var i} {φ} {⟨ x ⟩} m₁ m₂ | fst , snd = ?
+  IDesc-gen-Complete {δ = `1} {φ} {x} m₁ m₂ = {!!}
+  IDesc-gen-Complete {δ = δ `× δ₁} {φ} {x} m₁ m₂ = {!!}
+  IDesc-gen-Complete {δ = `σ n T} {φ} {x} m₁ m₂ = {!!}
+  IDesc-gen-Complete {δ = `Σ S T} {φ} {x} m₁ m₂ = {!!}
+
