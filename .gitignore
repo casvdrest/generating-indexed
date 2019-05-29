@@ -9,6 +9,7 @@ Writeup/Proposal/*.bib
 !Writeup/Proposal/*.pdf
 
 Writeup/Thesis/*
+Writeup/Thesis/*.bib
 !Writeup/Thesis/src/*
 !Writeup/Thesis/dist/*.pdf
 
