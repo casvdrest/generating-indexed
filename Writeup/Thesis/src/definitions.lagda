@@ -1,0 +1,65 @@
+\begin{code}
+{-# OPTIONS --type-in-type #-}
+{-# OPTIONS --allow-unsolved-metas #-}
+
+\end{code}
+
+%<*nat>
+\begin{code}
+data ℕ : Set where
+  zero  : ℕ
+  suc   : ℕ → ℕ
+\end{code}
+%</nat>
+
+%<*fin>
+\begin{code}
+data Fin : ℕ → Set where
+  zero  : ∀ {n : ℕ} → Fin (suc n)
+  suc   : ∀ {n : ℕ} → Fin n → Fin (suc n)
+\end{code}
+%</fin>
+
+%<*wellscoped>
+\begin{code}
+data WS : ℕ → Set where
+  var :  ∀ {n : ℕ} → Fin n → WS n
+  abs :  ∀ {n : ℕ} → WS (suc n) → WS n
+  app :  ∀ {n : ℕ} → WS n → WS n → WS n
+\end{code}
+%</wellscoped>
+
+\begin{code}
+Id : Set
+Id = ℕ
+\end{code}
+
+%<*context>
+\begin{code}
+data Ty : Set where
+  `τ    : Ty
+  _`→_  : Ty → Ty → Ty
+\end{code}
+%</context>
+
+%<*context>
+\begin{code}
+data Ctx : Set where
+  ∅ : Ctx
+  _,_∶_ : Ctx → Id → Ty → Ctx
+\end{code}
+%</context>
+
+%<*rawterm>
+\begin{code}
+data RT : Set where
+  $_    : Id → RT
+  Λ_⇒_  : Id → RT → RT 
+  _⊚_   : RT → RT → RT
+\end{code}
+%</rawterm>
+
+
+
+
+

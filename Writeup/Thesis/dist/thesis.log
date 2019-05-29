@@ -1,0 +1,1981 @@
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  29 MAY 2019 17:04
+entering extended mode
+ \write18 enabled.
+ %&-line parsing enabled.
+**dist/thesis.tex
+(./dist/thesis.tex
+LaTeX2e <2018-12-01>
+(./tex/latex/uustthesis.cls
+Document Class: uustthesis 2018/07/04 Utrecht University Software Technology Th
+esis Template
+(/usr/share/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2018/09/03 v1.4i Standard LaTeX document class
+(/usr/share/texmf-dist/tex/latex/base/bk10.clo
+File: bk10.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@chapter=\count81
+\c@section=\count82
+\c@subsection=\count83
+\c@subsubsection=\count84
+\c@paragraph=\count85
+\c@subparagraph=\count86
+\c@figure=\count87
+\c@table=\count88
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2018/04/16 v5.8 Page Geometry
+
+(/usr/share/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2018/09/07 v3.3 Provides the ifpdf switch
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count89
+\Gm@cntv=\count90
+\c@Gm@tempcnt=\count91
+\Gm@bindingoffset=\dimen103
+\Gm@wd@mp=\dimen104
+\Gm@odd@mp=\dimen105
+\Gm@even@mp=\dimen106
+\Gm@layoutwidth=\dimen107
+\Gm@layoutheight=\dimen108
+\Gm@layouthoffset=\dimen109
+\Gm@layoutvoffset=\dimen110
+\Gm@dimlist=\toks15
+)
+(/usr/share/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2019/01/31 v3.10 Extensive control of page headers and footer
+s
+\f@nch@headwidth=\skip43
+\f@nch@O@elh=\skip44
+\f@nch@O@erh=\skip45
+\f@nch@O@olh=\skip46
+\f@nch@O@orh=\skip47
+\f@nch@O@elf=\skip48
+\f@nch@O@erf=\skip49
+\f@nch@O@olf=\skip50
+\f@nch@O@orf=\skip51
+)
+(/usr/share/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(/usr/share/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: xetex.def on input line 225.
+
+(/usr/share/texmf-dist/tex/latex/graphics-def/xetex.def
+File: xetex.def 2017/06/24 v5.0h Graphics/color driver for xetex
+)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+(/usr/share/texmf-dist/tex/latex/ccaption/ccaption.sty
+Package: ccaption 2011/08/07 v3.2c Extended captioning and new floats
+\@contcwidth=\skip52
+\@contindw=\skip53
+\abovelegendskip=\skip54
+\belowlegendskip=\skip55
+\c@newflo@tctr=\count92
+)
+(/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: xetex.def on input line 99.
+)
+\Gin@req@height=\dimen111
+\Gin@req@width=\dimen112
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2018/12/01 v2.17b AMS math features
+\@mathmargin=\skip56
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks16
+\ex@=\dimen113
+))
+(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen114
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count93
+LaTeX Info: Redefining \frac on input line 223.
+\uproot@=\count94
+\leftroot@=\count95
+LaTeX Info: Redefining \overline on input line 385.
+\classnum@=\count96
+\DOTSCASE@=\count97
+LaTeX Info: Redefining \ldots on input line 482.
+LaTeX Info: Redefining \dots on input line 485.
+LaTeX Info: Redefining \cdots on input line 606.
+\Mathstrutbox@=\box27
+\strutbox@=\box28
+\big@size=\dimen115
+LaTeX Font Info:    Redeclaring font encoding OML on input line 729.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 730.
+\macc@depth=\count98
+\c@MaxMatrixCols=\count99
+\dotsspace@=\muskip10
+\c@parentequation=\count100
+\dspbrk@lvl=\count101
+\tag@help=\toks17
+\row@=\count102
+\column@=\count103
+\maxfields@=\count104
+\andhelp@=\toks18
+\eqnshift@=\dimen116
+\alignsep@=\dimen117
+\tagshift@=\dimen118
+\tagwidth@=\dimen119
+\totwidth@=\dimen120
+\lineht@=\dimen121
+\@envbody=\toks19
+\multlinegap=\skip57
+\multlinetaggap=\skip58
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2844.
+LaTeX Info: Redefining \] on input line 2845.
+)
+(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(/usr/share/texmf-dist/tex/latex/unicode-math/unicode-math.sty
+(/usr/share/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2019-02-15 L3 programming layer (loader) 
+
+(/usr/share/texmf-dist/tex/latex/l3kernel/expl3-code.tex
+Package: expl3 2019-02-15 L3 programming layer (code)
+\c_max_int=\count105
+\l_tmpa_int=\count106
+\l_tmpb_int=\count107
+\g_tmpa_int=\count108
+\g_tmpb_int=\count109
+\g__kernel_prg_map_int=\count110
+\c_log_iow=\count111
+\l_iow_line_count_int=\count112
+\l__iow_line_target_int=\count113
+\l__iow_one_indent_int=\count114
+\l__iow_indent_int=\count115
+\c_zero_dim=\dimen122
+\c_max_dim=\dimen123
+\l_tmpa_dim=\dimen124
+\l_tmpb_dim=\dimen125
+\g_tmpa_dim=\dimen126
+\g_tmpb_dim=\dimen127
+\c_zero_skip=\skip59
+\c_max_skip=\skip60
+\l_tmpa_skip=\skip61
+\l_tmpb_skip=\skip62
+\g_tmpa_skip=\skip63
+\g_tmpb_skip=\skip64
+\c_zero_muskip=\muskip11
+\c_max_muskip=\muskip12
+\l_tmpa_muskip=\muskip13
+\l_tmpb_muskip=\muskip14
+\g_tmpa_muskip=\muskip15
+\g_tmpb_muskip=\muskip16
+\l_keys_choice_int=\count116
+\l__intarray_loop_int=\count117
+\c__intarray_sp_dim=\dimen128
+\g__intarray_font_int=\count118
+\c__fp_leading_shift_int=\count119
+\c__fp_middle_shift_int=\count120
+\c__fp_trailing_shift_int=\count121
+\c__fp_big_leading_shift_int=\count122
+\c__fp_big_middle_shift_int=\count123
+\c__fp_big_trailing_shift_int=\count124
+\c__fp_Bigg_leading_shift_int=\count125
+\c__fp_Bigg_middle_shift_int=\count126
+\c__fp_Bigg_trailing_shift_int=\count127
+\g__fp_array_int=\count128
+\l__fp_array_loop_int=\count129
+\l__sort_length_int=\count130
+\l__sort_min_int=\count131
+\l__sort_top_int=\count132
+\l__sort_max_int=\count133
+\l__sort_true_max_int=\count134
+\l__sort_block_int=\count135
+\l__sort_begin_int=\count136
+\l__sort_end_int=\count137
+\l__sort_A_int=\count138
+\l__sort_B_int=\count139
+\l__sort_C_int=\count140
+\l__tl_analysis_normal_int=\count141
+\l__tl_analysis_index_int=\count142
+\l__tl_analysis_nesting_int=\count143
+\l__tl_analysis_type_int=\count144
+\l__regex_internal_a_int=\count145
+\l__regex_internal_b_int=\count146
+\l__regex_internal_c_int=\count147
+\l__regex_balance_int=\count148
+\l__regex_group_level_int=\count149
+\l__regex_mode_int=\count150
+\c__regex_cs_in_class_mode_int=\count151
+\c__regex_cs_mode_int=\count152
+\l__regex_catcodes_int=\count153
+\l__regex_default_catcodes_int=\count154
+\c__regex_catcode_L_int=\count155
+\c__regex_catcode_O_int=\count156
+\c__regex_catcode_A_int=\count157
+\c__regex_all_catcodes_int=\count158
+\l__regex_show_lines_int=\count159
+\l__regex_min_state_int=\count160
+\l__regex_max_state_int=\count161
+\l__regex_left_state_int=\count162
+\l__regex_right_state_int=\count163
+\l__regex_capturing_group_int=\count164
+\l__regex_min_pos_int=\count165
+\l__regex_max_pos_int=\count166
+\l__regex_curr_pos_int=\count167
+\l__regex_start_pos_int=\count168
+\l__regex_success_pos_int=\count169
+\l__regex_curr_char_int=\count170
+\l__regex_curr_catcode_int=\count171
+\l__regex_last_char_int=\count172
+\l__regex_case_changed_char_int=\count173
+\l__regex_curr_state_int=\count174
+\l__regex_step_int=\count175
+\l__regex_min_active_int=\count176
+\l__regex_max_active_int=\count177
+\l__regex_replacement_csnames_int=\count178
+\l__regex_match_count_int=\count179
+\l__regex_min_submatch_int=\count180
+\l__regex_submatch_int=\count181
+\l__regex_zeroth_submatch_int=\count182
+\g__regex_trace_regex_int=\count183
+\c_empty_box=\box29
+\l_tmpa_box=\box30
+\l_tmpb_box=\box31
+\g_tmpa_box=\box32
+\g_tmpb_box=\box33
+\l__box_top_dim=\dimen129
+\l__box_bottom_dim=\dimen130
+\l__box_left_dim=\dimen131
+\l__box_right_dim=\dimen132
+\l__box_top_new_dim=\dimen133
+\l__box_bottom_new_dim=\dimen134
+\l__box_left_new_dim=\dimen135
+\l__box_right_new_dim=\dimen136
+\l__box_internal_box=\box34
+\l__coffin_internal_box=\box35
+\l__coffin_internal_dim=\dimen137
+\l__coffin_offset_x_dim=\dimen138
+\l__coffin_offset_y_dim=\dimen139
+\l__coffin_x_dim=\dimen140
+\l__coffin_y_dim=\dimen141
+\l__coffin_x_prime_dim=\dimen142
+\l__coffin_y_prime_dim=\dimen143
+\c_empty_coffin=\box36
+\l__coffin_aligned_coffin=\box37
+\l__coffin_aligned_internal_coffin=\box38
+\l_tmpa_coffin=\box39
+\l_tmpb_coffin=\box40
+\g_tmpa_coffin=\box41
+\g_tmpb_coffin=\box42
+\c__coffin_empty_coffin=\box43
+\l__coffin_display_coffin=\box44
+\l__coffin_display_coord_coffin=\box45
+\l__coffin_display_pole_coffin=\box46
+\l__coffin_display_offset_dim=\dimen144
+\l__coffin_display_x_dim=\dimen145
+\l__coffin_display_y_dim=\dimen146
+\g__file_internal_ior=\read1
+\l__coffin_bounding_shift_dim=\dimen147
+\l__coffin_left_corner_dim=\dimen148
+\l__coffin_right_corner_dim=\dimen149
+\l__coffin_bottom_corner_dim=\dimen150
+\l__coffin_top_corner_dim=\dimen151
+\l__coffin_scaled_total_height_dim=\dimen152
+\l__coffin_scaled_width_dim=\dimen153
+)
+(/usr/share/texmf-dist/tex/latex/l3kernel/l3xdvipdfmx.def
+File: l3xdvipdfmx.def 2019-02-15 v L3 Experimental driver: xdvipdfmx
+\g__driver_image_int=\count184
+\g__driver_pdf_object_int=\count185
+))
+Package: unicode-math 2019/02/15 v0.8n Unicode maths in XeLaTeX and LuaLaTeX
+
+(/usr/share/texmf-dist/tex/latex/unicode-math/unicode-math-xetex.sty
+Package: unicode-math-xetex 2019/02/15 v0.8n Unicode maths in XeLaTeX and LuaLa
+TeX
+
+(/usr/share/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+Package: xparse 2018-10-17 L3 Experimental document command parser
+\l__xparse_current_arg_int=\count186
+\g__xparse_grabber_int=\count187
+\l__xparse_m_args_int=\count188
+\l__xparse_mandatory_args_int=\count189
+\l__xparse_v_nesting_int=\count190
+)
+(/usr/share/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+Package: l3keys2e 2018-10-17 LaTeX2e option processing using LaTeX3 keys
+)
+(/usr/share/texmf-dist/tex/latex/fontspec/fontspec.sty
+Package: fontspec 2019/02/12 v2.7b Font selection for XeLaTeX and LuaLaTeX
+
+(/usr/share/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+Package: fontspec-xetex 2019/02/12 v2.7b Font selection for XeLaTeX and LuaLaTe
+X
+\l__fontspec_script_int=\count191
+\l__fontspec_language_int=\count192
+\l__fontspec_strnum_int=\count193
+\l__fontspec_tmp_int=\count194
+\l__fontspec_tmpa_int=\count195
+\l__fontspec_tmpb_int=\count196
+\l__fontspec_tmpc_int=\count197
+\l__fontspec_em_int=\count198
+\l__fontspec_emdef_int=\count199
+\l__fontspec_strong_int=\count266
+\l__fontspec_strongdef_int=\count267
+\l__fontspec_tmpa_dim=\dimen154
+\l__fontspec_tmpb_dim=\dimen155
+\l__fontspec_tmpc_dim=\dimen156
+
+(/usr/share/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2018/08/11 v2.0j Standard LaTeX package
+
+(/usr/share/texmf-dist/tex/latex/base/tuenc.def
+File: tuenc.def 2018/08/11 v2.0j Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding TU on input line 82.
+))
+(/usr/share/texmf-dist/tex/latex/fontspec/fontspec.cfg)
+LaTeX Info: Redefining \itshape on input line 4044.
+LaTeX Info: Redefining \slshape on input line 4049.
+LaTeX Info: Redefining \scshape on input line 4054.
+LaTeX Info: Redefining \upshape on input line 4059.
+LaTeX Info: Redefining \em on input line 4089.
+LaTeX Info: Redefining \emph on input line 4114.
+))
+(/usr/share/texmf-dist/tex/latex/filehook/filehook.sty
+Package: filehook 2011/10/12 v0.5d Hooks for input files
+)
+(/usr/share/texmf-dist/tex/latex/base/fix-cm.sty
+Package: fix-cm 2015/01/14 v1.1t fixes to LaTeX
+
+(/usr/share/texmf-dist/tex/latex/base/ts1enc.def
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+))
+\g__um_fam_int=\count268
+\g__um_fonts_used_int=\count269
+\l__um_primecount_int=\count270
+\g__um_primekern_muskip=\muskip17
+
+(/usr/share/texmf-dist/tex/latex/unicode-math/unicode-math-table.tex)
+
+Package unicode-math Info: I'm going to patch macro \subarray.
+
+
+Package unicode-math Info: I'm going to patch macro \r@@t.
+
+))
+(/usr/share/texmf-dist/tex/latex/cleveref/cleveref.sty
+Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
+)
+(/usr/share/texmf-dist/tex/latex/catchfilebetweentags/catchfilebetweentags.sty
+Package: catchfilebetweentags 2011/02/19 v1.1 - Catch file between tags (FC)
+
+(/usr/share/texmf-dist/tex/latex/etex-pkg/etex.sty
+Package: etex 2016/08/01 v2.7 eTeX basic definition package (PEB,DPC)
+
+
+Package etex Warning: Extended allocation already in use.
+(etex)                etex.sty code will not be used.
+(etex)                To force etex package to load, add
+(etex)                \RequirePackage{etex}
+(etex)                at the start of the document.
+
+) (/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2018/08/19 v2.5f e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count271
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/catchfile.sty
+Package: catchfile 2016/05/16 v1.7 Catch the contents of a file (HO)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+))
+\CatchFBT@tok=\toks21
+)
+(./tex/latex/agda.sty
+Package: agda 
+ (/usr/share/texmf-dist/tex/latex/xifthen/xifthen.sty
+Package: xifthen 2015/11/05 v1.4.0 Extended ifthen features
+
+(/usr/share/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count272
+\calc@Bcount=\count273
+\calc@Adimen=\dimen157
+\calc@Bdimen=\dimen158
+\calc@Askip=\skip65
+\calc@Bskip=\skip66
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count274
+\calc@Cskip=\skip67
+)
+(/usr/share/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texmf-dist/tex/latex/ifmtarg/ifmtarg.sty
+Package: ifmtarg 2018/04/16 v1.2b check for an empty argument
+))
+(/usr/share/texmf-dist/tex/latex/polytable/polytable.sty
+Package: polytable 2013/07/18 v0.8.5 `polytable' package (Andres Loeh)
+
+(/usr/share/texmf-dist/tex/latex/lazylist/lazylist.sty)
+(/usr/share/texmf-dist/tex/latex/tools/array.sty
+Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
+\col@sep=\dimen159
+\ar@mcellbox=\box47
+\extrarowheight=\dimen160
+\NC@list=\toks22
+\extratabsurround=\skip68
+\backup@length=\skip69
+\ar@cellbox=\box48
+)
+\PT@colwidth=\dimen161
+\PT@cols=\count275
+\PT@table=\count276
+\PT@toks=\toks23
+\PT@in=\read2
+\PT@out=\write3
+)
+(/usr/share/texmf-dist/tex/latex/environ/environ.sty
+Package: environ 2014/05/04 v0.3 A new way to define environments
+
+(/usr/share/texmf-dist/tex/latex/trimspaces/trimspaces.sty
+Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
+))
+\mathindent=\dimen162
+\c@Agda@Current=\count277
+\c@Agda@Previous=\count278
+\c@Agda@AlignStart=\count279
+\c@Agda@SuppressStart=\count280
+\AgdaEmptySkip=\skip70
+\AgdaEmptyExtraSkip=\skip71
+)
+(/usr/share/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2016/03/21 v2.10.2 Sectioning titles
+\ttl@box=\box49
+\beforetitleunit=\skip72
+\aftertitleunit=\skip73
+\ttl@plus=\dimen163
+\ttl@minus=\dimen164
+\ttl@toksa=\toks24
+\titlewidth=\dimen165
+\titlewidthlast=\dimen166
+\titlewidthfirst=\dimen167
+)
+(/usr/share/texmf-dist/tex/latex/titling/titling.sty
+Package: titling 2009/09/04 v2.1d maketitle typesetting
+\thanksmarkwidth=\skip74
+\thanksmargin=\skip75
+\droptitle=\skip76
+)
+(/usr/share/texmf-dist/tex/latex/tocloft/tocloft.sty
+Package: tocloft 2017/08/31 v2.3i parameterised ToC, etc., typesetting
+Package tocloft Info: The document has chapter divisions on input line 51.
+\cftparskip=\skip77
+\cftbeforetoctitleskip=\skip78
+\cftaftertoctitleskip=\skip79
+\cftbeforepartskip=\skip80
+\cftpartnumwidth=\skip81
+\cftpartindent=\skip82
+\cftbeforechapskip=\skip83
+\cftchapindent=\skip84
+\cftchapnumwidth=\skip85
+\cftbeforesecskip=\skip86
+\cftsecindent=\skip87
+\cftsecnumwidth=\skip88
+\cftbeforesubsecskip=\skip89
+\cftsubsecindent=\skip90
+\cftsubsecnumwidth=\skip91
+\cftbeforesubsubsecskip=\skip92
+\cftsubsubsecindent=\skip93
+\cftsubsubsecnumwidth=\skip94
+\cftbeforeparaskip=\skip95
+\cftparaindent=\skip96
+\cftparanumwidth=\skip97
+\cftbeforesubparaskip=\skip98
+\cftsubparaindent=\skip99
+\cftsubparanumwidth=\skip100
+\cftbeforeloftitleskip=\skip101
+\cftafterloftitleskip=\skip102
+\cftbeforefigskip=\skip103
+\cftfigindent=\skip104
+\cftfignumwidth=\skip105
+\c@lofdepth=\count281
+\c@lotdepth=\count282
+\cftbeforelottitleskip=\skip106
+\cftafterlottitleskip=\skip107
+\cftbeforetabskip=\skip108
+\cfttabindent=\skip109
+\cfttabnumwidth=\skip110
+)
+(/usr/share/texmf-dist/tex/latex/appendix/appendix.sty
+Package: appendix 2009/09/02 v1.2b extra appendix facilities
+\c@@pps=\count283
+\c@@ppsavesec=\count284
+\c@@ppsaveapp=\count285
+)
+\c@mv@stix2_128=\count286
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(0)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math,StylisticSet={1,2,8}].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <->s*[0.9112053809055278]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(0)/m/n' will be
+(Font)              scaled to size 9.11209pt on input line 108.
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(1)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6.25-8.5,Font=STIX
+(fontspec)             Two Math,Style=MathScript},{Size=-6.25,Font=STIX Two
+(fontspec)             Math,Style=MathScriptScript}},StylisticSet={1,2,8}].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <8.5->s*[0.9112053809055278]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;"<6.
+25-8.5>s*[0.9112053809055278]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;+sst
+y=0;"<-6.25>s*[0.9112053809055278]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;+sst
+y=1;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(1)/m/n' will be
+(Font)              scaled to size 9.11209pt on input line 108.
+LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
+(Font)              `operators' in the math version `stix2_128' on input line 1
+08.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `stix2_128'
+(Font)                  OT1/cmr/m/n --> TU/STIXTwoMath(1)/m/n on input line 108
+.
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(2)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6.25-8.5,Font=STIX
+(fontspec)             Two Math,Style=MathScript},{Size=-6.25,Font=STIX Two
+(fontspec)             Math,Style=MathScriptScript}},StylisticSet={1,2,8},Scale
+Again=1.00001,FontAdjustment={\fontdimen
+(fontspec)             8\font =5.83174pt\relax \fontdimen 9\font
+(fontspec)             =5.33057pt\relax \fontdimen 10\font =4.28268pt\relax
+(fontspec)             \fontdimen 11\font =5.83174pt\relax \fontdimen 12\font
+(fontspec)             =5.33057pt\relax \fontdimen 13\font =3.28035pt\relax
+(fontspec)             \fontdimen 14\font =3.28035pt\relax \fontdimen 15\font
+(fontspec)             =2.29625pt\relax \fontdimen 16\font =1.91354pt\relax
+(fontspec)             \fontdimen 17\font =1.91354pt\relax \fontdimen 18\font
+(fontspec)             =2.09578pt\relax \fontdimen 19\font =1.45793pt\relax
+(fontspec)             \fontdimen 22\font =2.35092pt\relax \fontdimen 20\font
+(fontspec)             =0pt\relax \fontdimen 21\font =0pt\relax }].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <8.5->s*[0.9112144929593369]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;"<6.
+25-8.5>s*[0.9112144929593369]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;+sst
+y=0;"<-6.25>s*[0.9112144929593369]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;+sst
+y=1;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+(fontspec)             and font adjustment code:
+(fontspec)             \fontdimen 8\font =5.83174pt\relax \fontdimen 9\font
+(fontspec)             =5.33057pt\relax \fontdimen 10\font =4.28268pt\relax
+(fontspec)             \fontdimen 11\font =5.83174pt\relax \fontdimen 12\font
+(fontspec)             =5.33057pt\relax \fontdimen 13\font =3.28035pt\relax
+(fontspec)             \fontdimen 14\font =3.28035pt\relax \fontdimen 15\font
+(fontspec)             =2.29625pt\relax \fontdimen 16\font =1.91354pt\relax
+(fontspec)             \fontdimen 17\font =1.91354pt\relax \fontdimen 18\font
+(fontspec)             =2.09578pt\relax \fontdimen 19\font =1.45793pt\relax
+(fontspec)             \fontdimen 22\font =2.35092pt\relax \fontdimen 20\font
+(fontspec)             =0pt\relax \fontdimen 21\font =0pt\relax 
+
+LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
+(Font)              `symbols' in the math version `stix2_128' on input line 108
+.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `stix2_128'
+(Font)                  OMS/cmsy/m/n --> TU/STIXTwoMath(2)/m/n on input line 10
+8.
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(3)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6.25-8.5,Font=STIX
+(fontspec)             Two Math,Style=MathScript},{Size=-6.25,Font=STIX Two
+(fontspec)             Math,Style=MathScriptScript}},StylisticSet={1,2,8},Scale
+Again=0.99999,FontAdjustment={\fontdimen
+(fontspec)             8\font =0.61963pt\relax \fontdimen 9\font
+(fontspec)             =1.23013pt\relax \fontdimen 10\font =1.23013pt\relax
+(fontspec)             \fontdimen 11\font =2.73363pt\relax \fontdimen 12\font
+(fontspec)             =6.1051pt\relax \fontdimen 13\font =0pt\relax }].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <8.5->s*[0.9111962688517187]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;"<6.
+25-8.5>s*[0.9111962688517187]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;+sst
+y=0;"<-6.25>s*[0.9111962688517187]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ss01;+ss02;+ss08;+sst
+y=1;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+(fontspec)             and font adjustment code:
+(fontspec)             \fontdimen 8\font =0.61963pt\relax \fontdimen 9\font
+(fontspec)             =1.23013pt\relax \fontdimen 10\font =1.23013pt\relax
+(fontspec)             \fontdimen 11\font =2.73363pt\relax \fontdimen 12\font
+(fontspec)             =6.1051pt\relax \fontdimen 13\font =0pt\relax 
+
+LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
+(Font)              `largesymbols' in the math version `stix2_128' on input lin
+e 108.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `stix2_12
+8'
+(Font)                  OMX/cmex/m/n --> TU/STIXTwoMath(3)/m/n on input line 10
+8.
+LaTeX Font Info:    Redeclaring math version `stix2_128' on input line 109.
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(4)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <->s*[0.9112053809055278]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(4)/m/n' will be
+(Font)              scaled to size 9.11209pt on input line 109.
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(5)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6.25-8.5,Font=STIX
+(fontspec)             Two Math,Style=MathScript},{Size=-6.25,Font=STIX Two
+(fontspec)             Math,Style=MathScriptScript}}].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <8.5->s*[0.9112053809055278]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;"<6.25-8.5>s*[0.911205
+3809055278]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ssty=0;"<-6.25>s*[0.9
+112053809055278]"STIX
+(fontspec)             Two Math/OT:script=math;language=DFLT;+ssty=1;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 9.11209pt on input line 109.
+LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
+(Font)              `operators' in the math version `stix2_128' on input line 1
+09.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `stix2_128'
+(Font)                  OT1/cmr/m/n --> TU/STIXTwoMath(5)/m/n on input line 109
+.
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112144929593369.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(6)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6.25-8.5,Font=STIX
+(fontspec)             Two Math,Style=MathScript},{Size=-6.25,Font=STIX Two
+(fontspec)             Math,Style=MathScriptScript}},ScaleAgain=1.00001,FontAdj
+ustment={\fontdimen
+(fontspec)             8\font =5.83174pt\relax \fontdimen 9\font
+(fontspec)             =5.33057pt\relax \fontdimen 10\font =4.28268pt\relax
+(fontspec)             \fontdimen 11\font =5.83174pt\relax \fontdimen 12\font
+(fontspec)             =5.33057pt\relax \fontdimen 13\font =3.28035pt\relax
+(fontspec)             \fontdimen 14\font =3.28035pt\relax \fontdimen 15\font
+(fontspec)             =2.29625pt\relax \fontdimen 16\font =1.91354pt\relax
+(fontspec)             \fontdimen 17\font =1.91354pt\relax \fontdimen 18\font
+(fontspec)             =2.09578pt\relax \fontdimen 19\font =1.45793pt\relax
+(fontspec)             \fontdimen 22\font =2.35092pt\relax \fontdimen 20\font
+(fontspec)             =0pt\relax \fontdimen 21\font =0pt\relax }].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <8.5->s*[0.9112144929593369]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;"<6.25-8.5>s*[0.911214
+4929593369]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ssty=0;"<-6.25>s*[0.9
+112144929593369]"STIX
+(fontspec)             Two Math/OT:script=math;language=DFLT;+ssty=1;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+(fontspec)             and font adjustment code:
+(fontspec)             \fontdimen 8\font =5.83174pt\relax \fontdimen 9\font
+(fontspec)             =5.33057pt\relax \fontdimen 10\font =4.28268pt\relax
+(fontspec)             \fontdimen 11\font =5.83174pt\relax \fontdimen 12\font
+(fontspec)             =5.33057pt\relax \fontdimen 13\font =3.28035pt\relax
+(fontspec)             \fontdimen 14\font =3.28035pt\relax \fontdimen 15\font
+(fontspec)             =2.29625pt\relax \fontdimen 16\font =1.91354pt\relax
+(fontspec)             \fontdimen 17\font =1.91354pt\relax \fontdimen 18\font
+(fontspec)             =2.09578pt\relax \fontdimen 19\font =1.45793pt\relax
+(fontspec)             \fontdimen 22\font =2.35092pt\relax \fontdimen 20\font
+(fontspec)             =0pt\relax \fontdimen 21\font =0pt\relax 
+
+LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
+(Font)              `symbols' in the math version `stix2_128' on input line 109
+.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `stix2_128'
+(Font)                  OMS/cmsy/m/n --> TU/STIXTwoMath(6)/m/n on input line 10
+9.
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: Could not resolve font "STIX Two Math/B" (it probably
+(fontspec)             doesn't exist).
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9112053809055278.
+
+
+Package fontspec Info: STIX Two Math scale = 0.9111962688517187.
+
+
+Package fontspec Info: Font family 'STIXTwoMath(7)' created for font 'STIX Two
+(fontspec)             Math' with options
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
+allCapsFont={},Script=Math,SizeFeatures={{Size=8.5-},{Size=6.25-8.5,Font=STIX
+(fontspec)             Two Math,Style=MathScript},{Size=-6.25,Font=STIX Two
+(fontspec)             Math,Style=MathScriptScript}},ScaleAgain=0.99999,FontAdj
+ustment={\fontdimen
+(fontspec)             8\font =0.61963pt\relax \fontdimen 9\font
+(fontspec)             =1.23013pt\relax \fontdimen 10\font =1.23013pt\relax
+(fontspec)             \fontdimen 11\font =2.73363pt\relax \fontdimen 12\font
+(fontspec)             =6.1051pt\relax \fontdimen 13\font =0pt\relax }].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <8.5->s*[0.9111962688517187]"STIX Two
+(fontspec)             Math/OT:script=math;language=DFLT;"<6.25-8.5>s*[0.911196
+2688517187]"STIX
+(fontspec)             Two
+(fontspec)             Math/OT:script=math;language=DFLT;+ssty=0;"<-6.25>s*[0.9
+111962688517187]"STIX
+(fontspec)             Two Math/OT:script=math;language=DFLT;+ssty=1;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+(fontspec)             and font adjustment code:
+(fontspec)             \fontdimen 8\font =0.61963pt\relax \fontdimen 9\font
+(fontspec)             =1.23013pt\relax \fontdimen 10\font =1.23013pt\relax
+(fontspec)             \fontdimen 11\font =2.73363pt\relax \fontdimen 12\font
+(fontspec)             =6.1051pt\relax \fontdimen 13\font =0pt\relax 
+
+LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
+(Font)              `largesymbols' in the math version `stix2_128' on input lin
+e 109.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `stix2_12
+8'
+(Font)                  OMX/cmex/m/n --> TU/STIXTwoMath(7)/m/n on input line 10
+9.
+
+Package fontspec Info: Linux Libertine scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine/B scale = 0.9951381059751973.
+
+
+Package fontspec Info: Linux Libertine/B scale = 0.9951381059751973.
+
+
+Package fontspec Info: Linux Libertine/I scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine/I scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine/BI scale = 0.9689215148188804.
+
+
+Package fontspec Info: Linux Libertine/BI scale = 0.9689215148188804.
+
+
+Package fontspec Info: Font family 'LinuxLibertine(0)' created for font 'Linux
+(fontspec)             Libertine' with options
+(fontspec)             [Scale=MatchLowercase,Ligatures=TeX].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/OT:script=latn;language=DFLT;mapping=tex-text;
+"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/OT:script=latn;language=DFLT;+smcp;mapping=tex
+-text;"
+(fontspec)             - 'bold' (bx/n) with NFSS spec.:
+(fontspec)             <->s*[0.9951381059751973]"Linux
+(fontspec)             Libertine/B/OT:script=latn;language=DFLT;mapping=tex-tex
+t;"
+(fontspec)             - 'bold small caps'  (bx/sc) with NFSS spec.:
+(fontspec)             <->s*[0.9951381059751973]"Linux
+(fontspec)             Libertine/B/OT:script=latn;language=DFLT;+smcp;mapping=t
+ex-text;"
+(fontspec)             - 'italic' (m/it) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/I/OT:script=latn;language=DFLT;mapping=tex-tex
+t;"
+(fontspec)             - 'italic small caps'  (m/itsc) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/I/OT:script=latn;language=DFLT;+smcp;mapping=t
+ex-text;"
+(fontspec)             - 'bold italic' (bx/it) with NFSS spec.:
+(fontspec)             <->s*[0.9689215148188804]"Linux
+(fontspec)             Libertine/BI/OT:script=latn;language=DFLT;mapping=tex-te
+xt;"
+(fontspec)             - 'bold italic small caps'  (bx/itsc) with NFSS spec.:
+(fontspec)             <->s*[0.9689215148188804]"Linux
+(fontspec)             Libertine/BI/OT:script=latn;language=DFLT;+smcp;mapping=
+tex-text;"
+
+LaTeX Info: Redefining \rmfamily on input line 111.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 10.04196pt on input line 111.
+
+Package fontspec Info: Linux Libertine scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine/B scale = 0.9951381059751973.
+
+
+Package fontspec Info: Linux Libertine/B scale = 0.9951381059751973.
+
+
+Package fontspec Info: Linux Libertine/I scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine/I scale = 1.004195108077361.
+
+
+Package fontspec Info: Linux Libertine/BI scale = 0.9689215148188804.
+
+
+Package fontspec Info: Linux Libertine/BI scale = 0.9689215148188804.
+
+
+Package fontspec Info: Font family 'LinuxLibertine(1)' created for font 'Linux
+(fontspec)             Libertine' with options [Scale=MatchLowercase].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/OT:script=latn;language=DFLT;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/OT:script=latn;language=DFLT;+smcp;"
+(fontspec)             - 'bold' (bx/n) with NFSS spec.:
+(fontspec)             <->s*[0.9951381059751973]"Linux
+(fontspec)             Libertine/B/OT:script=latn;language=DFLT;"
+(fontspec)             - 'bold small caps'  (bx/sc) with NFSS spec.:
+(fontspec)             <->s*[0.9951381059751973]"Linux
+(fontspec)             Libertine/B/OT:script=latn;language=DFLT;+smcp;"
+(fontspec)             - 'italic' (m/it) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/I/OT:script=latn;language=DFLT;"
+(fontspec)             - 'italic small caps'  (m/itsc) with NFSS spec.:
+(fontspec)             <->s*[1.004195108077361]"Linux
+(fontspec)             Libertine/I/OT:script=latn;language=DFLT;+smcp;"
+(fontspec)             - 'bold italic' (bx/it) with NFSS spec.:
+(fontspec)             <->s*[0.9689215148188804]"Linux
+(fontspec)             Libertine/BI/OT:script=latn;language=DFLT;"
+(fontspec)             - 'bold italic small caps'  (bx/itsc) with NFSS spec.:
+(fontspec)             <->s*[0.9689215148188804]"Linux
+(fontspec)             Libertine/BI/OT:script=latn;language=DFLT;+smcp;"
+
+LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
+(Font)                  OT1/cmr/m/n --> TU/LinuxLibertine(1)/m/n on input line 
+111.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> TU/LinuxLibertine(1)/m/it on input lin
+e 111.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> TU/LinuxLibertine(1)/bx/n on input lin
+e 111.
+
+(/usr/share/texmf-dist/tex/latex/quotchap/quotchap.sty
+Package: quotchap 2012/10/20 v1.1 Decorative Chapter Headings with Quotes
+\@quotebox=\box50
+)
+(/usr/share/texmf-dist/tex/latex/newunicodechar/newunicodechar.sty
+Package: newunicodechar 2018/04/08 v1.2 Defining Unicode characters
+))
+(/usr/share/texmf-dist/tex/latex/framed/framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip111
+\fb@frw=\dimen168
+\fb@frh=\dimen169
+\FrameRule=\dimen170
+\FrameSep=\dimen171
+)
+(/usr/share/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
+(/usr/share/texmf-dist/tex/latex/stmaryrd/stmaryrd.sty
+Package: stmaryrd 1994/03/03 St Mary's Road symbol package
+\symstmry=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `stmry' in version `bold'
+(Font)                  U/stmry/m/n --> U/stmry/b/n on input line 89.
+)
+\blanklineskip=\skip112
+
+(/usr/share/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2018/12/12 v1.0d Color table columns (DPC)
+\everycr=\toks25
+\minrowclearance=\skip113
+)
+\coderulewidth=\skip114
+
+(/usr/share/texmf-dist/tex/latex/ucs/ucs.sty
+Package: ucs 2013/05/11 v2.2 UCS: Unicode input support
+
+(/usr/share/texmf-dist/tex/latex/ucs/data/uni-global.def
+File: uni-global.def 2013/05/13 UCS: Unicode global data
+)
+\uc@secondtry=\count287
+\uc@combtoks=\toks26
+\uc@combtoksb=\toks27
+\uc@temptokena=\toks28
+)
+(/usr/share/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2018/08/11 v1.3c Input encoding file
+\inpenc@prehook=\toks29
+\inpenc@posthook=\toks30
+
+
+Package inputenc Warning: inputenc package ignored with utf8 based engines.
+
+) (/usr/share/texmf-dist/tex/latex/ucs/utils/autofe.sty
+Package: autofe 2002/12/17 Automatic switching of fontencodings
+
+macro:->
+) (/usr/share/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2018/08/11 v2.0j Standard LaTeX package
+Package textcomp Info: Sub-encoding information:
+(textcomp)               5 = only ISO-Adobe without \textcurrency
+(textcomp)               4 = 5 + \texteuro
+(textcomp)               3 = 4 + \textohm
+(textcomp)               2 = 3 + \textestimated + \textcurrency
+(textcomp)               1 = TS1 - \textcircled - \t
+(textcomp)               0 = TS1 (full)
+(textcomp)             Font families with sub-encoding setting implement
+(textcomp)             only a restricted character set as indicated.
+(textcomp)             Family '?' is the default used for unknown fonts.
+(textcomp)             See the documentation for details.
+Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 79.
+
+(/usr/share/texmf-dist/tex/latex/base/ts1enc.def
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding TS1 on input line 47.
+)
+LaTeX Info: Redefining \oldstylenums on input line 334.
+Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 349.
+Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 350.
+Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 351.
+Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 352.
+Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 353.
+Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 354.
+Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 355.
+Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 356.
+Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 357.
+Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 358.
+Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 359.
+Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 360.
+Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 361.
+Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 362.
+Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 363.
+Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 364.
+Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 365.
+Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 366.
+Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 367.
+Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 368.
+Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 369.
+Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 370.
+Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 371.
+Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 372.
+
+Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 373.
+Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 374.
+Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 375.
+Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 376.
+Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 377.
+Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 378.
+Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 379.
+Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 380.
+Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 381.
+Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 382.
+Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 383.
+Package textcomp Info: Setting lmtt sub-encoding to TS1/0 on input line 384.
+Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 385.
+Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 386.
+Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 387.
+Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 388.
+Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 389.
+Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 390.
+Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 391.
+Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 392.
+Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 393.
+Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 394.
+Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 395.
+Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 396.
+Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 397.
+Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 398.
+Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 399.
+Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 400.
+Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 401.
+Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 402.
+Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 403.
+Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 404.
+Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 405.
+Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
+Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
+Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
+Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
+) (dist/thesis.aux)
+\openout1 = `thesis.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 415.
+LaTeX Font Info:    ... okay on input line 415.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+*geometry* verbose mode - [ preamble ] result:
+* driver: xetex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* bindingoffset: 28.45274pt
+* modes: twoside 
+* h-part:(L,W,R)=(83.64944pt, 400.56071pt, 84.84497pt)
+* v-part:(T,H,B)=(147.88254pt, 595.75766pt, 101.40665pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=400.56071pt
+* \textheight=595.75766pt
+* \oddsidemargin=39.8322pt
+* \evensidemargin=12.57498pt
+* \topmargin=45.54506pt
+* \headheight=15.0pt
+* \headsep=18.06749pt
+* \topskip=10.0pt
+* \footskip=25.29494pt
+* \marginparwidth=69.0pt
+* \marginparsep=7.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidetrue
+* \@mparswitchtrue
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 415.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 415.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 415.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 415.
+(/usr/share/texmf-dist/tex/latex/ucs/ucsencs.def
+File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
+)
+*geometry* verbose mode - [ newgeometry ] result:
+* driver: xetex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: twoside 
+* h-part:(L,W,R)=(85.35826pt, 426.79135pt, 85.35826pt)
+* v-part:(T,H,B)=(101.40665pt, 591.5302pt, 152.11pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=426.79135pt
+* \textheight=591.5302pt
+* \oddsidemargin=13.08827pt
+* \evensidemargin=13.08827pt
+* \topmargin=-3.93083pt
+* \headheight=15.0pt
+* \headsep=18.06749pt
+* \topskip=10.0pt
+* \footskip=25.29494pt
+* \marginparwidth=69.0pt
+* \marginparsep=7.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidetrue
+* \@mparswitchtrue
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+File: img/logo.pdf Graphic file (type pdf)
+<use img/logo.pdf>
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 6.37846pt on input line 416.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 5.01164pt on input line 416.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 9.11209pt on input line 416.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 6.37846pt on input line 416.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 5.01164pt on input line 416.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 9.11194pt on input line 416.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 6.37836pt on input line 416.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 5.01157pt on input line 416.
+LaTeX Font Info:    Try loading font information for U+msa on input line 416.
+
+(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 416.
+
+(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+stmry on input line 416.
+
+
+(/usr/share/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
+
+LaTeX Font Warning: Font shape `U/stmry/m/n' in size <5.5> not available
+(Font)              size <5> substituted on input line 416.
+
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
+(Font)              scaled to size 10.04196pt on input line 416.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
+(Font)              scaled to size 20.82703pt on input line 416.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
+(Font)              scaled to size 14.4604pt on input line 416.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
+(Font)              scaled to size 12.05035pt on input line 416.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 20.82703pt on input line 416.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
+(Font)              scaled to size 20.63904pt on input line 416.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 12.05035pt on input line 416.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
+(Font)              scaled to size 12.05035pt on input line 416.
+[1
+
+
+] [2
+
+
+]
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 100.41962pt on input line 420.
+ (dist/thesis.toc
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
+(Font)              scaled to size 9.95132pt on input line 1.
+)
+\tf@toc=\write4
+\openout4 = `thesis.toc'.
+
+ [1
+
+] [2
+
+] [3] [4
+
+] [5] [6
+
+]
+Chapter 1.
+[1
+
+] [2
+
+]
+Chapter 2.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
+(Font)              scaled to size 10.04196pt on input line 440.
+
+LaTeX Warning: Citation `wadler2015propositions' on page 3 undefined on input l
+ine 460.
+
+
+LaTeX Warning: Citation `norell2008dependently' on page 3 undefined on input li
+ne 465.
+
+\openout3 = `thesis.ptb'.
+
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 7.02937pt on input line 497.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 5.52307pt on input line 497.
+ [3]
+
+LaTeX Warning: Citation `abel2010miniagda' on page 4 undefined on input line 51
+1.
+
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+
+[4]
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Citation `norell2008dependently' on page 5 undefined on input li
+ne 633.
+
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [5]
+
+LaTeX Warning: Citation `altenkirch2015indexed' on page 6 undefined on input li
+ne 665.
+
+
+LaTeX Warning: Citation `dagand2013cosmology' on page 6 undefined on input line
+ 672.
+
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (15.88307pt too wide) in paragraph at lines 700--705
+[]\TU/LinuxLibertine(0)/m/n/10 Agda allows for the programmer to declare that $
+[][][][][][][][][]$ using the $[]$
+ []
+
+[6]
+Chapter 3.
+
+LaTeX Warning: Citation `claessen2011quickcheck' on page 7 undefined on input l
+ine 709.
+
+
+LaTeX Warning: Citation `runciman2008smallcheck' on page 7 undefined on input l
+ine 709.
+
+
+LaTeX Warning: Citation `matela2017tools' on page 7 undefined on input line 709
+.
+
+
+LaTeX Warning: Citation `claessen2011quickcheck' on page 7 undefined on input l
+ine 715.
+
+\openout3 = `thesis.ptb'.
+
+[7
+
+]
+
+LaTeX Warning: Citation `runciman2008smallcheck' on page 8 undefined on input l
+ine 749.
+
+
+LaTeX Warning: Citation `andoni2003evaluating' on page 8 undefined on input lin
+e 749.
+
+
+LaTeX Warning: Citation `matela2017tools' on page 8 undefined on input line 755
+.
+
+
+Overfull \hbox (5.91296pt too wide) in paragraph at lines 755--756
+[] []\TU/LinuxLibertine(0)/m/sc/10 LeanCheck[] \TU/LinuxLibertine(0)/m/n/10 Whe
+re SmallCheck uses a value’s \TU/LinuxLibertine(0)/m/it/10 depth \TU/LinuxLiber
+tine(0)/m/n/10 to bound the number of test values, LeanCheck
+ []
+
+
+Overfull \hbox (29.36014pt too wide) in paragraph at lines 757--758
+[]\TU/LinuxLibertine(0)/m/n/10 Both SmallCheck and LeanCheck contain functional
+ity to enumerate functions similar to QuickCheck’s
+ []
+
+
+LaTeX Warning: Citation `hedgehog' on page 8 undefined on input line 759.
+
+
+LaTeX Warning: Citation `duregaard2013feat' on page 8 undefined on input line 7
+61.
+
+
+LaTeX Warning: Citation `denes2014quickchick' on page 8 undefined on input line
+ 763.
+
+
+LaTeX Warning: Citation `paraskevopoulou2015foundational' on page 8 undefined o
+n input line 763.
+
+
+LaTeX Warning: Reference `introduction' on page 8 undefined on input line 769.
+
+[8]
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Citation `claessen2010quickspec' on page 9 undefined on input li
+ne 797.
+
+
+LaTeX Warning: Citation `palka2011testing' on page 9 undefined on input line 80
+5.
+
+
+LaTeX Warning: Citation `grygiel2013counting' on page 9 undefined on input line
+ 805.
+
+
+LaTeX Warning: Citation `claessen2015generating' on page 9 undefined on input l
+ine 805.
+
+
+LaTeX Warning: Citation `claessen2015generating' on page 9 undefined on input l
+ine 807.
+
+
+LaTeX Warning: Citation `duregaard2013feat' on page 9 undefined on input line 8
+07.
+
+
+LaTeX Warning: Citation `runciman2008smallcheck' on page 9 undefined on input l
+ine 807.
+
+
+LaTeX Warning: Citation `palka2011testing' on page 9 undefined on input line 80
+9.
+
+
+LaTeX Warning: Citation `claessen2015generating' on page 9 undefined on input l
+ine 809.
+
+
+LaTeX Warning: Citation `moczurad2000statistical' on page 9 undefined on input 
+line 809.
+
+
+LaTeX Warning: Citation `wang2005generating' on page 9 undefined on input line 
+811.
+
+
+LaTeX Warning: Citation `lampropoulos2017generating' on page 9 undefined on inp
+ut line 815.
+
+
+LaTeX Warning: Reference `introduction' on page 9 undefined on input line 815.
+
+[9]
+
+LaTeX Warning: Citation `de2014true' on page 10 undefined on input line 825.
+
+
+LaTeX Warning: Reference `patternfunctors' on page 10 undefined on input line 8
+25.
+
+
+LaTeX Warning: Citation `miraldo2018sums' on page 10 undefined on input line 82
+7.
+
+[10]
+Chapter 4.
+
+LaTeX Warning: Reference `sec:literature' on page 1 undefined on input line 832
+.
+
+
+LaTeX Warning: Reference `defnat' on page 11 undefined on input line 836.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+[11
+
+]
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 10.93451pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 7.28967pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 5.46725pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 10.93451pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 7.28967pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 5.46725pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 10.93433pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 7.28955pt on input line 876.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 5.46716pt on input line 876.
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `chap:derivingregular' on page 1 undefined on input li
+ne 890.
+
+[12]
+
+LaTeX Warning: Reference `deflist' on page 13 undefined on input line 892.
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[13] (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `findef' on page 14 undefined on input line 928.
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Missing character: There is no μ in font cmti10!
+Missing character: There is no μ in font cmti10!
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [14] (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `defwellscoped' on page 15 undefined on input line 950
+.
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [15] (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap04/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[16]
+Chapter 5.
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[17
+
+] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1041.
+
+
+[18]
+
+LaTeX Warning: Citation `norell2008dependently' on page 19 undefined on input l
+ine 1048.
+
+[19] [20
+
+]
+Chapter 6.
+[21] [22
+
+]
+Chapter 7.
+
+LaTeX Warning: Citation `dagand2013cosmology' on page 23 undefined on input lin
+e 1072.
+
+(dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[23] [24]
+Chapter 8.
+[25
+
+] [26
+
+]
+Chapter 9.
+[27] [28
+
+]
+Chapter 10.
+[29] [30
+
+]
+Appendix A.
+\openout3 = `thesis.ptb'.
+
+(dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [31]
+(dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [32]
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 13.1214pt on input line 1207.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 13.1214pt on input line 1207.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 13.12119pt on input line 1207.
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ⊚ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+(dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [33]
+[34
+
+] (dist/thesis.lof)
+\tf@lof=\write5
+\openout5 = `thesis.lof'.
+
+ [35
+
+] [36
+
+] (dist/thesis.lot)
+\tf@lot=\write6
+\openout6 = `thesis.lot'.
+
+ (dist/thesis.bbl [37]
+[38
+
+] [39]
+Underfull \hbox (badness 10000) in paragraph at lines 115--119
+[]\TU/LinuxLibertine(0)/m/n/10 Jacob Stanley.  hedgehog: Hedgehog will eat all 
+your bugs.
+ []
+
+
+Underfull \hbox (badness 2538) in paragraph at lines 115--119
+\TU/LinuxLibertine(0)/m/n/10 https://hackage.haskell.org/package/hedgehog, 2019
+.  [Online; accessed 26-Feb-
+ []
+
+) [40] (dist/thesis.aux)
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 2.25pt have occurred.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 23327 strings out of 492933
+ 450212 string characters out of 6138667
+ 729645 words of memory out of 5000000
+ 26978 multiletter control sequences out of 15000+600000
+ 546417 words of font info for 121 fonts, out of 8000000 for 9000
+ 1348 hyphenation exceptions out of 8191
+ 61i,12n,120p,1394b,879s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on dist/thesis.pdf (48 pages).

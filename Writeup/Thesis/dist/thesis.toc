@@ -1,0 +1,69 @@
+\contentsline {chapter}{Declaration}{iii}% 
+\contentsline {chapter}{Abstract}{v}% 
+\contentsline {chapter}{\numberline {1}Introduction}{1}% 
+\contentsline {chapter}{\numberline {2}Background}{3}% 
+\contentsline {section}{\numberline {2.1}Dependent Types}{3}% 
+\contentsline {subsection}{\numberline {2.1.1}Agda}{3}% 
+\contentsline {subsubsection}{Codata and Sized Types}{3}% 
+\contentsline {section}{\numberline {2.2}Generic Programming and Type Universes}{5}% 
+\contentsline {subsection}{\numberline {2.2.1}Design Pattern}{5}% 
+\contentsline {subsection}{\numberline {2.2.2}Example Universes}{5}% 
+\contentsline {paragraph}{Regular Types}{6}% 
+\contentsline {paragraph}{Indexed Containers}{6}% 
+\contentsline {paragraph}{Indexed Descriptions}{6}% 
+\contentsline {section}{\numberline {2.3}Universe Polymorphism}{6}% 
+\contentsline {chapter}{\numberline {3}Literature Review}{7}% 
+\contentsline {subsection}{\numberline {3.0.1}Property Based Testing}{7}% 
+\contentsline {subsubsection}{Existing Libraries}{7}% 
+\contentsline {paragraph}{QuickCheck}{7}% 
+\contentsline {paragraph}{(Lazy) SmallCheck}{8}% 
+\contentsline {paragraph}{LeanCheck}{8}% 
+\contentsline {paragraph}{Hegdgehog}{8}% 
+\contentsline {paragraph}{Feat}{8}% 
+\contentsline {paragraph}{QuickChick}{8}% 
+\contentsline {subsubsection}{Generating Constrained Test Data}{8}% 
+\contentsline {subsubsection}{Automatic Generation of Specifications}{9}% 
+\contentsline {subsection}{\numberline {3.0.2}Techniques for Generating Test Data}{9}% 
+\contentsline {subsubsection}{Lambda Terms}{9}% 
+\contentsline {subsubsection}{Inductive Relations in Coq}{9}% 
+\contentsline {subsection}{\numberline {3.0.3}Generic Programming \& Type Universes}{10}% 
+\contentsline {subsubsection}{SOP (Sum of Products)}{10}% 
+\contentsline {chapter}{\numberline {4}A Combinator Library for Generators}{11}% 
+\contentsline {section}{\numberline {4.1}The Type of Generators}{11}% 
+\contentsline {subsection}{\numberline {4.1.1}Examples in Existing Libraries}{11}% 
+\contentsline {subsection}{\numberline {4.1.2}Separating Structure and Interpretation}{11}% 
+\contentsline {subsection}{\numberline {4.1.3}The \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } Datatype}{12}% 
+\contentsline {subsection}{\numberline {4.1.4}Generator Interpretations}{13}% 
+\contentsline {section}{\numberline {4.2}Generalization to Indexed Datatypes}{14}% 
+\contentsline {section}{\numberline {4.3}Interpreting Generators as Enumerations}{16}% 
+\contentsline {section}{\numberline {4.4}Properties for Enumerations}{16}% 
+\contentsline {section}{\numberline {4.5}Generating Function Types}{16}% 
+\contentsline {section}{\numberline {4.6}Monadic Generators}{16}% 
+\contentsline {chapter}{\numberline {5}Generic Generators for Regular types}{17}% 
+\contentsline {section}{\numberline {5.1}The universe of regular types}{17}% 
+\contentsline {paragraph}{Example}{18}% 
+\contentsline {subsection}{\numberline {5.1.1}Non-regular data types}{18}% 
+\contentsline {section}{\numberline {5.2}Generic Generators for regular types}{19}% 
+\contentsline {subsection}{\numberline {5.2.1}Defining functions over codes}{19}% 
+\contentsline {subsection}{\numberline {5.2.2}Composing generic generators}{19}% 
+\contentsline {section}{\numberline {5.3}Enumerators for regular types}{19}% 
+\contentsline {subsection}{\numberline {5.3.1}A generic enumerator}{19}% 
+\contentsline {subsection}{\numberline {5.3.2}Proving completeness}{19}% 
+\contentsline {chapter}{\numberline {6}Deriving Generators for Indexed Containers}{21}% 
+\contentsline {chapter}{\numberline {7}Deriving Generators for Indexed Descriptions}{23}% 
+\contentsline {section}{\numberline {7.1}Universe Description}{23}% 
+\contentsline {subsection}{\numberline {7.1.1}Definition}{23}% 
+\contentsline {subsection}{\numberline {7.1.2}Examples}{24}% 
+\contentsline {section}{\numberline {7.2}Generic Generators for Indexed Descriptions}{24}% 
+\contentsline {chapter}{\numberline {8}Program Term Generation}{25}% 
+\contentsline {chapter}{\numberline {9}Implementation in Haskell}{27}% 
+\contentsline {chapter}{\numberline {10}Conclusion \& Further Work}{29}% 
+\contentsline {chapter}{\numberline {A}Datatype Definitions}{31}% 
+\contentsline {section}{\numberline {A.1}Natural numbers}{31}% 
+\contentsline {section}{\numberline {A.2}Finite Sets}{31}% 
+\contentsline {section}{\numberline {A.3}Vectors}{32}% 
+\contentsline {section}{\numberline {A.4}Simple Types}{32}% 
+\contentsline {section}{\numberline {A.5}Contexts}{32}% 
+\contentsline {section}{\numberline {A.6}Raw $\mitlambda $-Terms}{33}% 
+\contentsline {section}{\numberline {A.7}Lists}{33}% 
+\contentsline {section}{\numberline {A.8}Well-scoped $\mitlambda $-terms}{33}% 

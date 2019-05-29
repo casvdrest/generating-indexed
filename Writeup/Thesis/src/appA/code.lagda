@@ -1,0 +1,80 @@
+\begin{code}
+{-# OPTIONS --type-in-type #-}
+{-# OPTIONS --allow-unsolved-metas #-}
+
+\end{code}
+
+%<*nat>
+\begin{code}
+data ℕ : Set where
+  zero  : ℕ
+  suc   : ℕ → ℕ
+\end{code}
+%</nat>
+
+%<*fin>
+\begin{code}
+data Fin : ℕ → Set where
+  zero  : ∀ {n : ℕ} → Fin (suc n)
+  suc   : ∀ {n : ℕ} → Fin n → Fin (suc n)
+\end{code}
+%</fin>
+
+%<*vec>
+\begin{code}
+data Vec (a : Set) : ℕ → Set where
+  []   : Vec a zero
+  _∷_  : ∀ {n : ℕ} → a → Vec a n → Vec a (suc n)
+\end{code}
+%</vec>
+
+\begin{code}
+Id : Set
+Id = ℕ
+\end{code}
+
+%<*simpletypes>
+\begin{code}
+data Ty : Set where
+  `τ    : Ty
+  _`→_  : Ty → Ty → Ty
+\end{code}
+%</simpletypes>
+
+%<*context>
+\begin{code}
+data Ctx : Set where
+  ∅ : Ctx
+  _,_∶_ : Ctx → Id → Ty → Ctx
+\end{code}
+%</context>
+
+%<*rawterm>
+\begin{code}
+data RT : Set where
+  $_    : Id → RT
+  Λ_⇒_  : Id → RT → RT 
+  _⊚_   : RT → RT → RT
+\end{code}
+%</rawterm>
+
+%<*wellscoped>
+\begin{code}
+data WS : ℕ → Set where
+  var :  ∀ {n : ℕ} → Fin n → WS n
+  abs :  ∀ {n : ℕ} → WS (suc n) → WS n
+  app :  ∀ {n : ℕ} → WS n → WS n → WS n
+\end{code}
+%</wellscoped>
+
+%<*list>
+\begin{code}
+data List (a : Set) : Set where
+  []   :  List a
+  _∷_  :  a → List a → List a 
+\end{code}
+%</list>
+
+
+
+

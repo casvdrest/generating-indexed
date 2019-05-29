@@ -1,0 +1,11 @@
+\begin{code}
+
+
+infix 1 _⊢_
+\end{code}
+
+%<*regular>
+\begin{code}
+
+\end{code}
+%</regular>

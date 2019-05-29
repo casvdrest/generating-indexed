@@ -1,0 +1,40 @@
+\begin{code}
+{-# OPTIONS --type-in-type #-}
+{-# OPTIONS --allow-unsolved-metas #-}
+
+open import AgdaGen.Base hiding (Gen; 𝔾; Genᵢ ; 𝔾ᵢ)
+open import AgdaGen.Combinators
+
+open import Data.Unit hiding (_≟_)
+open import Data.Product hiding (map)
+open import Level hiding (suc; zero)
+open import Data.List
+open import Data.Sum
+open import Data.Fin  hiding (_≟_)
+open import Data.Nat  hiding (_≟_)
+
+open import Relation.Binary.PropositionalEquality
+
+open import Relation.Binary
+open import Relation.Nullary
+
+module code where
+
+  data 𝓤 : Set where
+
+  ⟦_⟧ : 𝓤 → Set → Set
+  ⟦_⟧ = {!!}
+
+  data Fix (u : 𝓤) : Set where
+
+\end{code}
+
+%<*eqdef>
+\begin{code}
+  _≟_ : ∀ {u : 𝓤} → (x : Fix u) → (y : Fix u) → x ≡ y ⊎ ¬ x ≡ y
+\end{code}
+%</eqdef>
+\begin{code}
+  _≟_ = {!!}
+\end{code}
+
