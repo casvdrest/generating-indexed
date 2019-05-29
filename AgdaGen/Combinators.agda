@@ -117,7 +117,7 @@ module AgdaGen.Combinators where
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
       → GMonad λ a x → Genᵢ a t x
     Genᵢ-Monad =
-      record { _>>=_ = Bindᵢ }
+      record { _>>=_  = Bindᵢ }
 
   instance
     Genᵢ-Alternative :
