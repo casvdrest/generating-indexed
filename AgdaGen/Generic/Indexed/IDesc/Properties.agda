@@ -24,16 +24,17 @@ open import Relation.Binary.PropositionalEquality
 
 module AgdaGen.Generic.Indexed.IDesc.Properties where
 
+  open GApplicative ⦃...⦄
   open GMonad ⦃...⦄
 
   postulate
-   bind-Complete :
-     ∀ {I : Set} {a b : Set} {t : I → Set} {x y : I}
-       {g : Genᵢ a t x} {g' : a → Genᵢ b t y}
-       {tg : (i : I) → 𝔾ᵢ t i}
-     → Completeᵢ {a = a} g tg
-     → ((v' : a) → Completeᵢ {a = b} (g' v') tg)
-     → Completeᵢ (g >>= g') tg
+    Σ-bind-Complete :
+      ∀ {I : Set} {a : Set} {b : a → Set} {t : I → Set} {x y : I}
+        {g : Genᵢ a t x} {g' : (v : a) → Genᵢ (b v) t y}
+        {x : Σ a b} {tg : (i : I) → 𝔾ᵢ t i}
+      → g ∣ᵢ tg ↝ proj₁ x
+      → g' (proj₁ x) ∣ᵢ tg ↝ proj₂ x
+      → _∣ᵢ_↝_ {i = y} (g >>= λ y → ⦇ (λ v → y , v) (g' y) ⦈) tg x
 
   -- The selector's generator is complete
   sl-gen-Complete : ∀ {n : ℕ} → Completeᵢ {a = Sl (lift n) } (Sl-gen (lift n)) Sl-gen
@@ -52,12 +53,16 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
       {tg : (i : I) → Genᵢ (t i) t i} {j : J}
     → Completeᵢ (g j) g
     → Completeᵢ {a = a j} {i = i} (Callᵢ j g) tg
+  callᵢ-Complete p {x} with p {x}
+  callᵢ-Complete p {x} | suc n , elem = suc n , elem
 
   call-Complete :
     ∀ {a : Set} {I : Set} {t : I → Set} {g : Gen a a}
       {tg : (i : I) → Genᵢ (t i) t i} {i : I}
     → Complete g g
     → Completeᵢ {a = a} {i = i} (Call g) tg
+  call-Complete p {x} with p {x}
+  call-Complete p {x} | suc n , elem = suc n , elem
 
   IDesc-gen-Complete :
     ∀ {I : Set} {ix : I} {δ : IDesc 0ℓ I} {φ  : func 0ℓ I I}
@@ -80,8 +85,8 @@ module AgdaGen.Generic.Indexed.IDesc.Properties where
     constrᵢ-preserves-elem {a = λ y → ⟦ func.out φ y ⟧ (μ φ)} (suc (suc fst) , snd)
   IDesc-gen-Complete {δ = `1} {φ} {lift tt} `1~ m₂ = 1 , here
   IDesc-gen-Complete {δ = δₗ `× δᵣ} {φ} {x} (mₗ `×~ mᵣ) m₂ = {!!}
-  IDesc-gen-Complete {δ = `σ n T} {φ} {x} (`σ~ x₁) m₂ =
-    bind-Complete (callᵢ-Complete sl-gen-Complete) λ sl → {!!}
-  IDesc-gen-Complete {δ = `Σ S T} {φ} {x} (`Σ~ (g , (cmp , mt)) x₂) m₂ =
-    bind-Complete (call-Complete cmp) λ s → {!!}
+  IDesc-gen-Complete {δ = `σ n T} {φ} {sl , x} (`σ~ mT) m₂ =
+    Σ-bind-Complete (callᵢ-Complete sl-gen-Complete) (IDesc-gen-Complete {δ = T sl} (mT sl) m₂)
+  IDesc-gen-Complete {δ = `Σ S T} {φ} {s , x} (`Σ~ (g , (cmp , mt)) x₂) m₂ =
+    Σ-bind-Complete (call-Complete cmp) (IDesc-gen-Complete (x₂ s) m₂)
 

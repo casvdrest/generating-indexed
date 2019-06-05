@@ -28,7 +28,7 @@ instance Serial m Nat where
 
 \subsection{The |Gen| Datatype}
 
-  We define the datatype of generators, |Gen a t|, to be a family of types indexed by two types. One signifying the type of values that are produced by the generator, and one specifying the type of values produced by recursive positions. 
+  We define the datatype of generators, |Gen a t|, to be a family of types indexed by two types \footnote{The listed definition will not be accepted by Agda due to inconsistencies in the universe levels. This is also the case for many code examples to come. To keep things readable, we will not concern ourselves with universe levels throughout this thesis.}. One signifying the type of values that are produced by the generator, and one specifying the type of values produced by recursive positions. 
 
 \includeagdalisting{4}{gendef}{Definition of the |Gen| datatype}{lst:gendef}
 

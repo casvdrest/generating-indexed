@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  29 MAY 2019 17:04
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  5 JUN 2019 12:26
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1157,6 +1157,13 @@ e 111.
 Package: quotchap 2012/10/20 v1.1 Decorative Chapter Headings with Quotes
 \@quotebox=\box50
 )
+\symstix@largesymbols=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `stix@largesymbols' in version `bol
+d'
+(Font)                  LS2/stixex/m/n --> LS2/stixex/b/n on input line 225.
+LaTeX Font Info:    Redeclaring math delimiter \lBrace on input line 225.
+LaTeX Font Info:    Redeclaring math delimiter \rBrace on input line 225.
+
 (/usr/share/texmf-dist/tex/latex/newunicodechar/newunicodechar.sty
 Package: newunicodechar 2018/04/08 v1.2 Defining Unicode characters
 ))
@@ -1168,23 +1175,155 @@ Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \FrameRule=\dimen170
 \FrameSep=\dimen171
 )
+(/usr/share/texmf-dist/tex/latex/mdframed/mdframed.sty
+Package: mdframed 2013/07/01 1.9b: mdframed
+
+(/usr/share/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+))
+(/usr/share/texmf-dist/tex/latex/oberdiek/zref-abspage.sty
+Package: zref-abspage 2018/11/21 v2.27 Module abspage for zref (HO)
+
+(/usr/share/texmf-dist/tex/latex/oberdiek/zref-base.sty
+Package: zref-base 2018/11/21 v2.27 Module base for zref (HO)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2018/09/10 v0.29 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: pdfTeX >= 1.30 not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode not found.
+)
+(/usr/share/texmf-dist/tex/latex/oberdiek/auxhook.sty
+Package: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
+)
+Package zref Info: New property list: main on input line 759.
+Package zref Info: New property: default on input line 760.
+Package zref Info: New property: page on input line 761.
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
+)
+\c@abspage=\count287
+Package zref Info: New property: abspage on input line 62.
+)
+(/usr/share/texmf-dist/tex/latex/needspace/needspace.sty
+Package: needspace 2010/09/12 v1.3d reserve vertical space
+)
+\mdf@templength=\skip112
+\c@mdf@globalstyle@cnt=\count288
+\mdf@skipabove@length=\skip113
+\mdf@skipbelow@length=\skip114
+\mdf@leftmargin@length=\skip115
+\mdf@rightmargin@length=\skip116
+\mdf@innerleftmargin@length=\skip117
+\mdf@innerrightmargin@length=\skip118
+\mdf@innertopmargin@length=\skip119
+\mdf@innerbottommargin@length=\skip120
+\mdf@splittopskip@length=\skip121
+\mdf@splitbottomskip@length=\skip122
+\mdf@outermargin@length=\skip123
+\mdf@innermargin@length=\skip124
+\mdf@linewidth@length=\skip125
+\mdf@innerlinewidth@length=\skip126
+\mdf@middlelinewidth@length=\skip127
+\mdf@outerlinewidth@length=\skip128
+\mdf@roundcorner@length=\skip129
+\mdf@footenotedistance@length=\skip130
+\mdf@userdefinedwidth@length=\skip131
+\mdf@needspace@length=\skip132
+\mdf@frametitleaboveskip@length=\skip133
+\mdf@frametitlebelowskip@length=\skip134
+\mdf@frametitlerulewidth@length=\skip135
+\mdf@frametitleleftmargin@length=\skip136
+\mdf@frametitlerightmargin@length=\skip137
+\mdf@shadowsize@length=\skip138
+\mdf@extratopheight@length=\skip139
+\mdf@subtitleabovelinewidth@length=\skip140
+\mdf@subtitlebelowlinewidth@length=\skip141
+\mdf@subtitleaboveskip@length=\skip142
+\mdf@subtitlebelowskip@length=\skip143
+\mdf@subtitleinneraboveskip@length=\skip144
+\mdf@subtitleinnerbelowskip@length=\skip145
+\mdf@subsubtitleabovelinewidth@length=\skip146
+\mdf@subsubtitlebelowlinewidth@length=\skip147
+\mdf@subsubtitleaboveskip@length=\skip148
+\mdf@subsubtitlebelowskip@length=\skip149
+\mdf@subsubtitleinneraboveskip@length=\skip150
+\mdf@subsubtitleinnerbelowskip@length=\skip151
+
+(/usr/share/texmf-dist/tex/latex/mdframed/md-frame-0.mdf
+File: md-frame-0.mdf 2013/07/01\ 1.9b: md-frame-0
+)
+\mdf@frametitlebox=\box51
+\mdf@footnotebox=\box52
+\mdf@splitbox@one=\box53
+\mdf@splitbox@two=\box54
+\mdf@splitbox@save=\box55
+\mdfsplitboxwidth=\skip152
+\mdfsplitboxtotalwidth=\skip153
+\mdfsplitboxheight=\skip154
+\mdfsplitboxdepth=\skip155
+\mdfsplitboxtotalheight=\skip156
+\mdfframetitleboxwidth=\skip157
+\mdfframetitleboxtotalwidth=\skip158
+\mdfframetitleboxheight=\skip159
+\mdfframetitleboxdepth=\skip160
+\mdfframetitleboxtotalheight=\skip161
+\mdffootnoteboxwidth=\skip162
+\mdffootnoteboxtotalwidth=\skip163
+\mdffootnoteboxheight=\skip164
+\mdffootnoteboxdepth=\skip165
+\mdffootnoteboxtotalheight=\skip166
+\mdftotallinewidth=\skip167
+\mdfboundingboxwidth=\skip168
+\mdfboundingboxtotalwidth=\skip169
+\mdfboundingboxheight=\skip170
+\mdfboundingboxdepth=\skip171
+\mdfboundingboxtotalheight=\skip172
+\mdf@freevspace@length=\skip173
+\mdf@horizontalwidthofbox@length=\skip174
+\mdf@verticalmarginwhole@length=\skip175
+\mdf@horizontalspaceofbox=\skip176
+\mdfsubtitleheight=\skip177
+\mdfsubsubtitleheight=\skip178
+\c@mdfcountframes=\count289
+
+****** mdframed patching \endmdf@trivlist
+
+****** -- success******
+
+\mdf@envdepth=\count290
+\c@mdf@env@i=\count291
+\c@mdf@env@ii=\count292
+\c@mdf@zref@counter=\count293
+Package zref Info: New property: mdf@pagevalue on input line 895.
+)
 (/usr/share/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2011/12/19 v6.7a set line spacing
 )
 (/usr/share/texmf-dist/tex/latex/stmaryrd/stmaryrd.sty
 Package: stmaryrd 1994/03/03 St Mary's Road symbol package
-\symstmry=\mathgroup6
+\symstmry=\mathgroup7
 LaTeX Font Info:    Overwriting symbol font `stmry' in version `bold'
 (Font)                  U/stmry/m/n --> U/stmry/b/n on input line 89.
 )
-\blanklineskip=\skip112
+\blanklineskip=\skip179
 
 (/usr/share/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2018/12/12 v1.0d Color table columns (DPC)
 \everycr=\toks25
-\minrowclearance=\skip113
+\minrowclearance=\skip180
 )
-\coderulewidth=\skip114
+\coderulewidth=\skip181
 
 (/usr/share/texmf-dist/tex/latex/ucs/ucs.sty
 Package: ucs 2013/05/11 v2.2 UCS: Unicode input support
@@ -1192,7 +1331,7 @@ Package: ucs 2013/05/11 v2.2 UCS: Unicode input support
 (/usr/share/texmf-dist/tex/latex/ucs/data/uni-global.def
 File: uni-global.def 2013/05/13 UCS: Unicode global data
 )
-\uc@secondtry=\count287
+\uc@secondtry=\count294
 \uc@combtoks=\toks26
 \uc@combtoksb=\toks27
 \uc@temptokena=\toks28
@@ -1291,25 +1430,33 @@ Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
 Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
-) (dist/thesis.aux)
+)
+No file thesis.aux.
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 415.
-LaTeX Font Info:    ... okay on input line 415.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 461.
+LaTeX Font Info:    ... okay on input line 461.
+LaTeX Font Info:    Checking defaults for LS2/stix/m/n on input line 461.
+LaTeX Font Info:    Try loading font information for LS2+stix on input line 461
+.
+(/usr/share/texmf-dist/tex/latex/stix/ls2stix.fd
+File: ls2stix.fd 2015/04/17 v1.1.2-latex STIX LS2 font definitions
+)
+LaTeX Font Info:    ... okay on input line 461.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1347,13 +1494,14 @@ LaTeX Font Info:    ... okay on input line 415.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 415.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 461.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 415.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 461.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 415.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 461.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 415.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 461.
+\AtBeginShipoutBox=\box56
 (/usr/share/texmf-dist/tex/latex/ucs/ucsencs.def
 File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
 )
@@ -1392,55 +1540,62 @@ File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
 File: img/logo.pdf Graphic file (type pdf)
 <use img/logo.pdf>
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 6.37846pt on input line 416.
+(Font)              scaled to size 6.37846pt on input line 462.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 5.01164pt on input line 416.
+(Font)              scaled to size 5.01164pt on input line 462.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 9.11209pt on input line 416.
+(Font)              scaled to size 9.11209pt on input line 462.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 6.37846pt on input line 416.
+(Font)              scaled to size 6.37846pt on input line 462.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 5.01164pt on input line 416.
+(Font)              scaled to size 5.01164pt on input line 462.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 9.11194pt on input line 416.
+(Font)              scaled to size 9.11194pt on input line 462.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 6.37836pt on input line 416.
+(Font)              scaled to size 6.37836pt on input line 462.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 5.01157pt on input line 416.
-LaTeX Font Info:    Try loading font information for U+msa on input line 416.
+(Font)              scaled to size 5.01157pt on input line 462.
+LaTeX Font Info:    Try loading font information for U+msa on input line 462.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 416.
+LaTeX Font Info:    Try loading font information for U+msb on input line 462.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+stmry on input line 416.
+LaTeX Font Info:    Try loading font information for LS2+stixex on input line 4
+62.
+
+(/usr/share/texmf-dist/tex/latex/stix/ls2stixex.fd
+File: ls2stixex.fd 2015/04/17 v1.1.2-latex STIX extentions LS2 font definitions
+
+)
+LaTeX Font Info:    Try loading font information for U+stmry on input line 462.
 
 
 (/usr/share/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
 
 LaTeX Font Warning: Font shape `U/stmry/m/n' in size <5.5> not available
-(Font)              size <5> substituted on input line 416.
+(Font)              size <5> substituted on input line 462.
 
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
-(Font)              scaled to size 10.04196pt on input line 416.
+(Font)              scaled to size 10.04196pt on input line 462.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
-(Font)              scaled to size 20.82703pt on input line 416.
+(Font)              scaled to size 20.82703pt on input line 462.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
-(Font)              scaled to size 14.4604pt on input line 416.
+(Font)              scaled to size 14.4604pt on input line 462.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/sc' will be
-(Font)              scaled to size 12.05035pt on input line 416.
+(Font)              scaled to size 12.05035pt on input line 462.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 20.82703pt on input line 416.
+(Font)              scaled to size 20.82703pt on input line 462.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
-(Font)              scaled to size 20.63904pt on input line 416.
+(Font)              scaled to size 20.63904pt on input line 462.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 12.05035pt on input line 416.
+(Font)              scaled to size 12.05035pt on input line 462.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
-(Font)              scaled to size 12.05035pt on input line 416.
+(Font)              scaled to size 12.05035pt on input line 462.
 [1
 
 
@@ -1449,15 +1604,13 @@ LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
 
 ]
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 100.41962pt on input line 420.
- (dist/thesis.toc
-LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
-(Font)              scaled to size 9.95132pt on input line 1.
-)
+(Font)              scaled to size 100.41962pt on input line 466.
+
+No file thesis.toc.
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
- [1
+[1
 
 ] [2
 
@@ -1474,28 +1627,87 @@ Chapter 1.
 ]
 Chapter 2.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
-(Font)              scaled to size 10.04196pt on input line 440.
+(Font)              scaled to size 10.04196pt on input line 487.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
+(Font)              scaled to size 9.95132pt on input line 532.
 
 LaTeX Warning: Citation `wadler2015propositions' on page 3 undefined on input l
-ine 460.
+ine 532.
 
 
-LaTeX Warning: Citation `norell2008dependently' on page 3 undefined on input li
-ne 465.
+LaTeX Warning: Reference `tbl:chiso' on page 1 undefined on input line 535.
 
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3]
+Package mdframed Info: mdframed works in twoside mode on input line 551.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/sc' will be
+(Font)              scaled to size 9.95132pt on input line 551.
+ (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
+
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 7.02937pt on input line 556.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 5.52307pt on input line 556.
+ (dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `mdf@pagelabel-1' on page 4 undefined on input line 56
+3.
+
+Package mdframed Info: mdframed works in twoside mode on input line 573.
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `mdf@pagelabel-2' on page 4 undefined on input line 58
+0.
 
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 7.02937pt on input line 497.
-LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 5.52307pt on input line 497.
- [3]
+ [4]
 
-LaTeX Warning: Citation `abel2010miniagda' on page 4 undefined on input line 51
-1.
+LaTeX Warning: Citation `wadler2015propositions' on page 5 undefined on input l
+ine 614.
+
+
+LaTeX Warning: Reference `chisodependent' on page 1 undefined on input line 614
+.
+
+Package mdframed Info: mdframed works in twoside mode on input line 627.
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `mdf@pagelabel-3' on page 5 undefined on input line 63
+5.
+
+
+LaTeX Warning: Citation `norell2008dependently' on page 5 undefined on input li
+ne 645.
+
+[5]
+Package mdframed Info: mdframed works in twoside mode on input line 666.
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `mdf@pagelabel-4' on page 6 undefined on input line 68
+7.
+
+
+LaTeX Warning: Citation `abel2010miniagda' on page 6 undefined on input line 69
+7.
 
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1503,207 +1715,253 @@ LaTeX Warning: Citation `abel2010miniagda' on page 4 undefined on input line 51
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-\openout3 = `thesis.ptb'.
-
-\openout3 = `thesis.ptb'.
-
-
-[4]
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: Citation `norell2008dependently' on page 5 undefined on input li
-ne 633.
-
-(dist/../src/chap02/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- [5]
-
-LaTeX Warning: Citation `altenkirch2015indexed' on page 6 undefined on input li
-ne 665.
-
-
-LaTeX Warning: Citation `dagand2013cosmology' on page 6 undefined on input line
- 672.
+Package mdframed Info: mdframed works in twoside mode on input line 711.
 
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (15.88307pt too wide) in paragraph at lines 700--705
-[]\TU/LinuxLibertine(0)/m/n/10 Agda allows for the programmer to declare that $
-[][][][][][][][][]$ using the $[]$
- []
+
+Package mdframed Warning: You got a bad break
+(mdframed)                because the last box will be empty
+(mdframed)                you have to change it manually
+(mdframed)                by changing the text, the space
+(mdframed)                or something else on input line 720.
+
+Package mdframed Info: Box was splittet wrong
+ starting loop to iterate the splitting point
+(mdframed)              on input line 720.
+
+LaTeX Warning: Reference `mdf@pagelabel-5' on page 6 undefined on input line 72
+0.
 
 [6]
+
+LaTeX Warning: Reference `mdf@pagelabel-6' on page 7 undefined on input line 72
+0.
+
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[7]
+
+LaTeX Warning: Citation `norell2008dependently' on page 8 undefined on input li
+ne 807.
+
+Package mdframed Info: mdframed works in twoside mode on input line 813.
+(dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `mdf@pagelabel-7' on page 8 undefined on input line 82
+3.
+
+
+LaTeX Warning: Reference `sec:lituniverses' on page 1 undefined on input line 8
+30.
+
+
+LaTeX Warning: Citation `altenkirch2015indexed' on page 8 undefined on input li
+ne 843.
+
+
+LaTeX Warning: Reference `lst:deffin' on page 1 undefined on input line 846.
+
+
+LaTeX Warning: Reference `lst:defvec' on page 1 undefined on input line 846.
+
+
+LaTeX Warning: Reference `lst:defwellscoped' on page 1 undefined on input line 
+847.
+
+[8]
+
+LaTeX Warning: Citation `dagand2013cosmology' on page 9 undefined on input line
+ 850.
+
+[9] [10
+
+]
 Chapter 3.
 
-LaTeX Warning: Citation `claessen2011quickcheck' on page 7 undefined on input l
-ine 709.
+LaTeX Warning: Citation `claessen2011quickcheck' on page 11 undefined on input 
+line 867.
 
 
-LaTeX Warning: Citation `runciman2008smallcheck' on page 7 undefined on input l
-ine 709.
+LaTeX Warning: Citation `runciman2008smallcheck' on page 11 undefined on input 
+line 868.
 
 
-LaTeX Warning: Citation `matela2017tools' on page 7 undefined on input line 709
-.
+LaTeX Warning: Citation `matela2017tools' on page 11 undefined on input line 86
+9.
 
 
-LaTeX Warning: Citation `claessen2011quickcheck' on page 7 undefined on input l
-ine 715.
+LaTeX Warning: Citation `claessen2011quickcheck' on page 11 undefined on input 
+line 878.
 
 \openout3 = `thesis.ptb'.
 
-[7
+[11]
 
-]
-
-LaTeX Warning: Citation `runciman2008smallcheck' on page 8 undefined on input l
-ine 749.
+LaTeX Warning: Citation `runciman2008smallcheck' on page 12 undefined on input 
+line 924.
 
 
-LaTeX Warning: Citation `andoni2003evaluating' on page 8 undefined on input lin
-e 749.
+LaTeX Warning: Citation `andoni2003evaluating' on page 12 undefined on input li
+ne 932.
 
 
-LaTeX Warning: Citation `matela2017tools' on page 8 undefined on input line 755
-.
-
-
-Overfull \hbox (5.91296pt too wide) in paragraph at lines 755--756
-[] []\TU/LinuxLibertine(0)/m/sc/10 LeanCheck[] \TU/LinuxLibertine(0)/m/n/10 Whe
-re SmallCheck uses a value’s \TU/LinuxLibertine(0)/m/it/10 depth \TU/LinuxLiber
-tine(0)/m/n/10 to bound the number of test values, LeanCheck
+Overfull \hbox (0.47623pt too wide) in paragraph at lines 924--933
+\TU/LinuxLibertine(0)/m/n/10 data. While the approach to formulation and testin
+g of properties is largely similar to QuickCheck’s,
  []
 
 
-Overfull \hbox (29.36014pt too wide) in paragraph at lines 757--758
+LaTeX Warning: Citation `matela2017tools' on page 12 undefined on input line 95
+0.
+
+
+Overfull \hbox (29.36014pt too wide) in paragraph at lines 953--955
 []\TU/LinuxLibertine(0)/m/n/10 Both SmallCheck and LeanCheck contain functional
 ity to enumerate functions similar to QuickCheck’s
  []
 
 
-LaTeX Warning: Citation `hedgehog' on page 8 undefined on input line 759.
+LaTeX Warning: Citation `hedgehog' on page 12 undefined on input line 958.
 
 
-LaTeX Warning: Citation `duregaard2013feat' on page 8 undefined on input line 7
-61.
+LaTeX Warning: Citation `duregaard2013feat' on page 12 undefined on input line 
+965.
 
 
-LaTeX Warning: Citation `denes2014quickchick' on page 8 undefined on input line
- 763.
+LaTeX Warning: Citation `denes2014quickchick' on page 12 undefined on input lin
+e 972.
 
 
-LaTeX Warning: Citation `paraskevopoulou2015foundational' on page 8 undefined o
-n input line 763.
+LaTeX Warning: Citation `paraskevopoulou2015foundational' on page 12 undefined 
+on input line 973.
+
+[12]
+
+LaTeX Warning: Reference `introduction' on page 13 undefined on input line 990.
 
 
-LaTeX Warning: Reference `introduction' on page 8 undefined on input line 769.
-
-[8]
 \openout3 = `thesis.ptb'.
 
 
-
-LaTeX Warning: Citation `claessen2010quickspec' on page 9 undefined on input li
-ne 797.
-
-
-LaTeX Warning: Citation `palka2011testing' on page 9 undefined on input line 80
-5.
+LaTeX Warning: Citation `claessen2010quickspec' on page 13 undefined on input l
+ine 1021.
 
 
-LaTeX Warning: Citation `grygiel2013counting' on page 9 undefined on input line
- 805.
+LaTeX Warning: Citation `palka2011testing' on page 13 undefined on input line 1
+036.
 
 
-LaTeX Warning: Citation `claessen2015generating' on page 9 undefined on input l
-ine 805.
+LaTeX Warning: Citation `grygiel2013counting' on page 13 undefined on input lin
+e 1036.
 
 
-LaTeX Warning: Citation `claessen2015generating' on page 9 undefined on input l
-ine 807.
+LaTeX Warning: Citation `claessen2015generating' on page 13 undefined on input 
+line 1036.
 
 
-LaTeX Warning: Citation `duregaard2013feat' on page 9 undefined on input line 8
-07.
+LaTeX Warning: Citation `claessen2015generating' on page 13 undefined on input 
+line 1041.
 
 
-LaTeX Warning: Citation `runciman2008smallcheck' on page 9 undefined on input l
-ine 807.
+LaTeX Warning: Citation `duregaard2013feat' on page 13 undefined on input line 
+1042.
 
 
-LaTeX Warning: Citation `palka2011testing' on page 9 undefined on input line 80
-9.
+LaTeX Warning: Citation `runciman2008smallcheck' on page 13 undefined on input 
+line 1045.
 
 
-LaTeX Warning: Citation `claessen2015generating' on page 9 undefined on input l
-ine 809.
+LaTeX Warning: Citation `palka2011testing' on page 13 undefined on input line 1
+049.
 
 
-LaTeX Warning: Citation `moczurad2000statistical' on page 9 undefined on input 
-line 809.
+LaTeX Warning: Citation `claessen2015generating' on page 13 undefined on input 
+line 1050.
 
 
-LaTeX Warning: Citation `wang2005generating' on page 9 undefined on input line 
-811.
+LaTeX Warning: Citation `moczurad2000statistical' on page 13 undefined on input
+ line 1059.
+
+[13]
+
+LaTeX Warning: Citation `wang2005generating' on page 14 undefined on input line
+ 1061.
 
 
-LaTeX Warning: Citation `lampropoulos2017generating' on page 9 undefined on inp
-ut line 815.
+LaTeX Warning: Citation `lampropoulos2017generating' on page 14 undefined on in
+put line 1067.
 
 
-LaTeX Warning: Reference `introduction' on page 9 undefined on input line 815.
-
-[9]
-
-LaTeX Warning: Citation `de2014true' on page 10 undefined on input line 825.
-
-
-LaTeX Warning: Reference `patternfunctors' on page 10 undefined on input line 8
-25.
-
-
-LaTeX Warning: Citation `miraldo2018sums' on page 10 undefined on input line 82
-7.
-
-[10]
-Chapter 4.
-
-LaTeX Warning: Reference `sec:literature' on page 1 undefined on input line 832
+LaTeX Warning: Reference `introduction' on page 14 undefined on input line 1072
 .
 
 
-LaTeX Warning: Reference `defnat' on page 11 undefined on input line 836.
+LaTeX Warning: Citation `de2014true' on page 14 undefined on input line 1092.
+
+
+LaTeX Warning: Reference `patternfunctors' on page 14 undefined on input line 1
+095.
+
+
+LaTeX Warning: Citation `miraldo2018sums' on page 14 undefined on input line 11
+01.
+
+[14]
+Chapter 4.
+
+LaTeX Warning: Reference `sec:literature' on page 1 undefined on input line 110
+6.
+
+
+LaTeX Warning: Reference `defnat' on page 15 undefined on input line 1110.
 
 \openout3 = `thesis.ptb'.
 
 \openout3 = `thesis.ptb'.
 
-[11
+[15
 
 ]
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 10.93451pt on input line 876.
+(Font)              scaled to size 10.93451pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 7.28967pt on input line 876.
+(Font)              scaled to size 7.28967pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 5.46725pt on input line 876.
+(Font)              scaled to size 5.46725pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 10.93451pt on input line 876.
+(Font)              scaled to size 10.93451pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 7.28967pt on input line 876.
+(Font)              scaled to size 7.28967pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 5.46725pt on input line 876.
+(Font)              scaled to size 5.46725pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 10.93433pt on input line 876.
+(Font)              scaled to size 10.93433pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 7.28955pt on input line 876.
+(Font)              scaled to size 7.28955pt on input line 1150.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 5.46716pt on input line 876.
+(Font)              scaled to size 5.46716pt on input line 1150.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 8.03357pt on input line 1152.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 6.02518pt on input line 1152.
  (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -1717,13 +1975,12 @@ LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
 
 
 LaTeX Warning: Reference `chap:derivingregular' on page 1 undefined on input li
-ne 890.
+ne 1164.
 
-[12]
 
-LaTeX Warning: Reference `deflist' on page 13 undefined on input line 892.
+LaTeX Warning: Reference `deflist' on page 16 undefined on input line 1166.
 
-(dist/../src/chap04/latex/code.tex)
+[16] (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap04/latex/code.tex)
@@ -1744,15 +2001,20 @@ LaTeX Warning: Reference `deflist' on page 13 undefined on input line 892.
 \openout3 = `thesis.ptb'.
 
 
-[13] (dist/../src/chap04/latex/code.tex)
+
+LaTeX Warning: Reference `sec:enuminterpretation' on page 1 undefined on input 
+line 1192.
+
+(dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
+[17]
 
-LaTeX Warning: Reference `findef' on page 14 undefined on input line 928.
+LaTeX Warning: Reference `findef' on page 18 undefined on input line 1202.
 
 (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1773,44 +2035,35 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [14] (dist/../src/chap04/latex/code.tex)
+ (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
 
-LaTeX Warning: Reference `defwellscoped' on page 15 undefined on input line 950
-.
+LaTeX Warning: Reference `defwellscoped' on page 18 undefined on input line 122
+4.
 
 (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [15] (dist/../src/chap04/latex/code.tex)
+ [18] (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-(dist/../src/chap04/latex/code.tex)
+
+LaTeX Warning: Reference `lst:tolist' on page 19 undefined on input line 1236.
+
+[19] (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-[16]
+[20]
 Chapter 5.
-(dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
 
- (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-[17
-
-] (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
+LaTeX Warning: Reference `lst:regular' on page 21 undefined on input line 1267.
 
 
 (dist/../src/chap05/latex/code.tex)
@@ -1818,25 +2071,111 @@ Chapter 5.
 
 
 
-LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1041.
+LaTeX Warning: Reference `lst:regsem' on page 21 undefined on input line 1272.
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
 
 
-[18]
 
-LaTeX Warning: Citation `norell2008dependently' on page 19 undefined on input l
-ine 1048.
+LaTeX Warning: `h' float specifier changed to `ht'.
 
-[19] [20
+Package mdframed Info: mdframed works in twoside mode on input line 1278.
+
+LaTeX Warning: Reference `lst:defnat' on page 21 undefined on input line 1280.
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `lst:natiso' on page 21 undefined on input line 1287.
+
+Package mdframed Info: Box was splittet wrong
+ starting loop to iterate the splitting point
+(mdframed)              on input line 1289.
+
+LaTeX Warning: Reference `mdf@pagelabel-8' on page 21 undefined on input line 1
+289.
+
+[21
 
 ]
+
+LaTeX Warning: Reference `mdf@pagelabel-9' on page 22 undefined on input line 1
+289.
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[22]
+
+LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1318.
+
+
+
+LaTeX Warning: Reference `sec:tudesignpattern' on page 1 undefined on input lin
+e 1323.
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [23] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (6.25644pt too wide) in paragraph at lines 1353--1354
+[]\TU/LinuxLibertine(0)/m/n/10 The elements produced by $[][][]$ can now readil
+y be transformed into the required datatype
+ []
+
+Package mdframed Info: mdframed works in twoside mode on input line 1355.
+
+LaTeX Warning: Reference `natiso' on page 24 undefined on input line 1357.
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `mdf@pagelabel-10' on page 24 undefined on input line 
+1361.
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [24]
 Chapter 6.
-[21] [22
+[25
+
+] [26
 
 ]
 Chapter 7.
 
-LaTeX Warning: Citation `dagand2013cosmology' on page 23 undefined on input lin
-e 1072.
+LaTeX Warning: Citation `dagand2013cosmology' on page 27 undefined on input lin
+e 1382.
+
+
+LaTeX Warning: Reference `lst:idesc' on page 27 undefined on input line 1402.
 
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1845,19 +2184,19 @@ e 1072.
 \openout3 = `thesis.ptb'.
 
 
-[23] [24]
+[27] [28]
 Chapter 8.
-[25
+[29
 
-] [26
+] [30
 
 ]
 Chapter 9.
-[27] [28
+[31] [32
 
 ]
 Chapter 10.
-[29] [30
+[33] [34
 
 ]
 Appendix A.
@@ -1869,7 +2208,7 @@ Appendix A.
  (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [31]
+ [35]
 (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -1884,13 +2223,13 @@ Appendix A.
 (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [32]
+ [36]
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 13.1214pt on input line 1207.
+(Font)              scaled to size 13.1214pt on input line 1517.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 13.1214pt on input line 1207.
+(Font)              scaled to size 13.1214pt on input line 1517.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 13.12119pt on input line 1207.
+(Font)              scaled to size 13.12119pt on input line 1517.
 \openout3 = `thesis.ptb'.
 
  (dist/../src/appA/latex/code.tex)
@@ -1927,37 +2266,25 @@ e=DFLT;mapping=tex-text;!
  (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [33]
-[34
+ [37]
+[38
 
-] (dist/thesis.lof)
+]
+No file thesis.lof.
 \tf@lof=\write5
 \openout5 = `thesis.lof'.
 
- [35
+[39
 
-] [36
+] [40
 
-] (dist/thesis.lot)
+]
+No file thesis.lot.
 \tf@lot=\write6
 \openout6 = `thesis.lot'.
 
- (dist/thesis.bbl [37]
-[38
-
-] [39]
-Underfull \hbox (badness 10000) in paragraph at lines 115--119
-[]\TU/LinuxLibertine(0)/m/n/10 Jacob Stanley.  hedgehog: Hedgehog will eat all 
-your bugs.
- []
-
-
-Underfull \hbox (badness 2538) in paragraph at lines 115--119
-\TU/LinuxLibertine(0)/m/n/10 https://hackage.haskell.org/package/hedgehog, 2019
-.  [Online; accessed 26-Feb-
- []
-
-) [40] (dist/thesis.aux)
+No file thesis.bbl.
+[41] (dist/thesis.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.25pt have occurred.
@@ -1970,12 +2297,12 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 23327 strings out of 492933
- 450212 string characters out of 6138667
- 729645 words of memory out of 5000000
- 26978 multiletter control sequences out of 15000+600000
- 546417 words of font info for 121 fonts, out of 8000000 for 9000
+ 24455 strings out of 492933
+ 472168 string characters out of 6138667
+ 753709 words of memory out of 5000000
+ 28034 multiletter control sequences out of 15000+600000
+ 550535 words of font info for 134 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 61i,12n,120p,1394b,879s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,12n,120p,1394b,831s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on dist/thesis.pdf (48 pages).
+Output written on dist/thesis.pdf (49 pages).

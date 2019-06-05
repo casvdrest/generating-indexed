@@ -16,7 +16,7 @@
 \RequirePackage{unicode-math}
 \RequirePackage{cleveref}
 \RequirePackage{catchfilebetweentags}
-\RequirePackage{agda}
+\RequirePackage[conor]{agda}
 
 %% Declaring our Options
 
@@ -211,6 +211,20 @@
 % {\hfill\Huge\scshape}%
 % [\HRule]
 
+\makeatletter
+\@ifpackageloaded{stix}{%
+}{%
+  \DeclareFontEncoding{LS2}{}{\noaccents@}
+  \DeclareFontSubstitution{LS2}{stix}{m}{n}
+  \DeclareSymbolFont{stix@largesymbols}{LS2}{stixex}{m}{n}
+  \SetSymbolFont{stix@largesymbols}{bold}{LS2}{stixex}{b}{n}
+  \DeclareMathDelimiter{\lBrace}{\mathopen} {stix@largesymbols}{"E8}%
+                                            {stix@largesymbols}{"0E}
+  \DeclareMathDelimiter{\rBrace}{\mathclose}{stix@largesymbols}{"E9}%
+                                            {stix@largesymbols}{"0F}
+}
+\makeatother
+
 \usepackage{newunicodechar}
 \newunicodechar{∷}{\ensuremath{∷}}
 \newunicodechar{▻}{\ensuremath{▻}}
@@ -221,3 +235,10 @@
 \newunicodechar{𝓤}{\ensuremath{\mathcal{U}}}
 \newunicodechar{≟}{\ensuremath{\overset{_?}{=}}}
 \newunicodechar{⊎}{\ensuremath{\uplus}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{⊥}{\ensuremath{\bot}}
+\newunicodechar{𝔾}{\ensuremath{\mathbb{G}}}
+\newunicodechar{ᵢ}{\ensuremath{_{i}}}
+\newunicodechar{ᵣ}{\ensuremath{_{r}}}
+\newunicodechar{⦃}{\ensuremath{\lBrace}}
+\newunicodechar{⦄}{\ensuremath{\rBrace}}

@@ -1,6 +1,7 @@
 \documentclass[a4paper,msc,twosized=semi]{uustthesis}
 
 \usepackage{framed}
+\usepackage{mdframed}
 \usepackage{setspace}
 % \usepackage{extsizes}
 
@@ -21,12 +22,18 @@
 }
 
 %% Agda snippets 
-\newcommand{\includeagda}[2]{\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}}
+\newcommand{\includeagda}[2]{\vspace*{-0.35cm}\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}\vspace*{-0.35cm}}
+
+%% Agda snippets, without removed spacing
+\newcommand{\includeagdanv}[2]{\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}}
+
+%% Agda snippets, not centered
+\newcommand{\includeagdanc}[2]{\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\vspace*{-0.35cm}}
 
 %% Agda listings
 \newcommand{\includeagdalisting}[4]{
   \begin{listing}{#3}{#4} 
-    \includeagda{#1}{#2}
+    \includeagdanc{#1}{#2}
   \end{listing} 
 }
 
@@ -38,6 +45,24 @@
   \begin{listing}{#3}{#4} 
     \appincludeagda{#1}{#2}
   \end{listing}
+}
+
+\newmdenv[
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  skipabove=\topsep,
+  skipbelow=\topsep
+]{siderules}
+
+\newenvironment{example}[0] 
+{
+  \begin{siderules}
+    \vspace{-0.5cm}
+    \paragraph{\textbf{Example}}
+}
+{
+  \end{siderules}
 }
 
 %% ODER: format ==         = "\mathrel{==}"
@@ -406,6 +431,27 @@
 \usepackage{autofe}
 \usepackage{textcomp}
 
+%% Haskell snippet 
+\newenvironment{myhaskell}
+{
+  \vspace{-0.35cm}
+  \begin{center}
+}
+{
+  \end{center}
+  \vspace{-0.35cm}
+}
+
+%% Haskell snippet 
+\newenvironment{myhaskellnv}
+{
+  \begin{center}
+}
+{
+  \end{center}
+}
+
+
 \title{Thesis title}
 
 \author{C.R. van der Rest}
@@ -431,57 +477,197 @@ Abstract
 \chapter{Introduction}
 
 \chapter{Background}
-\section{Dependent Types}
+In this section, we will briefly discuss some of the relevant theoretical background 
+for this thesis. We assume the reader to be familiar with the general concepts of both 
+Haskell and Agda, as well as functional programming in general. We shortly touch upon 
+the following subjects:
 
-    Dependent type theory allows the definition of types that depend 
-    on values. In addition to familiar constructs, such as the unit 
-    type ($\top$) and the empty type $\bot$, one can use so-called 
-    $\Pi$-types and $\Sigma$-types. $\Pi$-types capture the idea of 
-    dependent function types, that is, \textit{functions} whose output 
-    type may depend on the values of its input. Given some type $A$ 
-    and a family $P$ of types indexed by values of type $A$ (i.e. $P$ 
-    has type $A \rightarrow Type$), $\Pi$-types have the following 
-    definition: 
+\begin{itemize}
+  \item
+  \emph{Type theory} and its relationship with \emph{classical logic} through the 
+  \emph{Curry-Howard correspondence}
+
+  \item 
+  Some of the more advanced features of the programming language \emph{Agda}, which we 
+  use for the formalization of our ideas: \emph{Codata}, \emph{Sized Types} and \emph
+  {Universe Polymorphism}. 
+
+  \item 
+  \emph{Datatype generic programming} using \emph{type universes} and the design 
+  patterns associated with datatype generic programming.  
+\end{itemize}
+
+  We present this section as a courtesy to those readers who might not be familiar 
+  with these topics; anyone experienced in these areas should feel free to skip ahead. 
+
+\section{Type Theory}
+
+  \emph{Type theory} is the mathematical foundation that underlies the \emph{type 
+  systems} of many modern programming languages. In type theory, we reason about \emph\
+  {terms} and their \emph{types}. We briefly introduce some basic concepts, and show 
+  how they relate to our proofs in Agda. 
+
+  \subsection{Intuitionistic Type Theory}
+
+  In Intuitionistic type theory consists of terms, types and judgements $a : A$ 
+  stating that terms have a certain type. Generally we have the following two finite 
+  constructions: $\mathbb{0}$ or the \emph{empty type}, containing no terms, and 
+  $\mathbb{1}$ or the \emph{unit type} which contains exactly $1$ term. Additionally,
+  the \emph{equality type}, $=$, captures the notion of equality for both terms and 
+  types. The equalit type is constructed from \emph{reflexivity}, i.e. it is 
+  inhabited by one term $refl$ of the type $a = a$. 
+
+  Types may be combined using three constructions. The \emph{function type}, $a 
+  \rightarrow b$ is inhabited by functions that take an element of type $a$ as input 
+  and produce something of type $b$. The \emph{sum type}, $a + b$ creates a type that 
+  is inhabited by \emph{either} a value of type $a$ \emph{or} a 
+  value of type $b$. The \emph{product type}, $a * b$, is inhabited by a pair of 
+  values, one of type $a$ and one of type $b$. In terms of set theory, these 
+  operations correspond respectively to functions, \emph{cartesian product} and \emph
+  {tagged union}. 
+
+  \subsection{The Curry-Howard Equivalence}
+
+  The \emph{Curry-Howard equivalence} establishes an isomorphism between \emph
+  {propositions and types} and \emph{proofs and terms} \cite{wadler2015propositions}. 
+  This means that for any type there is a corresponding proposition, and any term 
+  inhabiting this type corresponds to a proof of the associated proposition. Types and 
+  propositions are generally connected using the mapping shown in \cref{tbl:chiso}.
+
+\begin{table}[h]\label{tbl:chiso}
+\begin{center}\begin{framed}
+\begin{tabular}{ll}
+\multicolumn{1}{c}{\textbf{Classical Logic}} & \textbf{Type Theory} \\ \hline \hline
+False                                        & $\bot$               \\
+True                                         & $\top$               \\
+$P \vee Q$                                   & $P + Q$              \\
+$P \wedge Q$                                 & $P * Q$              \\
+$p \Rightarrow Q$                            & $P \rightarrow Q$                       
+\end{tabular}
+\caption{Correspondence between classical logic and type theory}
+\end{framed}\end{center}
+\end{table}
+
+  \begin{example}
+
+    We can model the proposition $P \wedge (Q \vee R) \Rightarrow (P \wedge Q) \vee (P 
+    \wedge R)$ as a function with the following type: 
+
+\includeagdanv{2}{tautologytype}
+
+    We can then prove that this implication holds on any proposition by supplying a 
+    definition that inhabits the above type: 
+
+\includeagda{2}{tautologydef}
+
+  \end{example}
+
+  In general, we may prove any proposition that captured as a type by writing a 
+  programin that inhabits that type. Allmost all constructs are readily translatable 
+  from proposition logic, except boolean negation, for which there is no corresponding 
+  construction in type theory. Instead, we model negation using functions to the empty 
+  type $\bot$. That is, we can prove a property $P$ to be false by writing a function \
+  $P \rightarrow \bot$. This essentially says that $P$ is true, we can derive a \
+  contradiction, hence it must be false. Alowing us to prove many properties including negation. 
+  
+  \begin{example}
+
+    For example, we might prove that a property 
+    cannot be both true and false, i.e. $\forall\ P\ .\ \neg(P \wedge \neg P)$: 
+
+\includeagdanv{2}{notpandnotp}
+
+  \end{example}
+
+  However, there are properties of classical logic which do not carry over well 
+  through the Curry-Howard isomorphism. A good example of this is the \emph{law of 
+  excluded middle}, which cannot be proven in type theory: 
+
+\includeagda{2}{excludedmiddle}
+
+  This implies that type theory is incomplete as a proof system, in the sense that 
+  there exist properties wich we cannot prove, nor disprove. 
+
+\subsection{Dependent Types}
+
+  Dependent type theory allows the definition of types that depend on values. In 
+  addition to the constructs introduced above, one can use so-called $\Pi$-types and 
+  $\Sigma$-types. 
+  $\Pi$-types capture the idea of \emph{dependent function types}, that is, functions 
+  whose output type may depend on the values of its input. Given some type $A$ and a 
+  family $P$ of types indexed by values of type $A$ (i.e. $P$ has type $A \rightarrow 
+  Type$), $\Pi$-types have the following form: 
 
 \begin{equation*}
 \Pi_{(x : A)} P(x) \equiv (x : A) \rightarrow P(x) 
 \end{equation*}
 
-    In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of 
-    which the type of the second value may depend on te first value of 
-    the pair. 
+  In a similar spirit, $\Sigma$-types are ordered \textit{pairs} of which the type
+  of the second value may depend on te first value of the pair:
 
 \begin{equation*}
 \Sigma_{(x : A)} P(x) \equiv (x : A) \times P(x) 
 \end{equation*}
 
-    The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types 
-    as well: they can be used to model universal and existential 
-    quantification \cite{wadler2015propositions}. 
+  The Curry-Howard equivalence extends to $\Pi$- and $\Sigma$-types as well: they 
+  can be used to model universal and existential quantification \cite
+  {wadler2015propositions} (\cref{chisodependent}).
 
-  \subsection{Agda}
+\begin{table}[h]\label{tbl:chisodependent}
+\begin{center}\begin{framed}
+\begin{tabular}{ll}
+\multicolumn{1}{c}{\textbf{Classical Logic}} & \textbf{Type Theory}    \\ \hline \hline
+$\exists\ x\ .\ P\ x$                        & $\Sigma_{(x : A)} P(x)$ \\
+$\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$                    
+\end{tabular}
+\caption{Correspondence between quantifiers in classical logic and type theory}
+\end{framed}\end{center}
+\end{table}
 
-    Agda is a programming language based on Martin L{\"o}f type theory 
-    \cite{norell2008dependently}. Its syntax is broadly similar to Haskell's, 
-    though Agda's type system is more elaborate in the sense that types 
-    may depend on term level values. Agda is also a proof assistant, 
-    using the Curry-Howard equivalence to express propositions as 
-    types. 
+  \begin{example} 
+  
+    we might capture the relation between universal and negated existential 
+    quantification ($\forall\ x\ .\ \neg P\ x \Rightarrow \neg \exists\ x\ .\ P\ x$) 
+    as follows: 
 
-  \subsubsection{Codata and Sized Types}\label{codata}
+\includeagdanv{2}{forallnottonotexists} 
 
-    All definitions in Agda are required to be \textit{total}, meaning 
-    that they must be defined on all possible inputs, and give a result 
-    in finite time. The Halting problem states that it is impossible to 
-    define a general procedure that decides the termination condition 
-    for all functions, so to ensure that only terminating definitions 
-    are accepted Agda's termination checker uses a sound approximation. 
-    A logical consequence is that there are Agda programs that terminate, 
-    but are rejected by the termination checker. This means that we cannot 
-    work with infinite data in the same way as in the same way as in 
-    Haskell, which does not care about termination. For  example, the 
-    following definition is perfectly fine in Haskell: 
+  \end{example}
 
+  The correspondence between dependent pairs and existential quantification quite \
+  beautifullly illustrates the constructive nature of proofs in type theory; we prove 
+  any existential property by presenting a term together with a proof that the 
+  required property holds for that term. 
+
+\section{Agda}
+
+  Agda is a programming language based on Intuitionistic type theory\cite
+  {norell2008dependently}. Its syntax is broadly similar to Haskell's, though Agda's 
+  type system is arguably more expressive, since types may depend on term level 
+  values. 
+
+  Due to the aforementioned correspondence between types and propositions, any Agda 
+  program we write is simultaneously a proof of the proposition associated with its 
+  type. Through this mechanism, Agda serves a dual purpose as a proof assistent. 
+
+\subsection{Codata and Sized Types}\label{codata}
+
+  All definitions in Agda are required to be \textit{total}, meaning that they must be 
+  defined on all possible inputs, produce a result in finite time. To enforce this 
+  requirement, Agda needs to check whether the definitions we provide are terminating. 
+  As stated by the \emph{Halting Problem}, it is not possible to define a general 
+  procedure to perform this check. Instead, Agda uses a \emph{sound approximation}, in 
+  which it requires at least one argument of any recursive call to be \emph
+  {syntactically smaller} than its corresponding function argument. A consequence of 
+  this approach is that there are Agda programs that terminate, but are rejected by 
+  the termination checker. This means that we cannot work with infinite data in the 
+  same way as in the same way as in Haskell, which does not care about termination. 
+  
+  \begin{example}
+
+    The following definition is perfectly fine in Haskell: 
+
+\begin{myhaskellnv}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -490,123 +676,111 @@ Abstract
 \>[B]{}\HSVar{nats}\HSSym{\mathrel{=}}\HSNumeral{0}\HSCon{\mathbin{:}}\HSVar{map}\;\HSSpecial{(}\HSSym{+}\HSNumeral{1}\HSSpecial{)}\;\HSVar{nats}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+\end{myhaskellnv}
 
-    meanwhile, an equivalent definition in Agda gets rejected by the Termination 
-    checker: 
+    Meanwhile, an equivalent definition in Agda gets rejected by the Termination 
+    checker. The recursive call to \ensuremath{\HSVar{nats}} has no arguments, so none are structurally 
+    smaller, thus the termination checker flags this call.  
 
 \includeagda{2}{natsnonterminating}
 
-    This is no surprise, as the termination checker will reject any 
-    recursive calls where there is not at least one argument that is 
-    strictly smaller. However, in both Agda and Haskell, an expression 
-    such as \ensuremath{\HSVar{take}\;\HSNumeral{10}\;\HSVar{nats}} evaluates to $[0,1, \ldots , 9]$ in finite 
-    time. 
+  \end{example}
 
-    We can prevent the termination checker from flagging these kind 
-    of operations by making the lazy semantics explicit, using 
-    \textit{codata} and {sized types}. Codata is a general term for 
-    possible inifinite data, often described by a co-recursive definition. 
-    Sized types extend the space of function definitions that are recognized 
-    by the termination checker as terminating by tracking information about 
-    the size of values in types \cite{abel2010miniagda}. In the case of lists, 
-    this means that we explicitly specify that the recursive argument to the 
-    \ensuremath{\HSSym{\anonymous} \HSSym{∷\char95 }} constructor is a \textit{Thunk}, which should only be evaluated 
-    when needed: 
+  However, as long as we use \ensuremath{\HSVar{nats}} sensibly, there does not need to be a problem. 
+  Nonterminating programs only arise with improper use of such a definition, for 
+  example by calculating the length of \ensuremath{\HSVar{nats}}. We can prevent the termination 
+  checker from flagging these kind of operations by making the lazy semantics 
+  explicit, using \textit{codata} and {sized types}. Codata is a general term for 
+  possible inifinite data, often described by a co-recursive definition. Sized types 
+  extend the space of function definitions that are recognized by the termination 
+  checker as terminating by tracking information about the size of values in types 
+  \cite{abel2010miniagda}. In the case of lists, this means that we explicitly 
+  specify that the recursive argument to the \ensuremath{\HSSym{\anonymous} \HSSym{∷\char95 }} constructor is a \textit{Thunk}, 
+  which should only be evaluated when needed: 
 
 \includeagda{2}{colist}
 
-    We can now define \ensuremath{\HSVar{nats}} in Agda by wrapping the recursive call in a thunk: 
+  We can now define \ensuremath{\HSVar{nats}} in Agda by wrapping the recursive call in a thunk, 
+  explicitly marking that it is not to be evaluated until needed.  
 
-\includeagda{2}{terminating}
+\includeagda{2}{natsterminating}
 
-    Since colists are possible infinite structures, there are some functions we can 
-    define on lists, but not on colists. An example of this is a function calculating 
-    the length of a colist: 
+  Since colists are possible infinite structures, there are some functions we can 
+  define on lists, but not on colists. 
+    
+  \begin{example} Consider a function that attempts to calculate the length of a \ensuremath{\HSCon{Colist}}: 
 
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{38}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\HSVar{length}\HSCon{\mathbin{:}}\HSSym{∀}\HSSpecial{\HSSym{\{\mskip1.5mu} }\HSVar{a}\HSCon{\mathbin{:}}\HSCon{Set}\HSSpecial{\HSSym{\mskip1.5mu\}}}\HSSym{→}\HSCon{Colist}\;\HSVar{a}\HSSym{∞}\HSSym{→}{}\<[38]%
-\>[38]{}\HSCon{ℕ}{}\<[E]%
-\\
-\>[B]{}\HSVar{length}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}\HSSym{\mathrel{=}}\HSNumeral{0}{}\<[E]%
-\\
-\>[B]{}\HSVar{length}\;\HSSpecial{(}\HSVar{x}\HSSym{∷}\HSVar{xs}\HSSpecial{)}\HSSym{\mathrel{=}}\HSVar{suc}\;\HSSpecial{(}\HSVar{length'}\;\HSSpecial{(}\HSVar{xs}\HSSym{\mathbin{\circ}}\HSVar{force}\HSSpecial{)}\HSSpecial{)}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
+\includeagdanv{2}{lengthdef}
 
     In this case \ensuremath{\HSVar{length}} is not accepted by the termination checker because the input 
-    colist is indexed with size \ensuremath{\HSSym{∞}}, meaning that there is no finite upper bound on its 
-    size. Hence, there is no guarantee that our function terminates when inductively 
-    defined on the input colist.
-    
-    There are some cases in which we can convince the termination checker that our 
-    definition is terminating by using sized types. Consider the folowing example of a 
-    function that increments every element in a list of naturals with its position: 
+    colist is indexed with size \ensuremath{\HSSym{∞}}, meaning that there is no finite upper bound on 
+    its size. Hence, there is no guarantee that our function terminates when 
+    inductively defined on the input colist. 
 
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\HSVar{incpos}\HSCon{\mathbin{:}}\HSCon{List}\;\HSCon{ℕ}\HSSym{→}\HSCon{List}\;\HSCon{ℕ}{}\<[E]%
-\\
-\>[B]{}\HSVar{incpos}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}\HSSym{\mathrel{=}}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
-\\
-\>[B]{}\HSVar{incpos}\;\HSSpecial{(}\HSVar{x}\HSSym{∷}\HSVar{xs}\HSSpecial{)}\HSSym{\mathrel{=}}\HSVar{x}\HSSym{∷}\HSVar{incpos}\;\HSSpecial{(}\HSVar{map}\;\HSVar{suc}\;\HSVar{xs}\HSSpecial{)}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
+  \end{example}
+  
+  There are some cases in which we can convince the termination checker that our definition is terminating by using sized types. Consider the folowing function that increments every element in a list of naturals with its position: 
 
-    The recursive call to \ensuremath{\HSVar{incpos}} gets flagged by the termination checker; we know that 
-    \ensuremath{\HSVar{map}} does not alter the length of a list, but the termination checker cannot see this. 
-    For all it knows \ensuremath{\HSVar{map}} equals \ensuremath{\HSVar{const}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSNumeral{1}\HSSpecial{\HSSym{\mskip1.5mu]}}}, which would make \ensuremath{\HSVar{incpos}} non-terminating. 
-    The size-preserving property of \ensuremath{\HSVar{map}} is not reflected in its type. 
+\includeagda{2}{incposdef}
 
-    We can define an alternative version of the \ensuremath{\HSCon{List}} datatype indexed with \ensuremath{\HSCon{Size}}, which 
-    tracks the depth of a value in its type. 
+  The recursive call to \ensuremath{\HSVar{incpos}} gets flagged by the termination checker; we know 
+  that \ensuremath{\HSVar{map}} does not alter the length of a list, but the termination checker cannot 
+  see this. For all it knows \ensuremath{\HSVar{map}} equals \ensuremath{\HSVar{const}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSNumeral{1}\HSSpecial{\HSSym{\mskip1.5mu]}}}, which would make \ensuremath{\HSVar{incpos}} 
+  non-terminating. The size-preserving property of \ensuremath{\HSVar{map}} is not reflected in its 
+  type. To mitigate this issue, we can define an alternative version of the \ensuremath{\HSCon{List}} 
+  datatype indexed with \ensuremath{\HSCon{Size}}, which tracks the depth of a value in its type. 
 
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\HSKeyword{data}\;\HSCon{List}\;\HSSpecial{(}\HSVar{a}\HSCon{\mathbin{:}}\HSCon{Set}\HSSpecial{)}\HSCon{\mathbin{:}}\HSCon{Size}\HSSym{→}\HSCon{Set}\;\HSKeyword{where}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[7]%
-\>[7]{}\HSCon{\mathbin{:}}\HSSym{∀}\HSSpecial{\HSSym{\{\mskip1.5mu} }\HSVar{i}\HSSpecial{\HSSym{\mskip1.5mu\}}}\HSSym{→}\HSCon{List'}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\HSSym{\anonymous} \HSSym{∷\char95 }\HSCon{\mathbin{:}}\HSSym{∀}\HSSpecial{\HSSym{\{\mskip1.5mu} }\HSVar{i}\HSSpecial{\HSSym{\mskip1.5mu\}}}\HSSym{→}\HSVar{a}\HSSym{→}\HSCon{List'}\;\HSVar{a}\;\HSVar{i}\HSSym{→}\HSCon{List'}\;\HSVar{a}\;\HSSpecial{(}\HSSym{↑}\HSVar{i}\HSSpecial{)}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
+\includeagda{2}{sizedlistdef}
 
-    Here \ensuremath{\HSSym{↑}\HSVar{i}} means that the depth of a value constructed using the $::$ constructor is one 
-    deeper than its recursive argument. Incidently, the recursive depth of a list is equal 
-    to its size (or length), but this is not necessarily the case. By indexing values of 
-    \ensuremath{\HSCon{List}} with their size, we can define a version of \ensuremath{\HSVar{map}} which reflects in its type that 
-    the size of the input argument is preserved: 
+  Here \ensuremath{\HSSym{↑}\HSVar{i}} means that the depth of a value constructed using the $::$ constructor 
+  is one deeper than its recursive argument. Incidently, the recursive depth of a 
+  list is equal to its size (or length), but this is not necessarily the case. By 
+  indexing values of \ensuremath{\HSCon{List}} with their size, we can define a version of \ensuremath{\HSVar{map}} which 
+  reflects in its type that the size of the input argument is preserved: 
 
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\HSVar{map}\HSCon{\mathbin{:}}\HSSym{∀}\HSSpecial{\HSSym{\{\mskip1.5mu} }\HSVar{i}\HSSpecial{\HSSym{\mskip1.5mu\}}}\;\HSSpecial{\HSSym{\{\mskip1.5mu} }\HSVar{a}\;\HSVar{b}\HSCon{\mathbin{:}}\HSCon{Set}\HSSpecial{\HSSym{\mskip1.5mu\}}}\HSSym{→}\HSSpecial{(}\HSVar{a}\HSSym{→}\HSVar{b}\HSSpecial{)}\HSSym{→}\HSCon{List}\;\HSVar{a}\;\HSVar{i}\HSSym{→}\HSCon{List}\;\HSVar{b}\;\HSVar{i}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
+\includeagda{2}{sizedmapdef}
 
-    Using this definition of \ensuremath{\HSVar{map}}, the definition of \ensuremath{\HSVar{incpos}} is no longer rejected by the 
-    termination checker. 
+  Using this definition of \ensuremath{\HSVar{map}}, the definition of \ensuremath{\HSVar{incpos}} is no longer rejected 
+  by the termination checker. 
+
+\subsection{Universe Polymorphism}
+
+  Contrary to Haskell, Agda does not have separate notions for \emph{types}, 
+  \emph{kinds} and \emph{sorts}. Instead it provides an infinite hierarchy of 
+  type universes, where level is a member of the next, i.e. \ensuremath{\HSCon{Set}\;\HSVar{n}\HSCon{\mathbin{:}}\HSCon{Set}\;\HSSpecial{(}\HSVar{n}\HSSym{+}\HSNumeral{1}\HSSpecial{)}}. 
+  Agda uses this construction in favor of simply declaring \ensuremath{\HSCon{Set}\HSCon{\mathbin{:}}\HSCon{Set}} to avoid 
+  the construction of contradictory statements through Russel's paradox. 
+
+  This implies that every construction in Agda that ranges over some \ensuremath{\HSCon{Set}\;\HSVar{n}} can 
+  only be used for values that are in \ensuremath{\HSCon{Set}\;\HSVar{n}}. It is not possible to define, for 
+  example, a \ensuremath{\HSCon{List}} datatype that may contain both \emph{values} and \emph{types}
+   for this reason. 
+
+   We can work around this limitation by defining a \emph{universe polymorphic} 
+   construction for lists: 
+
+\includeagda{2}{upolylist}
+
+  Allowing us to capture lists of types (such as \ensuremath{\HSCon{ℕ}\HSSym{∷}\HSCon{Bool}\HSSym{∷}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}}) and lists of 
+  values (such as \ensuremath{\HSNumeral{1}\HSSym{∷}\HSNumeral{2}\HSSym{∷}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}}) using a single datatype. Agda allows for the 
+  programmer to declare that \ensuremath{\HSCon{Set}\HSCon{\mathbin{:}}\HSCon{Set}} using the \ensuremath{\mbox{\enskip\{-\# OPTIONS --type-in-type  \#-\}\enskip}} 
+  pragma. Throughout the development accompanying this thesis, we will refrain from 
+  using this pragma wherever possible. The examples included in this thesis are often 
+  not universe-polymorphic, since the universe level variables required often pollute 
+  the code, and obfuscate the concept we are trying to convey. 
 
 \section{Generic Programming and Type Universes}
 
-  In \emph{Datatype generic programming}, we define functionality not for individual types, 
-  but rather by induction on \emph{structure} of types. This means that generic functions 
-  will not take values of a particular type as input, but a \emph{code} that describes the 
-  structure of a type. Haskell's \ensuremath{\HSKeyword{deriving}} mechanism is a prime example of this mechanism. 
-  Anytime we add \ensuremath{\HSKeyword{deriving}\;\HSCon{Eq}} to a datatype definition, GHC will, in the background, convert 
-  our datatype to a structural representation, and use a \emph{generic equality} to create 
+  In \emph{Datatype generic programming}, we define functionality not for individual 
+  types, but rather by induction on \emph{structure} of types. This means that generic 
+  functions will not take values of a particular type as input, but a \emph{code} that 
+  describes the structure of a type. Haskell's \ensuremath{\HSKeyword{deriving}} mechanism is a prime example 
+  of this mechanism. Anytime we add \ensuremath{\HSKeyword{deriving}\;\HSCon{Eq}} to a datatype definition, GHC will, 
+  in the background, convert our datatype to a structural representation, and use a 
+  \emph{generic equality} to create 
   an instance of the \ensuremath{\HSCon{Eq}} typeclass for our type. 
 
-\subsection{Design Pattern}
+\subsection{Design Pattern}\label{sec:tudesignpattern}
 
   Datatype generic programming often follows a common design pattern that is 
   independent of the structural representation of types involved. In general 
@@ -634,14 +808,19 @@ Abstract
   how this can be done in Agda. We will only give a rough sketch of the most 
   common design pattern here. In general, a datatype generic function is supplied
   with a code \ensuremath{\HSVar{u}\HSCon{\mathbin{:}}\HSCon{𝓤}}, and returns a function whose type is dependent on the 
-  code it was supplied with. In the case of a generic decidable equality, we 
-  might use the following type signature. 
+  code it was supplied with. 
+  
+  \begin{example}
 
-\includeagda{2}{eqdef}
+    Suppose we are defining a generic procedure for decidable equality. We might use the following type signature for such a procedure:
 
-  If we now define \ensuremath{\HSSym{≟}} by induction over \ensuremath{\HSVar{u}}, we have a decision procedure 
-  for decidable equality that may act on values on any type, provided their 
-  structure can be described as a code in \ensuremath{\HSCon{𝓤}}. 
+\includeagdanv{2}{eqdef}
+
+    If we now define \ensuremath{\HSSym{≟}} by induction over \ensuremath{\HSVar{u}}, we have a decision procedure 
+    for decidable equality that may act on values on any type, provided their 
+    structure can be described as a code in \ensuremath{\HSCon{𝓤}}. 
+
+  \end{example}
 
 \subsection{Example Universes}
 
@@ -656,10 +835,9 @@ Abstract
     one of the simplest type universes, it can describe a wide variaty of 
     recursive algebraic datatypes \texttt{[citation]}, roughly corresponding to 
     the algebraic types in Haskell98. Examples of regular types are 
-    \emph{natural numbers}, \emph{lists} and \emph{binary trees}. 
-
-    Regular types are insufficient once we want to have a generic representation 
-    of mutually recursive or indexed datatypes. 
+    \emph{natural numbers}, \emph{lists} and \emph{binary trees}. Regular types are 
+    insufficient once we want to have a generic representation of mutually recursive 
+    or indexed datatypes. 
 
   \paragraph{Indexed Containers}
     The universe of \emph{Indexed Containers} \cite{altenkirch2015indexed} 
@@ -676,46 +854,30 @@ Abstract
     recursive subtrees have indices that cannot be uniquely determined from the 
     index of a value. 
 
-\section{Universe Polymorphism}
-
-  Contrary to Haskell, Agda does not have separate notions for \emph{types}, 
-  \emph{kinds} and \emph{sorts}. Instead it provides an infinite hierarchy of 
-  type universes, where level is a member of the next, i.e. \ensuremath{\HSCon{Set}\;\HSVar{n}\HSCon{\mathbin{:}}\HSCon{Set}\;\HSSpecial{(}\HSVar{n}\HSSym{+}\HSNumeral{1}\HSSpecial{)}}. 
-  Agda uses this construction in favor of simply declaring \ensuremath{\HSCon{Set}\HSCon{\mathbin{:}}\HSCon{Set}} to avoid 
-  the construction of contradictory statements through Russel's paradox. 
-
-  This implies that every construction in Agda that ranges over some \ensuremath{\HSCon{Set}\;\HSVar{n}} can 
-  only be used for values that are in \ensuremath{\HSCon{Set}\;\HSVar{n}}. It is not possible to define, for 
-  example, a \ensuremath{\HSCon{List}} datatype that may contain both \emph{values} and \emph{types}
-   for this reason. 
-
-   We can work around this limitation by defining a \emph{universe polymorphic} 
-   construction for lists: 
-
-\includeagda{2}{upolylist}
-
-  Allowing us to capture lists of types (such as \ensuremath{\HSCon{ℕ}\HSSym{∷}\HSCon{Bool}\HSSym{∷}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}}) and lists of 
-  values (such as \ensuremath{\HSNumeral{1}\HSSym{∷}\HSNumeral{2}\HSSym{∷}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}}) using a single datatype. 
-
-  Agda allows for the programmer to declare that \ensuremath{\HSCon{Set}\HSCon{\mathbin{:}}\HSCon{Set}} using the \ensuremath{\mbox{\enskip\{-\#    OPTIONS --type-in-type  \#-\}\enskip}} pragma. Throughout the development accompanying 
-  this thesis, we will refrain from using this pragma wherever possible. However,
-   since the universe polymorphic version of an Agda construction is often more 
-  difficult to read, we will include all code examples in this thesis in their 
-  non-polymorphic form. 
-
 \chapter{Literature Review}
-  \subsection{Property Based Testing}
+In this section, we discuss some of the existing literature that is relevant in the domain of generating test data for property based testing. We take a look at some existing testing libraries, techniques for generation of constrained test data, and a few type universes beyond those we used that aim to describe (at least a subset of) indexed datatypes. 
 
-    \textit{Property Based Testing} aims to assert properties that universally hold for our programs by parameterizing tests over values and checking them against a collection of test values. Libraries for property based testing often include some kind of mechanism to automatically generate collections of test values. Existing tools take different approaches towards generation of test data: \textit{QuickCheck} \cite{claessen2011quickcheck} randomly generates values within the test domain, while \textit{SmallCheck} \cite{runciman2008smallcheck} and \textit{LeanCheck} \cite{matela2017tools} exhaustively enumerate all values in the test domain up to a certain point. 
+\section{Property Based Testing}
 
-  \subsubsection{Existing Libraries}
+  \textit{Property Based Testing} aims to assert properties that universally hold 
+  for our programs by parameterizing tests over values and checking them against a 
+  collection of test values. Libraries for property based testing often include some 
+  kind of mechanism to automatically generate collections of test values. Existing 
+  tools take different approaches towards generation of test data: \textit
+  {QuickCheck} \cite{claessen2011quickcheck} randomly generates values within the 
+  test domain, while \textit{SmallCheck} \cite{runciman2008smallcheck} and \textit
+  {LeanCheck} \cite{matela2017tools} exhaustively enumerate all values in the test 
+  domain up to a certain point. 
 
-    Many libraries exist for property based testing. This section briefly discusses some of them. 
+\subsection{Existing Libraries}
 
-    \paragraph{QuickCheck} Published in 2000 by Claessen \& Hughes \cite{claessen2011quickcheck}, QuickCheck implements property based testing for Haskell. As mentioned before, test values are generated by sampling randomly from the domain of test values. QuickCheck supplies the typeclass \texttt{Arbitrary}, whose instances are those types for which random values can be generated. A property of type \ensuremath{\HSVar{a}\HSSym{\to} \HSCon{Bool}} can be tested if \ensuremath{\HSVar{a}} is an instance of \texttt{Arbitrary}. Instances for most common Haskell types are supplied by the library. 
+  There exist many libraries for property based testing. For brevity, we constrain ourselves here to those that are relevant in the domain of functional programming and/or haskell. 
 
-    If a property fails on a testcase, QuickCheck supplies a counterexample. Consider the following faulty definition of \ensuremath{\HSVar{reverse}}: 
+\subsubsection{QuickCheck} 
 
+  Published in 2000 by Claessen \& Hughes \cite{claessen2011quickcheck}, QuickCheck implements property based testing for Haskell. As mentioned before, test values are generated by sampling randomly from the domain of test values. QuickCheck supplies the typeclass \texttt{Arbitrary}, whose instances are those types for which random values can be generated. A property of type \ensuremath{\HSVar{a}\HSSym{\to} \HSCon{Bool}} can be tested if \ensuremath{\HSVar{a}} is an instance of \texttt{Arbitrary}. Instances for most common Haskell types are supplied by the library. If a property fails on a testcase, QuickCheck supplies a counterexample. Consider the following faulty definition of \ensuremath{\HSVar{reverse}}: 
+
+\begin{myhaskell}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{17}{@{}>{\hspre}c<{\hspost}@{}}%
@@ -733,8 +895,10 @@ Abstract
 \>[20]{}\HSVar{nub}\;\HSSpecial{(}\HSSpecial{(}\HSVar{reverse}\;\HSVar{xs}\HSSpecial{)}\HSSym{\plus} \HSSpecial{\HSSym{[\mskip1.5mu} }\HSVar{x}\HSSpecial{,}\HSVar{x}\HSSpecial{\HSSym{\mskip1.5mu]}}\HSSpecial{)}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+\end{myhaskell}
 
-    If we now test our function by calling \ensuremath{\HSVar{quickCheck}\;\HSVar{reverse\char95 preserves\char95 length}}, we get the following output: 
+  If we now test our function by calling \ensuremath{\HSVar{quickCheck}\;\HSVar{reverse\char95 preserves\char95 length}}, we 
+  get the following output: 
 
 \begin{tabbing}\ttfamily
 ~Test\char46{}QuickCheck\char62{}~quickCheck~reverse\char95{}preserves\char95{}length~\\
@@ -742,32 +906,90 @@ Abstract
 \ttfamily ~\char91{}7\char44{}7\char93{}
 \end{tabbing}
 
-    We see that a counterexample was found after 8 tests \textit{and 2 shrinks}. Due to the random nature of the tested values, the counterexamples that falsify a property are almost never minimal counterexamples. QuickCheck takes a counterexample and applies some function that produces a collection of values that are smaller than the original counterexample, and attempts to falsify the property using one of the smaller values. By repeatedly \textit{Shrinking} a counterexample, QuickCheck is able to find much smaller counterexamples, which are in general of much more use to the programmer. 
+  We see that a counterexample was found after 8 tests \textit{and 2 shrinks}. Due to 
+  the random nature of the tested values, the counterexamples that falsify a property 
+  are almost never minimal counterexamples. QuickCheck takes a counterexample and 
+  applies some function that produces a collection of values that are smaller than the 
+  original counterexample, and attempts to falsify the property using one of the 
+  smaller values. By repeatedly \textit{Shrinking} a counterexample, QuickCheck is 
+  able to find much smaller counterexamples, which are in general of much more use to 
+  the programmer. 
 
-    Perhaps somewhat surprising is that QuickCheck is also able randomly generate values for function types by modifying the seed of the random generator (which is used to generate the function's output) based on it's input. 
+  Perhaps somewhat surprising is that QuickCheck is also able randomly generate values 
+  for function types by modifying the seed of the random generator (which is used to 
+  generate the function's output) based on it's input. 
 
-    \paragraph{(Lazy) SmallCheck} Contrary to QuickCheck, SmallCheck \cite{runciman2008smallcheck} takes an \textit{enumerative} approach to the generation of test data. While the approach to formulation and testing of properties is largely similar to QuickCheck's, test values are not generated at random, but rather exhaustively enumerated up to a certain \textit{depth}. Zero-arity constructors have depth $0$, while the depth of any positive arity constructor is one greather than the maximum depth of its arguments.  The motivation for this is the \textit{small scope hypothesis}: if a program is incorrect, it will almost allways fail on some small input \cite{andoni2003evaluating}. 
+\subsubsection{(Lazy) SmallCheck} 
 
-    In addition to SmallCheck, there is also \textit{Lazy} SmallCheck. In many cases, the value of a property is determined only by part of the input. Additionally, Haskell's lazy semantics allow for functions to be defined on partial inputs. The prime example of this is a property \texttt{sorted :: Ord a => [a] -> Bool} that returns \texttt{false} when presented with \texttt{1:0:$\bot$}. It is not necessary to evaluate $\bot$ to determine that the input list is not ordered. 
+  Contrary to QuickCheck, SmallCheck \cite{runciman2008smallcheck} takes an \textit
+  {enumerative} approach to the generation of test data. While the approach to 
+  formulation and testing of properties is largely similar to QuickCheck's, test 
+  values are not generated at random, but rather exhaustively enumerated up to a 
+  certain \textit{depth}. Zero-arity constructors have depth $0$, while the depth of 
+  any positive arity constructor is one greather than the maximum depth of its 
+  arguments.  The motivation for this is the \textit{small scope hypothesis}: if a 
+  program is incorrect, it will almost allways fail on some small input \cite
+  {andoni2003evaluating}. 
 
-    Partial values represent an entire class of values. That is, \texttt{1:0:$\bot$} can be viewed as a representation of the set of lists that have prefix \texttt{[1, 0]}. By checking properties on partial values, it is possible to falsify a property for an entire class of values in one go, in some cases greatly reducing the amount of testcases needed. 
+  In addition to SmallCheck, there is also \textit{Lazy} SmallCheck. In many cases, 
+  the value of a property is determined only by part of the input. Additionally, 
+  Haskell's lazy semantics allow for functions to be defined on partial inputs. The 
+  prime example of this is a property \texttt{sorted :: Ord a => [a] -> Bool} that 
+  returns \texttt{false} when presented with \texttt{1:0:$\bot$}. It is not necessary 
+  to evaluate $\bot$ to determine that the input list is not ordered. 
 
-    \paragraph{LeanCheck} Where SmallCheck uses a value's \textit{depth} to bound the number of test values, LeanCheck uses a value's \textit{size} \cite{matela2017tools}, where size is defined as the number of construction applications of positive arity.
+  Partial values represent an entire class of values. That is, \texttt{1:0:$\bot$} can 
+  be viewed as a representation of the set of lists that have prefix \texttt{[1, 0]}. 
+  By checking properties on partial values, it is possible to falsify a property for 
+  an entire class of values in one go, in some cases greatly reducing the amount of 
+  testcases needed. 
 
-    Both SmallCheck and LeanCheck contain functionality to enumerate functions similar to QuickCheck's \texttt{Coarbitrary}. 
+\subsubsection{LeanCheck} 
 
-    \paragraph{Hegdgehog} Hedgehog \cite{hedgehog} is a framework similar to QuickCheck, that aims to be a more modern alternative. It includes support for monadic effects in generators and concurrent checking of properties.
+  Where SmallCheck uses a value's \textit{depth} to bound the number of test values, 
+  LeanCheck uses a value's \textit{size} \cite{matela2017tools}, where size is defined 
+  as the number of construction applications of positive arity.
 
-    \paragraph{Feat} A downside to both SmallCheck and LeanCheck is that they do not provide an efficient way to generate or sample large test values. QuickCheck has no problem with either, but QuickCheck generators are often more tedious to write compared to their SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill this gap by providing a way to efficiently enumerate algebraic types, employing memoization techniques to efficiently find the $n^{th}$ element of an enumeration. 
+  Both SmallCheck and LeanCheck contain functionality to enumerate functions similar 
+  to QuickCheck's \texttt{Coarbitrary}. 
 
-    \paragraph{QuickChick} QuickChick is a QuickCheck clone for the proof assistant Coq \cite{denes2014quickchick}. The fact that Coq is a proof assistant enables the user to reason about the testing framework itself \cite{paraskevopoulou2015foundational}. This allows one, for example, to prove that generators adhere to some distribution.  
+\subsubsection{Hegdgehog} 
+  
+  Hedgehog \cite{hedgehog} is a framework similar to QuickCheck, that aims to be a more modern alternative. It includes support for monadic effects in generators and concurrent checking of properties.
 
-  \subsubsection{Generating Constrained Test Data}\label{genconstrainedtd}
+\subsubsection{Feat} 
+  
+  A downside to both SmallCheck and LeanCheck is that they do not 
+  provide an efficient way to generate or sample large test values. QuickCheck has no 
+  problem with either, but QuickCheck generators are often more tedious to write 
+  compared to their SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill 
+  this gap by providing a way to efficiently enumerate algebraic types, employing 
+  memoization techniques to efficiently find the $n^{th}$ element of an enumeration. 
 
-    Defining a suitable generation of test data for property based testing is notoriously difficult in many cases, independent of whether we choose to sample from or enumerate the space of test values. Writing generators for mutually recursive datatypes with a suitable distribution is especially challenging. 
+\subsubsection{QuickChick} 
+  
+  QuickChick is a QuickCheck clone for the proof assistant Coq 
+  \cite{denes2014quickchick}. The fact that Coq is a proof assistant enables the user 
+  to reason about the testing framework itself \cite{paraskevopoulou2015foundational}. 
+  This allows one, for example, to prove that generators adhere to some distribution.  
+
+\subsection{Generating Constrained Test Data}\label{genconstrainedtd}
+
+  Defining a suitable generation of test data for property based testing is 
+  notoriously difficult in many cases, independent of whether we choose to sample from 
+  or enumerate the space of test values. Writing generators for mutually recursive 
+  datatypes with a suitable distribution is especially challenging. 
     
-    We run into prolems when we desire to generate test data for properties with a precondition. If a property's precondition is satisfied by few input values, it becomes unpractical to test such a property by simply generating random input data. Few testcases will be relevant (meaning they satisfy the precondition), and the testcases that do are often trivial cases. The usual solution to this problem is to define a custom test data generator that only produces data that satisfies the precondition. In some cases, such as the \ensuremath{\HSVar{insert\char95 preserves\char95 sorted}} from section \ref{introduction}, a suitable generator is not too hard to define: 
+  We run into prolems when we desire to generate test data for properties with a 
+  precondition. If a property's precondition is satisfied by few input values, it 
+  becomes unpractical to test such a property by simply generating random input data. 
+  Few testcases will be relevant (meaning they satisfy the precondition), and the 
+  testcases that do are often trivial cases. The usual solution to this problem is to 
+  define a custom test data generator that only produces data that satisfies the 
+  precondition. In some cases, such as the \ensuremath{\HSVar{insert\char95 preserves\char95 sorted}} from section \ref
+  {introduction}, a suitable generator is not too hard to define: 
 
+\begin{myhaskell}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -789,42 +1011,94 @@ Abstract
 \>[23]{}\HSSym{\mathrel{=}}\HSVar{x}\HSCon{\mathbin{:}}\HSVar{map}\;\HSSpecial{(}\HSSym{+}\HSVar{x}\HSSpecial{)}\;\HSSpecial{(}\HSVar{diff}\;\HSVar{xs}\HSSpecial{)}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+\end{myhaskell}
 
-    However, for more complex preconditions defining suitable generators is all but trivial. 
+  However, for more complex preconditions defining suitable generators is all but trivial. 
 
-  \subsubsection{Automatic Generation of Specifications}
+\subsection{Automatic Generation of Specifications}
 
-    A surprising application of property based testing is the automatic generation of program specifications, proposed by Claessen et al. \cite{claessen2010quickspec} with the tool \textit{QuickSpec}. QuickSpec automatically generates a set of candidate formal specifications given a list of pure functions, specifically in the form of algebraic equations. Random property based testing is then used to falsify specifications. In the end, the user is presented with a set of equations for which no counterexample was found. 
+  A surprising application of property based testing is the automatic generation of 
+  program specifications, proposed by Claessen et al. \cite{claessen2010quickspec} 
+  with the tool \textit{QuickSpec}. QuickSpec automatically generates a set of 
+  candidate formal specifications given a list of pure functions, specifically in the 
+  form of algebraic equations. Random property based testing is then used to falsify 
+  specifications. In the end, the user is presented with a set of equations for which 
+  no counterexample was found. 
 
-  \subsection{Techniques for Generating Test Data}
+\section{Techniques for Generating Test Data}
 
-    This section discusses some existing work regarding the generation of test data satisfying invariants, such as well-formed $\lambda$-terms. 
+  This section discusses some existing work regarding the generation of test data 
+  satisfying invariants, such as well-formed $\lambda$-terms. 
 
-  \subsubsection{Lambda Terms} 
+\subsection{Lambda Terms} 
 
-    A problem often considered in literature is the generation of (well-typed) lambda terms \cite{palka2011testing, grygiel2013counting, claessen2015generating}. Good generation of arbitrary program terms is especially interesting in the context of testing compiler infrastructure, and lambda terms provide a natural first step towards that goal. 
+  A problem often considered in literature is the generation of (well-typed) lambda 
+  terms \cite{palka2011testing, grygiel2013counting, claessen2015generating}. Good 
+  generation of arbitrary program terms is especially interesting in the context of 
+  testing compiler infrastructure, and lambda terms provide a natural first step 
+  towards that goal. 
 
-    Claessen and Duregaard \cite{claessen2015generating} adapt the techniques described by Duregaard \cite{duregaard2013feat} to allow efficient generation of constrained data. They use a variation on rejection sampling, where the space of values is gradually refined by rejecting classes of values through partial evaluation (similar to SmallCheck \cite{runciman2008smallcheck}) until a value satisfying the imposed constrained is found. 
+  Claessen and Duregaard \cite{claessen2015generating} adapt the techniques described 
+  by Duregaard \cite{duregaard2013feat} to allow efficient generation of constrained 
+  data. They use a variation on rejection sampling, where the space of values is 
+  gradually refined by rejecting classes of values through partial evaluation (similar 
+  to SmallCheck \cite{runciman2008smallcheck}) until a value satisfying the imposed 
+  constrained is found. 
 
-    An alternative approach centered around the semantics of the simply typed lambda calculus is described by Pa{\l}ka et al. \cite{palka2011testing}. Contrary to the work done by Claessen and Duregaard \cite{claessen2015generating}, where typechecking is viewed as a black box, they utilize definition of the typing rules to devise an algorithm for generation of random lambda terms. The basic approach is to take some input type, and randomly select an inference rule from the set of rules that could have been applied to arrive at the goal type. Obviously, such a procedure does not guarantee termination, as repeated application of the function application rule will lead to an arbitrarily large goal type. As such, the algorithm requires a maximum search depth and backtracking in order to guarantee that a suitable term will eventually be generated, though it is not guaranteed that such a term exists if a bound on term size is enforced \cite{moczurad2000statistical}. 
+  An alternative approach centered around the semantics of the simply typed lambda 
+  calculus is described by Pa{\l}ka et al. \cite{palka2011testing}. Contrary to the 
+  work done by Claessen and Duregaard \cite{claessen2015generating}, where 
+  typechecking is viewed as a black box, they utilize definition of the typing rules 
+  to devise an algorithm for generation of random lambda terms. The basic approach is 
+  to take some input type, and randomly select an inference rule from the set of rules 
+  that could have been applied to arrive at the goal type. Obviously, such a procedure 
+  does not guarantee termination, as repeated application of the function application 
+  rule will lead to an arbitrarily large goal type. As such, the algorithm requires a 
+  maximum search depth and backtracking in order to guarantee that a suitable term 
+  will eventually be generated, though it is not guaranteed that such a term exists if 
+  a bound on term size is enforced \cite{moczurad2000statistical}. 
 
-    Wang \cite{wang2005generating} considers the problem of generating closed untyped lambda terms. 
+  Wang \cite{wang2005generating} considers the problem of generating closed untyped 
+  lambda terms. 
 
-  \subsubsection{Inductive Relations in Coq}
+\subsection{Inductive Relations in Coq}
 
-    An approach to generation of constrained test data for Coq's QuickChick was proposed by Lampropoulos et al. \cite{lampropoulos2017generating} in their 2017 paper \textit{Generating Good Generators for Inductive Relations}. They observe a common pattern where the required test data is of a simple type, but constrained by some precondition. The precondition is then given by some inductive dependent relation indexed by said simple type. The \ensuremath{\HSCon{Sorted}} datatype shown in section \ref{introduction} is a good example of this
+  An approach to generation of constrained test data for Coq's QuickChick was proposed 
+  by Lampropoulos et al. \cite{lampropoulos2017generating} in their 2017 paper \textit
+  {Generating Good Generators for Inductive Relations}. They observe a common pattern 
+  where the required test data is of a simple type, but constrained by some 
+  precondition. The precondition is then given by some inductive dependent relation 
+  indexed by said simple type. The \ensuremath{\HSCon{Sorted}} datatype shown in section \ref
+  {introduction} is a good example of this
 
-    They derive generators for such datatypes by abstracting over dependent inductive relations indexed by simple types. For every constructor, the resulting type uses a set of expressions as indices, that may depend on the constructor's arguments and universally quantified variables. These expressions induce a set of unification constraints that apply when using that particular constructor. These unification constraints are then used when constructing generators to ensure that only values for which the dependent inductive relation is inhabited are generated. 
+  They derive generators for such datatypes by abstracting over dependent inductive 
+  relations indexed by simple types. For every constructor, the resulting type uses a 
+  set of expressions as indices, that may depend on the constructor's arguments and 
+  universally quantified variables. These expressions induce a set of unification 
+  constraints that apply when using that particular constructor. These unification 
+  constraints are then used when constructing generators to ensure that only values 
+  for which the dependent inductive relation is inhabited are generated. 
 
-  \subsection{Generic Programming \& Type Universes}\label{sec:lituniverses}
+\section{Generic Programming \& Type Universes}\label{sec:lituniverses}
 
-    Datatype generic programming concerns techniques that allow for the definition of functions by inducting on the \textit{structure} of a datatype. Many approaches towards this goal have been developed, some more expressive than others. This section discusses a few of them.  
+  Datatype generic programming concerns techniques that allow for the definition of 
+  functions by inducting on the \textit{structure} of a datatype. Many approaches 
+  towards this goal have been developed, some more expressive than others. This 
+  section discusses a few of them.  
 
-  \subsubsection{SOP (Sum of Products)}\label{sop}
+\subsection{SOP (Sum of Products)}\label{sop}
 
-    On of the more simple representations is the so called \textit{Sum of Products} view \cite{de2014true}, where datatypes are respresented as a choice between an arbitrary amount of constructors, each of which can have any arity. This view corresponds to how datatypes are defined in Haskell. As we will see (for example in section \ref{patternfunctors}), other universes too employ sum and product combinators to describe the structure of datatypes, though they do not necessarily enforce the representation to be in disjunctive normal form. 
+  On of the more simple representations is the so called \textit{Sum of Products} view 
+  \cite{de2014true}, where datatypes are respresented as a choice between an arbitrary 
+  amount of constructors, each of which can have any arity. This view corresponds to 
+  how datatypes are defined in Haskell. As we will see (for example in section \ref
+  {patternfunctors}), other universes too employ sum and product combinators to 
+  describe the structure of datatypes, though they do not necessarily enforce the 
+  representation to be in disjunctive normal form. 
 
-    Sum of Products, in its simplest form, cannot represent mutually recursive families of datatypes. An extension that allows this has been developed in \cite{miraldo2018sums}. 
+  Sum of Products, in its simplest form, cannot represent mutually recursive families 
+  of datatypes. An extension that allows this has been developed in \cite
+  {miraldo2018sums}. 
 
 \chapter{A Combinator Library for Generators}
 \section{The Type of Generators}
@@ -875,7 +1149,7 @@ Abstract
 
 \subsection{The \ensuremath{\HSCon{Gen}} Datatype}
 
-  We define the datatype of generators, \ensuremath{\HSCon{Gen}\;\HSVar{a}\;\HSVar{t}}, to be a family of types indexed by two types. One signifying the type of values that are produced by the generator, and one specifying the type of values produced by recursive positions. 
+  We define the datatype of generators, \ensuremath{\HSCon{Gen}\;\HSVar{a}\;\HSVar{t}}, to be a family of types indexed by two types \footnote{The listed definition will not be accepted by Agda due to inconsistencies in the universe levels. This is also the case for many code examples to come. To keep things readable, we will not concern ourselves with universe levels throughout this thesis.}. One signifying the type of values that are produced by the generator, and one specifying the type of values produced by recursive positions. 
 
 \includeagdalisting{4}{gendef}{Definition of the \ensuremath{\HSCon{Gen}} datatype}{lst:gendef}
 
@@ -977,49 +1251,52 @@ Abstract
 
 \chapter{Generic Generators for Regular types}
 
-  A large class of recursive algebraic data types can be described with 
-  the universe of \emph{regular types}. In this section we lay out this 
-  universe, together with its semantics, and describe how we may define 
-  functions over regular types by induction over their codes. We will 
-  then show how this allows us to derive from a code a generic generator 
-  that produces all values of a regular type.
+  A large class of recursive algebraic data types can be described with the universe 
+  of \emph{regular types}. In this section we lay out this universe, together with its 
+  semantics, and describe how we may define functions over regular types by induction 
+  over their codes. We will then show how this allows us to derive from a code a 
+  generic generator that produces all values of a regular type. We sketch how we can 
+  prove that these generators are indeed complete. 
 
 \section{The universe of regular types}
 
-  Though the exact definition may vary across sources, the universe of 
-  regular types is generally regarded to consist of the \emph{empty type} 
-  (or $\mathbb{0}$), the unit type (or $\mathbb{1}$) and constants types. 
-  It is closed under both products and coproducts. We can define a datatype 
-  for this universe in Agda as shown in lising \ref{lst:regular}
+  Though the exact definition may vary across sources, the universe of regular types 
+  is generally regarded to consist of the \emph{empty type} (or $\mathbb{0}$), the 
+  unit type (or $\mathbb{1}$) and constants types. It is closed under both products 
+  and coproducts \footnote{This roughly corresponds to datatypes in Haskell 98}. We 
+  can define a datatype for this universe in Agda as shown in lising \ref{lst:regular}
 
 \includeagdalisting{5}{regular}{The universe of regular types}{lst:regular}
 
-  The semantics associated with the \ensuremath{\HSCon{Reg}} datatype map a code to a functorial 
-  representation of a datatype, commonly known as its \emph{pattern functor}. 
-  The datatype that is represented by a code is isomorphic to the least 
-  fixpoint of its pattern functor. 
+  The semantics associated with the \ensuremath{\HSCon{Reg}} datatype, as shown in listing \ref
+  {lst:regsem}, map a code to a functorial representation of a datatype, commonly 
+  known as its \emph{pattern functor}. The datatype that is represented by a code is 
+  isomorphic to the least fixpoint of its pattern functor. 
 
-\includeagda{5}{regularsemantics}
+\includeagdalisting{5}{regularsemantics}{Semantics of the universe of regular types}{lst:regsem}
 
-  \paragraph{Example} The type of natural numbers (see listing \ref{lst:defnat}) 
-  exposes two constructors: the nullary constructor \ensuremath{\HSVar{zero}}, and the unary 
-  constructor \ensuremath{\HSVar{suc}} that takes one recursive argument. We may thus view this 
-  type as a coproduct (i.e. choice) of either a \emph{unit type} or a 
-  \emph{recursive subtree}: 
+  \begin{example}
 
-\includeagda{5}{natregular}
+    The type of natural numbers (see listing \ref{lst:defnat}) 
+    exposes two constructors: the nullary constructor \ensuremath{\HSVar{zero}}, and the unary constructor \ensuremath{\HSVar{suc}} that takes one recursive argument. We may thus view this type as a coproduct (i.e. choice) of either a \emph{unit type} or a \emph{recursive subtree}: 
 
-  We convince ourselves that \ensuremath{\HSCon{ℕ'}} is indeed equivalent to \ensuremath{\HSCon{ℕ}} by defining 
-  conversion functions, and showing their composition is extensionally equal to 
-  the identity function. 
+\includeagdanv{5}{natregular}
 
-\includeagda{5}{natiso} 
+    We convince ourselves that \ensuremath{\HSCon{ℕ'}} is indeed equivalent to \ensuremath{\HSCon{ℕ}} by defining conversion 
+    functions, and showing their composition is extensionally equal to the identity 
+    function, shown in listing \ref{lst:natiso}. 
+
+  \end{example}
+
+\includeagdalisting{5}{natiso}{Isomorphism between \ensuremath{\HSCon{ℕ}} and \ensuremath{\HSCon{ℕ'}}}{lst:natiso}
 
   We may then say that a type is regular if we can provide a proof that it is 
-  isomorphic to the fixpoint of some \ensuremath{\HSVar{c}} of type \ensuremath{\HSCon{Reg}}. We use a record to capture this 
-  notion, consisting of a code and an value that witnesses the isomorphism.
+  isomorphic to the fixpoint of some \ensuremath{\HSVar{c}} of type \ensuremath{\HSCon{Reg}}. We use a record to capture 
+  this notion, consisting of a code and an value that witnesses the isomorphism.
 
 \includeagda{5}{regularrecord}
+
+  By instantiating \ensuremath{\HSCon{Regular}} for a type, we may use any generic functionality that is defined over regular types. 
 
 \subsection{Non-regular data types}
 
@@ -1038,29 +1315,62 @@ Abstract
 \section{Generic Generators for regular types}
 
   We can derive generators for all regular types by induction over their associated 
-  codes. Furthermore, we will show in section \cref{regularproof} that, once interpreted 
-  as enumerators, these generators are complete; i.e. any value will eventually show 
-  up in the enumerator, provided we supply a sufficiently large size parameter.  
+  codes. Furthermore, we will show in section \cref{regularproof} that, once 
+  interpreted as enumerators, these generators are complete; i.e. any value will eventually show up in the enumerator, provided we supply a sufficiently large size parameter.  
 
 \subsection{Defining functions over codes}
 
-  Defining functions over codes is quite subtle, as we need to account for the code 
-  referred to by recursive positions \cite{norell2008dependently}. Simply put, we 
-  cannot work with values of type \ensuremath{\HSCon{Fix}\;\HSVar{c}}, since this implicitly imposes the 
-  restriction that any \ensuremath{\HSCon{I}} in \ensuremath{\HSVar{c}} refers to \ensuremath{\HSCon{Fix}\;\HSVar{c}}. However, as we descent into 
-  recursive calls, the code we are working with changes, and with it the type 
-  associated with recursive positions. For example, the \ensuremath{\HSCon{I}} in (\ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}) refers 
-  to values of type \ensuremath{\HSCon{Fix}\;\HSSpecial{(}\HSCon{U}\HSSym{⊕}\HSCon{I}\HSSpecial{)}}, not \ensuremath{\HSCon{Fix}\;\HSCon{I}}. 
+  If we apply the approach described in \cref{sec:tudesignpattern} without care, we run into problems. Simply put, we cannot work with values of type \ensuremath{\HSCon{Fix}\;\HSVar{c}}, since this implicitly imposes the restriction that any \ensuremath{\HSCon{I}} in \ensuremath{\HSVar{c}} refers to \ensuremath{\HSCon{Fix}\;\HSVar{c}}. However, as we descent into recursive calls, the code we are working with changes, and with it the type associated with recursive positions. For example: the \ensuremath{\HSCon{I}} in (\ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}) refers to values of type \ensuremath{\HSCon{Fix}\;\HSSpecial{(}\HSCon{U}\HSSym{⊕}\HSCon{I}\HSSpecial{)}}, not \ensuremath{\HSCon{Fix}\;\HSCon{I}}. We need to make a distinction between the code we are currently working on, and the code that recursive positions refer to. For this reason, we cannot define the generic generator, \ensuremath{\HSVar{deriveGen}}, with the following type signature: 
 
-  This can be resolved by observing that \ensuremath{\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}\HSSym{≅}\HSCon{Fix}\;\HSVar{c}} for any code \ensuremath{\HSVar{c}}
-  and \ensuremath{\HSVar{c'}}, so long \ensuremath{\HSVar{c}} and \ensuremath{\HSVar{c'}} are equal. By inducting over \ensuremath{\HSVar{c'}}, we may recursively
-  define functionality over codes without altering the semantics of recursive positions. 
+\includeagda{5}{genericgen}
+
+  If we observe that \ensuremath{\HSSym{⟦}\HSVar{c}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}\HSSym{≃}\HSCon{Fix}\;\HSVar{c}}, we may alter the type signature of \ensuremath{\HSVar{deriveGen}} slightly, such that it takes two input codes instead of one
+
+\includeagda{5}{genericgen2}
+
+  This allows us to induct over the first input code, while still being able to have recursive positions reference the correct \emph{top-level code}. Notice that the first and second type parameter of \ensuremath{\HSCon{Gen}} are different. This is intensional, as we would otherwise not be able to use the $\mu$ constructor to mark recursive positions.  
 
 \subsection{Composing generic generators}
 
+  Now that we have the correct type for \ensuremath{\HSVar{deriveGen}} in place, we can start defining it. Starting with the cases for \ensuremath{\HSCon{Z}} and \ensuremath{\HSCon{U}}: 
+
+\includeagda{5}{genericgenZU}
+
+  Both cases are trivial. In case of the \ensuremath{\HSCon{Z}} combinator, we yield a generator that produces no elements. As for the \ensuremath{\HSCon{U}} combinator, \ensuremath{\HSSym{⟦}\HSCon{U}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}} equals \ensuremath{\HSSym{⊤}}, so we need to return a generator that produces all inhabitants of \ensuremath{\HSSym{⊤}}. This is simply done by lifting the single value \ensuremath{\HSVar{tt}} into the generator type. 
+
+  In case of the \ensuremath{\HSCon{I}} combinator, we cannot simply use the $\mu$ constructor right away. In this context, $\mu$ has the type \ensuremath{\HSCon{Gen}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}}. However, since \ensuremath{\HSSym{⟦}\HSCon{I}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}} equals \ensuremath{\HSCon{Fix}\;\HSVar{c}}, the types do not lign up. We need to map the \ensuremath{\HSCon{In}} constructor over $\mu$ to fix this: 
+
+\includeagda{5}{genericgenI}
+
+  Moving on to products and coproducts: with the correct type for \ensuremath{\HSVar{deriveGen}} in place, we can define their generators quite easily by recursing on the left and right subcodes, and combining their results using the appropriate generator combinators: 
+
+\includeagda{5}{genericgenPCOP}
+
+  Since the the \ensuremath{\HSCon{Regular}} record expects an isomorphism with \ensuremath{\HSCon{Fix}\;\HSVar{c}}, we still need to wrap the resulting generator in the \ensuremath{\HSCon{In}} constructor: 
+
+\includeagda{5}{genericgenFinal}
+
+  The elements produced by \ensuremath{\HSVar{genericGen}} can now readily be transformed into the required datatype through an appropriate isomorphism. 
+
+  \begin{example}
+
+    We derive a generator for natural numbers by invoking \ensuremath{\HSVar{genericGen}} on the appropriate code \ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}, and applying the isomorphism defined in listing \ref{natiso} to its results: 
+
+\includeagdanv{5}{genericgenNat}
+
+  \end{example}
+
+  In general, we can derive a generator for any type \ensuremath{\HSCon{A}}, as long as there is an instance argument of the type \ensuremath{\HSCon{Regular}\;\HSCon{A}} in scope: 
+
+\includeagda{5}{isogen}
+
 \section{Enumerators for regular types}
 
+  We can define enumerators for regular types, and prove that these enumerators are \emph{complete}, in the sense that they will allways \emph{eventually} produce any arbitrary elementof the type they range over. We show how to arrive at such an enumerator, and how to assemble the completeness proof. 
+
 \subsection{A generic enumerator}
+
+  Since we define enumerators as functions \ensuremath{\HSCon{ℕ}\HSSym{→}\HSCon{List}\;\HSCon{A}}, we can look at Haskell's standard library for inspiration, specifically the implementations of the \ensuremath{\HSCon{Applicative}} and \ensuremath{\HSCon{Alternative}} typeclasses. 
 
 \subsection{Proving completeness}\label{sec:regularproof}
 

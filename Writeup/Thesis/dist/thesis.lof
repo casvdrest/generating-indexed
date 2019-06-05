@@ -4,23 +4,25 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Definition of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } datatype}}{12}% 
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Definitiong of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Genᵢ}\endgroup } datatype}}{15}% 
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Interpretation of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } datatype as an enumeration}}{16}% 
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Definition of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } datatype}}{16}% 
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Definitiong of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Genᵢ}\endgroup } datatype}}{19}% 
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Interpretation of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } datatype as an enumeration}}{19}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces The universe of regular types}}{17}% 
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces The Universe of indexed descriptions}}{23}% 
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces The universe of regular types}}{21}% 
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Semantics of the universe of regular types}}{22}% 
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ'}\endgroup }}}{22}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces The Universe of indexed descriptions}}{27}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{31}% 
-\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{31}% 
-\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{32}% 
-\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{32}% 
-\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{32}% 
-\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw $\mitlambda $-terms in Haskell and Agda}}{33}% 
-\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{33}% 
-\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped $\mitlambda $-terms in Agda}}{33}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{35}% 
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{35}% 
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{36}% 
+\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{36}% 
+\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{36}% 
+\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw $\mitlambda $-terms in Haskell and Agda}}{37}% 
+\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{37}% 
+\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped $\mitlambda $-terms in Agda}}{37}% 

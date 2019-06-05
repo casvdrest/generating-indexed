@@ -1,6 +1,7 @@
 \documentclass[a4paper,msc,twosized=semi]{uustthesis}
 
 \usepackage{framed}
+\usepackage{mdframed}
 \usepackage{setspace}
 % \usepackage{extsizes}
 
@@ -21,12 +22,18 @@
 }
 
 %% Agda snippets 
-\newcommand{\includeagda}[2]{\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}}
+\newcommand{\includeagda}[2]{\vspace*{-0.35cm}\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}\vspace*{-0.35cm}}
+
+%% Agda snippets, without removed spacing
+\newcommand{\includeagdanv}[2]{\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}}
+
+%% Agda snippets, not centered
+\newcommand{\includeagdanc}[2]{\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\vspace*{-0.35cm}}
 
 %% Agda listings
 \newcommand{\includeagdalisting}[4]{
   \begin{listing}{#3}{#4} 
-    \includeagda{#1}{#2}
+    \includeagdanc{#1}{#2}
   \end{listing} 
 }
 
@@ -40,6 +47,24 @@
   \end{listing}
 }
 
+\newmdenv[
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  skipabove=\topsep,
+  skipbelow=\topsep
+]{siderules}
+
+\newenvironment{example}[0] 
+{
+  \begin{siderules}
+    \vspace{-0.5cm}
+    \paragraph{\textbf{Example}}
+}
+{
+  \end{siderules}
+}
+
 %include polycode.fmt
 %include greek.fmt
 %include colorcode.fmt
@@ -50,6 +75,27 @@
 \usepackage[utf8x]{inputenc}
 \usepackage{autofe}
 \usepackage{textcomp}
+
+%% Haskell snippet 
+\newenvironment{myhaskell}
+{
+  \vspace{-0.35cm}
+  \begin{center}
+}
+{
+  \end{center}
+  \vspace{-0.35cm}
+}
+
+%% Haskell snippet 
+\newenvironment{myhaskellnv}
+{
+  \begin{center}
+}
+{
+  \end{center}
+}
+
 
 \title{Thesis title}
 
