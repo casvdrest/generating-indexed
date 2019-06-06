@@ -1271,14 +1271,21 @@ In this section, we discuss some of the existing literature that is relevant in 
   The semantics associated with the \ensuremath{\HSCon{Reg}} datatype, as shown in listing \ref
   {lst:regsem}, map a code to a functorial representation of a datatype, commonly 
   known as its \emph{pattern functor}. The datatype that is represented by a code is 
-  isomorphic to the least fixpoint of its pattern functor. 
+  isomorphic to the least fixpoint of its pattern functor. We fix pattern functors 
+  using the following fixpoint combinator: 
 
-\includeagdalisting{5}{regularsemantics}{Semantics of the universe of regular types}{lst:regsem}
+\includeagda{5}{regularfix}
+
+\includeagdalisting{5}{regularsemantics}{Semantics of the universe of regular types}
+{lst:regsem}
 
   \begin{example}
 
     The type of natural numbers (see listing \ref{lst:defnat}) 
-    exposes two constructors: the nullary constructor \ensuremath{\HSVar{zero}}, and the unary constructor \ensuremath{\HSVar{suc}} that takes one recursive argument. We may thus view this type as a coproduct (i.e. choice) of either a \emph{unit type} or a \emph{recursive subtree}: 
+    exposes two constructors: the nullary constructor \ensuremath{\HSVar{zero}}, and the unary 
+    constructor \ensuremath{\HSVar{suc}} that takes one recursive argument. We may thus view this type as 
+    a coproduct (i.e. choice) of either a \emph{unit type} or a \emph{recursive 
+    subtree}: 
 
 \includeagdanv{5}{natregular}
 
@@ -1316,11 +1323,20 @@ In this section, we discuss some of the existing literature that is relevant in 
 
   We can derive generators for all regular types by induction over their associated 
   codes. Furthermore, we will show in section \cref{regularproof} that, once 
-  interpreted as enumerators, these generators are complete; i.e. any value will eventually show up in the enumerator, provided we supply a sufficiently large size parameter.  
+  interpreted as enumerators, these generators are complete; i.e. any value will 
+  eventually show up in the enumerator, provided we supply a sufficiently large size 
+  parameter.  
 
 \subsection{Defining functions over codes}
 
-  If we apply the approach described in \cref{sec:tudesignpattern} without care, we run into problems. Simply put, we cannot work with values of type \ensuremath{\HSCon{Fix}\;\HSVar{c}}, since this implicitly imposes the restriction that any \ensuremath{\HSCon{I}} in \ensuremath{\HSVar{c}} refers to \ensuremath{\HSCon{Fix}\;\HSVar{c}}. However, as we descent into recursive calls, the code we are working with changes, and with it the type associated with recursive positions. For example: the \ensuremath{\HSCon{I}} in (\ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}) refers to values of type \ensuremath{\HSCon{Fix}\;\HSSpecial{(}\HSCon{U}\HSSym{⊕}\HSCon{I}\HSSpecial{)}}, not \ensuremath{\HSCon{Fix}\;\HSCon{I}}. We need to make a distinction between the code we are currently working on, and the code that recursive positions refer to. For this reason, we cannot define the generic generator, \ensuremath{\HSVar{deriveGen}}, with the following type signature: 
+  If we apply the approach described in \cref{sec:tudesignpattern} without care, we 
+  run into problems. Simply put, we cannot work with values of type \ensuremath{\HSCon{Fix}\;\HSVar{c}}, since 
+  this implicitly imposes the restriction that any \ensuremath{\HSCon{I}} in \ensuremath{\HSVar{c}} refers to \ensuremath{\HSCon{Fix}\;\HSVar{c}}. 
+  However, as we descent into recursive calls, the code we are working with changes, 
+  and with it the type associated with recursive positions. For example: the \ensuremath{\HSCon{I}} in (\ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}) refers to values of type \ensuremath{\HSCon{Fix}\;\HSSpecial{(}\HSCon{U}\HSSym{⊕}\HSCon{I}\HSSpecial{)}}, not \ensuremath{\HSCon{Fix}\;\HSCon{I}}. We need to make a 
+  distinction between the code we are currently working on, and the code that 
+  recursive positions refer to. For this reason, we cannot define the generic 
+  generator, \ensuremath{\HSVar{deriveGen}}, with the following type signature: 
 
 \includeagda{5}{genericgen}
 
@@ -1328,51 +1344,209 @@ In this section, we discuss some of the existing literature that is relevant in 
 
 \includeagda{5}{genericgen2}
 
-  This allows us to induct over the first input code, while still being able to have recursive positions reference the correct \emph{top-level code}. Notice that the first and second type parameter of \ensuremath{\HSCon{Gen}} are different. This is intensional, as we would otherwise not be able to use the $\mu$ constructor to mark recursive positions.  
+  This allows us to induct over the first input code, while still being able to have 
+  recursive positions reference the correct \emph{top-level code}. Notice that the 
+  first and second type parameter of \ensuremath{\HSCon{Gen}} are different. This is intensional, as we 
+  would otherwise not be able to use the $\mu$ constructor to mark recursive 
+  positions.  
 
 \subsection{Composing generic generators}
 
-  Now that we have the correct type for \ensuremath{\HSVar{deriveGen}} in place, we can start defining it. Starting with the cases for \ensuremath{\HSCon{Z}} and \ensuremath{\HSCon{U}}: 
+  Now that we have the correct type for \ensuremath{\HSVar{deriveGen}} in place, we can start defining 
+  it. Starting with the cases for \ensuremath{\HSCon{Z}} and \ensuremath{\HSCon{U}}: 
 
 \includeagda{5}{genericgenZU}
 
-  Both cases are trivial. In case of the \ensuremath{\HSCon{Z}} combinator, we yield a generator that produces no elements. As for the \ensuremath{\HSCon{U}} combinator, \ensuremath{\HSSym{⟦}\HSCon{U}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}} equals \ensuremath{\HSSym{⊤}}, so we need to return a generator that produces all inhabitants of \ensuremath{\HSSym{⊤}}. This is simply done by lifting the single value \ensuremath{\HSVar{tt}} into the generator type. 
+  Both cases are trivial. In case of the \ensuremath{\HSCon{Z}} combinator, we yield a generator that 
+  produces no elements. As for the \ensuremath{\HSCon{U}} combinator, \ensuremath{\HSSym{⟦}\HSCon{U}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}} equals \ensuremath{\HSSym{⊤}}, so we 
+  need to return a generator that produces all inhabitants of \ensuremath{\HSSym{⊤}}. This is simply done 
+  by lifting the single value \ensuremath{\HSVar{tt}} into the generator type. 
 
-  In case of the \ensuremath{\HSCon{I}} combinator, we cannot simply use the $\mu$ constructor right away. In this context, $\mu$ has the type \ensuremath{\HSCon{Gen}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}}. However, since \ensuremath{\HSSym{⟦}\HSCon{I}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}} equals \ensuremath{\HSCon{Fix}\;\HSVar{c}}, the types do not lign up. We need to map the \ensuremath{\HSCon{In}} constructor over $\mu$ to fix this: 
+  In case of the \ensuremath{\HSCon{I}} combinator, we cannot simply use the $\mu$ constructor right 
+  away. In this context, $\mu$ has the type \ensuremath{\HSCon{Gen}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}}
+  . However, since \ensuremath{\HSSym{⟦}\HSCon{I}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}} equals \ensuremath{\HSCon{Fix}\;\HSVar{c}}, the types do not lign up. We need 
+  to map the \ensuremath{\HSCon{In}} constructor over $\mu$ to fix this: 
 
 \includeagda{5}{genericgenI}
 
-  Moving on to products and coproducts: with the correct type for \ensuremath{\HSVar{deriveGen}} in place, we can define their generators quite easily by recursing on the left and right subcodes, and combining their results using the appropriate generator combinators: 
+  Moving on to products and coproducts: with the correct type for \ensuremath{\HSVar{deriveGen}} in place,
+   we can define their generators quite easily by recursing on the left and right 
+   subcodes, and combining their results using the appropriate generator combinators: 
 
 \includeagda{5}{genericgenPCOP}
 
-  Since the the \ensuremath{\HSCon{Regular}} record expects an isomorphism with \ensuremath{\HSCon{Fix}\;\HSVar{c}}, we still need to wrap the resulting generator in the \ensuremath{\HSCon{In}} constructor: 
+  Although defining \ensuremath{\HSVar{deriveGen}} constitutes most of the work, we are not quite there 
+  yet. Since the the \ensuremath{\HSCon{Regular}} record expects an isomorphism with \ensuremath{\HSCon{Fix}\;\HSVar{c}}, we still 
+  need to wrap the resulting generator in the \ensuremath{\HSCon{In}} constructor: 
 
 \includeagda{5}{genericgenFinal}
 
-  The elements produced by \ensuremath{\HSVar{genericGen}} can now readily be transformed into the required datatype through an appropriate isomorphism. 
+  The elements produced by \ensuremath{\HSVar{genericGen}} can now readily be transformed into the 
+  required datatype through an appropriate isomorphism. 
 
   \begin{example}
 
-    We derive a generator for natural numbers by invoking \ensuremath{\HSVar{genericGen}} on the appropriate code \ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}, and applying the isomorphism defined in listing \ref{natiso} to its results: 
+    We derive a generator for natural numbers by invoking \ensuremath{\HSVar{genericGen}} on the 
+    appropriate code \ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}, and applying the isomorphism defined in listing \ref
+    {natiso} to its results: 
 
 \includeagdanv{5}{genericgenNat}
 
   \end{example}
 
-  In general, we can derive a generator for any type \ensuremath{\HSCon{A}}, as long as there is an instance argument of the type \ensuremath{\HSCon{Regular}\;\HSCon{A}} in scope: 
+  In general, we can derive a generator for any type \ensuremath{\HSCon{A}}, as long as there is an 
+  instance argument of the type \ensuremath{\HSCon{Regular}\;\HSCon{A}} in scope: 
 
 \includeagda{5}{isogen}
 
-\section{Enumerators for regular types}
+\section{Constant Types}
 
-  We can define enumerators for regular types, and prove that these enumerators are \emph{complete}, in the sense that they will allways \emph{eventually} produce any arbitrary elementof the type they range over. We show how to arrive at such an enumerator, and how to assemble the completeness proof. 
+  In some cases, we describe datatypes as a compositions of other datatypes. An 
+  example of this would be lists of numbers, \ensuremath{\HSCon{List}\;\HSCon{ℕ}}. Our current universe definition 
+  is not expressive enough to do this. 
+  
+  \begin{example}
 
-\subsection{A generic enumerator}
+    Given the code representing natural numbers (\ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}) and lists (\ensuremath{\HSCon{U}\HSSym{⊕}\HSSpecial{(}\HSCon{C}\HSSym{⊗}\HSCon{I}\HSSpecial{)}}, 
+    where \ensuremath{\HSCon{C}} is a code representing the type of elements in the list), we might be 
+    tempted to try and replace \ensuremath{\HSCon{C}} with the code for natural numbers in the code for 
+    lists: 
 
-  Since we define enumerators as functions \ensuremath{\HSCon{ℕ}\HSSym{→}\HSCon{List}\;\HSCon{A}}, we can look at Haskell's standard library for inspiration, specifically the implementations of the \ensuremath{\HSCon{Applicative}} and \ensuremath{\HSCon{Alternative}} typeclasses. 
+  \includeagdanv{5}{natlist}
 
-\subsection{Proving completeness}\label{sec:regularproof}
+    This code does not describe lists of natural numbers. The problem here is that the 
+    two recursive positions refer to the \emph{same} code, which is incorrect. We need 
+    the first \ensuremath{\HSCon{I}} to refer to the code of natural numbers, and the second \ensuremath{\HSCon{I}} to refer 
+    to the entire code. 
+
+  \end{example}
+
+\subsection{Definition and Semantics}
+
+  In order to be able to refer to other recursive datatypes, the universe of regular 
+  types often includes a constructor marking \emph{constant types}: 
+
+\includeagda{5}{constantdef}
+
+  The \ensuremath{\HSCon{K}} constructor takes one parameter of type \ensuremath{\HSCon{Set}}, marking the type it 
+  references. The semantics of \ensuremath{\HSCon{K}} is simply the type it carries: 
+
+\includeagda{5}{constantsemantics}
+
+  \begin{example}
+    
+    Given the addition of \ensuremath{\HSCon{K}}, we can now define a code that represents lists of 
+    natural numbers: 
+
+\includeagdanv{5}{natlist2}
+
+    With the property that \ensuremath{\HSVar{listℕ}\HSSym{≃}\HSCon{List}\;\HSCon{ℕ}}. 
+
+  \end{example}
+
+\subsection{Generic Generators for Constant Typse}
+
+  When attempting to define \ensuremath{\HSVar{deriveGen}} on \ensuremath{\HSCon{K}\;\HSVar{s}}, we run into a problem. We need to 
+  return a generator that produces values of type \ensuremath{\HSVar{s}}, but we have no information 
+  about \ensuremath{\HSVar{s}} whatsoever, apart from knowing that it lies in \ensuremath{\HSCon{Set}}. This is a problem, 
+  since we cannot derive generators for arbitrary values in \ensuremath{\HSCon{Set}}. This leaves us with 
+  two options: either we restrict the types that \ensuremath{\HSCon{K}} may carry to those types for 
+  which we can generically derive a generator, or we require the programmer to supply 
+  a generator for every constant type in a code. We choose the latter, since it has 
+  the advantage that we can generate a larger set of types. 
+
+  We have the programmer supply the necessary generators by defining a \emph{metadata} 
+  structure, indexed by a code, that carries additional information for every \ensuremath{\HSCon{K}} 
+  constructor used. We then parameterize \ensuremath{\HSVar{deriveGen}} with a metadata structure, 
+  indexed by the code we are inducting over. The definition of the metadata structure 
+  is shown in listing \ref{lst:mdstructure}. 
+
+\includeagdalisting{5}{mdstructure}{Metadata structure carrying additional information 
+for constant types}{lst:mdstructure}
+
+  We then adapt the type of \ensuremath{\HSVar{deriveGen}} to accept a parameter containing the required 
+  metadata structure: 
+
+\includeagda{5}{derivegenKTy} 
+
+  We then define \ensuremath{\HSVar{deriveGen}} as follows for constant types. All cases for existing 
+  constructors remain the same. 
+
+\includeagda{5}{derivegenKCase}
+
+\section{Complete Enumerators For Regular Types}
+
+  By applying the \ensuremath{\HSVar{toList}} interpretation shown in listing \ref{lst:tolist} to our 
+  generic generator for regular types we obtain a complete enumeration for regular 
+  types. Obviously, this relies on the programmer to supply complete generators for 
+  all constant types referred to by a code. 
+
+  We formulate the desired completeness property as follows: \textit{for every code c 
+  and value x it holds that there is an n such that x occurs at depth n in the 
+  enumeration derived from c}. In Agda, this amounts to proving the following statement: 
+
+\includeagda{5}{genericgencomplete}
+
+  Just as was the case with deriving generators for codes, we need to take into the 
+  account the difference between the code we are currently working with, and the top 
+  level code. To this end, we alter the previous statement slightly. 
+
+\includeagda{5}{derivegencomplete}
+
+  If we invoke this lemma with two equal codes, we may leverage the fact that \ensuremath{\HSCon{In}} is 
+  bijective to obtain a proof that \ensuremath{\HSVar{genericGen}} is complete too. The key observation 
+  here is that mapping a bijective function over a complete generator results in 
+  another complete generator. 
+
+  The completeness proof roughly follows the following steps: 
+
+  \begin{itemize}
+
+    \item 
+      First, we prove completeness for individual generator combinators 
+
+    \item 
+      Next, we assemble a suitable metadata structure to carry the required proofs 
+      for constant types in the code. 
+
+    \item 
+      Finally, we assemble the individual components into a proof of the statement above. 
+
+  \end{itemize}
+
+\subsection{Combinator Correctness}
+
+  We start our proof by asserting that the used combinators are indeed complete. That is, we show for every constructor of \ensuremath{\HSCon{Reg}} that the generator we return in \ensuremath{\HSVar{deriveGen}} produces all elements of the interpretation of that constructor. In the case of \ensuremath{\HSCon{Z}} and \ensuremath{\HSCon{U}}, this is easy. 
+
+\includeagda{5}{derivegencompleteZU}
+
+  The semantics of \ensuremath{\HSCon{Z}} is the empty type, so any generator producing values of type \ensuremath{\HSSym{⊥}} is trivially complete. Similarly, in the case of \ensuremath{\HSCon{U}} we simply need to show that interpreting \ensuremath{\HSVar{pure}\;\HSVar{tt}} returns a list containing \ensuremath{\HSVar{tt}}. 
+
+  Things become a bit more interesting once we move to products and coproducts. In the case of coproducts, we know the following equality to hold, by definition of both \ensuremath{\HSVar{toList}} and \ensuremath{\HSVar{deriveGen}}: 
+
+\includeagda{5}{tolistcopeq}
+
+  Basically, this equality unfolds the \ensuremath{\HSVar{toList}} function one step. Notice how the generators on the left hand side of the equation are \emph{almost} the same as the recursive calls we make. This means that we can prove completeness for coproducts by proving the following lemmas, where we obtain the required completeness proofs by recursing on the left and right subcodes of the coproduct. 
+
+\includeagda{5}{mergecomplete}
+
+  Similarly, by unfolding the toList function one step in the case of products, we get the following equality:
+
+\includeagda{5}{tolistpeq}
+
+  We can prove the right hand side of this equality by proving the following lemma about the applicative instance of lists:
+
+\includeagda{5}{apcomplete}
+
+  Again, the preconditions of this lemma can be obtained by recursing on the left and right subcodes of the product. 
+
+\subsection{Completeness for Constant Types}
+
+  Since our completeness proof relies on completeness of the generators for constant types, we need the programmer to supply a proof that the supplied generators are indeed complete. 
+  
+\subsection{Generator Monotonicity}
+
+\subsection{Final Proof Sketch}
 
 \chapter{Deriving Generators for Indexed Containers}
 

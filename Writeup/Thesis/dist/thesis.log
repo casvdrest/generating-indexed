@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  5 JUN 2019 12:26
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  6 JUN 2019 14:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1430,8 +1430,7 @@ Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
 Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
-)
-No file thesis.aux.
+) (dist/thesis.aux)
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 461.
@@ -1453,6 +1452,7 @@ LaTeX Font Info:    ... okay on input line 461.
 LaTeX Font Info:    Checking defaults for LS2/stix/m/n on input line 461.
 LaTeX Font Info:    Try loading font information for LS2+stix on input line 461
 .
+
 (/usr/share/texmf-dist/tex/latex/stix/ls2stix.fd
 File: ls2stix.fd 2015/04/17 v1.1.2-latex STIX LS2 font definitions
 )
@@ -1605,16 +1605,18 @@ LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
 ]
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
 (Font)              scaled to size 100.41962pt on input line 466.
-
-No file thesis.toc.
+ (dist/thesis.toc
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
+(Font)              scaled to size 9.95132pt on input line 1.
+)
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
-[1
+ [1
 
-] [2
+] [2] [3
 
-] [3] [4
+] [4
 
 ] [5] [6
 
@@ -1628,14 +1630,9 @@ Chapter 1.
 Chapter 2.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
 (Font)              scaled to size 10.04196pt on input line 487.
-LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
-(Font)              scaled to size 9.95132pt on input line 532.
 
 LaTeX Warning: Citation `wadler2015propositions' on page 3 undefined on input l
 ine 532.
-
-
-LaTeX Warning: Reference `tbl:chiso' on page 1 undefined on input line 535.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -1654,24 +1651,16 @@ LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-
-
-LaTeX Warning: Reference `mdf@pagelabel-1' on page 4 undefined on input line 56
-3.
-
 Package mdframed Info: mdframed works in twoside mode on input line 573.
-(dist/../src/chap02/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: Reference `mdf@pagelabel-2' on page 4 undefined on input line 58
-0.
 
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [4]
+ (dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[4]
 
 LaTeX Warning: Citation `wadler2015propositions' on page 5 undefined on input l
 ine 614.
@@ -1686,10 +1675,6 @@ Package mdframed Info: mdframed works in twoside mode on input line 627.
 
 
 
-LaTeX Warning: Reference `mdf@pagelabel-3' on page 5 undefined on input line 63
-5.
-
-
 LaTeX Warning: Citation `norell2008dependently' on page 5 undefined on input li
 ne 645.
 
@@ -1700,10 +1685,6 @@ Package mdframed Info: mdframed works in twoside mode on input line 666.
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-
-
-LaTeX Warning: Reference `mdf@pagelabel-4' on page 6 undefined on input line 68
-7.
 
 
 LaTeX Warning: Citation `abel2010miniagda' on page 6 undefined on input line 69
@@ -1731,16 +1712,7 @@ Package mdframed Warning: You got a bad break
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
 (mdframed)              on input line 720.
-
-LaTeX Warning: Reference `mdf@pagelabel-5' on page 6 undefined on input line 72
-0.
-
-[6]
-
-LaTeX Warning: Reference `mdf@pagelabel-6' on page 7 undefined on input line 72
-0.
-
-(dist/../src/chap02/latex/code.tex)
+[6] (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap02/latex/code.tex)
@@ -1765,26 +1737,8 @@ Package mdframed Info: mdframed works in twoside mode on input line 813.
 
 
 
-LaTeX Warning: Reference `mdf@pagelabel-7' on page 8 undefined on input line 82
-3.
-
-
-LaTeX Warning: Reference `sec:lituniverses' on page 1 undefined on input line 8
-30.
-
-
 LaTeX Warning: Citation `altenkirch2015indexed' on page 8 undefined on input li
 ne 843.
-
-
-LaTeX Warning: Reference `lst:deffin' on page 1 undefined on input line 846.
-
-
-LaTeX Warning: Reference `lst:defvec' on page 1 undefined on input line 846.
-
-
-LaTeX Warning: Reference `lst:defwellscoped' on page 1 undefined on input line 
-847.
 
 [8]
 
@@ -2001,10 +1955,6 @@ LaTeX Warning: Reference `deflist' on page 16 undefined on input line 1166.
 \openout3 = `thesis.ptb'.
 
 
-
-LaTeX Warning: Reference `sec:enuminterpretation' on page 1 undefined on input 
-line 1192.
-
 (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2050,9 +2000,6 @@ LaTeX Warning: Reference `defwellscoped' on page 18 undefined on input line 122
 \openout3 = `thesis.ptb'.
 
 
-
-LaTeX Warning: Reference `lst:tolist' on page 19 undefined on input line 1236.
-
 [19] (dist/../src/chap04/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2062,16 +2009,12 @@ LaTeX Warning: Reference `lst:tolist' on page 19 undefined on input line 1236.
 
 [20]
 Chapter 5.
-
-LaTeX Warning: Reference `lst:regular' on page 21 undefined on input line 1267.
-
-
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
 
-
-LaTeX Warning: Reference `lst:regsem' on page 21 undefined on input line 1272.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2080,46 +2023,23 @@ LaTeX Warning: Reference `lst:regsem' on page 21 undefined on input line 1272.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1278.
+Package mdframed Info: mdframed works in twoside mode on input line 1282.
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
 
-LaTeX Warning: Reference `lst:defnat' on page 21 undefined on input line 1280.
+ [21
+
+] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
+ [22]
 
+LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1325.
 
-LaTeX Warning: Reference `lst:natiso' on page 21 undefined on input line 1287.
-
-Package mdframed Info: Box was splittet wrong
- starting loop to iterate the splitting point
-(mdframed)              on input line 1289.
-
-LaTeX Warning: Reference `mdf@pagelabel-8' on page 21 undefined on input line 1
-289.
-
-[21
-
-]
-
-LaTeX Warning: Reference `mdf@pagelabel-9' on page 22 undefined on input line 1
-289.
-
-(dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-[22]
-
-LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1318.
-
-
-
-LaTeX Warning: Reference `sec:tudesignpattern' on page 1 undefined on input lin
-e 1323.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2142,40 +2062,91 @@ e 1323.
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (6.25644pt too wide) in paragraph at lines 1353--1354
+Overfull \hbox (6.25644pt too wide) in paragraph at lines 1384--1386
 []\TU/LinuxLibertine(0)/m/n/10 The elements produced by $[][][]$ can now readil
 y be transformed into the required datatype
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 1355.
+Package mdframed Info: mdframed works in twoside mode on input line 1387.
 
-LaTeX Warning: Reference `natiso' on page 24 undefined on input line 1357.
+LaTeX Warning: Reference `natiso' on page 24 undefined on input line 1391.
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed works in twoside mode on input line 1408.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
 
-LaTeX Warning: Reference `mdf@pagelabel-10' on page 24 undefined on input line 
-1361.
+Package mdframed Warning: You got a bad break
+(mdframed)                because the last box will be empty
+(mdframed)                you have to change it manually
+(mdframed)                by changing the text, the space
+(mdframed)                or something else on input line 1422.
+
+[24] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed works in twoside mode on input line 1436.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [24]
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [25] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [26] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [27] [28
+
+]
 Chapter 6.
-[25
-
-] [26
+[29] [30
 
 ]
 Chapter 7.
 
-LaTeX Warning: Citation `dagand2013cosmology' on page 27 undefined on input lin
-e 1382.
-
-
-LaTeX Warning: Reference `lst:idesc' on page 27 undefined on input line 1402.
+LaTeX Warning: Citation `dagand2013cosmology' on page 31 undefined on input lin
+e 1556.
 
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2184,19 +2155,19 @@ LaTeX Warning: Reference `lst:idesc' on page 27 undefined on input line 1402.
 \openout3 = `thesis.ptb'.
 
 
-[27] [28]
+[31] [32]
 Chapter 8.
-[29
+[33
 
-] [30
+] [34
 
 ]
 Chapter 9.
-[31] [32
+[35] [36
 
 ]
 Chapter 10.
-[33] [34
+[37] [38
 
 ]
 Appendix A.
@@ -2208,7 +2179,7 @@ Appendix A.
  (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [35]
+ [39]
 (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2223,13 +2194,13 @@ Appendix A.
 (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [36]
+ [40]
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 13.1214pt on input line 1517.
+(Font)              scaled to size 13.1214pt on input line 1691.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 13.1214pt on input line 1517.
+(Font)              scaled to size 13.1214pt on input line 1691.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 13.12119pt on input line 1517.
+(Font)              scaled to size 13.12119pt on input line 1691.
 \openout3 = `thesis.ptb'.
 
  (dist/../src/appA/latex/code.tex)
@@ -2266,25 +2237,37 @@ e=DFLT;mapping=tex-text;!
  (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [37]
-[38
+ [41]
+[42
 
-]
-No file thesis.lof.
+] (dist/thesis.lof)
 \tf@lof=\write5
 \openout5 = `thesis.lof'.
 
-[39
+ [43
 
-] [40
+] [44
 
-]
-No file thesis.lot.
+] (dist/thesis.lot)
 \tf@lot=\write6
 \openout6 = `thesis.lot'.
 
-No file thesis.bbl.
-[41] (dist/thesis.aux)
+ (dist/thesis.bbl [45]
+[46
+
+] [47]
+Underfull \hbox (badness 10000) in paragraph at lines 115--119
+[]\TU/LinuxLibertine(0)/m/n/10 Jacob Stanley.  hedgehog: Hedgehog will eat all 
+your bugs.
+ []
+
+
+Underfull \hbox (badness 2538) in paragraph at lines 115--119
+\TU/LinuxLibertine(0)/m/n/10 https://hackage.haskell.org/package/hedgehog, 2019
+.  [Online; accessed 26-Feb-
+ []
+
+) [48] (dist/thesis.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.25pt have occurred.
@@ -2297,12 +2280,12 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 24455 strings out of 492933
- 472168 string characters out of 6138667
- 753709 words of memory out of 5000000
- 28034 multiletter control sequences out of 15000+600000
+ 24561 strings out of 492933
+ 474482 string characters out of 6138667
+ 758612 words of memory out of 5000000
+ 28100 multiletter control sequences out of 15000+600000
  550535 words of font info for 134 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  61i,12n,120p,1394b,831s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on dist/thesis.pdf (49 pages).
+Output written on dist/thesis.pdf (56 pages).

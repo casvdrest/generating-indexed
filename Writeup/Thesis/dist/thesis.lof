@@ -11,18 +11,19 @@
 \contentsline {figure}{\numberline {5.1}{\ignorespaces The universe of regular types}}{21}% 
 \contentsline {figure}{\numberline {5.2}{\ignorespaces Semantics of the universe of regular types}}{22}% 
 \contentsline {figure}{\numberline {5.3}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ'}\endgroup }}}{22}% 
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Metadata structure carrying additional information for constant types}}{25}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces The Universe of indexed descriptions}}{27}% 
+\contentsline {figure}{\numberline {7.1}{\ignorespaces The Universe of indexed descriptions}}{31}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{35}% 
-\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{35}% 
-\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{36}% 
-\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{36}% 
-\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{36}% 
-\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw $\mitlambda $-terms in Haskell and Agda}}{37}% 
-\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{37}% 
-\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped $\mitlambda $-terms in Agda}}{37}% 
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{39}% 
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{39}% 
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{40}% 
+\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{40}% 
+\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{40}% 
+\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw $\mitlambda $-terms in Haskell and Agda}}{41}% 
+\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{41}% 
+\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped $\mitlambda $-terms in Agda}}{41}% 
