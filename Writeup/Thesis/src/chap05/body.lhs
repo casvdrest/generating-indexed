@@ -292,8 +292,38 @@ for constant types}{lst:mdstructure}
 
 \subsection{Completeness for Constant Types}
 
-  Since our completeness proof relies on completeness of the generators for constant types, we need the programmer to supply a proof that the supplied generators are indeed complete. 
+  Since our completeness proof relies on completeness of the generators for constant types, we need the programmer to supply a proof that the supplied generators are indeed complete. To this end, we add a metadata parameter to the type of |deriveGen|-|complete|, with the following type: 
+
+\includeagda{5}{proofinfotype}
+
+  In order to be able to use the completeness proof from the metadata structure in the |K| branch of |deriveGen|-|Complete|, we need to be able to express the relationship between the metadata structure used in the proof, and the metadata structure used by |deriveGen|. To do this, we need a way to transform the type of information that is carried by a value of type |KInfo|: 
+
+\includeagda{5}{kinfomap}
+
+  Given the definition of |KInfo|-|map|, we can take the first projection of the metadata input to |deriveGen|-|Complete|, and use the resulting structure as input to |deriveGen|: 
+
+\includeagda{5}{proofinfotype}
+
+  This amounts to the following final type for |deriveGen|-|Complete|, where |◂ m| = |KInfo|-|map proj₁ m|:  
+
+\includeagda{5}{derivegenwithmd}
+
+  Now, with this explicit relation between the completeness proofs and the generators given to |deriveGen|, we can simply retrun the proof contained in the metadata of the |K| branch. 
   
 \subsection{Generator Monotonicity}
 
+  The lemma |×|-|complete| is not enough to prove completeness in the case of products. We make two recursive calls, that both return a dependent pair with a depth value, and a proof that a value occurs in the enumeration at that depth. However, we need to return just such a dependent pair stating that a pair of both values does occur in the enumeration at a certain depth. The question is what depth to use. The logical choice would be to take the maximum of both dephts. This comes with the problem that we can only combine completeness proofs when they have the same depth value. 
+
+  For this reason, we need a way to transform a proof that some value |x| occurs in the enumeration at depth |n| into a proof that |x| occurs in the enumeration at depth |m|, given that $n \leq m$. In other words, the set of values that occurs in an enumeration monotoneously increases with the enumeration depth. To finish our completeness proof, this means that we require a proof of the following lemma: 
+
+\includeagda{5}{derivegenmonotone}
+
+  We can complete a proof of this lemma by using the same approach as for the completeness proof. 
+
 \subsection{Final Proof Sketch}
+
+  By bringing all these elements together, we can prove that |deriveGen| is complete for any code |c|, given that the programmer is able to provide a suitable metadatastructure. We can transform this proof into a proof that |isoGen| returns a complete generator by observing that any isomorphism |A ≃ B| establishes a bijection between the types |A| and |B|. Hence, if we apply such an isomorphism to the elements produced by a generator, completeness is preserved. 
+
+  We have the required isomorphism readily at our disposal in |isoGen|, since it is contained in the instance argument |Regular a|. This allows us to have |isoGen| return a completeness proof for the generator it derives: 
+
+\includeagda{5}{isogenproven}

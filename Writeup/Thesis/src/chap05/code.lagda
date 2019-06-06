@@ -3,7 +3,7 @@
 {-# OPTIONS --type-in-type #-}
 
 open import Data.Empty
-open import Data.Unit
+open import Data.Unit hiding (_≤_)
 open import Data.Product
 open import Data.Sum
 open import Data.Nat
@@ -220,12 +220,29 @@ module C where
 \end{code}
 %</derivegenKCase>
 
+
+
 \begin{code}
   deriveGen c c' info = {!!}
 
 open import Data.Sum
 open import AgdaGen.Data using (_∈_; here ; there ; merge)
 open import AgdaGen.Enumerate renaming (interpret to toList)
+
+\end{code}
+\begin{code}
+open import AgdaGen.Data using (_∈_)
+\end{code}
+
+%<*isogenproven>
+\begin{code}
+isoGen : ∀ {A} → ⦃ p : Regular A ⦄ → Σ[ g ∈ Gen A A ] ∀ {x} → ∃[ n ] (x ∈ toList g g n)
+\end{code}
+%</isogenproven>
+
+\begin{code}
+
+isoGen = ?
 
 open B
 \end{code}
@@ -238,27 +255,29 @@ genericGen-Complete : ∀ {c x} → ∃[ n ] (x ∈ toList (genericGen c) (gener
 
 \begin{code}
 genericGen-Complete = {!!}
+
+module E where 
 \end{code}
 
 %<*derivegencomplete>
 \begin{code}
-deriveGen-Complete : ∀ {c c' x} → ∃[ n ] (x ∈ toList (deriveGen c c') (deriveGen c' c') n)
+  deriveGen-Complete : ∀ {c c' x} → ∃[ n ] (x ∈ toList (deriveGen c c') (deriveGen c' c') n)
 \end{code}
 %</derivegencomplete>
 
 %<*derivegencompleteZU>
 \begin{code}
-deriveGen-Complete {Z} {c'} {()}
-deriveGen-Complete {U} {c'} {tt}      = 1 , here
+  deriveGen-Complete {Z} {c'} {()}
+  deriveGen-Complete {U} {c'} {tt}      = 1 , here
 \end{code}
 %</derivegencompleteZU> 
 
 \begin{code}
-deriveGen-Complete {cₗ ⊕ cᵣ} {c'} {x} = {!!}
-deriveGen-Complete {cₗ ⊗ cᵣ} {c'} {x} = {!!}
-deriveGen-Complete {I} {c'} {In x} with deriveGen-Complete {c'} {c'} {x}
-... | n , elem = {!!} , {!!}
-deriveGen-Complete {K x₁} {c'} {x} = {!!}
+  deriveGen-Complete {cₗ ⊕ cᵣ} {c'} {x} = {!!}
+  deriveGen-Complete {cₗ ⊗ cᵣ} {c'} {x} = {!!}
+  deriveGen-Complete {I} {c'} {In x} with deriveGen-Complete {c'} {c'} {x}
+  ... | n , elem = {!!} , {!!}
+  deriveGen-Complete {K x₁} {c'} {x} = {!!}
 \end{code}
 
 
@@ -339,4 +358,47 @@ KInfo-map f (iₗ ⊗~ iᵣ) = KInfo-map f iₗ ⊗~ KInfo-map f iᵣ
 KInfo-map f I~ = I~
 \end{code}
 
+\begin{code}
+module F where
+
+  open C
+\end{code}
+
+%<*proofinfotype>
+\begin{code}
+  ProofMD : Reg → Set
+  ProofMD c = KInfo (λ S → Σ[ g ∈ Gen S S ] (∀ {x} → ∃[ n ] (x ∈ toList g g n))) c
+\end{code}
+%</proofinfotype>
+
+\begin{code}
+  ◂_  : ∀ {c : Reg} → KInfo (λ A → Σ[ g ∈ Gen A A ] (∀ {x} → ∃[ n ] (x ∈ toList g g n))) c → KInfo (λ A → Gen A A) c
+  ◂ m = KInfo-map proj₁ m
+\end{code}
+
+%<*derivegenwithmd>
+\begin{code}
+  deriveGen-Complete : (c c' : Reg) → (i : ProofMD c) → (i' : ProofMD c')
+    → ∀ {x} → ∃[ n ] (x ∈ toList (C.deriveGen c c' (◂ i)) (C.deriveGen c' c' (◂ i')) n)
+\end{code}
+%</derivegenwithmd>
+
+\begin{code}
+  deriveGen-Complete = {!!}
+
+open F
+
+monotone : ∀ {n m : ℕ} {c c' : Reg} {x : ⟦ c ⟧ (Fix c')} {i i'} →
+\end{code}
+
+%<*derivegenmonotone>
+\begin{code}
+  n ≤ m → x ∈ toList (C.deriveGen c c' (◂ i)) (C.deriveGen c' c' (◂ i')) n
+        → x ∈ toList (C.deriveGen c c' (◂ i)) (C.deriveGen c' c' (◂ i')) m
+\end{code}
+%</derivegenmonotone>
+
+\begin{code}
+monotone = {!!}
+\end{code} 
 

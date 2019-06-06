@@ -64,8 +64,8 @@
 \contentsline {section}{\numberline {5.4}Complete Enumerators For Regular Types}{26}% 
 \contentsline {subsection}{\numberline {5.4.1}Combinator Correctness}{26}% 
 \contentsline {subsection}{\numberline {5.4.2}Completeness for Constant Types}{27}% 
-\contentsline {subsection}{\numberline {5.4.3}Generator Monotonicity}{27}% 
-\contentsline {subsection}{\numberline {5.4.4}Final Proof Sketch}{27}% 
+\contentsline {subsection}{\numberline {5.4.3}Generator Monotonicity}{28}% 
+\contentsline {subsection}{\numberline {5.4.4}Final Proof Sketch}{28}% 
 \contentsline {chapter}{\numberline {6}Deriving Generators for Indexed Containers}{29}% 
 \contentsline {chapter}{\numberline {7}Deriving Generators for Indexed Descriptions}{31}% 
 \contentsline {section}{\numberline {7.1}Universe Description}{31}% 

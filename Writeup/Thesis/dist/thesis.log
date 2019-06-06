@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  6 JUN 2019 14:02
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  6 JUN 2019 16:51
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -2136,17 +2136,45 @@ Package mdframed Info: mdframed works in twoside mode on input line 1436.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [27] [28
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
 
-]
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (22.12193pt too wide) in paragraph at lines 1557--1558
+[]\TU/LinuxLibertine(0)/m/n/10 This amounts to the following final type for $[]
+[][]$-$[][][]$, where $[][][][]\OT1/cmr/m/it/10 m[]$ \TU/LinuxLibertine(0)/m/n/
+10 = $[][][]$-$[][][] [][][] []\OT1/cmr/m/it/10 m[]$\TU/LinuxLibertine(0)/m/n/1
+0 : 
+ []
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [27] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [28]
 Chapter 6.
-[29] [30
+[29
+
+] [30
 
 ]
 Chapter 7.
 
 LaTeX Warning: Citation `dagand2013cosmology' on page 31 undefined on input lin
-e 1556.
+e 1586.
 
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2196,11 +2224,11 @@ Appendix A.
 
  [40]
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 13.1214pt on input line 1691.
+(Font)              scaled to size 13.1214pt on input line 1721.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 13.1214pt on input line 1691.
+(Font)              scaled to size 13.1214pt on input line 1721.
 LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 13.12119pt on input line 1691.
+(Font)              scaled to size 13.12119pt on input line 1721.
 \openout3 = `thesis.ptb'.
 
  (dist/../src/appA/latex/code.tex)
@@ -2252,22 +2280,9 @@ e=DFLT;mapping=tex-text;!
 \tf@lot=\write6
 \openout6 = `thesis.lot'.
 
- (dist/thesis.bbl [45]
-[46
 
-] [47]
-Underfull \hbox (badness 10000) in paragraph at lines 115--119
-[]\TU/LinuxLibertine(0)/m/n/10 Jacob Stanley.  hedgehog: Hedgehog will eat all 
-your bugs.
- []
-
-
-Underfull \hbox (badness 2538) in paragraph at lines 115--119
-\TU/LinuxLibertine(0)/m/n/10 https://hackage.haskell.org/package/hedgehog, 2019
-.  [Online; accessed 26-Feb-
- []
-
-) [48] (dist/thesis.aux)
+No file thesis.bbl.
+[45] (dist/thesis.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.25pt have occurred.
@@ -2275,17 +2290,14 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 24561 strings out of 492933
- 474482 string characters out of 6138667
- 758612 words of memory out of 5000000
- 28100 multiletter control sequences out of 15000+600000
+ 24558 strings out of 492933
+ 474552 string characters out of 6138667
+ 778045 words of memory out of 5000000
+ 28087 multiletter control sequences out of 15000+600000
  550535 words of font info for 134 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  61i,12n,120p,1394b,831s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on dist/thesis.pdf (56 pages).
+Output written on dist/thesis.pdf (53 pages).

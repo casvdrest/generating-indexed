@@ -242,3 +242,4 @@
 \newunicodechar{ᵣ}{\ensuremath{_{r}}}
 \newunicodechar{⦃}{\ensuremath{\lBrace}}
 \newunicodechar{⦄}{\ensuremath{\rBrace}}
+\newunicodechar{◂}{\ensuremath{{\scriptstyle\blacktriangleleft}}}
