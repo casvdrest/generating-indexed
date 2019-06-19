@@ -60,9 +60,9 @@
 
 \end{listing}
 \newpage
-\section{Raw $\lambda$-Terms}
+\section{Raw Lambda Terms}
 
-\begin{listing}{Definition of raw $\lambda$-terms in Haskell and Agda}{lst:defrawterm}
+\begin{listing}{Definition of raw lambda terms in Haskell and Agda}{lst:defrawterm}
 
   \begin{code}
   data RT  =  Var Id 
@@ -84,9 +84,9 @@
 
 \end{listing}
 
-\section{Well-scoped $\lambda$-terms}
+\section{Well-scoped Lambda Terms}
 
-\begin{listing}{Definition well-scoped $\lambda$-terms in Agda}{lst:defwellscoped}
+\begin{listing}{Definition well-scoped lambda terms in Agda}{lst:defwellscoped}
 
   \appincludeagda{A}{wellscoped}
 

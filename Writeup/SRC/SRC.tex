@@ -1,0 +1,694 @@
+\documentclass[acmsmall, nonacm]{acmart}
+
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain} % removes running headers
+
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+%
+%
+\ReadOnlyOnce{colorcode.fmt}%
+
+\RequirePackage{colortbl}
+\RequirePackage{calc}
+
+\makeatletter
+\newenvironment{colorhscode}%
+  {\hsnewpar\abovedisplayskip
+   \hscodestyle
+   \tabular{@{}>{\columncolor{codecolor}}p{\linewidth}@{}}%
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \endtabular
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{tightcolorhscode}%
+  {\hsnewpar\abovedisplayskip
+   \hscodestyle
+   \tabular{@{}>{\columncolor{codecolor}\(}l<{\)}@{}}%
+   \pmboxed}%
+  {\endpmboxed%
+   \endtabular
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{barhscode}%
+  {\hsnewpar\abovedisplayskip
+   \hscodestyle
+   \arrayrulecolor{codecolor}%
+   \arrayrulewidth=\coderulewidth
+   \tabular{|p{\linewidth-\arrayrulewidth-\tabcolsep}@{}}%
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \endtabular
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+\makeatother
+
+\def\colorcode{\columncolor{codecolor}}
+\definecolor{codecolor}{rgb}{1,1,.667}
+\newlength{\coderulewidth}
+\setlength{\coderulewidth}{3pt}
+
+\newcommand{\colorhs}{\sethscode{colorhscode}}
+\newcommand{\tightcolorhs}{\sethscode{tightcolorhscode}}
+\newcommand{\barhs}{\sethscode{barhscode}}
+
+\EndFmtInput
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Haskell Styling
+%%
+%% TODO: Figure out spacing!
+
+%% Colors (from duo-tone light syntax)
+\definecolor{hsblack}{RGB}{45,32,3}
+\definecolor{hsgold1}{RGB}{179,169,149}
+\definecolor{hsgold2}{RGB}{177,149,90}
+\definecolor{hsgold3}{RGB}{190,106,13}%{192,96,4}%{132,97,19}
+\definecolor{hsblue1}{RGB}{173,176,182}
+\definecolor{hsblue2}{RGB}{113,142,205}
+\definecolor{hsblue3}{RGB}{0,33,132}
+\definecolor{hsblue4}{RGB}{97,108,132}
+\definecolor{hsblue5}{RGB}{34,50,68}
+\definecolor{hsred2}{RGB}{191,121,103}
+\definecolor{hsred3}{RGB}{171,72,46}
+
+%% LaTeX Kerning nastiness. By using curly braces to delimit color group,
+%% it breaks spacing. The following seems to work:
+%%
+%% https://tex.stackexchange.com/questions/85033/colored-symbols/85035#85035
+%%
+\newcommand*{\mathcolor}{}
+\def\mathcolor#1#{\mathcoloraux{#1}}
+\newcommand*{\mathcoloraux}[3]{%
+  \protect\leavevmode
+  \begingroup
+    \color#1{#2}#3%
+  \endgroup
+}
+\newcommand{\HSKeyword}[1]{\mathcolor{hsgold3}{\textbf{#1}}}
+\newcommand{\HSNumeral}[1]{\mathcolor{hsred3}{#1}}
+\newcommand{\HSChar}[1]{\mathcolor{hsred2}{#1}}
+\newcommand{\HSString}[1]{\mathcolor{hsred2}{#1}}
+\newcommand{\HSSpecial}[1]{\mathcolor{hsblue4}{#1}}
+\newcommand{\HSSym}[1]{\mathcolor{hsblue4}{#1}}
+\newcommand{\HSCon}[1]{\mathcolor{hsblue3}{\mathit{#1}}}
+\newcommand{\HSVar}[1]{\mathcolor{hsblue5}{\mathit{#1}}}
+\newcommand{\HSComment}[1]{\mathcolor{hsgold2}{\textit{#1}}}
+
+
+%%% lhs2TeX parser does not recognize '*' 
+%%% in kind annotations, it thinks it is a multiplication.
+
+
+
+% \usepackage{xcolor}
+\usepackage{multicol}
+\newcommand\todo[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
+\usepackage{textcomp}
+
+\DeclareUnicodeCharacter{10218}{$\langle\langle$}
+\DeclareUnicodeCharacter{10219}{$\rangle\rangle$}
+\DeclareUnicodeCharacter{7522}{\textsubscript{i}}
+\DeclareUnicodeCharacter{7524}{\textsubscript{u}}
+\DeclareUnicodeCharacter{8336}{\textsubscript{a}}
+\DeclareUnicodeCharacter{8346}{\textsubscript{p}}
+\DeclareUnicodeCharacter{10631}{$\llparenthesis$}
+\DeclareUnicodeCharacter{10632}{$\rrparenthesis$}
+\DeclareUnicodeCharacter{10627}{\{\!\{}
+\DeclareUnicodeCharacter{10628}{\}\!\}}
+\DeclareUnicodeCharacter{9656}{$\blacktriangleright$}
+\DeclareUnicodeCharacter{9667}{$\triangleleft$}
+\DeclareUnicodeCharacter{8347}{\textsubscript{s}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{220B}{\ensuremath{\ni}}
+\DeclareUnicodeCharacter{22A2}{\ensuremath{\vdash}}
+
+\usepackage[font=small,labelfont=bf]{caption}
+
+\usepackage{textgreek}
+
+% Math
+\usepackage{amssymb}
+\usepackage{mathtools}
+% Tables
+\usepackage{amsmath}
+
+% Colors
+%% \usepackage{xcolor, color, colortbl}
+%% \colorlet{gray}{gray!70}
+%% \colorlet{green}{green!50}
+%% \definecolor{darkblue}{HTML}{1D577A}
+%% \definecolor{rred}{HTML}{C03425}
+%% \definecolor{darkgreen}{HTML}{8BB523}
+%% \definecolor{ppurple}{HTML}{6B1B7F}
+%% \definecolor{pblack}{HTML}{000000}
+%% \definecolor{darkyellow}{HTML}{C0B225}
+
+% Links
+\usepackage{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour,citecolor=blue}
+
+\setlength\mathindent{0.6cm}
+
+\title{Synthesizing Well-Formed Programs using Datatype Generic Programming}
+
+\author{Cas van der Rest}
+\email{c.r.vanderrest@students.uu.nl}
+\affiliation{
+\institution{Utrecht University}
+\country{The Netherlands}
+}
+
+\begin{abstract}
+\textbf{Advisor:} Wouter Swierstra 
+\textbf{Category:} Graduate (Master)
+\textbf{ACM student member number:} 2709516
+\end{abstract}
+
+\begin{document}
+
+\maketitle
+
+  \section*{Introduction}
+
+  Test programs are invaluable when testing a compiler. However, synthesizing constrained test data such as well-formed programs is a difficult problem, which has been the subject of extensive research. For example: Claessen and Duregaard \cite{claessen2015generating} generate constrained data using an iterative process in which they refine the search space in each step. Lampropoulos et al. define an abstraction over inductive relations in Coq, and describe how generators may be defined for these abstractions. They create an extension to QuickChick \cite{denes2014quickchick} implementing these ideas. Pa{\l}ka et al. \cite{palka2011testing} generate well-typed lambda terms by reverse engineering a proof tree, given a goal type and context.
+
+  We take a novel approach by considering the more general problem of synthesizing values of \emph{arbitrary indexed datatypes}, and generating values that inhabit indexed datatypes describing well-formedness. We use Dagand's universe of \emph{Indexed Descriptions} \cite{dagand2013cosmology} to represent indexed datatypes in a generic fashion. Given a description in this universe, we can derive a generator that produces values isomorphic to the type it represents. We have constructed a Haskell Library that implements this approach, where the user only needs to supply a description of a type describing well-formedness, and a conversion function that transforms generated values into the desired non-indexed datatype. We show how well-typed lambda terms can be generated using this technique. Additionally, we assert correctness of our work through a formalization in Agda. Both are available on Github \cite{github}.
+
+  \vspace{-0.1cm}
+  \section*{The universe of indexed descriptions}
+
+  \emph{Indexed descriptions} \cite{dagand2013cosmology} are perhaps best viewed as an extension to the universe of regular types. The key modifications include: 
+
+  \begin{itemize}
+    \item 
+      Types are described by a function \ensuremath{\HSCon{I}\HSSym{\to} \HSCon{Description}}, mapping indices to descriptions.
+
+    \item 
+      Recursive positions store the index of the recursive subtree at that position.
+
+    \item 
+      An extra constructor \ensuremath{\Sigma \HSCon{\mathbin{:}}\HSSpecial{(}\HSCon{S}\HSCon{\mathbin{:}}\HSSym{*}\HSSpecial{)}\HSSym{\to} \HSSpecial{(}\HSCon{S}\HSSym{\to} \HSCon{Description}\HSSpecial{)}\HSSym{\to} \HSCon{Description}} is added. The interpretation of \ensuremath{\Sigma \;\HSCon{S}\;\HSCon{P}} is a \emph{dependent pair} with type \ensuremath{\HSSpecial{(}\HSSpecial{(}\HSVar{s}\HSCon{\mathbin{:}}\HSCon{S}\HSSpecial{)}\HSSpecial{,}\HSVar{interpret}\HSSym{\mathbin{\circ}}\HSCon{P}\HSSpecial{)}}. 
+  \end{itemize}
+
+   We describe indexed descriptions using a GADT \cite{hinze2003fun} with two type parameters: one denoting the associated non-indexed datatype, and the other the index type. The constructors for unit types, empty types, recursive positions, products and coproducts closely follow the definition of regular types, with the exception of \ensuremath{\HSCon{Var}}, which stores an index value.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{39}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{39E}{@{}l@{}}%
+\column{43}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{IDesc}\;\HSSpecial{(}\HSVar{a}\HSSym{::}\HSSym{*}\HSSpecial{)}\;\HSSpecial{(}\HSVar{i}\HSSym{::}\HSSym{*}\HSSpecial{)}\;\HSKeyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\HSCon{One}{}\<[12]%
+\>[12]{}\HSSym{::}{}\<[43]%
+\>[43]{}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\HSCon{Empty}{}\<[12]%
+\>[12]{}\HSSym{::}{}\<[43]%
+\>[43]{}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\HSCon{Var}{}\<[12]%
+\>[12]{}\HSSym{::}\HSVar{i}{}\<[39]%
+\>[39]{}\HSSym{\to} {}\<[39E]%
+\>[43]{}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\HSSpecial{(}\HSSym{:*:}\HSSpecial{)}{}\<[12]%
+\>[12]{}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[39]%
+\>[39]{}\HSSym{\to} {}\<[39E]%
+\>[43]{}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\HSSpecial{(}\HSSym{:+:}\HSSpecial{)}{}\<[12]%
+\>[12]{}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[39]%
+\>[39]{}\HSSym{\to} {}\<[39E]%
+\>[43]{}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We can then define a \emph{type family} \ensuremath{\HSCon{Interpret}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\HSSym{::}\HSSym{*}} that describes the semantics of a description. \ensuremath{\HSCon{E}} is a datatype with no constructors representing the \emph{empty type} ($\bot$).
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{47}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSCon{One}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSCon{Empty}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSCon{E}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSCon{Var}\;\HSSym{\anonymous} \HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSVar{a}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSVar{dl}\HSSym{:*:}\HSVar{dr}\HSSpecial{)}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{Interpret}\;\HSVar{dl}\HSSpecial{,}\HSCon{Interpret}\;\HSVar{dr}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSVar{dl}\HSSym{:+:}\HSVar{dr}\HSSpecial{)}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSCon{Either}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{dl}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{dr}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Dagand originally defines this universe in a dependently typed setting. Since we choose to use Haskell for our implementation, we need to adapt the original definition slightly, choosing a more restrictive form of the \ensuremath{\Sigma } constructor. We do this based on the observation that in most practical use cases of \ensuremath{\Sigma }, only the indices of recursive positions depend on the choice for the first element. Since the interpretation of \ensuremath{\HSCon{Var}} is independent of the recursive index stored, so is the interpretation of the entire description. Consequently, we can describe this class of functions using a single description with a function \ensuremath{\HSVar{s}\HSSym{\to} \HSVar{i}} as its index type:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Sigma \HSSym{::}\HSCon{Proxy}\;\HSVar{s}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  This allows us to interpret a \ensuremath{\Sigma } as a regular pair, instead of a dependent pair. 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\Sigma \;\HSVar{s}\;\HSVar{d}\HSSpecial{)}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{UnProxy}\;\HSVar{s}\HSSpecial{,}\HSCon{Interpret}\;\HSVar{d}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Here, \ensuremath{\HSCon{UnProxy}} maps a value of type \ensuremath{\HSCon{Proxy}\;\HSVar{a}} to the type it carries. 
+
+\vspace{-0.1cm}
+\section*{Deriving generators}
+
+  Assuming some generator type \ensuremath{\HSCon{G}\;\HSVar{a}}, our goal is to define a function of type \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSym{\to} \HSCon{G}\;\HSVar{a}} that returns a generator derived from its input description. However, we need a way to describe (at the type level) the dependency between the input description and the type of values generated. It is not possible to encode this relation directly in Haskell's type system, but we can simulate it using \emph{singleton types} \cite{eisenberg2013dependently}. Singleton types bridge the gap between values at the term level and their promoted counterparts, by defining an indexed type that is inhabited by exactly one value for every value of the index type. We define a typeclass \ensuremath{\HSCon{Singleton}\;\HSVar{a}} with an associated type \ensuremath{\HSCon{Sing}\HSSym{::}\HSVar{a}\HSSym{\to} \HSSym{*}}, to capture this notion. We make \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}} an instance of \ensuremath{\HSCon{Singleton}} by defining the type \ensuremath{\HSCon{SingIDesc}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}}:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{42}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{42E}{@{}l@{}}%
+\column{43}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{43E}{@{}l@{}}%
+\column{46}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{47}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{SingIDesc}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\;\HSKeyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SOne}{}\<[11]%
+\>[11]{}\HSSym{::}{}\<[47]%
+\>[47]{}\HSCon{SingIDesc}\;\HSCon{One}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SEmpty}{}\<[11]%
+\>[11]{}\HSSym{::}{}\<[47]%
+\>[47]{}\HSCon{SingIDesc}\;\HSCon{Empty}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SVar}{}\<[11]%
+\>[11]{}\HSSym{::}\HSVar{i}{}\<[43]%
+\>[43]{}\HSSym{\to} {}\<[43E]%
+\>[47]{}\HSCon{SingIDesc}\;\HSSpecial{(}\HSCon{Var}\;\HSVar{i'}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}\HSSym{:*:\$}\HSSpecial{)}{}\<[11]%
+\>[11]{}\HSSym{::}\HSCon{SingIDesc}\;\HSVar{l}{}\<[27]%
+\>[27]{}\HSSym{\to} \HSCon{SingIDesc}\;\HSVar{r}{}\<[43]%
+\>[43]{}\HSSym{\to} {}\<[43E]%
+\>[47]{}\HSCon{SingIDesc}\;\HSSpecial{(}\HSVar{l}\HSSym{:*:}\HSVar{r}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}\HSSym{:+:\$}\HSSpecial{)}{}\<[11]%
+\>[11]{}\HSSym{::}\HSCon{SingIDesc}\;\HSVar{l}{}\<[27]%
+\>[27]{}\HSSym{\to} \HSCon{SingIDesc}\;\HSVar{r}{}\<[43]%
+\>[43]{}\HSSym{\to} {}\<[43E]%
+\>[47]{}\HSCon{SingIDesc}\;\HSSpecial{(}\HSVar{l}\HSSym{:+:}\HSVar{r}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SSigma}{}\<[11]%
+\>[11]{}\HSSym{::}\HSCon{Proxy}\;\HSVar{s}\HSSym{\to} \HSCon{SingIDesc}\;\HSVar{d}{}\<[42]%
+\>[42]{}\HSSym{\to} {}\<[42E]%
+\>[46]{}\HSCon{SingIDesc}\;\HSSpecial{(}\Sigma \;\HSSpecial{(}\HSCon{Proxy}\HSSym{::}\HSCon{Proxy}\;\HSVar{s}\HSSpecial{)}\;\HSVar{d}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+    This enables us to write a function \ensuremath{\HSVar{deriveGen}\HSSym{::}\HSCon{Sing}\;\HSVar{d}\HSSym{\to} \HSCon{G}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{d}\HSSpecial{)}}, which returns a generator whose output type depends on the provided description. We sketch the definition of \ensuremath{\HSVar{deriveGen}}, under the assumption that \ensuremath{\HSCon{G}} is an instance of both \ensuremath{\HSCon{Monad}} and \ensuremath{\HSCon{Alternative}}.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{deriveGen}\;\HSCon{SOne}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSVar{pure}\;\HSSpecial{(}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{deriveGen}\;\HSCon{SEmpty}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSVar{empty}{}\<[E]%
+\\
+\>[B]{}\HSVar{deriveGen}\;\HSSpecial{(}\HSVar{l}\HSSym{:*:\$}\HSVar{r}\HSSpecial{)}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSSpecial{,}\HSSpecial{)}\HSSym{<\$>}\HSVar{deriveGen}\;\HSVar{l}\HSSym{<*>}\HSVar{deriveGen}\;\HSVar{r}{}\<[E]%
+\\
+\>[B]{}\HSVar{deriveGen}\;\HSSpecial{(}\HSVar{l}\HSSym{:+:\$}\HSVar{r}\HSSpecial{)}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSCon{Left}\HSSym{<\$>}\HSVar{deriveGen}\;\HSVar{l}\HSSym{<|>}\HSCon{Right}\HSSym{<\$>}\HSVar{derivegen}\;\HSVar{r}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  In the case of the \ensuremath{\Sigma } constructor, we need a way to generate values of the first element type. Since we do not have a general procedure to derive genrators for arbitrary types of kind \ensuremath{\HSSym{*}}, we add this generator as a precondition to \ensuremath{\HSVar{deriveGen}}. This can be achieved in various ways (e.g. by using typeclasses), so for now we simply assume that a generator \ensuremath{\HSVar{genS}\HSSym{::}\HSCon{G}\;\HSVar{s}}, supplied by the programmer, is in scope. If we now define a type family \ensuremath{\HSCon{Expand}} that transforms descriptions \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}} into functions \ensuremath{\HSVar{s}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}}:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{family}\;\HSCon{Expand}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSVar{x}\HSSym{::}\HSVar{s}\HSSpecial{)}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  and a function \ensuremath{\HSVar{expand}} that describes this operation at the term level
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{expand}\HSSym{::}\HSVar{forall}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathbin{\circ}}\HSCon{Singleton}\;\HSVar{s}\HSSym{\Rightarrow} \HSCon{Sing}\;\HSVar{d}\HSSym{\to} \HSCon{Sing}\;\HSVar{s}\HSSym{\to} \HSCon{SingIDesc}\;\HSSpecial{(}\HSCon{Expand}\;\HSVar{d}\;\HSVar{s}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  we can define a generator for the \ensuremath{\Sigma } constructor by utilizing the monadic structure of \ensuremath{\HSCon{G}}:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[3]{}\HSVar{deriveGen}\;\HSSpecial{(}\HSCon{SSigma}\;\HSVar{s}\;\HSCon{P}\HSSpecial{)}\HSSym{\mathrel{=}}\HSVar{genS}\HSSym{\bind} \HSSym{\lambda} \HSVar{x}\HSSym{\to} \HSVar{deriveGen}\;\HSSpecial{(}\HSVar{expand}\;\HSVar{f}\;\HSVar{x}\HSSpecial{)}\HSSym{\bind} \HSSym{\lambda} \HSVar{y}\HSSym{\to} \HSSpecial{(}\HSVar{x}\HSSpecial{,}\HSVar{y}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+completing our definition of \ensuremath{\HSVar{deriveGen}}.
+
+\vspace{-0.15cm}
+\section*{Generating Lambda Terms}
+
+We use the datatype \ensuremath{\HSCon{Term}\HSSym{\mathrel{=}}\HSCon{TVar}\;\HSCon{Nat}\HSSym{\mid} \HSCon{TAbs}\;\HSCon{Term}\HSSym{\mid} \HSCon{TApp}\;\HSCon{Term}\;\HSCon{Term}} to represent raw terms, and a subset of the representation used in Philip Wadler and Wen Kokke's PLFA \cite{wadler2019plfa} to describe well-formedness, restricting ourselves to the constructors for variables, abstraction and application. Let $\Gamma$ range over contexts and $\tau$ over types. A valid judgement of the form $\Gamma \vdash \tau$ can be constructed using one of the following constructors:
+
+\vspace{-0.1cm}
+\begin{equation*}
+\texttt{[Var]}\frac{\Gamma \ni \tau}{\Gamma \vdash \tau} \quad 
+\texttt{[Abs]}\frac{\Gamma , \sigma \vdash \tau}{\Gamma \vdash \sigma \rightarrow \tau} \quad 
+\texttt{[App]}\frac{\Gamma \vdash \sigma \rightarrow \tau \quad \Gamma \vdash \sigma}{\Gamma \vdash \tau}
+\end{equation*}
+
+  \vspace{0.2cm}
+  We use a type family \ensuremath{\HSCon{SLTCDesc}\;\HSSpecial{(}\HSVar{i}\HSSym{::}\HSSpecial{(}\HSCon{Ctx}\HSSpecial{,}\HSCon{Type}\HSSpecial{)}\HSSpecial{)}} to describe these judgements as a code in the universe of indexed descriptions. We do this by induction over the goal type, return a coproduct of the descriptions corresponding to the constructors that could have been used to arrive at a judgement with that type.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{45}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSCon{VarDesc}\HSSym{\mathrel{=}}\Sigma \;\HSSpecial{(}\HSCon{P}\;\HSCon{CtxPos}\HSSpecial{)}\;\HSCon{One}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSCon{AppDesc}\HSSym{\mathrel{=}}\Sigma \;\HSSpecial{(}\HSCon{P}\;\HSCon{Type}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Var}\;\HSCon{I}\HSSym{:*:}\HSCon{Var}\;\HSCon{I}\HSSpecial{)}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{family}\;\HSCon{SLTCDesc}\;\HSSpecial{(}\HSVar{i}\HSSym{::}\HSSpecial{(}\HSCon{Ctx}\HSSpecial{,}\HSCon{Type}\HSSpecial{)}\HSSpecial{)}\HSSym{::}\HSCon{IDesc}\;\HSCon{Term}\;\HSSpecial{(}\HSCon{Ctx}\HSSpecial{,}\HSCon{Type}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{SLTCDesc}\;\HSSpecial{(}\HSVar{ctx}\HSSpecial{,}\HSCon{T}\HSSpecial{)}{}\<[45]%
+\>[45]{}\HSSym{\mathrel{=}}\HSCon{VarDesc}\HSSym{:+:}\HSCon{AppDesc}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{SLTCDesc}\;\HSSpecial{(}\HSVar{ctx}\HSSpecial{,}\HSSpecial{(}\HSVar{t1}\HSSym{:->}\HSVar{t2}\HSSpecial{)}\HSSpecial{)}{}\<[45]%
+\>[45]{}\HSSym{\mathrel{=}}\HSCon{VarDesc}\HSSym{:+:}\HSCon{Var}\;\HSSpecial{(}\HSSpecial{(}\HSVar{t1}\HSCon{\mathbin{:}}\HSVar{ctx}\HSSpecial{)}\HSSpecial{,}\HSVar{t2}\HSSpecial{)}\HSSym{:+:}\HSCon{AppDesc}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Given a context \ensuremath{\HSVar{ctx}} and a type \ensuremath{\HSVar{ty}}, \ensuremath{\HSCon{Interpret}\;\HSSpecial{(}\HSCon{SLTCDesc}\;\HSSpecial{(}\HSVar{ctx}\HSSpecial{,}\HSVar{ty}\HSSpecial{)}\HSSpecial{)}} is isomorphic to the typing judgement $\texttt{ctx} \vdash \texttt{ty}$, its inhabitants corresponding to raw terms that have type \texttt{ty} under context \texttt{ctx}. Next, we define an appropriate singleton value \ensuremath{\HSVar{sltcDesc}\HSSym{::}\HSCon{Sing}\;\HSVar{i}\HSSym{\to} \HSCon{Sing}\;\HSSpecial{(}\HSCon{SLTCDesc}\;\HSVar{i}\HSSpecial{)}} to connect the term and type level, along with a conversion function \ensuremath{\HSVar{toTerm}\HSSym{::}\HSCon{Sing}\;\HSVar{i}\HSSym{\to} \HSCon{Interpret}\;\HSSpecial{(}\HSCon{SLTCDesc}\;\HSVar{i}\HSSpecial{)}\HSSym{\to} \HSCon{Term}} that transforms judgements into terms. Both definitions follow naturally once the type family that describes the inductive relation is in place. By passing the singleton description \ensuremath{\HSVar{sltcDesc}} to \ensuremath{\HSVar{deriveGen}}, and applying \ensuremath{\HSVar{toTerm}} to the generated values, we have obtained a generator that produces well-typed lambda terms. 
+
+\vspace{-0.1cm}
+\section*{Conclusion \& Future work}
+
+  We have shown that we can use the techniques described in this abstract to generate well-typed lambda terms, while being reasonably confident that the results are correct. Although a lot is left to be desired in terms of usability and efficiency, we could theoretically synthesize terms of any programming language whose well-formedness can be described using an indexed datatype. Still, there are many possible avenues for further exploration, such as more efficient generation using memoization techniques as used in FEAT \cite{duregaard2013feat}, property based testing for GADT's, and generation of data whose well-formedness is described by a \emph{mutually recursive} datatypes \cite{miraldo2018sums, yakushev2009generic}. 
+  
+\bibliographystyle{acm} % ACM-Reference-Format 
+\bibliography{references}
+\end{document}
+
+

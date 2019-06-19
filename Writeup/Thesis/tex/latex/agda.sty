@@ -121,7 +121,7 @@
 }{
     \newcommand{\AgdaKeywordFontStyle}[1]{\ensuremath{\textrm{#1}}}
 }
-\newcommand{\AgdaBoldFontStyle}[1]{\ensuremath{\textbf{#1}}}
+\newcommand{\AgdaBoldFontStyle}[1]{\ensuremath{\textrm{#1}}}
 \newcommand{\AgdaStringFontStyle}[1]{\texttt{#1}}
 \newcommand{\AgdaCommentFontStyle}[1]{\texttt{#1}}
 \newcommand{\AgdaBoundFontStyle}[1]{\textit{#1}}
@@ -320,13 +320,14 @@
 \newcommand{\AgdaFixityOp}          [1]{\AgdaNoSpaceMath{$#1$}}
 \newcommand{\AgdaDottedPattern}     [1]{\textcolor{AgdaDottedPattern}{#1}}
 \newcommand{\AgdaUnsolvedMeta}      [1]
-    {\AgdaFontStyle{\colorbox{AgdaUnsolvedMeta}{#1}}}
+    {\AgdaFontStyle{#1}}
 \newcommand{\AgdaTerminationProblem}[1]
     {\AgdaFontStyle{\colorbox{AgdaTerminationProblem}{#1}}}
 \newcommand{\AgdaIncompletePattern} [1]{\colorbox{AgdaIncompletePattern}{#1}}
 \newcommand{\AgdaError}             [1]
     {\AgdaFontStyle{\textcolor{AgdaError}{\underline{#1}}}}
 \newcommand{\AgdaCatchallClause}    [1]{#1} % feel free to change this
+\newcommand{\AgdaUnsolvedConstraint}[1]{#1}
 
 % Used to hide code from LaTeX.
 %

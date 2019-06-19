@@ -45,6 +45,7 @@ module Singleton where
                | T_CTXMEM
                | T_WTTERM
                | T_STREE
+               | T_EXPR
 
   -- | Tags used to distinguish between different generators for the same type,
   --   in order to be able to seledct different generation strategies for
@@ -241,3 +242,33 @@ module Singleton where
     promote (Just x) =
       case promote x of
         (Promoted x') -> Promoted (SJust x')
+
+  data SBool :: Bool -> * where 
+    STrue  :: SBool True 
+    SFalse :: SBool False
+
+  instance Singleton Bool where 
+    type Sing = SBool 
+    dm STrue  = True 
+    dm SFalse = False
+
+  instance Promote Bool where 
+    promote True = Promoted STrue 
+    promote False = Promoted SFalse
+
+  type S0 = SZero 
+  type S1 = SSuc SZero
+  type S2 = SSuc (SSuc SZero)
+  type S3 = SSuc (SSuc (SSuc SZero))
+  type S4 = SSuc (SSuc (SSuc (SSuc SZero)))
+  type S5 = SSuc (SSuc (SSuc (SSuc (SSuc SZero))))
+  type S6 = SSuc (SSuc (SSuc (SSuc (SSuc (SSuc SZero)))))
+
+  s0 = SZero2 
+  s1 = SSuc2 SZero2
+  s2 = SSuc2 (SSuc2 SZero2)
+  s3 = SSuc2 (SSuc2 (SSuc2 SZero2))
+  s4 = SSuc2 (SSuc2 (SSuc2 (SSuc2 SZero2)))
+  s5 = SSuc2 (SSuc2 (SSuc2 (SSuc2 (SSuc2 SZero2))))
+  s6 = SSuc2 (SSuc2 (SSuc2 (SSuc2 (SSuc2 (SSuc2 SZero2)))))
+      

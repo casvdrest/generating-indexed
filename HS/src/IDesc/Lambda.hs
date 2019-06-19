@@ -9,7 +9,7 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TupleSections #-}
 
 module IDesc.Lambda where
 
@@ -20,69 +20,77 @@ module IDesc.Lambda where
   import Singleton
   import Data
   import Control.Applicative
+  import IDesc.Instances
   import Unsafe.Coerce
-  import qualified GHC.Generics as Generics
+
+  import Data.List
 
   import IDesc.IDesc
-  import IDesc.Instances
-  import IDesc.Context
+  import IDesc.Term
 
-  import Debug.Trace
+  type P a = ('Proxy :: Proxy a)
 
-  ----------------------------------------------------------------------------
-  -- Well typed terms
+  type VarDesc = Sigma (P CtxPos) One
+  type AppDesc = Sigma (P Type) (Var I :*: Var I) 
 
-  tyGen :: () -> G () Ty Ty
-  tyGen () = pure T <|> (:->:) <$> mu () <*> mu ()
-
-  idGen :: G () Id Id
-  idGen = pure [Syma, Syma] <|> pure [Symb,  Symb] <|> pure [Symc , Symc]
-
-  instance Generatable Id where 
-    gen = idGen
-
-  type family WTTermDesc (i :: (Ctx, Ty)) :: IDesc (Term Id) (Ctx , Ty)
-  type instance WTTermDesc ('(,) ctx T) = 
-    SSuc (SSuc SZero) :+> 
-      (   K ('Proxy :: Proxy Id) ('(,) ctx T)
-      ::: Sigma ('Proxy :: Proxy Ty) (Var I :*: Var I) 
-      ::: VNil )
-  type instance WTTermDesc ('(,) ctx (ty1 :->: ty2)) = 
+  type family SLTCDesc (i :: (Ctx , Type)) :: IDesc Term (Ctx , Type)
+  type instance SLTCDesc ('(,) ctx T) = 
+    SSuc (SSuc SZero) :+> ( VarDesc ::: AppDesc ::: VNil )
+  type instance SLTCDesc ('(,) ctx (t1 :-> t2)) = 
     SSuc (SSuc (SSuc SZero)) :+> 
-      (   K ('Proxy :: Proxy Id) ('(,) ctx (ty1 :->: ty2)) 
-      ::: Sigma ('Proxy :: Proxy Id) (Var I)
-      ::: Sigma ('Proxy :: Proxy Ty) (Var I :*: Var I) 
-      ::: VNil ) 
+      ( VarDesc ::: Var ('(,) (t1:ctx) t2) ::: AppDesc ::: VNil )
 
-  type instance Desc T_WTTERM (Term Id) (Ctx , Ty) i = WTTermDesc i
+  type instance Desc T_WTTERM Term (Ctx , Type) i = SLTCDesc i
 
-  wtTermSDesc :: Proxy T_WTTERM -> Sing i -> SingIDesc (WTTermDesc i)
-  wtTermSDesc _ (SPair sctx ST) = 
-    SSuc2 (SSuc2 SZero2) :+>~ 
-      (    SK (Proxy :: Proxy Id) (SPair sctx ST)
-      :::~ SSigma (SVar (\ty' -> (dm sctx , ty' :->: T)) :*:~ SVar (\ty' -> (dm sctx , ty'))) 
-            undefined
-            (\_ -> Refl) 
-      :::~ SVNil )
-  wtTermSDesc _ (SPair sctx (sty1 :->$ sty2)) = 
-    SSuc2 (SSuc2 (SSuc2 SZero2)) :+>~ 
-      (    SK (Proxy :: Proxy Id) (SPair sctx (sty1 :->$ sty2))
-      :::~ SSigma (SVar (\id -> (CtxCons id (dm sty1) (dm sctx) , dm sty2))) undefined (\_-> Refl)
-      :::~ SSigma (SVar (\ty' -> (dm sctx , ty' :->: (dm sty1 :->: dm sty2))) :*:~ SVar (\ty' -> (dm sctx , ty'))) undefined (\_->Refl)
-      :::~ SVNil )
+  sltcDesc :: Proxy T_WTTERM -> Sing i -> Sing (SLTCDesc i)
+  sltcDesc _ (SPair sctx ST) = (SSuc2 (SSuc2 SZero2)) :+>~ 
+    (    SSigma SOne (genElem (dm sctx) T) (\_ -> Refl) 
+    :::~ SSigma (SVar (\sigma -> (dm sctx, (sigma :-> T))) :*:~ SVar ((dm sctx,))) genType (\_ -> Refl)
+    :::~ SVNil)
+  sltcDesc _ (SPair sctx (t1 :->$ t2)) = (SSuc2 (SSuc2 (SSuc2 SZero2))) :+>~ 
+    (    SSigma SOne (genElem (dm sctx) (dm t1 :-> dm t2)) (\_ -> Refl) 
+    :::~ SVar (dm t1 : dm sctx , dm t2)
+    :::~ SSigma (SVar (\sigma -> (dm sctx, (sigma :-> (dm t1 :-> dm t2)))) :*:~ SVar ((dm sctx,))) genType (\_ -> Refl)
+    :::~ SVNil)
 
-  toWtTerm :: Proxy T_WTTERM -> Sing i -> Interpret (WTTermDesc i) -> Term Id 
-  toWtTerm _ (SPair sctx ST) (Left x)  = VarT x
-  toWtTerm _ (SPair sctx ST) (Right (p , (t1 , t2))) = AppT t1 t2
-  toWtTerm _ (SPair sctx (sty1 :->$ sty2)) (Left x) = VarT x 
-  toWtTerm _ (SPair sctx (sty1 :->$ sty2)) (Right (Left (id, tm))) = AbsT id tm
-  toWtTerm _ (SPair sctx (sty1 :->$ sty2)) (Right (Right (p , (t1 , t2)))) = AppT t1 t2 
+  toTerm :: Proxy T_WTTERM -> Sing i -> Interpret (SLTCDesc i) -> Term
+  toTerm _ (SPair sctx ST) (Left (n , ())) = TVar (toNat n)
+  toTerm _ (SPair sctx ST) (Right (_ , (t1 , t2))) = TApp t1 t2
+  toTerm _ (SPair sctx (_ :->$ _)) (Left (n , ())) = TVar (toNat n)
+  toTerm _ (SPair sctx (_ :->$ _)) (Right (Left y)) = TAbs y
+  toTerm _ (SPair sctx (_ :->$ _)) (Right (Right (_ , (t1 , t2)))) = TApp t1 t2 
 
-  instance Describe T_WTTERM (Term Id) (Ctx , Ty) where 
-    sdesc = wtTermSDesc 
-    to = toWtTerm
+  instance Describe T_WTTERM Term (Ctx , Type) where 
+    sdesc = sltcDesc 
+    to = toTerm
 
-  wtTermGen :: (Ctx , Ty) -> G (Ctx , Ty) (Term Id) (Term Id)
-  wtTermGen i = 
+  termGen :: (Ctx , Type) -> G (Ctx , Type) Term Term
+  termGen i = 
     case promote i of 
       (Promoted i') -> genDesc (Proxy :: Proxy T_WTTERM) i' 
+
+  isApp :: Term -> Bool 
+  isApp (TApp _ _ ) = True 
+  isApp _ = False
+
+  test :: [Term]
+  test = {- foldl' (\b tm -> b && check [T , T :-> T] tm T) True -} run termGen ([T , T , T, T, T :-> T, T] , T :-> T) 3
+
+  inContext :: Nat -> Ctx -> Type -> Bool
+  inContext n [] _ = False 
+  inContext Zero (t:ts) t' = t == t' 
+  inContext (Suc n) (t:ts) t' = inContext n ts t'
+
+  types :: Int -> [Type] 
+  types = run (\() -> genType) ()
+
+  check :: Ctx -> Term -> Type -> Bool 
+  check ctx (TVar n )      ty            = inContext n ctx ty
+  check ctx (TAbs tm)      (ty1 :-> ty2) = check (ty1:ctx) tm ty2
+  check ctx (TApp tm1 tm2) ty            = any (\i -> any (\ty' -> check ctx tm1 (ty' :-> ty) && check ctx tm2 ty') (types i)) [1..3]
+  check _   _              _             = False
+
+  --                                          T -> T
+  -- [y : T , z : T :-> T] |- (\x -> y) z
+  tm1 :: Term 
+  tm1 = TApp (TApp (TAbs (TVar Zero)) (TAbs (TVar (Suc Zero)))) (TVar (Suc Zero))

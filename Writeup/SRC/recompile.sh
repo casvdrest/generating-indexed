@@ -1,3 +1,3 @@
-lhs2TeX -o tyde.tex tyde.lagda --agda
-bibtex tyde
-pdflatex -shell-escape tyde.tex
+lhs2TeX -o SRC.tex SRC.lhs 
+bibtex SRC
+pdflatex -shell-escape SRC.tex

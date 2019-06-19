@@ -1,0 +1,64 @@
+\begin{thebibliography}{10}
+
+\bibitem{github}
+Generation for indexed datatypes.
+\newblock \url{https://github.com/casvdrest/generating-indexed}.
+
+\bibitem{claessen2015generating}
+{\sc Claessen, K., Dureg{\aa}rd, J., and Pa{\l}ka, M.~H.}
+\newblock Generating constrained random data with uniform distribution.
+\newblock {\em Journal of functional programming 25\/} (2015).
+
+\bibitem{dagand2013cosmology}
+{\sc Dagand, P.-E.}
+\newblock {\em A Cosmology of Datatypes}.
+\newblock PhD thesis, Citeseer, 2013.
+
+\bibitem{denes2014quickchick}
+{\sc D{\'e}n{\`e}s, M., Hritcu, C., Lampropoulos, L., Paraskevopoulou, Z., and
+  Pierce, B.~C.}
+\newblock Quickchick: Property-based testing for coq.
+\newblock In {\em The Coq Workshop\/} (2014).
+
+\bibitem{duregaard2013feat}
+{\sc Dureg{\aa}rd, J., Jansson, P., and Wang, M.}
+\newblock Feat: functional enumeration of algebraic types.
+\newblock {\em ACM SIGPLAN Notices 47}, 12 (2013), 61--72.
+
+\bibitem{eisenberg2013dependently}
+{\sc Eisenberg, R.~A., and Weirich, S.}
+\newblock Dependently typed programming with singletons.
+\newblock {\em ACM SIGPLAN Notices 47}, 12 (2013), 117--130.
+
+\bibitem{hinze2003fun}
+{\sc Hinze, R., et~al.}
+\newblock Fun with phantom types.
+\newblock {\em The fun of programming\/} (2003), 245--262.
+
+\bibitem{miraldo2018sums}
+{\sc Miraldo, V.~C., and Serrano, A.}
+\newblock Sums of products for mutually recursive datatypes: the
+  appropriationist’s view on generic programming.
+\newblock In {\em Proceedings of the 3rd ACM SIGPLAN International Workshop on
+  Type-Driven Development\/} (2018), ACM, pp.~65--77.
+
+\bibitem{palka2011testing}
+{\sc Pa{\l}ka, M.~H., Claessen, K., Russo, A., and Hughes, J.}
+\newblock Testing an optimising compiler by generating random lambda terms.
+\newblock In {\em Proceedings of the 6th International Workshop on Automation
+  of Software Test\/} (2011), ACM, pp.~91--97.
+
+\bibitem{wadler2019plfa}
+{\sc Wadler, P., and Kokke, W.}
+\newblock Programming language foundations in agda, debruijn: Inherently typed
+  de bruijn representation.
+\newblock \url{https://plfa.github.io/DeBruijn/}.
+\newblock Accessed: 2019-06-13.
+
+\bibitem{yakushev2009generic}
+{\sc Yakushev, A.~R., Holdermans, S., L{\"o}h, A., and Jeuring, J.}
+\newblock Generic programming with fixed points for mutually recursive
+  datatypes.
+\newblock In {\em ACM Sigplan Notices\/} (2009), vol.~44, ACM, pp.~233--244.
+
+\end{thebibliography}

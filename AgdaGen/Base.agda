@@ -15,10 +15,13 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 module AgdaGen.Base where
 
+  data Func {ℓ} (A B : Set ℓ) : Set ℓ where
+    Store : (A → B) → Func A B 
+
   mutual
     -- The generator type. The `a` type parameter marks the output type of the
     -- generator. The resulting family is indexed by a type marking the type
-    -- of values produced by recursive positions. 
+    -- of values produced by recursive positions.
     data Gen {ℓ k} : (a : Set ℓ) → (t : Set ℓ) → Set (sucL k ⊔ sucL ℓ) where
   
       -- Marks choice between generators
@@ -46,7 +49,6 @@ module AgdaGen.Base where
       `_    : ∀ {a t : Set ℓ} → Gen {ℓ} {k} a a → Gen a t
 
       ⟨_`_⟩ : ∀ {i : Set k} {p : i → Set ℓ} {t : Set ℓ} → (x : i) → ((x : i) → Genᵢ (p x) p x) → Gen (p x) t
-
 
     data Genᵢ {ℓ k} {i : Set k} : 
       (Set ℓ) → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where

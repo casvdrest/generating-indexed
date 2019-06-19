@@ -242,7 +242,7 @@ isoGen : ∀ {A} → ⦃ p : Regular A ⦄ → Σ[ g ∈ Gen A A ] ∀ {x} → �
 
 \begin{code}
 
-isoGen = ?
+isoGen = {!!}
 
 open B
 \end{code}

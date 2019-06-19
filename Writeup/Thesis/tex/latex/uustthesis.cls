@@ -14,6 +14,7 @@
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
 \RequirePackage{unicode-math}
+\RequirePackage[colorlinks=false]{hyperref}
 \RequirePackage{cleveref}
 \RequirePackage{catchfilebetweentags}
 \RequirePackage[conor]{agda}
@@ -243,3 +244,6 @@
 \newunicodechar{⦃}{\ensuremath{\lBrace}}
 \newunicodechar{⦄}{\ensuremath{\rBrace}}
 \newunicodechar{◂}{\ensuremath{{\scriptstyle\blacktriangleleft}}}
+\newunicodechar{◃}{\ensuremath{{\scriptscriptstyle\triangleleft}}}
+\newunicodechar{⊚}{\ensuremath{\circledcirc}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}

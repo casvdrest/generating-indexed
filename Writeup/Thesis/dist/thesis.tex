@@ -467,6 +467,11 @@
 
 \chapter{Declaration}
 Thanks to family, supervisor, friends and hops!
+\\ \\
+I declare that this thesis has been composed solely by myself and that it has not been
+submitted, in whole or in part, in any previous application for a degree. Except where
+stated otherwise by reference or acknowledgment, the work presented is entirely my
+own.
 
 \chapter{Abstract}
 Abstract
@@ -475,6 +480,47 @@ Abstract
 \mainmatter
 
 \chapter{Introduction}
+This thesis concerns itself with the generation of complex test data in the context of property based testing specifically, and generic programming for indexed datatypes in general. 
+
+\section{Motivation}
+
+\section{Research Question and Goals}
+
+  This thesis aims to work towards an answer to the following question: 
+
+  \begin{center} \emph{
+    How can we obtain constrained test data by generically deriving enumeration and/or sampling mechanisms for indexed datatypes?
+  }\end{center}
+
+  In addition to a theoretical exploration of this question, we intend to supply the following deliverables:
+
+  \begin{itemize}
+    \item A formalization in Agda of the various type universe explored in this thesis.
+    
+    \item A haskell library that demonstrates how the ideas developed in this thesis can be applied in a more practical setting. 
+  \end{itemize}
+
+\section{Contributions}
+
+\section{Thesis Structure}
+
+  This thesis is structured as follows: in chapter 2 we discuss some relevant 
+  theoretical background, and in chapter 3 we describe some of the work related to 
+  this thesis. Chapter 4 sketches the design of our generator combinator library. 
+  Chapter 5 through 7 describe various type universes, and show how we may derive 
+  generators for any type in those universes. Additionally, we sketch how we may prove 
+  that the associated enumerations are complete. Chapter 8 and 9 are concerned with 
+  how we can implement these ideas in Haskell, and provide a comprehensive framework 
+  for the generation of well formed programs. Finally, chapter 10 provides a 
+  conclusion and lists some of the possible future work.
+
+\section{Methodology}
+
+\subsection{Agda Model}
+
+\subsection{Haskell Library}
+
+\subsection{Notational Conventions}
 
 \chapter{Background}
 In this section, we will briefly discuss some of the relevant theoretical background 
@@ -855,27 +901,35 @@ $\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$
     index of a value. 
 
 \chapter{Literature Review}
-In this section, we discuss some of the existing literature that is relevant in the domain of generating test data for property based testing. We take a look at some existing testing libraries, techniques for generation of constrained test data, and a few type universes beyond those we used that aim to describe (at least a subset of) indexed datatypes. 
+In this section, we discuss some of the existing literature that is relevant in the 
+domain of generating test data for property based testing. We take a look at some 
+existing testing libraries, techniques for generation of constrained test data, and a 
+few type universes beyond those we used that aim to describe (at least a subset of) 
+indexed datatypes. 
 
-\section{Property Based Testing}
+\section{Libraries for Property Based Testing}
 
-  \textit{Property Based Testing} aims to assert properties that universally hold 
-  for our programs by parameterizing tests over values and checking them against a 
+  \textit{Property Based Testing} aims to assert properties that universally hold for 
+  our programs by parameterizing tests over values and checking them against a 
   collection of test values. Libraries for property based testing often include some 
   kind of mechanism to automatically generate collections of test values. Existing 
-  tools take different approaches towards generation of test data: \textit
-  {QuickCheck} \cite{claessen2011quickcheck} randomly generates values within the 
-  test domain, while \textit{SmallCheck} \cite{runciman2008smallcheck} and \textit
-  {LeanCheck} \cite{matela2017tools} exhaustively enumerate all values in the test 
-  domain up to a certain point. 
+  tools take different approaches towards generation of test data: \textit{QuickCheck} 
+  \cite{claessen2011quickcheck} randomly generates values within the test domain, 
+  while \textit{SmallCheck} \cite{runciman2008smallcheck} and \textit{LeanCheck} \cite
+  {matela2017tools} exhaustively enumerate all values in the test domain up to a 
+  certain point. There exist many libraries for property based testing. For brevity we 
+  constrain ourselves here to those that are relevant in the domain of functional 
+  programming and/or haskell. 
 
-\subsection{Existing Libraries}
+\subsection{QuickCheck} 
 
-  There exist many libraries for property based testing. For brevity, we constrain ourselves here to those that are relevant in the domain of functional programming and/or haskell. 
-
-\subsubsection{QuickCheck} 
-
-  Published in 2000 by Claessen \& Hughes \cite{claessen2011quickcheck}, QuickCheck implements property based testing for Haskell. As mentioned before, test values are generated by sampling randomly from the domain of test values. QuickCheck supplies the typeclass \texttt{Arbitrary}, whose instances are those types for which random values can be generated. A property of type \ensuremath{\HSVar{a}\HSSym{\to} \HSCon{Bool}} can be tested if \ensuremath{\HSVar{a}} is an instance of \texttt{Arbitrary}. Instances for most common Haskell types are supplied by the library. If a property fails on a testcase, QuickCheck supplies a counterexample. Consider the following faulty definition of \ensuremath{\HSVar{reverse}}: 
+  Published in 2000 by Claessen \& Hughes \cite{claessen2011quickcheck}, QuickCheck 
+  implements property based testing for Haskell. Test values are generated by sampling randomly from the domain of test values. QuickCheck supplies 
+  the typeclass \texttt{Arbitrary}, whose instances are those types for which random 
+  values can be generated. A property of type \ensuremath{\HSVar{a}\HSSym{\to} \HSCon{Bool}} can be tested if \ensuremath{\HSVar{a}} is an 
+  instance of \texttt{Arbitrary}. Instances for most common Haskell types are supplied 
+  by the library. If a property fails on a testcase, QuickCheck supplies a 
+  counterexample. Consider the following faulty definition of \ensuremath{\HSVar{reverse}}: 
 
 \begin{myhaskell}
 \begin{hscode}\SaveRestoreHook
@@ -897,8 +951,7 @@ In this section, we discuss some of the existing literature that is relevant in 
 \end{hscode}\resethooks
 \end{myhaskell}
 
-  If we now test our function by calling \ensuremath{\HSVar{quickCheck}\;\HSVar{reverse\char95 preserves\char95 length}}, we 
-  get the following output: 
+  If we now test our function by calling \ensuremath{\HSVar{quickChec}\;\HSVar{reverse\char95 preserves\char95 length}}, we get the following output: 
 
 \begin{tabbing}\ttfamily
 ~Test\char46{}QuickCheck\char62{}~quickCheck~reverse\char95{}preserves\char95{}length~\\
@@ -919,7 +972,7 @@ In this section, we discuss some of the existing literature that is relevant in 
   for function types by modifying the seed of the random generator (which is used to 
   generate the function's output) based on it's input. 
 
-\subsubsection{(Lazy) SmallCheck} 
+\subsection{(Lazy) SmallCheck} 
 
   Contrary to QuickCheck, SmallCheck \cite{runciman2008smallcheck} takes an \textit
   {enumerative} approach to the generation of test data. While the approach to 
@@ -927,7 +980,7 @@ In this section, we discuss some of the existing literature that is relevant in 
   values are not generated at random, but rather exhaustively enumerated up to a 
   certain \textit{depth}. Zero-arity constructors have depth $0$, while the depth of 
   any positive arity constructor is one greather than the maximum depth of its 
-  arguments.  The motivation for this is the \textit{small scope hypothesis}: if a 
+  arguments. The motivation for this is the \textit{small scope hypothesis}: if a 
   program is incorrect, it will almost allways fail on some small input \cite
   {andoni2003evaluating}. 
 
@@ -944,78 +997,37 @@ In this section, we discuss some of the existing literature that is relevant in 
   an entire class of values in one go, in some cases greatly reducing the amount of 
   testcases needed. 
 
-\subsubsection{LeanCheck} 
+\subsection{LeanCheck} 
 
   Where SmallCheck uses a value's \textit{depth} to bound the number of test values, 
   LeanCheck uses a value's \textit{size} \cite{matela2017tools}, where size is defined 
-  as the number of construction applications of positive arity.
+  as the number of construction applications of positive arity. Both SmallCheck and 
+  LeanCheck contain functionality to enumerate functions similar to QuickCheck's 
+  \texttt{Coarbitrary}. 
 
-  Both SmallCheck and LeanCheck contain functionality to enumerate functions similar 
-  to QuickCheck's \texttt{Coarbitrary}. 
-
-\subsubsection{Hegdgehog} 
+\subsection{Hegdgehog} 
   
-  Hedgehog \cite{hedgehog} is a framework similar to QuickCheck, that aims to be a more modern alternative. It includes support for monadic effects in generators and concurrent checking of properties.
+  Hedgehog \cite{hedgehog} is a framework similar to QuickCheck, that aims to be a 
+  more modern alternative. It includes support for monadic effects in generators and 
+  concurrent checking of properties. Additionally it supports automatic schrinking for many datatypes. Unlike QuickCheck and SmallCheck, HedgeHog does not support (partial) automatic derivation of generators, but rather chooses to supply a comprehensive set of combinators, which the user can then use to assemble generators.
 
-\subsubsection{Feat} 
+\subsection{Feat} 
   
-  A downside to both SmallCheck and LeanCheck is that they do not 
-  provide an efficient way to generate or sample large test values. QuickCheck has no 
-  problem with either, but QuickCheck generators are often more tedious to write 
-  compared to their SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill 
-  this gap by providing a way to efficiently enumerate algebraic types, employing 
-  memoization techniques to efficiently find the $n^{th}$ element of an enumeration. 
+  A downside to both SmallCheck and LeanCheck is that they do not provide an efficient 
+  way to generate or sample large test values. QuickCheck has no problem with either, 
+  but QuickCheck generators are often more tedious to write compared to their 
+  SmallCheck counterpart. Feat \cite{duregaard2013feat} aims to fill this gap by 
+  providing a way to efficiently enumerate algebraic types, employing memoization 
+  techniques to efficiently find the $n^{th}$ element of an enumeration. 
 
-\subsubsection{QuickChick} 
+\subsection{QuickChick: QuickCheck for Coq} 
   
-  QuickChick is a QuickCheck clone for the proof assistant Coq 
-  \cite{denes2014quickchick}. The fact that Coq is a proof assistant enables the user 
-  to reason about the testing framework itself \cite{paraskevopoulou2015foundational}. 
-  This allows one, for example, to prove that generators adhere to some distribution.  
+  QuickChick is a QuickCheck clone for the proof assistant Coq \cite
+  {denes2014quickchick}. The fact that Coq is a proof assistant enables the user to 
+  reason about the testing framework itself \cite{paraskevopoulou2015foundational}. 
+  This allows one, for example, to prove that generators adhere to some distribution. 
 
-\subsection{Generating Constrained Test Data}\label{genconstrainedtd}
-
-  Defining a suitable generation of test data for property based testing is 
-  notoriously difficult in many cases, independent of whether we choose to sample from 
-  or enumerate the space of test values. Writing generators for mutually recursive 
-  datatypes with a suitable distribution is especially challenging. 
-    
-  We run into prolems when we desire to generate test data for properties with a 
-  precondition. If a property's precondition is satisfied by few input values, it 
-  becomes unpractical to test such a property by simply generating random input data. 
-  Few testcases will be relevant (meaning they satisfy the precondition), and the 
-  testcases that do are often trivial cases. The usual solution to this problem is to 
-  define a custom test data generator that only produces data that satisfies the 
-  precondition. In some cases, such as the \ensuremath{\HSVar{insert\char95 preserves\char95 sorted}} from section \ref
-  {introduction}, a suitable generator is not too hard to define: 
-
-\begin{myhaskell}
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\HSVar{gen\char95 sorted}\HSSym{::}\HSCon{Gen}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
-\\
-\>[B]{}\HSVar{gen\char95 sorted}\HSSym{\mathrel{=}}\HSVar{arbitrary}\HSSym{\bind} \HSVar{return}\HSSym{\mathbin{\circ}}\HSVar{diff}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\HSKeyword{where}\;{}\<[10]%
-\>[10]{}\HSVar{diff}\HSSym{::}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}\HSSym{\to} \HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
-\\
-\>[10]{}\HSVar{diff}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[23]%
-\>[23]{}\HSSym{\mathrel{=}}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
-\\
-\>[10]{}\HSVar{diff}\;\HSSpecial{(}\HSVar{x}\HSCon{\mathbin{:}}\HSVar{xs}\HSSpecial{)}{}\<[23]%
-\>[23]{}\HSSym{\mathrel{=}}\HSVar{x}\HSCon{\mathbin{:}}\HSVar{map}\;\HSSpecial{(}\HSSym{+}\HSVar{x}\HSSpecial{)}\;\HSSpecial{(}\HSVar{diff}\;\HSVar{xs}\HSSpecial{)}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-\end{myhaskell}
-
-  However, for more complex preconditions defining suitable generators is all but trivial. 
-
-\subsection{Automatic Generation of Specifications}
+\subsection{QuickSpec: Automatic Generation of Specifications}
 
   A surprising application of property based testing is the automatic generation of 
   program specifications, proposed by Claessen et al. \cite{claessen2010quickspec} 
@@ -1023,12 +1035,27 @@ In this section, we discuss some of the existing literature that is relevant in 
   candidate formal specifications given a list of pure functions, specifically in the 
   form of algebraic equations. Random property based testing is then used to falsify 
   specifications. In the end, the user is presented with a set of equations for which 
-  no counterexample was found. 
+  no counterexample was found.  
 
-\section{Techniques for Generating Test Data}
+\section{Generating Constrained Test Data}\label{genconstrainedtd}
 
-  This section discusses some existing work regarding the generation of test data 
-  satisfying invariants, such as well-formed $\lambda$-terms. 
+  Defining a suitable generation of test data for property based testing potentially very challenging, independent of whether we choose to sample from 
+  or enumerate the space of test values. Writing generators for mutually recursive 
+  datatypes with a suitable distribution is especially challenging. 
+    
+  We run into prolems when we desire to generate test data for properties with a 
+  precondition. If a property's precondition is satisfied by few input values, it 
+  becomes unpractical to test such a property by simply generating random input data, 
+  and using rejection sampling to filter out those values that satisfy the desired 
+  precondition. We will often end up with very few testcases, and we will end up with 
+  a skewed distribution favoring those test values that have the largest probability 
+  to be picked at random (often these are the simplest values that satisfy the 
+  precondition). 
+  
+  The usual solution to this problem is to define a custom test data generator that 
+  only produces data that satisfies the precondition. There are cases in which this is 
+  not too difficult, however once we require more complex test data, such as 
+  well-formed programs, this is quite a challenging task. 
 
 \subsection{Lambda Terms} 
 
@@ -1079,26 +1106,92 @@ In this section, we discuss some of the existing literature that is relevant in 
   constraints are then used when constructing generators to ensure that only values 
   for which the dependent inductive relation is inhabited are generated. 
 
-\section{Generic Programming \& Type Universes}\label{sec:lituniverses}
+\section{Generic Programming \& Type Universes}\label
+{sec:lituniverses}
 
-  Datatype generic programming concerns techniques that allow for the definition of 
-  functions by inducting on the \textit{structure} of a datatype. Many approaches 
-  towards this goal have been developed, some more expressive than others. This 
-  section discusses a few of them.  
+  Many type universes have been developed beyond those used in this thesis, some of 
+  which are also designed to describe (a subset of) indexed datatypes. We describe a 
+  few of them here, and briefly discuss how they relate to the universes we used. 
 
 \subsection{SOP (Sum of Products)}\label{sop}
 
   On of the more simple representations is the so called \textit{Sum of Products} view 
   \cite{de2014true}, where datatypes are respresented as a choice between an arbitrary 
   amount of constructors, each of which can have any arity. This view corresponds to 
-  how datatypes are defined in Haskell. As we will see (for example in section \ref
-  {patternfunctors}), other universes too employ sum and product combinators to 
-  describe the structure of datatypes, though they do not necessarily enforce the 
-  representation to be in disjunctive normal form. 
+  how datatypes are defined in Haskell, and is closely related to the universe of 
+  regular types. As we will see (for example in section \ref{patternfunctors}), other 
+  universes too employ sum and product combinators to describe the structure of 
+  datatypes, though they do not necessarily enforce the representation to be in 
+  disjunctive normal form. Sum of Products, in its simplest form, cannot represent 
+  mutually recursive families of datatypes. An extension that allows this has been 
+  developed in \cite{miraldo2018sums}, and is available as a Haskell library through 
+  \emph{Hackage}.  
 
-  Sum of Products, in its simplest form, cannot represent mutually recursive families 
-  of datatypes. An extension that allows this has been developed in \cite
-  {miraldo2018sums}. 
+\subsection{W-Types}\label{sec:wtypes}
+
+  Introduced by Per Martin-Löf \cite{martin1984intuitionistic}, \emph{W-types} 
+  abstract over tree-shaped data structures, such as natural numbers or binary trees. 
+  W-types are defined by their \emph{shape} and \emph{position}, describing 
+  respectively the set of constructors and the number of recursive positions. 
+
+  Perhaps the best known definition of W-types is using an inductive datatype, with 
+  one constructor taking a shape value, and a function from position to W-type: 
+
+\includeagda{3}{winductive}
+
+  However, we can use an alternate definition where we separate the universe into 
+  codes, semantics and a fixpoint operation (listing \ref{lst:wtypes})
+
+\includeagdalisting{3}{wtypes}{W-types defined with separate codes and semantics}
+{lst:wtypes}
+
+  We take this redundant step for two reasons: 
+
+  \begin{enumerate}
+    \item To unify the definition of W-types with the design pattern for type 
+    universes we described in \cref{sec:tudesignpattern}. 
+
+    \item To emphasize the the similarities between W-types, and the universe of 
+    indexed containers, which will be further discussed in (TODO ref chapter 6)
+  \end{enumerate}
+
+  \begin{example} 
+
+    Let us look at the natural numbers (listing \ref{lst:defnat}) as an example. We 
+    can define the following W-type that is isomorphic to \ensuremath{\HSCon{ℕ}}:
+
+\includeagdanv{3}{wnat}
+
+    The \ensuremath{\HSCon{ℕ}} type has two constructors, hence our shape is a finite type with two 
+    inhabitants (\ensuremath{\HSCon{Bool}} in this case). We then map \ensuremath{\HSVar{false}} to the empty type, 
+    signifying that \ensuremath{\HSVar{zero}} has no recursive subtrees, and \ensuremath{\HSVar{true}} to the unit type, 
+    denoting that \ensuremath{\HSVar{suc}} has one recursive subtree. The isomorphism between \ensuremath{\HSCon{ℕ}} and \ensuremath{\HSCon{Wℕ}}
+     is established in listing \ref{wnatiso}. 
+
+  \end{example}
+
+\includeagdalisting{3}{wnatiso}{Isomorphism between \ensuremath{\HSCon{ℕ}} and \ensuremath{\HSCon{Wℕ}}}{lst:wnatiso}
+
+\subsection{Indexed Functors}
+
+  Löh and Magalhães propose in their paper \emph{Generic Programming with Indexed 
+  Functors} \cite{loh2011generic} a type universe for generic programming in Agda, 
+  that is able to handle a large class of indexed datatypes. Their universe takes the 
+  universe of regular types as a basis. 
+  
+  The semantics of the universe, however, is not a functor \ensuremath{\HSCon{Set}\HSSym{→}\HSCon{Set}}, but rather an 
+  \emph{indexed} functor \ensuremath{\HSSpecial{(}\HSCon{I}\HSSym{→}\HSCon{Set}\HSSpecial{)}\HSSym{→}\HSCon{O}\HSSym{→}\HSCon{Set}}. Additionally, they add some 
+  combinators, such as first order constructors to encode isomorphisms and fixpoints 
+  as part of their universe. 
+
+\subsection{Combinatorial Species}
+
+  Combinatorial Species. Combinatorial species \cite{yorgey2010species} were 
+  originally developed as a mathematical framework, but can also be used as an 
+  alternative way of looking at datatypes. A species can, in terms of functional 
+  programming, be thought of as a type constructor with one polymorphic argument. 
+  Haskell’s ADTs (or regular types in general) can be described by definining familiar 
+  combinators for species, such as sum and product.
 
 \chapter{A Combinator Library for Generators}
 \section{The Type of Generators}
@@ -1483,7 +1576,8 @@ for constant types}{lst:mdstructure}
 
   We formulate the desired completeness property as follows: \textit{for every code c 
   and value x it holds that there is an n such that x occurs at depth n in the 
-  enumeration derived from c}. In Agda, this amounts to proving the following statement: 
+  enumeration derived from c}. In Agda, this amounts to proving the following 
+  statement: 
 
 \includeagda{5}{genericgencomplete}
 
@@ -1510,47 +1604,69 @@ for constant types}{lst:mdstructure}
       for constant types in the code. 
 
     \item 
-      Finally, we assemble the individual components into a proof of the statement above. 
+      Finally, we assemble the individual components into a proof of the statement 
+      above. 
 
   \end{itemize}
 
 \subsection{Combinator Correctness}
 
-  We start our proof by asserting that the used combinators are indeed complete. That is, we show for every constructor of \ensuremath{\HSCon{Reg}} that the generator we return in \ensuremath{\HSVar{deriveGen}} produces all elements of the interpretation of that constructor. In the case of \ensuremath{\HSCon{Z}} and \ensuremath{\HSCon{U}}, this is easy. 
+  We start our proof by asserting that the used combinators are indeed complete. That 
+  is, we show for every constructor of \ensuremath{\HSCon{Reg}} that the generator we return in \ensuremath{\HSVar{deriveGen}} produces all elements of the interpretation of that constructor. In the 
+  case of \ensuremath{\HSCon{Z}} and \ensuremath{\HSCon{U}}, this is easy. 
 
 \includeagda{5}{derivegencompleteZU}
 
-  The semantics of \ensuremath{\HSCon{Z}} is the empty type, so any generator producing values of type \ensuremath{\HSSym{⊥}} is trivially complete. Similarly, in the case of \ensuremath{\HSCon{U}} we simply need to show that interpreting \ensuremath{\HSVar{pure}\;\HSVar{tt}} returns a list containing \ensuremath{\HSVar{tt}}. 
+  The semantics of \ensuremath{\HSCon{Z}} is the empty type, so any generator producing values of type \ensuremath{\HSSym{⊥}}
+   is trivially complete. Similarly, in the case of \ensuremath{\HSCon{U}} we simply need to show that 
+   interpreting \ensuremath{\HSVar{pure}\;\HSVar{tt}} returns a list containing \ensuremath{\HSVar{tt}}. 
 
-  Things become a bit more interesting once we move to products and coproducts. In the case of coproducts, we know the following equality to hold, by definition of both \ensuremath{\HSVar{toList}} and \ensuremath{\HSVar{deriveGen}}: 
+  Things become a bit more interesting once we move to products and coproducts. In the 
+  case of coproducts, we know the following equality to hold, by definition of both \ensuremath{\HSVar{toList}} and \ensuremath{\HSVar{deriveGen}}: 
 
 \includeagda{5}{tolistcopeq}
 
-  Basically, this equality unfolds the \ensuremath{\HSVar{toList}} function one step. Notice how the generators on the left hand side of the equation are \emph{almost} the same as the recursive calls we make. This means that we can prove completeness for coproducts by proving the following lemmas, where we obtain the required completeness proofs by recursing on the left and right subcodes of the coproduct. 
+  Basically, this equality unfolds the \ensuremath{\HSVar{toList}} function one step. Notice how the 
+  generators on the left hand side of the equation are \emph{almost} the same as the 
+  recursive calls we make. This means that we can prove completeness for coproducts by 
+  proving the following lemmas, where we obtain the required completeness proofs by 
+  recursing on the left and right subcodes of the coproduct. 
 
 \includeagda{5}{mergecomplete}
 
-  Similarly, by unfolding the toList function one step in the case of products, we get the following equality:
+  Similarly, by unfolding the toList function one step in the case of products, we get 
+  the following equality:
 
 \includeagda{5}{tolistpeq}
 
-  We can prove the right hand side of this equality by proving the following lemma about the applicative instance of lists:
+  We can prove the right hand side of this equality by proving the following lemma 
+  about the applicative instance of lists:
 
 \includeagda{5}{apcomplete}
 
-  Again, the preconditions of this lemma can be obtained by recursing on the left and right subcodes of the product. 
+  Again, the preconditions of this lemma can be obtained by recursing on the left and 
+  right subcodes of the product. 
 
 \subsection{Completeness for Constant Types}
 
-  Since our completeness proof relies on completeness of the generators for constant types, we need the programmer to supply a proof that the supplied generators are indeed complete. To this end, we add a metadata parameter to the type of \ensuremath{\HSVar{deriveGen}}-\ensuremath{\HSVar{complete}}, with the following type: 
+  Since our completeness proof relies on completeness of the generators for constant 
+  types, we need the programmer to supply a proof that the supplied generators are 
+  indeed complete. To this end, we add a metadata parameter to the type of \ensuremath{\HSVar{deriveGen}}
+  -\ensuremath{\HSVar{complete}}, with the following type: 
 
 \includeagda{5}{proofinfotype}
 
-  In order to be able to use the completeness proof from the metadata structure in the \ensuremath{\HSCon{K}} branch of \ensuremath{\HSVar{deriveGen}}-\ensuremath{\HSCon{Complete}}, we need to be able to express the relationship between the metadata structure used in the proof, and the metadata structure used by \ensuremath{\HSVar{deriveGen}}. To do this, we need a way to transform the type of information that is carried by a value of type \ensuremath{\HSCon{KInfo}}: 
+  In order to be able to use the completeness proof from the metadata structure in the 
+  \ensuremath{\HSCon{K}} branch of \ensuremath{\HSVar{deriveGen}}-\ensuremath{\HSCon{Complete}}, we need to be able to express the relationship 
+  between the metadata structure used in the proof, and the metadata structure used by 
+  \ensuremath{\HSVar{deriveGen}}. To do this, we need a way to transform the type of information that is 
+  carried by a value of type \ensuremath{\HSCon{KInfo}}: 
 
 \includeagda{5}{kinfomap}
 
-  Given the definition of \ensuremath{\HSCon{KInfo}}-\ensuremath{\HSVar{map}}, we can take the first projection of the metadata input to \ensuremath{\HSVar{deriveGen}}-\ensuremath{\HSCon{Complete}}, and use the resulting structure as input to \ensuremath{\HSVar{deriveGen}}: 
+  Given the definition of \ensuremath{\HSCon{KInfo}}-\ensuremath{\HSVar{map}}, we can take the first projection of the 
+  metadata input to \ensuremath{\HSVar{deriveGen}}-\ensuremath{\HSCon{Complete}}, and use the resulting structure as input 
+  to \ensuremath{\HSVar{deriveGen}}: 
 
 \includeagda{5}{proofinfotype}
 
@@ -1558,34 +1674,193 @@ for constant types}{lst:mdstructure}
 
 \includeagda{5}{derivegenwithmd}
 
-  Now, with this explicit relation between the completeness proofs and the generators given to \ensuremath{\HSVar{deriveGen}}, we can simply retrun the proof contained in the metadata of the \ensuremath{\HSCon{K}} branch. 
+  Now, with this explicit relation between the completeness proofs and the generators 
+  given to \ensuremath{\HSVar{deriveGen}}, we can simply retrun the proof contained in the metadata of 
+  the \ensuremath{\HSCon{K}} branch. 
   
 \subsection{Generator Monotonicity}
 
-  The lemma \ensuremath{\HSSym{×}}-\ensuremath{\HSVar{complete}} is not enough to prove completeness in the case of products. We make two recursive calls, that both return a dependent pair with a depth value, and a proof that a value occurs in the enumeration at that depth. However, we need to return just such a dependent pair stating that a pair of both values does occur in the enumeration at a certain depth. The question is what depth to use. The logical choice would be to take the maximum of both dephts. This comes with the problem that we can only combine completeness proofs when they have the same depth value. 
+  The lemma \ensuremath{\HSSym{×}}-\ensuremath{\HSVar{complete}} is not enough to prove completeness in the case of 
+  products. We make two recursive calls, that both return a dependent pair with a 
+  depth value, and a proof that a value occurs in the enumeration at that depth. 
+  However, we need to return just such a dependent pair stating that a pair of both 
+  values does occur in the enumeration at a certain depth. The question is what depth 
+  to use. The logical choice would be to take the maximum of both dephts. This comes 
+  with the problem that we can only combine completeness proofs when they have the 
+  same depth value. 
 
-  For this reason, we need a way to transform a proof that some value \ensuremath{\HSVar{x}} occurs in the enumeration at depth \ensuremath{\HSVar{n}} into a proof that \ensuremath{\HSVar{x}} occurs in the enumeration at depth \ensuremath{\HSVar{m}}, given that $n \leq m$. In other words, the set of values that occurs in an enumeration monotoneously increases with the enumeration depth. To finish our completeness proof, this means that we require a proof of the following lemma: 
+  For this reason, we need a way to transform a proof that some value \ensuremath{\HSVar{x}} occurs in 
+  the enumeration at depth \ensuremath{\HSVar{n}} into a proof that \ensuremath{\HSVar{x}} occurs in the enumeration at 
+  depth \ensuremath{\HSVar{m}}, given that $n \leq m$. In other words, the set of values that occurs in 
+  an enumeration monotoneously increases with the enumeration depth. To finish our 
+  completeness proof, this means that we require a proof of the following lemma: 
 
 \includeagda{5}{derivegenmonotone}
 
-  We can complete a proof of this lemma by using the same approach as for the completeness proof. 
+  We can complete a proof of this lemma by using the same approach as for the 
+  completeness proof. 
 
 \subsection{Final Proof Sketch}
 
-  By bringing all these elements together, we can prove that \ensuremath{\HSVar{deriveGen}} is complete for any code \ensuremath{\HSVar{c}}, given that the programmer is able to provide a suitable metadatastructure. We can transform this proof into a proof that \ensuremath{\HSVar{isoGen}} returns a complete generator by observing that any isomorphism \ensuremath{\HSCon{A}\HSSym{≃}\HSCon{B}} establishes a bijection between the types \ensuremath{\HSCon{A}} and \ensuremath{\HSCon{B}}. Hence, if we apply such an isomorphism to the elements produced by a generator, completeness is preserved. 
+  By bringing all these elements together, we can prove that \ensuremath{\HSVar{deriveGen}} is complete 
+  for any code \ensuremath{\HSVar{c}}, given that the programmer is able to provide a suitable 
+  metadatastructure. We can transform this proof into a proof that \ensuremath{\HSVar{isoGen}} returns a 
+  complete generator by observing that any isomorphism \ensuremath{\HSCon{A}\HSSym{≃}\HSCon{B}} establishes a bijection 
+  between the types \ensuremath{\HSCon{A}} and \ensuremath{\HSCon{B}}. Hence, if we apply such an isomorphism to the 
+  elements produced by a generator, completeness is preserved. 
 
-  We have the required isomorphism readily at our disposal in \ensuremath{\HSVar{isoGen}}, since it is contained in the instance argument \ensuremath{\HSCon{Regular}\;\HSVar{a}}. This allows us to have \ensuremath{\HSVar{isoGen}} return a completeness proof for the generator it derives: 
+  We have the required isomorphism readily at our disposal in \ensuremath{\HSVar{isoGen}}, since it is 
+  contained in the instance argument \ensuremath{\HSCon{Regular}\;\HSVar{a}}. This allows us to have \ensuremath{\HSVar{isoGen}} 
+  return a completeness proof for the generator it derives: 
 
 \includeagda{5}{isogenproven}
 
-\chapter{Deriving Generators for Indexed Containers}
+  With which we have shown that if a type is regular, we can derive a complete 
+  generator producing elements of that type. 
 
-\chapter{Deriving Generators for Indexed Descriptions}
+\chapter{Deriving Generators for Indexed Containers}
+  This chapter discusses the universe of \emph{indexed containers} \cite{altenkirch2015indexed}, which provide a generic framework to describe those datatypes that can be defined by induction on their index type. Examples of datatypes we can describe using this universe include finite types \ref{}, vectors \ref{} and well-scoped lambda terms. In this chapter, we give the definition for this universe together with a few examples, and show how a generic generator may be derived for indexed containers. 
+
 \section{Universe Description}
 
-  We utilize the generic description for indexed datatypes proposed by Dagand \cite{dagand2013cosmology} in his PhD thesis.
+  We choose to follow the representation used by Dagand in \emph{The Essence Of Ornaments} \cite{dagand2017essence}, which provides an excellent introduction to indexed containers, alongside numerous examples. Just as in the previous chapter, we follow the pattern of first defining a datatype describing codes before giving the semantics and fixpoint operation. 
 
 \subsection{Definition}
+
+  Recall our definition of \emph{W-types} in \cref{sec:wtypes}. We purposefully split the canonical definition into three separate definitions for codes, semantics and fixpoint operation. If we consider the datatype describing codes in the universe of indexed descriptions (listing \ref{lst:signatures}), their similarities become clear. Signatures consist of a triple of \emph{operations}, \emph{arities} and \emph{typing discipline} .
+
+\includeagdalisting{6}{signature}{Signatures}{lst:signatures}
+
+  The operations of a signature correspond to a W-type's \emph{shape}, describing the set of available operations. The major difference is that the operations in a signature are parameterized over the index type. Similarly, arity corresponds to position in a W-type, describing the set of recursive subtrees for a given operation. Again, a signature's arity is parameterized over the index type. The typing discipline maps arities to the indices of the corresponding subtrees. 
+
+  The semantics of a signature is, just as for a W-type, a dependent pair, with the first element being a choice of operation, and the second element a function mapping arities to an appropriate recursive type. Contrary to the semantics of a W-type, which maps a code to a value in \ensuremath{\HSCon{Set}\HSSym{\to} \HSCon{Set}}, the semantics of a signature are parameterized over the index type, meaning they map a signature to a value in \ensuremath{\HSSpecial{(}\HSCon{I}\HSSym{\to} \HSCon{Set}\HSSpecial{)}\HSSym{\to} \HSSpecial{(}\HSCon{I}\HSSym{\to} \HSCon{Set}\HSSpecial{)}}. The semantics are shown in listing \ref{lst:sigmtheory}. 
+
+\includeagdalisting{6}{sigmtheory}{The semantics of a signature}{lst:sigmtheory}
+
+  Consequently, the fixpoint operation needs to be lifted from \ensuremath{\HSCon{Set}} to \ensuremath{\HSCon{I}\HSSym{\to} \HSCon{Set}} as well. The required adaptation follows naturally from the definition of the semantics: 
+
+\includeagda{6}{sigfix}
+
+  It is worth noting that, since \ensuremath{\HSCon{Set}\HSSym{≅}\HSSym{⊤}\HSSym{\to} \HSCon{Set}}, we can describe non-indexed datatypes as an indexed container by choosing \ensuremath{\HSSym{⊤}} as the index type. More precisely, there exists a bijection between W-types and signatures indexed with the unit type, such that for every W-type, its interpretation is isomorphic to the interpretation of the corresponding signature, and vice versa. 
+  
+\subsection{Example Signatures}
+
+  Let us now consider a few examples of datatypes represented as a signature. 
+
+  \begin{example}
+
+    We start by defining a suitable set of operations. The \ensuremath{\HSCon{ℕ}} datatype has two constructor, so we return a type with two inhabitants. We use \ensuremath{\HSSym{⊤}} as the index of the signature, since \ensuremath{\HSCon{ℕ}} is a non-indexed datatype.
+
+\includeagdanv{6}{natop}
+
+    Next, we map each of those operations to the right arity. The \ensuremath{\HSVar{zero}} constructor has no recursive branches, so its arity is the empty type (\ensuremath{\HSSym{⊥}}), while the \ensuremath{\HSVar{suc}} constructor has a single recursive argument, so its arity is the unit type (\ensuremath{\HSSym{⊤}}). 
+
+\includeagdanv{6}{natar}
+
+    Since the index type has only one inhabitant, the associated typing discipline just returns \ensuremath{\HSVar{tt}} in all cases. We bring all these elements together into a single signature, for which we can show that its fixpoint is isomorphic to \ensuremath{\HSCon{ℕ}}.
+
+\includeagdanv{6}{natsig}
+
+  \end{example}
+
+  The signature for natural numbers is quite similar to how we would represent them as a W-type. This example, however, does not tell us much about how signatures enable us to represent indexed datatypes, so let us look at another example. 
+
+  \begin{example}
+
+    We consider the type of finite sets (listing \ref{lst:deffin}). Contrary to natural numbers, the set of available operations varies with different indices. That is, \ensuremath{\HSCon{Fin}\;\HSNumeral{0}} is uninhabited, so the set of operations associated with index \ensuremath{\HSNumeral{0}} is empty. A value of type \ensuremath{\HSCon{Fin}\;\HSSpecial{(}\HSVar{suc}\;\HSVar{n}\HSSpecial{)}} can be constructed using both \ensuremath{\HSVar{suc}} and \ensuremath{\HSVar{zero}}, hence the set of associated operations has two elements: 
+
+\includeagdanv{6}{finop}
+
+    The arity of the \ensuremath{\HSCon{Fin}} type is exactly the same as the arity of \ensuremath{\HSCon{ℕ}}, with the exception of an absurd pattern in the case of index \ensuremath{\HSVar{zero}}. 
+
+\includeagdanv{6}{finar}
+
+    Recall the type of the \ensuremath{\HSVar{suc}} constructor: \ensuremath{\HSCon{Fin}\;\HSVar{n}\HSSym{\to} \HSCon{Fin}\;\HSSpecial{(}\HSVar{suc}\;\HSVar{n}\HSSpecial{)}}. The index of the recursive argument is one less than the index of the constructed value. The typing discipline describes this relation between index of the constructed value, and indices of recursive arguments. In the case of \ensuremath{\HSCon{Fin}}, this means that we map \ensuremath{\HSVar{suc}\;\HSVar{n}} to \ensuremath{\HSVar{n}}, if the index is greater than \ensuremath{\HSNumeral{0}}, and the operation corresponding to the \ensuremath{\HSVar{suc}} constructor is selected. 
+
+\includeagdanv{6}{finty}
+
+    Again, we combine operations, arity and typing into a signature: 
+
+\includeagdanv{6}{finsig}
+
+  \end{example}
+
+  One thing to keep in mind while defining signatures for types is that part of their semantics is a dependent function type. This means that proving an isomorphism between a signature and the type it represents requires some extra work. More specifically, we need to postulate a variation of \emph{extensional equality} for function types: 
+
+\includeagda{6}{funext} 
+
+  One aspect we have not yet addressed is how to represent parameterized types, such as \ensuremath{\HSCon{Vec}\;\HSVar{a}} (listing \ref{lst:defvec}). Indexed containers do not have an explicit way to refer to other types, such as is the case with regular types, but rather include this kind of information as part of a type's operations. 
+
+  \begin{example}
+
+    We consider the \ensuremath{\HSCon{Vec}} type as an example, defining the following operations: 
+
+\includeagdanv{6}{vecop}
+
+    Notice that we map \ensuremath{\HSVar{suc}\;\HSVar{n}} to \ensuremath{\HSCon{A}}, indicating that the \ensuremath{\HSSym{∷}} constructor requires an argument of type \ensuremath{\HSCon{A}}. The remainder of the signature is then quite straightforward: 
+
+\includeagdanv{6}{vecsig}
+
+  \end{example}
+
+\section{Generic Generators for Indexed Containers}
+
+  In order to be able to derive generators from signatures, there are two additional steps we need to take: restricting the set of possible operations and arities, and defining \emph{co-generators} for regular types. 
+
+\subsection{Restricting Operations and Arities}
+  
+  The set of operations of a signature, \ensuremath{\HSCon{Op}}, is a value in \ensuremath{\HSCon{Set}}. This implies that we have no way to generate values of type \ensuremath{\HSCon{Op}\;\HSVar{i}} without any further input of the programmer. The same problem occurs with arities. We solve this problem by restricting operations and arities to regular types. By doing this, we can reuse the generators we defined for regular types to generate operations and arities. This leads to the slightly altered variation on indexed containers shown in listing (\ref{lst:sigreg}), where \ensuremath{\HSCon{FixR}} and \ensuremath{\HSCon{InR}} denote the fixpoint operation for regular types. The fixpoint operation for signatures remains the same. 
+
+\includeagdalisting{6}{sigreg}{Indexed containers with restricted operations and arities}{lst:sigreg}
+
+  This implies that the definition of signatures changes slightly as well. 
+
+  \begin{example}
+
+    We use the following operation, arity and typing to describe the \ensuremath{\HSCon{Fin}} type as a restricted signature:
+
+\includeagdanv{6}{sigfinreg}
+
+    This definition does not differ too much from the previous one, except that we now pattern match on the fixpoint of some code in \ensuremath{\HSCon{Reg}} instead of directly on the operation or arity. 
+
+  \end{example}
+
+\subsection{Generating Function Types}
+
+  To derive a generator from a signature, we need, in addition to generic generators for regular types, a way to generate function types whose input argument is a regular type. That is, we need to define the following function: 
+
+\includeagda{6}{cogenerate}
+
+  We draw inspiration from SmallCheck's \cite{runciman2008smallcheck} \ensuremath{\HSCon{CoSeries}} typeclass, for which instances can be automatically derived. Co-generators for constant types are to be supplied by a programmer using a metadata structure; we choose to not make this explicit in the type signature. An example definition of \ensuremath{\HSVar{cogenerate}} is included in listing \ref{lst:cogen}.
+
+\includeagdalisting{6}{cogen}{Definition of \ensuremath{\HSVar{cogenerate}}}{lst:cogen}
+
+  Since part of the semantics of an indexed container is a \emph{dependent} function type,  we need to extend \ensuremath{\HSVar{cogenerate}} to work for dependent function types as well. 
+
+\includeagda{6}{picogen}
+
+  The type signature of $\Pi$-\ensuremath{\HSVar{cogenerate}} may look a bit daunting, but it essentially follows the exact same structure as \ensuremath{\HSVar{cogenerate}}. The only real difference is that the the result type of the generated functions may depend on the code we are inducting over, and that we do not take a generator as input, but rather a function from index to generator. The definitions of $\Pi$-\ensuremath{\HSVar{cogenerate}} and \ensuremath{\HSVar{cogenerate}} are virtually the same, but we need to make the dependency between argument and result type explicit in the type in order for Agda to be able to solve all metavariables. 
+
+\subsection{Constructing the Generator}
+
+  We are now ready to construct a the generic generator for indexed descriptions. Recall that \ensuremath{\HSVar{deriveGen}\;\HSVar{r}\;\HSVar{r}} returns a generator for the regular type represented by r. 
+
+\includeagda{6}{gensignature}
+
+  The final generator is quite simple, really. We use the existing functionality for regular types to generate operations and arities, and return them as a dependent pair, wrapping and unwrapping fixpoint operations as we go along. The dependency between the first and second element of said pair is captured using by using the monadic structure of the generator type.
+
+  Unfortunately, we have not been able to assemble a completeness proof for the enumeration derived using $\Sigma$-\ensuremath{\HSVar{generate}}. As was the case with the completeness proof for regular types, we need to explicitly pattern match on the value for which we are proving that it occurs in the enumeration in order for the termination checker to recognize that the proof can be constructed in finite time. However, since part of the semantics of a signature is a function type, we would require induction over function types in order to complete the proof. 
+
+
+\chapter{Deriving Generators for Indexed Descriptions}
+
+We use the generic description for indexed datatypes proposed by Dagand \cite{dagand2013cosmology} in his PhD thesis. First, we give the definition and semantics of this universe, before showing how a generator can be derived from codes in this universe. Finally, we prove that the enumerations resulting from these generators are complete. 
+
+\section{Universe Description}
+
+  
+
+\subsection{Definition}\label{sec:idescdef}
 
   Indexed descriptions are not much unlike the codes used to describe regular types (that is, the \ensuremath{\HSCon{Reg}} datatype), with the differences being: 
 
@@ -1597,23 +1872,112 @@ for constant types}{lst:mdstructure}
   A generalized coproduct, \ensuremath{\HSSpecial{`}}$\sigma$, that denotes choice between $n$ constructors, in favor of the \ensuremath{\HSSym{⊕}} combinator. 
 
   \item 
-  Recursive positions storing the index of recursive values
+  A combinator denoting dependent pairs. 
 
   \item 
-  Addition of a combinator to encode $\Sigma$ types which is a generalization of the \ensuremath{\HSCon{K}} combinator. 
+  Recursive positions storing the index of recursive values. 
 \end{enumerate}
 
-  This amounts to the definition of indexed descriptions described in listing \ref{lst:idesc}. 
+  This amounts to the Agda datatype describing indexed descriptions shown in listing \ref{lst:idesc}. 
 
-\includeagdalisting{7}{idesc}{The Universe of indexed descriptions}{lst:idesc}\
+\includeagdalisting{7}{idesc}{The Universe of indexed descriptions}{lst:idesc}
 
-The \ensuremath{\HSCon{Sl}} datatype is used to select the right branch from the generic coproduct, and is isomorphic to the \ensuremath{\HSCon{Fin}} datatype. 
+  Notice how we retain the regular product of codes as a first order construct in our universe. The \ensuremath{\HSCon{Sl}} datatype is used to select the right branch from the generic coproduct, and is isomorphic to the \ensuremath{\HSCon{Fin}} datatype. 
 
 \includeagda{7}{sl}
 
-\subsection{Examples}
+  The semantics associated with the \ensuremath{\HSCon{IDesc}} universe is largely the same as the semantics of the universe of regular types. The key difference is that we do not map codes to a functor \ensuremath{\HSCon{Set}\HSSym{→}\HSCon{Set}}, but rather to \ensuremath{\HSCon{IDesc}\;\HSCon{I}\HSSym{→}\HSSpecial{(}\HSCon{I}\HSSym{→}\HSCon{Set}\HSSpecial{)}\HSSym{→}\HSCon{Set}}. The semantics is shown in listing \ref{lst:idescsem}.
+
+\includeagdalisting{7}{idescsem}{Semantics of the IDesc universe}{lst:idescsem}
+
+  We do not require a separate constructor representing the empty type, as we can encode it as a coproduct over zero constructors: \ensuremath{\HSSpecial{`}}$\sigma$ \ensuremath{\HSNumeral{0}} $\lambda$ \ensuremath{\HSSpecial{(}\HSSpecial{)}}. 
+
+  We calculate the fixpoint of interpreted codes using the following fixpoint combinator: 
+
+\includeagda{7}{idescfix}
+
+  \begin{example}
+    We can describe the \ensuremath{\HSCon{Fin}} datatype, listing \ref{lst:deffin}, as follows using a code in the universe of indexed descriptions: 
+
+\includeagdanv{7}{idescfin}
+
+    If the index is \ensuremath{\HSVar{zero}}, there are no inhabitants, so we return a coproduct of zero choices. Otherwise, we may choose between two constructors: \ensuremath{\HSVar{zero}} or \ensuremath{\HSVar{suc}}. Notice that we describe the datatype by induction on the index type. This is not required, althoug convenient in this case. A different, but equally valid description exists, in which we use the \ensuremath{\HSSpecial{`}}$\Sigma$ constructor to explicitly enforce the constraint that the index \ensuremath{\HSVar{n}} is the successor of some \ensuremath{\HSVar{n'}}. 
+    
+\includeagdanv{7}{idescfin2}
+    
+    Listing \ref{lst:finiso} establishes that the fixpoint of \ensuremath{\HSVar{finD}} is indeed isomorphic to \ensuremath{\HSCon{Fin}}. 
+
+  \end{example}
+
+\includeagdalisting{7}{idescfiniso}{Isomorphism between \ensuremath{\HSCon{Fix}\;\HSVar{finD}} and \ensuremath{\HSCon{Fin}}}{lst:finiso}
+
+\subsection{Exmample: describing well typed lambda terms}
+
+  To demonstrate the expressiveness of the \ensuremath{\HSCon{IDesc}} universe, and to show how one might model a more complex datatype, we consider simply typed lambda terms as an example. We assume raw terms as described in listing \ref{lst:defrawterm}. We type terms using the universe described in listing \ref{lst:defstype}. 
+
+\subsubsection{Modelling SLC in Agda}
+
+  We write $\Gamma \ni \alpha : \tau$ to signify that $\alpha$ has type $\tau$ in $\Gamma$. Context membership is described by the following inference rules: 
+
+\begin{equation*}
+\texttt{[Top]}
+  \frac{}{\Gamma , \alpha : \tau \ni \alpha : \tau} \quad 
+\texttt{[Pop]}
+  \frac{\Gamma \ni \alpha : \tau}{\Gamma , \beta : \sigma \ni \alpha : \tau}
+\end{equation*}
+
+  We describe these inference rules in Agda using an inductive datatype, shown in listing \ref{lst:ctxmem}, indexed with a type and a context, whose inhabitants correspond to all proofs that a context $\Gamma$ contains a variable of type $\tau$. 
+
+\includeagdalisting{7}{ctxmembership}{Context membership in Agda}{lst:ctxmem}
+
+  We write $\Gamma \vdash t : \tau$ to express a typing judgement stating that term $t$ has type $\tau$ when evaluated under context $\Gamma$. The following inference rules determine when a term is type correct: 
+
+\begin{equation*}
+\texttt{[Var]}
+  \frac{\Gamma \ni \alpha : \tau}{\Gamma \vdash \alpha : \tau} \quad 
+\texttt{[Abs]}
+  \frac{\Gamma , \alpha : \sigma \vdash t : \tau}{\Gamma \vdash \lambda\ \alpha\ .\ t : \sigma \rightarrow \tau} \quad
+\texttt{[App]}
+  \frac{\Gamma \vdash t1 : \sigma \rightarrow \tau \quad \Gamma \vdash t2 : \sigma}{\Gamma \vdash t_1\ t_2 : \tau}
+\end{equation*} 
+
+  We model these inference rules in Agda using a two way relation between contexts and types whose inhabitants correspond to all terms that have a given type under a given context (listing \ref{lst:wflambda})
+
+\includeagdalisting{7}{typejudgement}{Well-typed lambda terms as a two way relation}{lst:wflambda}
+
+  Given an inhabitant $\Gamma$ \ensuremath{\HSSym{⊢}} $\tau$ of this relationship, we can write a function \ensuremath{\HSVar{toTerm}} that transforms the typing judgement to its corresponding untyped term. 
+
+\includeagda{7}{toterm}
+
+  The term returned by \ensuremath{\HSVar{toTerm}} will has type $\tau$ under context $\Gamma$. 
+
+\subsubsection{Describing well typed terms}
+
+  In \cref{sec:idescdef}, we saw that we can describe the \ensuremath{\HSCon{Fin}} both by induction on the index, as well as by adding explicit constraints. Similarly, we can choose to define a description in two ways: either by induction on the type of the terms we are describing, or by including an explicit constraint that the index type is a function type for the description of the abstraction rule. If we consider a description for lambda terms using induction on the index (listing \ref{slcdescinductive}), we see that it has a downside. The same constructor may yield a value with different index patterns. 
+
+\includeagdalisting{7}{slcdescinductive}{A description for well typed terms using induction on the index type}{lst:slcdescinductive}
+
+  For example, the application rule may yield both a function type as well as a ground type, we need to include a description for this constructor in both branches when pattern matching on the input type. If we compare the inductive description to a version that explicitly includes a constraint that the input type is a function type in case of the description for the abstraction rule, we end up with a much more succinct description. 
+
+  However, using such a description comes at a price. The descriptions used will become more complex, hence their interpretation will too. Additionally, we delay the point at which it becomes apparent that a constructor could not have been used to create a value with the input index. This makes the generators for indexed descriptions, which we will derive in the next section, potentially more computationally intensive to run when derived from a description that uses explicit constraints, compared to an equivalent description that is defined by induction on the index. 
+
+\includeagdalisting{7}{slcdescconstrained}{A description for well typed terms using explicit constraints}{lst:slcdescconstrained} 
+
+  To convince ourselves that these descriptions do indeed describe the same type, we can show that their fixpoints are isomorphic: 
+
+\includeagda{7}{desciso}
+
+  Given an isomorphism between the fixpoints of two descriptions, we can prove that they are both isomorphic to the target type by establishing an isomorphism between the fixpoint of one of them and the type we are describing. For example, we might prove the following isomorphism: 
+
+\includeagda{7}{constrainediso}
+
+  Using the transitivity of \ensuremath{\HSSym{\anonymous} \HSSym{≃\char95 }}, we can show that the inductive description also describes well typed terms. 
 
 \section{Generic Generators for Indexed Descriptions}
+
+
+
+\section{Completeness Proof for Generators Derived From Indexed Descriptions}
 
 \chapter{Program Term Generation}
 
@@ -1718,9 +2082,9 @@ The \ensuremath{\HSCon{Sl}} datatype is used to select the right branch from the
 
 \end{listing}
 \newpage
-\section{Raw $\lambda$-Terms}
+\section{Raw Lambda Terms}
 
-\begin{listing}{Definition of raw $\lambda$-terms in Haskell and Agda}{lst:defrawterm}
+\begin{listing}{Definition of raw lambda terms in Haskell and Agda}{lst:defrawterm}
 
   \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1755,9 +2119,9 @@ The \ensuremath{\HSCon{Sl}} datatype is used to select the right branch from the
 
 \end{listing}
 
-\section{Well-scoped $\lambda$-terms}
+\section{Well-scoped Lambda Terms}
 
-\begin{listing}{Definition well-scoped $\lambda$-terms in Agda}{lst:defwellscoped}
+\begin{listing}{Definition well-scoped lambda terms in Agda}{lst:defwellscoped}
 
   \appincludeagda{A}{wellscoped}
 
@@ -1767,7 +2131,7 @@ The \ensuremath{\HSCon{Sl}} datatype is used to select the right branch from the
 \listoffigures
 \listoftables
 
-\bibliographystyle{alpha}
+\bibliographystyle{acm}
 \bibliography{references}
 
 \end{document}

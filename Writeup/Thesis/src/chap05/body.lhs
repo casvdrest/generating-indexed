@@ -233,7 +233,8 @@ for constant types}{lst:mdstructure}
 
   We formulate the desired completeness property as follows: \textit{for every code c 
   and value x it holds that there is an n such that x occurs at depth n in the 
-  enumeration derived from c}. In Agda, this amounts to proving the following statement: 
+  enumeration derived from c}. In Agda, this amounts to proving the following 
+  statement: 
 
 \includeagda{5}{genericgencomplete}
 
@@ -260,70 +261,119 @@ for constant types}{lst:mdstructure}
       for constant types in the code. 
 
     \item 
-      Finally, we assemble the individual components into a proof of the statement above. 
+      Finally, we assemble the individual components into a proof of the statement 
+      above. 
 
   \end{itemize}
 
 \subsection{Combinator Correctness}
 
-  We start our proof by asserting that the used combinators are indeed complete. That is, we show for every constructor of |Reg| that the generator we return in |deriveGen| produces all elements of the interpretation of that constructor. In the case of |Z| and |U|, this is easy. 
+  We start our proof by asserting that the used combinators are indeed complete. That 
+  is, we show for every constructor of |Reg| that the generator we return in |
+  deriveGen| produces all elements of the interpretation of that constructor. In the 
+  case of |Z| and |U|, this is easy. 
 
 \includeagda{5}{derivegencompleteZU}
 
-  The semantics of |Z| is the empty type, so any generator producing values of type |⊥| is trivially complete. Similarly, in the case of |U| we simply need to show that interpreting |pure tt| returns a list containing |tt|. 
+  The semantics of |Z| is the empty type, so any generator producing values of type |⊥|
+   is trivially complete. Similarly, in the case of |U| we simply need to show that 
+   interpreting |pure tt| returns a list containing |tt|. 
 
-  Things become a bit more interesting once we move to products and coproducts. In the case of coproducts, we know the following equality to hold, by definition of both |toList| and |deriveGen|: 
+  Things become a bit more interesting once we move to products and coproducts. In the 
+  case of coproducts, we know the following equality to hold, by definition of both |
+  toList| and |deriveGen|: 
 
 \includeagda{5}{tolistcopeq}
 
-  Basically, this equality unfolds the |toList| function one step. Notice how the generators on the left hand side of the equation are \emph{almost} the same as the recursive calls we make. This means that we can prove completeness for coproducts by proving the following lemmas, where we obtain the required completeness proofs by recursing on the left and right subcodes of the coproduct. 
+  Basically, this equality unfolds the |toList| function one step. Notice how the 
+  generators on the left hand side of the equation are \emph{almost} the same as the 
+  recursive calls we make. This means that we can prove completeness for coproducts by 
+  proving the following lemmas, where we obtain the required completeness proofs by 
+  recursing on the left and right subcodes of the coproduct. 
 
 \includeagda{5}{mergecomplete}
 
-  Similarly, by unfolding the toList function one step in the case of products, we get the following equality:
+  Similarly, by unfolding the toList function one step in the case of products, we get 
+  the following equality:
 
 \includeagda{5}{tolistpeq}
 
-  We can prove the right hand side of this equality by proving the following lemma about the applicative instance of lists:
+  We can prove the right hand side of this equality by proving the following lemma 
+  about the applicative instance of lists:
 
 \includeagda{5}{apcomplete}
 
-  Again, the preconditions of this lemma can be obtained by recursing on the left and right subcodes of the product. 
+  Again, the preconditions of this lemma can be obtained by recursing on the left and 
+  right subcodes of the product. 
 
 \subsection{Completeness for Constant Types}
 
-  Since our completeness proof relies on completeness of the generators for constant types, we need the programmer to supply a proof that the supplied generators are indeed complete. To this end, we add a metadata parameter to the type of |deriveGen|-|complete|, with the following type: 
+  Since our completeness proof relies on completeness of the generators for constant 
+  types, we need the programmer to supply a proof that the supplied generators are 
+  indeed complete. To this end, we add a metadata parameter to the type of |deriveGen|
+  -|complete|, with the following type: 
 
 \includeagda{5}{proofinfotype}
 
-  In order to be able to use the completeness proof from the metadata structure in the |K| branch of |deriveGen|-|Complete|, we need to be able to express the relationship between the metadata structure used in the proof, and the metadata structure used by |deriveGen|. To do this, we need a way to transform the type of information that is carried by a value of type |KInfo|: 
+  In order to be able to use the completeness proof from the metadata structure in the 
+  |K| branch of |deriveGen|-|Complete|, we need to be able to express the relationship 
+  between the metadata structure used in the proof, and the metadata structure used by 
+  |deriveGen|. To do this, we need a way to transform the type of information that is 
+  carried by a value of type |KInfo|: 
 
 \includeagda{5}{kinfomap}
 
-  Given the definition of |KInfo|-|map|, we can take the first projection of the metadata input to |deriveGen|-|Complete|, and use the resulting structure as input to |deriveGen|: 
+  Given the definition of |KInfo|-|map|, we can take the first projection of the 
+  metadata input to |deriveGen|-|Complete|, and use the resulting structure as input 
+  to |deriveGen|: 
 
 \includeagda{5}{proofinfotype}
 
-  This amounts to the following final type for |deriveGen|-|Complete|, where |◂ m| = |KInfo|-|map proj₁ m|:  
+  This amounts to the following final type for |deriveGen|-|Complete|, where |◂ m| = |
+  KInfo|-|map proj₁ m|:  
 
 \includeagda{5}{derivegenwithmd}
 
-  Now, with this explicit relation between the completeness proofs and the generators given to |deriveGen|, we can simply retrun the proof contained in the metadata of the |K| branch. 
+  Now, with this explicit relation between the completeness proofs and the generators 
+  given to |deriveGen|, we can simply retrun the proof contained in the metadata of 
+  the |K| branch. 
   
 \subsection{Generator Monotonicity}
 
-  The lemma |×|-|complete| is not enough to prove completeness in the case of products. We make two recursive calls, that both return a dependent pair with a depth value, and a proof that a value occurs in the enumeration at that depth. However, we need to return just such a dependent pair stating that a pair of both values does occur in the enumeration at a certain depth. The question is what depth to use. The logical choice would be to take the maximum of both dephts. This comes with the problem that we can only combine completeness proofs when they have the same depth value. 
+  The lemma |×|-|complete| is not enough to prove completeness in the case of 
+  products. We make two recursive calls, that both return a dependent pair with a 
+  depth value, and a proof that a value occurs in the enumeration at that depth. 
+  However, we need to return just such a dependent pair stating that a pair of both 
+  values does occur in the enumeration at a certain depth. The question is what depth 
+  to use. The logical choice would be to take the maximum of both dephts. This comes 
+  with the problem that we can only combine completeness proofs when they have the 
+  same depth value. 
 
-  For this reason, we need a way to transform a proof that some value |x| occurs in the enumeration at depth |n| into a proof that |x| occurs in the enumeration at depth |m|, given that $n \leq m$. In other words, the set of values that occurs in an enumeration monotoneously increases with the enumeration depth. To finish our completeness proof, this means that we require a proof of the following lemma: 
+  For this reason, we need a way to transform a proof that some value |x| occurs in 
+  the enumeration at depth |n| into a proof that |x| occurs in the enumeration at 
+  depth |m|, given that $n \leq m$. In other words, the set of values that occurs in 
+  an enumeration monotoneously increases with the enumeration depth. To finish our 
+  completeness proof, this means that we require a proof of the following lemma: 
 
 \includeagda{5}{derivegenmonotone}
 
-  We can complete a proof of this lemma by using the same approach as for the completeness proof. 
+  We can complete a proof of this lemma by using the same approach as for the 
+  completeness proof. 
 
 \subsection{Final Proof Sketch}
 
-  By bringing all these elements together, we can prove that |deriveGen| is complete for any code |c|, given that the programmer is able to provide a suitable metadatastructure. We can transform this proof into a proof that |isoGen| returns a complete generator by observing that any isomorphism |A ≃ B| establishes a bijection between the types |A| and |B|. Hence, if we apply such an isomorphism to the elements produced by a generator, completeness is preserved. 
+  By bringing all these elements together, we can prove that |deriveGen| is complete 
+  for any code |c|, given that the programmer is able to provide a suitable 
+  metadatastructure. We can transform this proof into a proof that |isoGen| returns a 
+  complete generator by observing that any isomorphism |A ≃ B| establishes a bijection 
+  between the types |A| and |B|. Hence, if we apply such an isomorphism to the 
+  elements produced by a generator, completeness is preserved. 
 
-  We have the required isomorphism readily at our disposal in |isoGen|, since it is contained in the instance argument |Regular a|. This allows us to have |isoGen| return a completeness proof for the generator it derives: 
+  We have the required isomorphism readily at our disposal in |isoGen|, since it is 
+  contained in the instance argument |Regular a|. This allows us to have |isoGen| 
+  return a completeness proof for the generator it derives: 
 
 \includeagda{5}{isogenproven}
+
+  With which we have shown that if a type is regular, we can derive a complete 
+  generator producing elements of that type. 

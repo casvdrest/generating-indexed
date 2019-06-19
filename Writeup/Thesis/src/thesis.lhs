@@ -113,6 +113,11 @@
 
 \chapter{Declaration}
 Thanks to family, supervisor, friends and hops!
+\\ \\
+I declare that this thesis has been composed solely by myself and that it has not been
+submitted, in whole or in part, in any previous application for a degree. Except where
+stated otherwise by reference or acknowledgment, the work presented is entirely my
+own.
 
 \chapter{Abstract}
 Abstract
@@ -121,6 +126,7 @@ Abstract
 \mainmatter
 
 \chapter{Introduction}
+%include src/chap01/body.lhs
 
 \chapter{Background}
 %include src/chap02/body.lhs
@@ -135,6 +141,7 @@ Abstract
 %include src/chap05/body.lhs
 
 \chapter{Deriving Generators for Indexed Containers}
+%include src/chap06/body.lhs
 
 \chapter{Deriving Generators for Indexed Descriptions}
 %include src/chap07/body.lhs
@@ -153,7 +160,7 @@ Abstract
 \listoffigures
 \listoftables
 
-\bibliographystyle{alpha}
+\bibliographystyle{acm}
 \bibliography{references}
 
 \end{document}

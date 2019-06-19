@@ -62,15 +62,15 @@ module IDesc.IDesc where
 
   -- | Map a type to it's interpretation 
   type family Interpret (d :: IDesc a i) :: *
-  type instance Interpret One                            = ()
-  type instance Interpret Empty                          = E
-  type instance Interpret (Var _ :: IDesc a i)           = a
-  type instance Interpret (dl :*: dr)                    = (Interpret dl , Interpret dr)
-  type instance Interpret (SZero :+> VNil)               = E
-  type instance Interpret (SSuc SZero :+> (x ::: VNil))  = Interpret x
-  type instance Interpret (SSuc (SSuc n) :+> (x ::: xs)) = Either (Interpret x) (Interpret (SSuc n :+> xs))
-  type instance Interpret (K p _)                        = UnProxy p
-  type instance Interpret (Sigma p fd)                   = (UnProxy p , Interpret fd)
+  type instance Interpret One                             = ()
+  type instance Interpret Empty                           = E
+  type instance Interpret (Var _ :: IDesc a i)            = a
+  type instance Interpret (dl :*: dr)                     = (Interpret dl , Interpret dr)
+  type instance Interpret (SZero :+> VNil)                = E
+  type instance Interpret (SSuc SZero :+> (x ::: VNil))   = Interpret x
+  type instance Interpret (SSuc (SSuc n) :+> (x ::: xs))  = Either (Interpret x) (Interpret (SSuc n :+> xs))
+  type instance Interpret (K p _)                         = UnProxy p
+  type instance Interpret (Sigma p fd)                    = (UnProxy p , Interpret fd)
 
   --------------------------------------------------------------------------
   -- Singleton Instance for Indexed Descriptions
@@ -161,12 +161,15 @@ module IDesc.IDesc where
     <|> Right <$> idesc_gen (SSuc2 n :+>~ ds)
   idesc_gen (SK (Proxy :: Proxy s) sj) = G (Call (unG . genIndexed) (dm sj))
   idesc_gen (SSigma desc gen eq)               = do 
-    (Promoted x) <- undefined
-    p <- idesc_gen (expand desc x) 
-    pure (dm x , eqConv (sym (eq x)) p) 
+    x <- G (Call (\() -> unG gen) ())
+    let px = promote x
+    case px of 
+      Promoted x' -> do 
+        p <- idesc_gen (expand desc x')
+        pure (x , eqConv (sym (eq x')) p)
   
   -- | Maps a combination of tag, goal type and index to a description. 
-  type family Desc (t :: DataTag) (a :: *) (i :: *) (i' :: i) :: IDesc a i
+  type family Desc (t :: DataTag) (a :: *) (i :: *) (i' :: i) :: IDesc a i 
 
   -- | Class of types that can be described by an indexed description. 
   -- 

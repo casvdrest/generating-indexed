@@ -88,48 +88,6 @@ module IDesc.Instances where
   instance DepthCalc () where
     depth () = 0
 
-  data Term a = VarT a
-              | AbsT a (Term a)
-              | AppT (Term a) (Term a)
-              deriving (Show, Eq , Generics.Generic, DepthCalc)
-
-  instance Functor Term where 
-    fmap f (VarT x) = VarT (f x) 
-    fmap f (AbsT x tm) = AbsT (f x) (fmap f tm)
-    fmap f (AppT t1 t2) = AppT (fmap f t1) (fmap f t2)
-
-  type family WSTermDesc (n :: Nat) :: IDesc (Term Nat) Nat
-  type instance WSTermDesc n = 
-    SSuc (SSuc (SSuc SZero)) :+> 
-    (   K ('Proxy :: Proxy Nat) n
-    ::: Var (Suc n) 
-    ::: Var n :*: Var n 
-    ::: VNil )
-
-  type instance Desc T_WSTERM (Term Nat) Nat n = WSTermDesc n
-
-  wsTermSDesc :: Proxy T_WSTERM -> Sing n -> SingIDesc (WSTermDesc n)
-  wsTermSDesc _ n = 
-    SSuc2 (SSuc2 (SSuc2 SZero2)) :+>~ 
-    (    SK Proxy n
-    :::~ SVar (Suc (dm n)) 
-    :::~ (SVar (dm n)) :*:~ (SVar (dm n)) 
-    :::~ SVNil )
-
-  toTerm :: Proxy T_WSTERM -> Sing n -> Interpret (WSTermDesc n) -> Term Nat
-  toTerm _ n (Left x)                  = VarT x
-  toTerm _ n (Right (Left x))          = AbsT Zero x
-  toTerm _ n (Right (Right (t1 , t2))) = AppT t1 t2
-
-  instance Describe T_WSTERM (Term Nat) Nat where 
-    sdesc = wsTermSDesc 
-    to    = toTerm
-
-  genTerm :: Nat -> G Nat (Term Nat) (Term Nat)
-  genTerm n = 
-    case promote n of 
-      Promoted n' -> genDesc (Proxy :: Proxy T_WSTERM) n' 
-
   ----------------------------------------------------------------------------
   -- Sized Trees
 
