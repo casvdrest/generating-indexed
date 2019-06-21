@@ -128,14 +128,8 @@ Abstract
 \chapter{Introduction}
 %include src/chap01/body.lhs
 
-\chapter{Background}
-%include src/chap02/body.lhs
-
-\chapter{Literature Review}
-%include src/chap03/body.lhs
-
-\chapter{A Combinator Library for Generators}
-%include src/chap04/body.lhs
+\chapter{Background \& Related Work}
+%include src/chap023/body.lhs 
 
 \chapter{Generic Generators for Regular types}
 %include src/chap05/body.lhs
@@ -144,13 +138,15 @@ Abstract
 %include src/chap06/body.lhs
 
 \chapter{Deriving Generators for Indexed Descriptions}
-%include src/chap07/body.lhs
+%include src/chap07/body.lhs 
 
-\chapter{Program Term Generation}
+%% \chapter{A Combinator Library for Generators}
+%% %include src/chap04/body.lhs
 
 \chapter{Implementation in Haskell}
+%include src/chap08/body.lhs
 
-\chapter{Conclusion \& Further Work}
+\chapter{Discussion}
 
 \appendix
 \chapter{Datatype Definitions}
@@ -158,7 +154,7 @@ Abstract
 
 \backmatter
 \listoffigures
-\listoftables
+%% \listoftables
 
 \bibliographystyle{acm}
 \bibliography{references}

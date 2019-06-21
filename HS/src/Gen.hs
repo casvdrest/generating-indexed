@@ -13,13 +13,13 @@ module Gen where
 
   -- | The type of abstract generators 
   data Gen i a t where 
-    None  :: Gen i a t 
-    Pure  :: a -> Gen i a t 
-    Or    :: Gen i a t -> Gen i a t -> Gen i a t 
-    Ap    :: Gen i (b -> a) t -> Gen i b t -> Gen i a t
-    Bind  :: Gen i a t -> (a -> Gen i b t) -> Gen i b t
-    Mu    :: i -> Gen i a a
-    Call :: (j -> Gen j a a) -> j -> Gen i a t
+    None  ::                                   Gen i a t 
+    Pure  :: a                              -> Gen i a t 
+    Or    :: Gen i a t -> Gen i a t         -> Gen i a t 
+    Ap    :: Gen i (b -> a) t -> Gen i b t  -> Gen i a t
+    Bind  :: Gen i a t -> (a -> Gen i b t)  -> Gen i b t
+    Mu    :: i                              -> Gen i a a
+    Call  :: (j -> Gen j a a) -> j          -> Gen i a t
 
   -- | Wrapper to allow generators to be an instance of 
   --   the required typeclasses

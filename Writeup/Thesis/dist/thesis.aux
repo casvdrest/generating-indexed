@@ -24,73 +24,72 @@
 \@writefile{toc}{\contentsline {chapter}{Abstract}{v}{chapter*.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\citation{claessen2011quickcheck}
+\citation{runciman2008smallcheck}
+\citation{palka2011testing}
+\citation{grygiel2013counting}
+\citation{claessen2015generating}
 \HyPL@Entry{8<</S/D>>}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {1.1}Motivation}{1}{section.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.2}Research Question and Goals}{1}{section.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Contributions}{1}{section.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.4}Thesis Structure}{1}{section.1.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.5}Methodology}{2}{section.1.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.1}Agda Model}{2}{subsection.1.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.2}Haskell Library}{2}{subsection.1.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.3}Notational Conventions}{2}{subsection.1.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Problem Statement}{1}{section.1.1}\protected@file@percent }
+\citation{lampropoulos2017generating}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Research Question and Goals}{2}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Contributions}{2}{section.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Thesis Structure}{3}{section.1.4}\protected@file@percent }
 \citation{wadler2015propositions}
-\@writefile{toc}{\contentsline {chapter}{\numberline {2}Background}{3}{chapter.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Background \& Related Work}{5}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}Type Theory}{3}{section.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Intuitionistic Type Theory}{3}{subsection.2.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}The Curry-Howard Equivalence}{3}{subsection.2.1.2}\protected@file@percent }
-\newlabel{tbl:chiso}{{2.1.2}{4}{The Curry-Howard Equivalence}{subsection.2.1.2}{}}
-\newlabel{tbl:chiso@cref}{{[subsection][2][2,1]2.1.2}{[1][3][]4}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Correspondence between classical logic and type theory}}{4}{table.2.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-1}{\default{2.1.2}\page{4}\abspage{12}\mdf@pagevalue{4}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{4}{table.2.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-2}{\default{2.1.2}\page{4}\abspage{12}\mdf@pagevalue{4}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{4}{table.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Type Theory}{5}{section.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Intuitionistic Type Theory}{5}{subsection.2.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}The Curry-Howard Equivalence}{5}{subsection.2.1.2}\protected@file@percent }
+\newlabel{tbl:chiso}{{2.1.2}{6}{The Curry-Howard Equivalence}{subsection.2.1.2}{}}
+\newlabel{tbl:chiso@cref}{{[subsection][2][2,1]2.1.2}{[1][5][]6}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Correspondence between classical logic and type theory}}{6}{table.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-1}{\default{2.1.2}\page{6}\abspage{14}\mdf@pagevalue{6}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{6}{table.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-2}{\default{2.1.2}\page{6}\abspage{14}\mdf@pagevalue{6}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{6}{table.2.1}\protected@file@percent }
 \citation{wadler2015propositions}
 \citation{norell2008dependently}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Dependent Types}{5}{subsection.2.1.3}\protected@file@percent }
-\newlabel{tbl:chisodependent}{{2.1.3}{5}{Dependent Types}{subsection.2.1.3}{}}
-\newlabel{tbl:chisodependent@cref}{{[subsection][3][2,1]2.1.3}{[1][5][]5}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Correspondence between quantifiers in classical logic and type theory}}{5}{table.2.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-3}{\default{2.1.3}\page{5}\abspage{13}\mdf@pagevalue{5}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{5}{table.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Agda}{5}{section.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Codata and Sized Types}{5}{subsection.2.2.1}\protected@file@percent }
-\newlabel{codata}{{2.2.1}{5}{Codata and Sized Types}{subsection.2.2.1}{}}
-\newlabel{codata@cref}{{[subsection][1][2,2]2.2.1}{[1][5][]5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Dependent Types}{7}{subsection.2.1.3}\protected@file@percent }
+\newlabel{tbl:chisodependent}{{2.1.3}{7}{Dependent Types}{subsection.2.1.3}{}}
+\newlabel{tbl:chisodependent@cref}{{[subsection][3][2,1]2.1.3}{[1][7][]7}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Correspondence between quantifiers in classical logic and type theory}}{7}{table.2.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-3}{\default{2.1.3}\page{7}\abspage{15}\mdf@pagevalue{7}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{7}{table.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Agda}{7}{section.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Codata and Sized Types}{7}{subsection.2.2.1}\protected@file@percent }
+\newlabel{codata}{{2.2.1}{7}{Codata and Sized Types}{subsection.2.2.1}{}}
+\newlabel{codata@cref}{{[subsection][1][2,2]2.2.1}{[1][7][]7}}
 \citation{abel2010miniagda}
-\zref@newlabel{mdf@pagelabel-4}{\default{2.2.1}\page{6}\abspage{14}\mdf@pagevalue{6}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{6}{subsection.2.2.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-5}{\default{2.2.1}\page{6}\abspage{14}\mdf@pagevalue{6}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{6}{subsection.2.2.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-6}{\default{2.2.1}\page{7}\abspage{15}\mdf@pagevalue{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Universe Polymorphism}{7}{subsection.2.2.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-4}{\default{2.2.1}\page{8}\abspage{16}\mdf@pagevalue{8}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{8}{subsection.2.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-5}{\default{2.2.1}\page{8}\abspage{16}\mdf@pagevalue{8}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{8}{subsection.2.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-6}{\default{2.2.1}\page{9}\abspage{17}\mdf@pagevalue{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Universe Polymorphism}{9}{subsection.2.2.2}\protected@file@percent }
 \citation{norell2008dependently}
 \citation{altenkirch2015indexed}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Generic Programming and Type Universes}{8}{section.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Design Pattern}{8}{subsection.2.3.1}\protected@file@percent }
-\newlabel{sec:tudesignpattern}{{2.3.1}{8}{Design Pattern}{subsection.2.3.1}{}}
-\newlabel{sec:tudesignpattern@cref}{{[subsection][1][2,3]2.3.1}{[1][8][]8}}
-\zref@newlabel{mdf@pagelabel-7}{\default{2.3.1}\page{8}\abspage{16}\mdf@pagevalue{8}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{8}{Item.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Example Universes}{8}{subsection.2.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Regular Types}{8}{subsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Generic Programming and Type Universes}{10}{section.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Design Pattern}{10}{subsection.2.3.1}\protected@file@percent }
+\newlabel{sec:tudesignpattern}{{2.3.1}{10}{Design Pattern}{subsection.2.3.1}{}}
+\newlabel{sec:tudesignpattern@cref}{{[subsection][1][2,3]2.3.1}{[1][10][]10}}
+\zref@newlabel{mdf@pagelabel-7}{\default{2.3.1}\page{10}\abspage{18}\mdf@pagevalue{10}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{10}{Item.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Example Universes}{10}{subsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regular Types}{10}{subsection.2.3.2}\protected@file@percent }
 \citation{dagand2013cosmology}
-\@writefile{toc}{\contentsline {paragraph}{Indexed Containers}{9}{subsection.2.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Indexed Descriptions}{9}{subsection.2.3.2}\protected@file@percent }
 \citation{claessen2011quickcheck}
 \citation{runciman2008smallcheck}
 \citation{matela2017tools}
 \citation{claessen2011quickcheck}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Literature Review}{11}{chapter.3}\protected@file@percent }
-\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Libraries for Property Based Testing}{11}{section.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}QuickCheck}{11}{subsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Indexed Containers}{11}{subsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Indexed Descriptions}{11}{subsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Libraries for Property Based Testing}{11}{section.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}QuickCheck}{11}{subsection.2.4.1}\protected@file@percent }
 \citation{runciman2008smallcheck}
 \citation{andoni2003evaluating}
 \citation{matela2017tools}
@@ -98,10 +97,10 @@
 \citation{duregaard2013feat}
 \citation{denes2014quickchick}
 \citation{paraskevopoulou2015foundational}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}(Lazy) SmallCheck}{12}{subsection.3.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}LeanCheck}{12}{subsection.3.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Hegdgehog}{12}{subsection.3.1.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.5}Feat}{12}{subsection.3.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}(Lazy) SmallCheck}{12}{subsection.2.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}LeanCheck}{12}{subsection.2.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}Hegdgehog}{12}{subsection.2.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.5}Feat}{12}{subsection.2.4.5}\protected@file@percent }
 \citation{claessen2010quickspec}
 \citation{palka2011testing}
 \citation{grygiel2013counting}
@@ -114,240 +113,266 @@
 \citation{moczurad2000statistical}
 \citation{wang2005generating}
 \citation{lampropoulos2017generating}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.6}QuickChick: QuickCheck for Coq}{13}{subsection.3.1.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.7}QuickSpec: Automatic Generation of Specifications}{13}{subsection.3.1.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Generating Constrained Test Data}{13}{section.3.2}\protected@file@percent }
-\newlabel{genconstrainedtd}{{3.2}{13}{Generating Constrained Test Data}{section.3.2}{}}
-\newlabel{genconstrainedtd@cref}{{[section][2][3]3.2}{[1][13][]13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Lambda Terms}{13}{subsection.3.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.6}QuickChick: QuickCheck for Coq}{13}{subsection.2.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.7}QuickSpec: Automatic Generation of Specifications}{13}{subsection.2.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Generating Constrained Test Data}{13}{section.2.5}\protected@file@percent }
+\newlabel{genconstrainedtd}{{2.5}{13}{Generating Constrained Test Data}{section.2.5}{}}
+\newlabel{genconstrainedtd@cref}{{[section][5][2]2.5}{[1][13][]13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Lambda Terms}{13}{subsection.2.5.1}\protected@file@percent }
 \citation{de2014true}
 \citation{miraldo2018sums}
 \citation{martin1984intuitionistic}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Inductive Relations in Coq}{14}{subsection.3.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Generic Programming \& Type Universes}{14}{section.3.3}\protected@file@percent }
-\newlabel{sec:lituniverses}{{3.3}{14}{Generic Programming \& Type Universes}{section.3.3}{}}
-\newlabel{sec:lituniverses@cref}{{[section][3][3]3.3}{[1][14][]14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}SOP (Sum of Products)}{14}{subsection.3.3.1}\protected@file@percent }
-\newlabel{sop}{{3.3.1}{14}{SOP (Sum of Products)}{subsection.3.3.1}{}}
-\newlabel{sop@cref}{{[subsection][1][3,3]3.3.1}{[1][14][]14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}W-Types}{14}{subsection.3.3.2}\protected@file@percent }
-\newlabel{sec:wtypes}{{3.3.2}{14}{W-Types}{subsection.3.3.2}{}}
-\newlabel{sec:wtypes@cref}{{[subsection][2][3,3]3.3.2}{[1][14][]14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Inductive Relations in Coq}{14}{subsection.2.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}Generic Programming \& Type Universes}{14}{section.2.6}\protected@file@percent }
+\newlabel{sec:lituniverses}{{2.6}{14}{Generic Programming \& Type Universes}{section.2.6}{}}
+\newlabel{sec:lituniverses@cref}{{[section][6][2]2.6}{[1][14][]14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.1}SOP (Sum of Products)}{14}{subsection.2.6.1}\protected@file@percent }
+\newlabel{sop}{{2.6.1}{14}{SOP (Sum of Products)}{subsection.2.6.1}{}}
+\newlabel{sop@cref}{{[subsection][1][2,6]2.6.1}{[1][14][]14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.2}W-Types}{14}{subsection.2.6.2}\protected@file@percent }
+\newlabel{sec:wtypes}{{2.6.2}{14}{W-Types}{subsection.2.6.2}{}}
+\newlabel{sec:wtypes@cref}{{[subsection][2][2,6]2.6.2}{[1][14][]14}}
 \citation{loh2011generic}
-\newlabel{lst:wtypes}{{3.3.2}{15}{W-Types}{subsection.3.3.2}{}}
-\newlabel{lst:wtypes@cref}{{[subsection][2][3,3]3.3.2}{[1][14][]15}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces W-types defined with separate codes and semantics}}{15}{figure.3.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-8}{\default{3.3.2}\page{15}\abspage{23}\mdf@pagevalue{15}}
+\newlabel{lst:wtypes}{{2.6.2}{15}{W-Types}{subsection.2.6.2}{}}
+\newlabel{lst:wtypes@cref}{{[subsection][2][2,6]2.6.2}{[1][14][]15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces W-types defined with separate codes and semantics}}{15}{figure.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-8}{\default{2.6.2}\page{15}\abspage{23}\mdf@pagevalue{15}}
 \@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{15}{Item.5}\protected@file@percent }
-\newlabel{lst:wnatiso}{{3.3.2}{15}{W-Types}{Item.5}{}}
-\newlabel{lst:wnatiso@cref}{{[subsection][2][3,3]3.3.2}{[1][15][]15}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Isomorphism between \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Wℕ}\endgroup }}}{15}{figure.3.2}\protected@file@percent }
+\newlabel{lst:wnatiso}{{2.6.2}{15}{W-Types}{Item.5}{}}
+\newlabel{lst:wnatiso@cref}{{[subsection][2][2,6]2.6.2}{[1][15][]15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Isomorphism between \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Wℕ}\endgroup }}}{15}{figure.2.2}\protected@file@percent }
 \citation{yorgey2010species}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Indexed Functors}{16}{subsection.3.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Combinatorial Species}{16}{subsection.3.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}A Combinator Library for Generators}{17}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.3}Indexed Functors}{16}{subsection.2.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.4}Combinatorial Species}{16}{subsection.2.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Generic Generators for Regular types}{17}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}The Type of Generators}{17}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Examples in Existing Libraries}{17}{subsection.4.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Separating Structure and Interpretation}{17}{subsection.4.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}The \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Gen}\endgroup } Datatype}{18}{subsection.4.1.3}\protected@file@percent }
-\newlabel{lst:gendef}{{4.1.3}{18}{The \ensuremath {\HSCon {Gen}} Datatype}{subsection.4.1.3}{}}
-\newlabel{lst:gendef@cref}{{[subsection][3][4,1]4.1.3}{[1][18][]18}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Definition of the \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Gen}\endgroup } datatype}}{18}{figure.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Generator Interpretations}{19}{subsection.4.1.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Generalization to Indexed Datatypes}{20}{section.4.2}\protected@file@percent }
-\newlabel{lst:genidef}{{4.2}{21}{Generalization to Indexed Datatypes}{section.4.2}{}}
-\newlabel{lst:genidef@cref}{{[section][2][4]4.2}{[1][20][]21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Definitiong of the \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Genᵢ}\endgroup } datatype}}{21}{figure.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Interpreting Generators as Enumerations}{21}{section.4.3}\protected@file@percent }
-\newlabel{sec:enuminterpretation}{{4.3}{21}{Interpreting Generators as Enumerations}{section.4.3}{}}
-\newlabel{sec:enuminterpretation@cref}{{[section][3][4]4.3}{[1][20][]21}}
-\newlabel{lst:tolist}{{4.3}{21}{Interpreting Generators as Enumerations}{section.4.3}{}}
-\newlabel{lst:tolist@cref}{{[section][3][4]4.3}{[1][21][]21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Interpretation of the \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Gen}\endgroup } datatype as an enumeration}}{21}{figure.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Properties for Enumerations}{22}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Generating Function Types}{22}{section.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}Monadic Generators}{22}{section.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Generic Generators for Regular types}{23}{chapter.5}\protected@file@percent }
-\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}The universe of regular types}{23}{section.5.1}\protected@file@percent }
-\newlabel{lst:regular}{{5.1}{23}{The universe of regular types}{section.5.1}{}}
-\newlabel{lst:regular@cref}{{[section][1][5]5.1}{[1][23][]23}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces The universe of regular types}}{23}{figure.5.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-9}{\default{5.1}\page{23}\abspage{31}\mdf@pagevalue{23}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{23}{figure.5.2}\protected@file@percent }
-\newlabel{lst:regsem}{{5.1}{24}{The universe of regular types}{figure.5.1}{}}
-\newlabel{lst:regsem@cref}{{[section][1][5]5.1}{[1][23][]24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Semantics of the universe of regular types}}{24}{figure.5.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-10}{\default{5.1}\page{24}\abspage{32}\mdf@pagevalue{24}}
-\newlabel{lst:natiso}{{5.1}{24}{The universe of regular types}{figure.5.2}{}}
-\newlabel{lst:natiso@cref}{{[section][1][5]5.1}{[1][24][]24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Isomorphism between \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {ℕ'}\endgroup }}}{24}{figure.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Non-regular data types}{25}{subsection.5.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Generic Generators for regular types}{25}{section.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Defining functions over codes}{25}{subsection.5.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Composing generic generators}{25}{subsection.5.2.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-11}{\default{5.2.2}\page{26}\abspage{34}\mdf@pagevalue{26}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{26}{subsection.5.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Constant Types}{26}{section.5.3}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-12}{\default{5.3}\page{26}\abspage{34}\mdf@pagevalue{26}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{26}{section.5.3}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-13}{\default{5.3}\page{27}\abspage{35}\mdf@pagevalue{27}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Definition and Semantics}{27}{subsection.5.3.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-14}{\default{5.3.1}\page{27}\abspage{35}\mdf@pagevalue{27}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{27}{subsection.5.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Generic Generators for Constant Typse}{27}{subsection.5.3.2}\protected@file@percent }
-\newlabel{lst:mdstructure}{{5.3.2}{27}{Generic Generators for Constant Typse}{subsection.5.3.2}{}}
-\newlabel{lst:mdstructure@cref}{{[subsection][2][5,3]5.3.2}{[1][27][]27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Metadata structure carrying additional information for constant types}}{27}{figure.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}Complete Enumerators For Regular Types}{28}{section.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Combinator Correctness}{28}{subsection.5.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Completeness for Constant Types}{29}{subsection.5.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}Generator Monotonicity}{30}{subsection.5.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}Final Proof Sketch}{30}{subsection.5.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}The universe of regular types}{17}{section.3.1}\protected@file@percent }
+\newlabel{lst:regular}{{3.1}{17}{The universe of regular types}{section.3.1}{}}
+\newlabel{lst:regular@cref}{{[section][1][3]3.1}{[1][17][]17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces The universe of regular types}}{17}{figure.3.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-9}{\default{3.1}\page{17}\abspage{25}\mdf@pagevalue{17}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{17}{figure.3.2}\protected@file@percent }
+\newlabel{lst:regsem}{{3.1}{18}{The universe of regular types}{figure.3.1}{}}
+\newlabel{lst:regsem@cref}{{[section][1][3]3.1}{[1][17][]18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Semantics of the universe of regular types}}{18}{figure.3.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-10}{\default{3.1}\page{18}\abspage{26}\mdf@pagevalue{18}}
+\newlabel{lst:natiso}{{3.1}{18}{The universe of regular types}{figure.3.2}{}}
+\newlabel{lst:natiso@cref}{{[section][1][3]3.1}{[1][18][]18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Isomorphism between \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {ℕ'}\endgroup }}}{18}{figure.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Non-regular data types}{19}{subsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Generic Generators for regular types}{19}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Defining functions over codes}{19}{subsection.3.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Composing generic generators}{19}{subsection.3.2.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-11}{\default{3.2.2}\page{20}\abspage{28}\mdf@pagevalue{20}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{20}{subsection.3.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Constant Types}{20}{section.3.3}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-12}{\default{3.3}\page{20}\abspage{28}\mdf@pagevalue{20}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{20}{section.3.3}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-13}{\default{3.3}\page{21}\abspage{29}\mdf@pagevalue{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Definition and Semantics}{21}{subsection.3.3.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-14}{\default{3.3.1}\page{21}\abspage{29}\mdf@pagevalue{21}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{21}{subsection.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Generic Generators for Constant Typse}{21}{subsection.3.3.2}\protected@file@percent }
+\newlabel{sec:genericgenreg}{{3.3.2}{21}{Generic Generators for Constant Typse}{subsection.3.3.2}{}}
+\newlabel{sec:genericgenreg@cref}{{[subsection][2][3,3]3.3.2}{[1][21][]21}}
+\newlabel{lst:mdstructure}{{3.3.2}{21}{Generic Generators for Constant Typse}{subsection.3.3.2}{}}
+\newlabel{lst:mdstructure@cref}{{[subsection][2][3,3]3.3.2}{[1][21][]21}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Metadata structure carrying additional information for constant types}}{21}{figure.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Complete Enumerators For Regular Types}{22}{section.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Combinator Correctness}{22}{subsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Completeness for Constant Types}{23}{subsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Generator Monotonicity}{24}{subsection.3.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Final Proof Sketch}{24}{subsection.3.4.4}\protected@file@percent }
 \citation{altenkirch2015indexed}
 \citation{dagand2017essence}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Deriving Generators for Indexed Containers}{31}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Deriving Generators for Indexed Containers}{25}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Universe Description}{31}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Definition}{31}{subsection.6.1.1}\protected@file@percent }
-\newlabel{lst:signatures}{{6.1.1}{31}{Definition}{subsection.6.1.1}{}}
-\newlabel{lst:signatures@cref}{{[subsection][1][6,1]6.1.1}{[1][31][]31}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Signatures}}{31}{figure.6.1}\protected@file@percent }
-\newlabel{lst:sigmtheory}{{6.1.1}{32}{Definition}{figure.6.1}{}}
-\newlabel{lst:sigmtheory@cref}{{[subsection][1][6,1]6.1.1}{[1][32][]32}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces The semantics of a signature}}{32}{figure.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Example Signatures}{32}{subsection.6.1.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-15}{\default{6.1.2}\page{32}\abspage{40}\mdf@pagevalue{32}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{32}{subsection.6.1.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-16}{\default{6.1.2}\page{33}\abspage{41}\mdf@pagevalue{33}}
-\zref@newlabel{mdf@pagelabel-17}{\default{6.1.2}\page{33}\abspage{41}\mdf@pagevalue{33}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{33}{subsection.6.1.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-18}{\default{6.1.2}\page{34}\abspage{42}\mdf@pagevalue{34}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{34}{subsection.6.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Generic Generators for Indexed Containers}{34}{section.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Restricting Operations and Arities}{34}{subsection.6.2.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-19}{\default{6.2.1}\page{34}\abspage{42}\mdf@pagevalue{34}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{34}{figure.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Universe Description}{25}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Definition}{25}{subsection.4.1.1}\protected@file@percent }
+\newlabel{lst:signatures}{{4.1.1}{25}{Definition}{subsection.4.1.1}{}}
+\newlabel{lst:signatures@cref}{{[subsection][1][4,1]4.1.1}{[1][25][]25}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Signatures}}{25}{figure.4.1}\protected@file@percent }
+\newlabel{lst:sigmtheory}{{4.1.1}{26}{Definition}{figure.4.1}{}}
+\newlabel{lst:sigmtheory@cref}{{[subsection][1][4,1]4.1.1}{[1][26][]26}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces The semantics of a signature}}{26}{figure.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Example Signatures}{26}{subsection.4.1.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-15}{\default{4.1.2}\page{26}\abspage{34}\mdf@pagevalue{26}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{26}{subsection.4.1.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-16}{\default{4.1.2}\page{27}\abspage{35}\mdf@pagevalue{27}}
+\zref@newlabel{mdf@pagelabel-17}{\default{4.1.2}\page{27}\abspage{35}\mdf@pagevalue{27}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{27}{subsection.4.1.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-18}{\default{4.1.2}\page{28}\abspage{36}\mdf@pagevalue{28}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{28}{subsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Generic Generators for Indexed Containers}{28}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Restricting Operations and Arities}{28}{subsection.4.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-19}{\default{4.2.1}\page{28}\abspage{36}\mdf@pagevalue{28}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{28}{figure.4.3}\protected@file@percent }
 \citation{runciman2008smallcheck}
-\newlabel{lst:sigreg}{{6.2.1}{35}{Restricting Operations and Arities}{subsection.6.2.1}{}}
-\newlabel{lst:sigreg@cref}{{[subsection][1][6,2]6.2.1}{[1][34][]35}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces Indexed containers with restricted operations and arities}}{35}{figure.6.3}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-20}{\default{6.2.1}\page{35}\abspage{43}\mdf@pagevalue{35}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Generating Function Types}{35}{subsection.6.2.2}\protected@file@percent }
-\newlabel{lst:cogen}{{6.2.2}{36}{Generating Function Types}{subsection.6.2.2}{}}
-\newlabel{lst:cogen@cref}{{[subsection][2][6,2]6.2.2}{[1][35][]36}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Definition of \ensuremath  {\leavevmode \begingroup \color  {hsblue5}\mathit {cogenerate}\endgroup }}}{36}{figure.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Constructing the Generator}{36}{subsection.6.2.3}\protected@file@percent }
+\newlabel{lst:sigreg}{{4.2.1}{29}{Restricting Operations and Arities}{subsection.4.2.1}{}}
+\newlabel{lst:sigreg@cref}{{[subsection][1][4,2]4.2.1}{[1][28][]29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Indexed containers with restricted operations and arities}}{29}{figure.4.3}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-20}{\default{4.2.1}\page{29}\abspage{37}\mdf@pagevalue{29}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Generating Function Types}{29}{subsection.4.2.2}\protected@file@percent }
+\newlabel{lst:cogen}{{4.2.2}{30}{Generating Function Types}{subsection.4.2.2}{}}
+\newlabel{lst:cogen@cref}{{[subsection][2][4,2]4.2.2}{[1][29][]30}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Definition of \ensuremath  {\leavevmode \begingroup \color  {hsblue5}\mathit {cogenerate}\endgroup }}}{30}{figure.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Constructing the Generator}{30}{subsection.4.2.3}\protected@file@percent }
 \citation{dagand2013cosmology}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}Deriving Generators for Indexed Descriptions}{37}{chapter.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Deriving Generators for Indexed Descriptions}{31}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {7.1}Universe Description}{37}{section.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1.1}Definition}{37}{subsection.7.1.1}\protected@file@percent }
-\newlabel{sec:idescdef}{{7.1.1}{37}{Definition}{subsection.7.1.1}{}}
-\newlabel{sec:idescdef@cref}{{[subsection][1][7,1]7.1.1}{[1][37][]37}}
-\newlabel{lst:idesc}{{7.1.1}{37}{Definition}{Item.9}{}}
-\newlabel{lst:idesc@cref}{{[subsection][1][7,1]7.1.1}{[1][37][]37}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7.1}{\ignorespaces The Universe of indexed descriptions}}{37}{figure.7.1}\protected@file@percent }
-\newlabel{lst:idescsem}{{7.1.1}{38}{Definition}{figure.7.1}{}}
-\newlabel{lst:idescsem@cref}{{[subsection][1][7,1]7.1.1}{[1][38][]38}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7.2}{\ignorespaces Semantics of the IDesc universe}}{38}{figure.7.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-21}{\default{7.1.1}\page{38}\abspage{46}\mdf@pagevalue{38}}
-\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{38}{figure.7.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-22}{\default{7.1.1}\page{39}\abspage{47}\mdf@pagevalue{39}}
-\newlabel{lst:finiso}{{7.1.1}{39}{Definition}{figure.7.2}{}}
-\newlabel{lst:finiso@cref}{{[subsection][1][7,1]7.1.1}{[1][39][]39}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7.3}{\ignorespaces Isomorphism between \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Fix}\endgroup \tmspace  +\thickmuskip {.2777em}\leavevmode \begingroup \color  {hsblue5}\mathit {finD}\endgroup } and \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Fin}\endgroup }}}{39}{figure.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1.2}Exmample: describing well typed lambda terms}{39}{subsection.7.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Modelling SLC in Agda}{39}{subsection.7.1.2}\protected@file@percent }
-\newlabel{lst:ctxmem}{{7.1.2}{40}{Modelling SLC in Agda}{subsection.7.1.2}{}}
-\newlabel{lst:ctxmem@cref}{{[subsection][2][7,1]7.1.2}{[1][39][]40}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7.4}{\ignorespaces Context membership in Agda}}{40}{figure.7.4}\protected@file@percent }
-\newlabel{lst:wflambda}{{7.1.2}{40}{Modelling SLC in Agda}{figure.7.4}{}}
-\newlabel{lst:wflambda@cref}{{[subsection][2][7,1]7.1.2}{[1][39][]40}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7.5}{\ignorespaces Well-typed lambda terms as a two way relation}}{40}{figure.7.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Describing well typed terms}{40}{figure.7.5}\protected@file@percent }
-\newlabel{lst:slcdescinductive}{{7.1.2}{41}{Describing well typed terms}{figure.7.5}{}}
-\newlabel{lst:slcdescinductive@cref}{{[subsection][2][7,1]7.1.2}{[1][40][]41}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7.6}{\ignorespaces A description for well typed terms using induction on the index type}}{41}{figure.7.6}\protected@file@percent }
-\newlabel{lst:slcdescconstrained}{{7.1.2}{41}{Describing well typed terms}{figure.7.6}{}}
-\newlabel{lst:slcdescconstrained@cref}{{[subsection][2][7,1]7.1.2}{[1][41][]41}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7.7}{\ignorespaces A description for well typed terms using explicit constraints}}{41}{figure.7.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7.2}Generic Generators for Indexed Descriptions}{42}{section.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7.3}Completeness Proof for Generators Derived From Indexed Descriptions}{42}{section.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Program Term Generation}{43}{chapter.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Universe Description}{31}{section.5.1}\protected@file@percent }
+\newlabel{sec:idescdesc}{{5.1}{31}{Universe Description}{section.5.1}{}}
+\newlabel{sec:idescdesc@cref}{{[section][1][5]5.1}{[1][31][]31}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Definition}{31}{subsection.5.1.1}\protected@file@percent }
+\newlabel{sec:idescdef}{{5.1.1}{31}{Definition}{subsection.5.1.1}{}}
+\newlabel{sec:idescdef@cref}{{[subsection][1][5,1]5.1.1}{[1][31][]31}}
+\newlabel{lst:idesc}{{5.1.1}{31}{Definition}{Item.9}{}}
+\newlabel{lst:idesc@cref}{{[subsection][1][5,1]5.1.1}{[1][31][]31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces The Universe of indexed descriptions}}{31}{figure.5.1}\protected@file@percent }
+\newlabel{lst:idescsem}{{5.1.1}{32}{Definition}{figure.5.1}{}}
+\newlabel{lst:idescsem@cref}{{[subsection][1][5,1]5.1.1}{[1][32][]32}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Semantics of the IDesc universe}}{32}{figure.5.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-21}{\default{5.1.1}\page{32}\abspage{40}\mdf@pagevalue{32}}
+\@writefile{toc}{\contentsline {paragraph}{\textbf  {Example}}{32}{figure.5.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-22}{\default{5.1.1}\page{33}\abspage{41}\mdf@pagevalue{33}}
+\newlabel{lst:finiso}{{5.1.1}{33}{Definition}{figure.5.2}{}}
+\newlabel{lst:finiso@cref}{{[subsection][1][5,1]5.1.1}{[1][33][]33}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Isomorphism between \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Fix}\endgroup \tmspace  +\thickmuskip {.2777em}\leavevmode \begingroup \color  {hsblue5}\mathit {finD}\endgroup } and \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Fin}\endgroup }}}{33}{figure.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Exmample: describing well typed lambda terms}{33}{subsection.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Modelling SLC in Agda}{33}{subsection.5.1.2}\protected@file@percent }
+\newlabel{lst:ctxmem}{{5.1.2}{34}{Modelling SLC in Agda}{subsection.5.1.2}{}}
+\newlabel{lst:ctxmem@cref}{{[subsection][2][5,1]5.1.2}{[1][33][]34}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Context membership in Agda}}{34}{figure.5.4}\protected@file@percent }
+\newlabel{lst:wflambda}{{5.1.2}{34}{Modelling SLC in Agda}{figure.5.4}{}}
+\newlabel{lst:wflambda@cref}{{[subsection][2][5,1]5.1.2}{[1][34][]34}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Well-typed lambda terms as a two way relation}}{34}{figure.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Describing well typed terms}{34}{figure.5.5}\protected@file@percent }
+\newlabel{lst:slcdescinductive}{{5.1.2}{35}{Describing well typed terms}{figure.5.5}{}}
+\newlabel{lst:slcdescinductive@cref}{{[subsection][2][5,1]5.1.2}{[1][34][]35}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces A description for well typed terms using induction on the index type}}{35}{figure.5.6}\protected@file@percent }
+\newlabel{lst:slcdescconstrained}{{5.1.2}{35}{Describing well typed terms}{figure.5.6}{}}
+\newlabel{lst:slcdescconstrained@cref}{{[subsection][2][5,1]5.1.2}{[1][35][]35}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces A description for well typed terms using explicit constraints}}{35}{figure.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Generic Generators for Indexed Descriptions}{36}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Completeness Proof for Enumerators Derived From Indexed Descriptions}{37}{section.5.3}\protected@file@percent }
+\newlabel{lst:bindcomplete}{{5.3}{37}{Completeness Proof for Enumerators Derived From Indexed Descriptions}{section.5.3}{}}
+\newlabel{lst:bindcomplete@cref}{{[section][3][5]5.3}{[1][37][]37}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces Completeness for the bind operator}}{37}{figure.5.8}\protected@file@percent }
+\citation{dagand2013cosmology}
+\citation{eisenberg2013dependently}
+\citation{ghcdocsdatakinds}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Implementation in Haskell}{39}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {9}Implementation in Haskell}{45}{chapter.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}General Approach}{39}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Representing Indexed Descriptions In Haskell}{39}{section.6.2}\protected@file@percent }
+\newlabel{lst:idescdef}{{6.2}{40}{Representing Indexed Descriptions In Haskell}{section.6.2}{}}
+\newlabel{lst:idescdef@cref}{{[section][2][6]6.2}{[1][39][]40}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Definition of \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {IDesc}\endgroup \tmspace  +\thickmuskip {.2777em}\leavevmode \begingroup \color  {hsblue5}\mathit {a}\endgroup \tmspace  +\thickmuskip {.2777em}\leavevmode \begingroup \color  {hsblue5}\mathit {i}\endgroup } in Haskell}}{40}{figure.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Generalized coproducts}{40}{subsection.6.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}The \ensuremath  {\leavevmode \begingroup \color  {hsblue4}`\endgroup \mitSigma } combinator}{40}{subsection.6.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Semantics}{41}{subsection.6.2.3}\protected@file@percent }
+\newlabel{lst:idescsem}{{6.2.3}{41}{Semantics}{subsection.6.2.3}{}}
+\newlabel{lst:idescsem@cref}{{[subsection][3][6,2]6.2.3}{[1][41][]41}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces Semantics of the \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {IDesc}\endgroup } type}}{41}{figure.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Deriving Generators for Indexed Descriptions in Haskell}{41}{section.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}The generator type}{42}{subsection.6.3.1}\protected@file@percent }
+\newlabel{lst:hsgendef}{{6.3.1}{42}{The generator type}{subsection.6.3.1}{}}
+\newlabel{lst:hsgendef@cref}{{[subsection][1][6,3]6.3.1}{[1][42][]42}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces The \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {Gen}\endgroup } type in Haskell}}{42}{figure.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}A singleton instance for descriptions}{42}{subsection.6.3.2}\protected@file@percent }
+\newlabel{lst:singidescdef}{{6.3.2}{42}{A singleton instance for descriptions}{subsection.6.3.2}{}}
+\newlabel{lst:singidescdef@cref}{{[subsection][2][6,3]6.3.2}{[1][42][]42}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Singleton instance for the \ensuremath  {\leavevmode \begingroup \color  {hsblue3}\mathit {IDesc}\endgroup } type}}{42}{figure.6.4}\protected@file@percent }
+\newlabel{lst:singsigmadef}{{6.3.2}{43}{A singleton instance for descriptions}{figure.6.4}{}}
+\newlabel{lst:singsigmadef@cref}{{[subsection][2][6,3]6.3.2}{[1][43][]43}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Singleton instance for the \ensuremath  {\mitSigma } constructor}}{43}{figure.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}Deriving generators}{43}{subsection.6.3.3}\protected@file@percent }
+\newlabel{lst:exptypefam}{{6.3.2}{44}{A singleton instance for descriptions}{figure.6.5}{}}
+\newlabel{lst:exptypefam@cref}{{[subsection][2][6,3]6.3.2}{[1][43][]44}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Description expansion}}{44}{figure.6.6}\protected@file@percent }
+\newlabel{lst:expdef}{{6.3.2}{44}{A singleton instance for descriptions}{figure.6.6}{}}
+\newlabel{lst:expdef@cref}{{[subsection][2][6,3]6.3.2}{[1][43][]44}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Description expansion for singletons}}{44}{figure.6.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}Examples}{45}{section.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.1}Finite sets}{45}{subsection.6.4.1}\protected@file@percent }
+\citation{wadler2019plfa}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.2}Well-typed lambda terms}{46}{subsection.6.4.2}\protected@file@percent }
+\newlabel{lst:wttermsdesc}{{6.4.2}{47}{Well-typed lambda terms}{subsection.6.4.2}{}}
+\newlabel{lst:wttermsdesc@cref}{{[subsection][2][6,4]6.4.2}{[1][46][]47}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Type level description of well typed terms}}{47}{figure.6.8}\protected@file@percent }
+\newlabel{lst:wtsingdesc}{{6.4.2}{47}{Well-typed lambda terms}{figure.6.8}{}}
+\newlabel{lst:wtsingdesc@cref}{{[subsection][2][6,4]6.4.2}{[1][46][]47}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Singleton description of well typed terms}}{47}{figure.6.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Discussion}{49}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {10}Conclusion \& Further Work}{47}{chapter.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Datatype Definitions}{51}{appendix.A}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Datatype Definitions}{49}{appendix.A}\protected@file@percent }
-\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {A.1}Natural numbers}{49}{section.A.1}\protected@file@percent }
-\newlabel{lst:defnat}{{A.1}{49}{Natural numbers}{section.A.1}{}}
-\newlabel{lst:defnat@cref}{{[subappendix][1][2147483647,1]A.1}{[1][49][]49}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{49}{figure.A.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.2}Finite Sets}{49}{section.A.2}\protected@file@percent }
-\newlabel{lst:deffin}{{A.2}{49}{Finite Sets}{section.A.2}{}}
-\newlabel{lst:deffin@cref}{{[subappendix][2][2147483647,1]A.2}{[1][49][]49}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{49}{figure.A.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.3}Vectors}{50}{section.A.3}\protected@file@percent }
-\newlabel{lst:defvec}{{A.3}{50}{Vectors}{section.A.3}{}}
-\newlabel{lst:defvec@cref}{{[subappendix][3][2147483647,1]A.3}{[1][50][]50}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{50}{figure.A.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.4}Simple Types}{50}{section.A.4}\protected@file@percent }
-\newlabel{lst:defstype}{{A.4}{50}{Simple Types}{section.A.4}{}}
-\newlabel{lst:defstype@cref}{{[subappendix][4][2147483647,1]A.4}{[1][50][]50}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{50}{figure.A.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.5}Contexts}{50}{section.A.5}\protected@file@percent }
-\newlabel{lst:defcontext}{{A.5}{50}{Contexts}{section.A.5}{}}
-\newlabel{lst:defcontext@cref}{{[subappendix][5][2147483647,1]A.5}{[1][50][]50}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{50}{figure.A.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.6}Raw Lambda Terms}{51}{section.A.6}\protected@file@percent }
-\newlabel{lst:defrawterm}{{A.6}{51}{Raw Lambda Terms}{section.A.6}{}}
-\newlabel{lst:defrawterm@cref}{{[subappendix][6][2147483647,1]A.6}{[1][51][]51}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw lambda terms in Haskell and Agda}}{51}{figure.A.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.7}Lists}{51}{section.A.7}\protected@file@percent }
-\newlabel{lst:deflist}{{A.7}{51}{Lists}{section.A.7}{}}
-\newlabel{lst:deflist@cref}{{[subappendix][7][2147483647,1]A.7}{[1][51][]51}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{51}{figure.A.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.8}Well-scoped Lambda Terms}{51}{section.A.8}\protected@file@percent }
-\newlabel{lst:defwellscoped}{{A.8}{51}{Well-scoped Lambda Terms}{section.A.8}{}}
-\newlabel{lst:defwellscoped@cref}{{[subappendix][8][2147483647,1]A.8}{[1][51][]51}}
-\@writefile{lof}{\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped lambda terms in Agda}}{51}{figure.A.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Natural numbers}{51}{section.A.1}\protected@file@percent }
+\newlabel{lst:defnat}{{A.1}{51}{Natural numbers}{section.A.1}{}}
+\newlabel{lst:defnat@cref}{{[subappendix][1][2147483647,1]A.1}{[1][51][]51}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{51}{figure.A.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}Finite Sets}{51}{section.A.2}\protected@file@percent }
+\newlabel{lst:deffin}{{A.2}{51}{Finite Sets}{section.A.2}{}}
+\newlabel{lst:deffin@cref}{{[subappendix][2][2147483647,1]A.2}{[1][51][]51}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{51}{figure.A.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.3}Vectors}{52}{section.A.3}\protected@file@percent }
+\newlabel{lst:defvec}{{A.3}{52}{Vectors}{section.A.3}{}}
+\newlabel{lst:defvec@cref}{{[subappendix][3][2147483647,1]A.3}{[1][52][]52}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{52}{figure.A.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.4}Simple Types}{52}{section.A.4}\protected@file@percent }
+\newlabel{lst:defstype}{{A.4}{52}{Simple Types}{section.A.4}{}}
+\newlabel{lst:defstype@cref}{{[subappendix][4][2147483647,1]A.4}{[1][52][]52}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{52}{figure.A.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.5}Contexts}{52}{section.A.5}\protected@file@percent }
+\newlabel{lst:defcontext}{{A.5}{52}{Contexts}{section.A.5}{}}
+\newlabel{lst:defcontext@cref}{{[subappendix][5][2147483647,1]A.5}{[1][52][]52}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{52}{figure.A.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.6}Raw Lambda Terms}{53}{section.A.6}\protected@file@percent }
+\newlabel{lst:defrawterm}{{A.6}{53}{Raw Lambda Terms}{section.A.6}{}}
+\newlabel{lst:defrawterm@cref}{{[subappendix][6][2147483647,1]A.6}{[1][53][]53}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw lambda terms in Haskell and Agda}}{53}{figure.A.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.7}Lists}{53}{section.A.7}\protected@file@percent }
+\newlabel{lst:deflist}{{A.7}{53}{Lists}{section.A.7}{}}
+\newlabel{lst:deflist@cref}{{[subappendix][7][2147483647,1]A.7}{[1][53][]53}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{53}{figure.A.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.8}Well-scoped Lambda Terms}{53}{section.A.8}\protected@file@percent }
+\newlabel{lst:defwellscoped}{{A.8}{53}{Well-scoped Lambda Terms}{section.A.8}{}}
+\newlabel{lst:defwellscoped@cref}{{[subappendix][8][2147483647,1]A.8}{[1][53][]53}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped lambda terms in Agda}}{53}{figure.A.8}\protected@file@percent }
 \bibstyle{acm}
 \bibdata{references}
-\bibcite{abel2010miniagda}{1}
-\bibcite{altenkirch2015indexed}{2}
-\bibcite{andoni2003evaluating}{3}
-\bibcite{claessen2015generating}{4}
-\bibcite{claessen2011quickcheck}{5}
-\bibcite{claessen2010quickspec}{6}
-\bibcite{dagand2013cosmology}{7}
-\bibcite{dagand2017essence}{8}
-\bibcite{de2014true}{9}
-\bibcite{denes2014quickchick}{10}
-\bibcite{duregaard2013feat}{11}
-\bibcite{grygiel2013counting}{12}
-\bibcite{lampropoulos2017generating}{13}
-\bibcite{loh2011generic}{14}
-\bibcite{martin1984intuitionistic}{15}
-\bibcite{matela2017tools}{16}
-\bibcite{miraldo2018sums}{17}
-\bibcite{moczurad2000statistical}{18}
-\bibcite{norell2008dependently}{19}
-\bibcite{palka2011testing}{20}
-\bibcite{paraskevopoulou2015foundational}{21}
-\bibcite{runciman2008smallcheck}{22}
-\bibcite{hedgehog}{23}
-\bibcite{wadler2015propositions}{24}
-\bibcite{wang2005generating}{25}
-\bibcite{yorgey2010species}{26}
+\bibcite{ghcdocsdatakinds}{1}
+\bibcite{abel2010miniagda}{2}
+\bibcite{altenkirch2015indexed}{3}
+\bibcite{andoni2003evaluating}{4}
+\bibcite{claessen2015generating}{5}
+\bibcite{claessen2011quickcheck}{6}
+\bibcite{claessen2010quickspec}{7}
+\bibcite{dagand2013cosmology}{8}
+\bibcite{dagand2017essence}{9}
+\bibcite{de2014true}{10}
+\bibcite{denes2014quickchick}{11}
+\bibcite{duregaard2013feat}{12}
+\bibcite{eisenberg2013dependently}{13}
+\bibcite{grygiel2013counting}{14}
+\bibcite{lampropoulos2017generating}{15}
+\bibcite{loh2011generic}{16}
+\bibcite{martin1984intuitionistic}{17}
+\bibcite{matela2017tools}{18}
+\bibcite{miraldo2018sums}{19}
+\bibcite{moczurad2000statistical}{20}
+\bibcite{norell2008dependently}{21}
+\bibcite{palka2011testing}{22}
+\bibcite{paraskevopoulou2015foundational}{23}
+\bibcite{runciman2008smallcheck}{24}
+\bibcite{hedgehog}{25}
+\bibcite{wadler2015propositions}{26}
+\bibcite{wadler2019plfa}{27}
+\bibcite{wang2005generating}{28}
+\bibcite{yorgey2010species}{29}

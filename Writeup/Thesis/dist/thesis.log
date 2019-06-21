@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  19 JUN 2019 23:27
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  21 JUN 2019 23:19
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1520,7 +1520,14 @@ Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
 Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
-) (dist/thesis.aux)
+) (dist/thesis.aux
+
+LaTeX Warning: Label `lst:idescsem' multiply defined.
+
+
+LaTeX Warning: Label `lst:idescsem@cref' multiply defined.
+
+)
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 461.
@@ -1546,8 +1553,7 @@ LaTeX Font Info:    ... okay on input line 461.
 LaTeX Font Info:    Checking defaults for LS2/stix/m/n on input line 461.
 LaTeX Font Info:    Try loading font information for LS2+stix on input line 461
 .
-
-(/usr/share/texmf-dist/tex/latex/stix/ls2stix.fd
+ (/usr/share/texmf-dist/tex/latex/stix/ls2stix.fd
 File: ls2stix.fd 2015/04/17 v1.1.2-latex STIX LS2 font definitions
 )
 LaTeX Font Info:    ... okay on input line 461.
@@ -1724,13 +1730,13 @@ LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
 (dist/thesis.toc
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/n' will be
 (Font)              scaled to size 9.95132pt on input line 1.
- [1
-
-])
+)
 \tf@toc=\write5
 \openout5 = `thesis.toc'.
 
- [2]
+ [1
+
+] [2]
 Underfull \hbox (badness 10000) in paragraph at lines 469--475
 
  []
@@ -1744,35 +1750,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 469--475
 ]
 Chapter 1.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/it' will be
-(Font)              scaled to size 10.04196pt on input line 493.
+(Font)              scaled to size 10.04196pt on input line 487.
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 7.02937pt on input line 537.
+LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
+(Font)              scaled to size 5.52307pt on input line 537.
 [1
 
-] [2]
+] (dist/../src/chap02/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [2] [3] [4
+
+]
 Chapter 2.
-
-LaTeX Warning: Citation `wadler2015propositions' on page 3 undefined on input l
-ine 578.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3
-
-]
-Package mdframed Info: mdframed works in twoside mode on input line 597.
+[5]
+Package mdframed Info: mdframed works in twoside mode on input line 666.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/bx/sc' will be
-(Font)              scaled to size 9.95132pt on input line 597.
+(Font)              scaled to size 9.95132pt on input line 666.
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 7.02937pt on input line 602.
-LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 5.52307pt on input line 602.
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 619.
+Package mdframed Info: mdframed works in twoside mode on input line 688.
 
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1781,35 +1790,22 @@ Package mdframed Info: mdframed works in twoside mode on input line 619.
 \openout3 = `thesis.ptb'.
 
 
-[4]
+[6]
 
-LaTeX Warning: Citation `wadler2015propositions' on page 5 undefined on input l
-ine 660.
-
-
-LaTeX Warning: Reference `chisodependent' on page 1 undefined on input line 660
+LaTeX Warning: Reference `chisodependent' on page 1 undefined on input line 729
 .
 
-Package mdframed Info: mdframed works in twoside mode on input line 673.
+Package mdframed Info: mdframed works in twoside mode on input line 742.
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-
-
-LaTeX Warning: Citation `norell2008dependently' on page 5 undefined on input li
-ne 691.
-
-[5]
-Package mdframed Info: mdframed works in twoside mode on input line 712.
+ [7]
+Package mdframed Info: mdframed works in twoside mode on input line 781.
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-
-
-LaTeX Warning: Citation `abel2010miniagda' on page 6 undefined on input line 74
-3.
 
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1817,7 +1813,7 @@ LaTeX Warning: Citation `abel2010miniagda' on page 6 undefined on input line 74
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 757.
+Package mdframed Info: mdframed works in twoside mode on input line 826.
 
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1828,12 +1824,12 @@ Package mdframed Warning: You got a bad break
 (mdframed)                because the last box will be empty
 (mdframed)                you have to change it manually
 (mdframed)                by changing the text, the space
-(mdframed)                or something else on input line 766.
+(mdframed)                or something else on input line 835.
 
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
-(mdframed)              on input line 766.
-[6] (dist/../src/chap02/latex/code.tex)
+(mdframed)              on input line 835.
+[8] (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap02/latex/code.tex)
@@ -1847,47 +1843,13 @@ Package mdframed Info: Box was splittet wrong
 \openout3 = `thesis.ptb'.
 
 
-[7]
-
-LaTeX Warning: Citation `norell2008dependently' on page 8 undefined on input li
-ne 853.
-
-Package mdframed Info: mdframed works in twoside mode on input line 859.
-(dist/../src/chap02/latex/code.tex)
+[9]
+Package mdframed Info: mdframed works in twoside mode on input line 928.
+ (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-
-
-LaTeX Warning: Citation `altenkirch2015indexed' on page 8 undefined on input li
-ne 889.
-
-[8]
-
-LaTeX Warning: Citation `dagand2013cosmology' on page 9 undefined on input line
- 896.
-
-[9] [10
-
-]
-Chapter 3.
-
-LaTeX Warning: Citation `claessen2011quickcheck' on page 11 undefined on input 
-line 917.
-
-
-LaTeX Warning: Citation `runciman2008smallcheck' on page 11 undefined on input 
-line 918.
-
-
-LaTeX Warning: Citation `matela2017tools' on page 11 undefined on input line 91
-9.
-
-
-LaTeX Warning: Citation `claessen2011quickcheck' on page 11 undefined on input 
-line 926.
-
-
-Overfull \hbox (7.28906pt too wide) in paragraph at lines 926--933
+ [10]
+Overfull \hbox (7.28906pt too wide) in paragraph at lines 994--1001
 \TU/LinuxLibertine(0)/m/n/10 Haskell. Test values are generated by sampling ran
 domly from the domain of test values. QuickCheck
  []
@@ -1895,107 +1857,20 @@ domly from the domain of test values. QuickCheck
 \openout3 = `thesis.ptb'.
 
 [11]
-
-LaTeX Warning: Citation `runciman2008smallcheck' on page 12 undefined on input 
-line 977.
-
-
-LaTeX Warning: Citation `andoni2003evaluating' on page 12 undefined on input li
-ne 985.
-
-
-Overfull \hbox (0.47623pt too wide) in paragraph at lines 977--986
+Overfull \hbox (0.47623pt too wide) in paragraph at lines 1045--1054
 \TU/LinuxLibertine(0)/m/n/10 data. While the approach to formulation and testin
 g of properties is largely similar to QuickCheck’s,
  []
 
-
-LaTeX Warning: Citation `matela2017tools' on page 12 undefined on input line 10
-03.
-
-
-LaTeX Warning: Citation `hedgehog' on page 12 undefined on input line 1010.
-
-
-LaTeX Warning: Citation `duregaard2013feat' on page 12 undefined on input line 
-1019.
-
-
-LaTeX Warning: Citation `denes2014quickchick' on page 12 undefined on input lin
-e 1026.
-
-
-LaTeX Warning: Citation `paraskevopoulou2015foundational' on page 12 undefined 
-on input line 1027.
-
 [12]
 
-LaTeX Warning: Citation `claessen2010quickspec' on page 13 undefined on input l
-ine 1033.
-
-
-LaTeX Warning: Citation `palka2011testing' on page 13 undefined on input line 1
-063.
-
-
-LaTeX Warning: Citation `grygiel2013counting' on page 13 undefined on input lin
-e 1063.
-
-
-LaTeX Warning: Citation `claessen2015generating' on page 13 undefined on input 
-line 1063.
-
-
-LaTeX Warning: Citation `claessen2015generating' on page 13 undefined on input 
-line 1068.
-
-
-LaTeX Warning: Citation `duregaard2013feat' on page 13 undefined on input line 
-1069.
-
-
-LaTeX Warning: Citation `runciman2008smallcheck' on page 13 undefined on input 
-line 1072.
-
-
-LaTeX Warning: Citation `palka2011testing' on page 13 undefined on input line 1
-076.
-
-
-LaTeX Warning: Citation `claessen2015generating' on page 13 undefined on input 
-line 1077.
-
-
-LaTeX Warning: Citation `moczurad2000statistical' on page 13 undefined on input
- line 1086.
-
-
-LaTeX Warning: Citation `wang2005generating' on page 13 undefined on input line
- 1088.
-
-
-LaTeX Warning: Citation `lampropoulos2017generating' on page 13 undefined on in
-put line 1094.
-
-
-LaTeX Warning: Reference `introduction' on page 13 undefined on input line 1099
+LaTeX Warning: Reference `introduction' on page 13 undefined on input line 1167
 .
 
 [13]
 
-LaTeX Warning: Citation `de2014true' on page 14 undefined on input line 1119.
-
-
 LaTeX Warning: Reference `patternfunctors' on page 14 undefined on input line 1
-122.
-
-
-LaTeX Warning: Citation `miraldo2018sums' on page 14 undefined on input line 11
-27.
-
-
-LaTeX Warning: Citation `martin1984intuitionistic' on page 14 undefined on inpu
-t line 1132.
+190.
 
 (dist/../src/chap03/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2007,160 +1882,37 @@ t line 1132.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1158.
+Package mdframed Info: mdframed works in twoside mode on input line 1226.
 (dist/../src/chap03/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
 
-LaTeX Warning: Reference `wnatiso' on page 14 undefined on input line 1169.
+LaTeX Warning: Reference `wnatiso' on page 14 undefined on input line 1237.
 
 [14]
-Package mdframed Info: Not enough space on this page on input line 1171.
+Package mdframed Info: Not enough space on this page on input line 1239.
  (dist/../src/chap03/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-
-
-LaTeX Warning: Citation `loh2011generic' on page 15 undefined on input line 117
-8.
-
-[15]
-
-LaTeX Warning: Citation `yorgey2010species' on page 16 undefined on input line 
-1189.
-
-[16]
-Chapter 4.
-
-LaTeX Warning: Reference `sec:literature' on page 1 undefined on input line 119
-9.
-
-
-LaTeX Warning: Reference `defnat' on page 17 undefined on input line 1203.
-
-\openout3 = `thesis.ptb'.
-
-\openout3 = `thesis.ptb'.
-
-[17
-
-]
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 10.93451pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 7.28967pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
-(Font)              scaled to size 5.46725pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 10.93451pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 7.28967pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
-(Font)              scaled to size 5.46725pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 10.93433pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 7.28955pt on input line 1243.
-LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
-(Font)              scaled to size 5.46716pt on input line 1243.
+ [15] [16]
+Chapter 3.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 8.03357pt on input line 1245.
+(Font)              scaled to size 8.03357pt on input line 1278.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 7.28967pt on input line 1278.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 5.46725pt on input line 1278.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 7.28967pt on input line 1278.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 5.46725pt on input line 1278.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 7.28955pt on input line 1278.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 5.46716pt on input line 1278.
 LaTeX Font Info:    Font shape `TU/LinuxLibertine(0)/m/n' will be
-(Font)              scaled to size 6.02518pt on input line 1245.
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: Reference `chap:derivingregular' on page 1 undefined on input li
-ne 1257.
-
-
-LaTeX Warning: Reference `deflist' on page 18 undefined on input line 1259.
-
-[18] (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-[19]
-
-LaTeX Warning: Reference `findef' on page 20 undefined on input line 1295.
-
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-Missing character: There is no μ in font cmti10!
-Missing character: There is no μ in font cmti10!
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: Reference `defwellscoped' on page 20 undefined on input line 131
-7.
-
-(dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- [20] (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-[21] (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap04/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-[22]
-Chapter 5.
+(Font)              scaled to size 6.02518pt on input line 1278.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2175,11 +1927,11 @@ Chapter 5.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1375.
+Package mdframed Info: mdframed works in twoside mode on input line 1294.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [23
+ [17
 
 ] (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2188,23 +1940,9 @@ Package mdframed Info: mdframed works in twoside mode on input line 1375.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [24]
+ [18]
 
-LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1418.
-
-
-(dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- [25] (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
+LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1337.
 
 
 (dist/../src/chap05/latex/code.tex)
@@ -2214,14 +1952,28 @@ LaTeX Warning: Reference `regularproof' on page 1 undefined on input line 1418.
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (6.25644pt too wide) in paragraph at lines 1477--1479
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [19] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (6.25644pt too wide) in paragraph at lines 1396--1398
 []\TU/LinuxLibertine(0)/m/n/10 The elements produced by $[][][]$ can now readil
 y be transformed into the required datatype
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 1480.
+Package mdframed Info: mdframed works in twoside mode on input line 1399.
 
-LaTeX Warning: Reference `natiso' on page 26 undefined on input line 1484.
+LaTeX Warning: Reference `natiso' on page 20 undefined on input line 1403.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2229,7 +1981,7 @@ LaTeX Warning: Reference `natiso' on page 26 undefined on input line 1484.
  (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1501.
+Package mdframed Info: mdframed works in twoside mode on input line 1420.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2240,29 +1992,15 @@ Package mdframed Warning: You got a bad break
 (mdframed)                because the last box will be empty
 (mdframed)                you have to change it manually
 (mdframed)                by changing the text, the space
-(mdframed)                or something else on input line 1515.
+(mdframed)                or something else on input line 1434.
 
-[26] (dist/../src/chap05/latex/code.tex)
+[20] (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1529.
-
-(dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- [27] (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
+Package mdframed Info: mdframed works in twoside mode on input line 1448.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2274,16 +2012,12 @@ Package mdframed Info: mdframed works in twoside mode on input line 1529.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- (dist/../src/chap05/latex/code.tex)
+ [21] (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-(dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
 
- [28] (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
+LaTeX Warning: Reference `lst:tolist' on page 22 undefined on input line 1491.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2299,7 +2033,28 @@ Package mdframed Info: mdframed works in twoside mode on input line 1529.
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (22.12193pt too wide) in paragraph at lines 1673--1674
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [22] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (22.12193pt too wide) in paragraph at lines 1592--1593
 []\TU/LinuxLibertine(0)/m/n/10 This amounts to the following final type for $[]
 [][]$-$[][][]$, where $[][][][]\OT1/cmr/m/it/10 m[]$ \TU/LinuxLibertine(0)/m/n/
 10 = $[][][]$-$[][][] [][][] []\OT1/cmr/m/it/10 m[]$\TU/LinuxLibertine(0)/m/n/1
@@ -2309,33 +2064,25 @@ Overfull \hbox (22.12193pt too wide) in paragraph at lines 1673--1674
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [29] (dist/../src/chap05/latex/code.tex)
+ [23] (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [30]
-Chapter 6.
+ [24]
+Chapter 4.
 
-LaTeX Warning: Citation `altenkirch2015indexed' on page 31 undefined on input l
-ine 1722.
-
-
-LaTeX Warning: Reference `' on page 31 undefined on input line 1722.
+LaTeX Warning: Reference `' on page 25 undefined on input line 1641.
 
 
-LaTeX Warning: Reference `' on page 31 undefined on input line 1722.
-
-
-LaTeX Warning: Citation `dagand2017essence' on page 31 undefined on input line 
-1726.
+LaTeX Warning: Reference `' on page 25 undefined on input line 1641.
 
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [31
+ [25
 
 ] (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2344,7 +2091,7 @@ LaTeX Warning: Citation `dagand2017essence' on page 31 undefined on input line
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1750.
+Package mdframed Info: mdframed works in twoside mode on input line 1669.
  (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2357,10 +2104,10 @@ Package mdframed Info: mdframed works in twoside mode on input line 1750.
 
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
-(mdframed)              on input line 1764.
+(mdframed)              on input line 1683.
 
-[32]
-Package mdframed Info: mdframed works in twoside mode on input line 1768.
+[26]
+Package mdframed Info: mdframed works in twoside mode on input line 1687.
  (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2378,8 +2125,8 @@ Package mdframed Info: mdframed works in twoside mode on input line 1768.
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [33]
-Package mdframed Info: mdframed works in twoside mode on input line 1794.
+ [27]
+Package mdframed Info: mdframed works in twoside mode on input line 1713.
  (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2394,17 +2141,13 @@ Package mdframed Info: mdframed works in twoside mode on input line 1794.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1818.
+Package mdframed Info: mdframed works in twoside mode on input line 1737.
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [34] (dist/../src/chap06/latex/code.tex)
+ [28] (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-
-
-LaTeX Warning: Citation `runciman2008smallcheck' on page 35 undefined on input 
-line 1834.
 
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2416,22 +2159,17 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [35]
-Overfull \hbox (24.57005pt too wide) in paragraph at lines 1846--1847
+ [29]
+Overfull \hbox (8.9218pt too wide) in paragraph at lines 1765--1766
 \TU/LinuxLibertine(0)/m/n/10 We are now ready to construct a the generic genera
-tor for indexed descriptions. Recall that $[][][] []\OT1/cmr/m/it/10 r[] []r[]$
-
+tor for indexed descriptions. Recall that $[][][]$
  []
 
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [36]
-Chapter 7.
-
-LaTeX Warning: Citation `dagand2013cosmology' on page 37 undefined on input lin
-e 1857.
-
+ [30]
+Chapter 5.
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -2439,7 +2177,7 @@ e 1857.
 \openout3 = `thesis.ptb'.
 
 
-[37
+[31
 
 ] (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2447,7 +2185,7 @@ e 1857.
  (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1899.
+Package mdframed Info: mdframed works in twoside mode on input line 1816.
 
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2457,41 +2195,9 @@ Package mdframed Info: mdframed works in twoside mode on input line 1899.
 
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
-(mdframed)              on input line 1910.
+(mdframed)              on input line 1827.
 
-[38] (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-(dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-(dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- [39]
-
-LaTeX Warning: Reference `slcdescinductive' on page 40 undefined on input line 
-1956.
-
-(dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[40] (dist/../src/chap07/latex/code.tex)
+[32] (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap07/latex/code.tex)
@@ -2502,24 +2208,392 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (4.88132pt too wide) in paragraph at lines 1980--1980
-|[]\TU/LinuxLibertine(0)/m/sc/14.4 Completeness Proof for Generators Derived Fr
-om Indexed
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[33] (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: Reference `slcdescinductive' on page 34 undefined on input line 
+1877.
+
+(dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[34] (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[35] (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [36] (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+Missing character: There is no ↝ in font Linux Libertine/OT:script=latn;languag
+e=DFLT;mapping=tex-text;!
+[37] [38]
+Chapter 6.
+
+LaTeX Warning: Reference `idescdef' on page 39 undefined on input line 1966.
+
+\openout3 = `thesis.ptb'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[39
+
+]
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(5)/m/n' will be
+(Font)              scaled to size 10.93451pt on input line 2028.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(6)/m/n' will be
+(Font)              scaled to size 10.93451pt on input line 2028.
+LaTeX Font Info:    Font shape `TU/STIXTwoMath(7)/m/n' will be
+(Font)              scaled to size 10.93433pt on input line 2028.
+\openout3 = `thesis.ptb'.
+
+ [40]
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (16.14696pt too wide) in paragraph at lines 2092--2093
+\TU/LinuxLibertine(0)/m/n/10 example, we would map a vector $[][][][] [][][][][
+] [][][] [][][][][] [][]$ to the type $[][][] [][][][][][] [][][][][][] [][][][
+][][] [][][][][][]$.
  []
 
-[41] [42]
-Chapter 8.
-[43
+\openout3 = `thesis.ptb'.
 
-] [44
 
-]
-Chapter 9.
-[45] [46
+Overfull \hbox (0.2424pt too wide) in paragraph at lines 2115--2115
+|[]\TU/LinuxLibertine(0)/m/sc/14.4 Deriving Generators for Indexed Descriptions
+ in Haskell| 
+ []
 
-]
-Chapter 10.
-[47] [48
+[41]
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+ [42]
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][][][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][][][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][][][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][][][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][][][] 
+ []
+
+
+Overfull \hbox (3.0964pt too wide) in paragraph at lines 2315--2347
+ [][][][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+[43]
+\openout3 = `thesis.ptb'.
+
+ [44]
+
+LaTeX Warning: Reference `' on page 45 undefined on input line 2448.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+[45]
+\openout3 = `thesis.ptb'.
+
+
+Missing character: There is no λ in font [lmmono10-regular]:!
+Missing character: There is no λ in font [lmmono10-regular]:!
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (6.00664pt too wide) in paragraph at lines 2550--2561
+ [][] 
+ []
+
+
+Overfull \hbox (6.00664pt too wide) in paragraph at lines 2550--2561
+ [][][][] 
+ []
+
+
+Overfull \hbox (6.00664pt too wide) in paragraph at lines 2550--2561
+ [][] 
+ []
+
+\openout3 = `thesis.ptb'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+\openout3 = `thesis.ptb'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+\openout3 = `thesis.ptb'.
+
+[46]
+\openout3 = `thesis.ptb'.
+
+
+Missing character: There is no λ in font [lmmono10-regular]:!
+[47]
+Missing character: There is no λ in font [lmmono10-regular]:!
+[48]
+Chapter 7.
+[49
+
+] [50
 
 ]
 Appendix A.
@@ -2531,88 +2605,81 @@ Appendix A.
  (dist/../src/appA/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [49]
-(dist/../src/appA/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-\openout3 = `thesis.ptb'.
-
- (dist/../src/appA/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/appA/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- [50]
-\openout3 = `thesis.ptb'.
-
- (dist/../src/appA/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/appA/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/appA/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
  [51]
-[52
+(dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [52]
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/appA/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [53]
+[54
 
 ] (dist/thesis.lof)
 \tf@lof=\write6
 \openout6 = `thesis.lof'.
 
- [53
+ (dist/thesis.bbl [55
 
-] [54
-
-] (dist/thesis.lot)
-\tf@lot=\write7
-\openout7 = `thesis.lot'.
-
- (dist/thesis.bbl [55]
-[56
+] [56
 
 ] [57]
-Underfull \hbox (badness 10000) in paragraph at lines 129--133
+Underfull \hbox (badness 10000) in paragraph at lines 140--144
 []\TU/LinuxLibertine(0)/m/sc/10 Stanley, J.  \TU/LinuxLibertine(0)/m/n/10 hedge
 hog: Hedgehog will eat all your bugs.
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2137.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2853.
  [58]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 2137.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 2853.
  (dist/thesis.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 2137.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2137.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 2853.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2853.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: .
 
 
 LaTeX Font Warning: Size substitutions with differences
-(Font)              up to 2.25pt have occurred.
+(Font)              up to 3.625pt have occurred.
 
 
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2137.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2853.
  ) 
 Here is how much of TeX's memory you used:
- 31415 strings out of 492933
- 573687 string characters out of 6138667
- 932823 words of memory out of 5000000
- 34840 multiletter control sequences out of 15000+600000
- 549277 words of font info for 134 fonts, out of 8000000 for 9000
+ 31423 strings out of 492933
+ 573867 string characters out of 6138667
+ 933833 words of memory out of 5000000
+ 34871 multiletter control sequences out of 15000+600000
+ 554224 words of font info for 155 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 61i,12n,120p,1394b,985s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,16n,120p,1099b,985s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on dist/thesis.pdf (66 pages).

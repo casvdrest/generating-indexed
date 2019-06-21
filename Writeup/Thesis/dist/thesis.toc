@@ -1,111 +1,106 @@
 \contentsline {chapter}{Declaration}{iii}{chapter*.2}% 
 \contentsline {chapter}{Abstract}{v}{chapter*.3}% 
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
-\contentsline {section}{\numberline {1.1}Motivation}{1}{section.1.1}% 
-\contentsline {section}{\numberline {1.2}Research Question and Goals}{1}{section.1.2}% 
-\contentsline {section}{\numberline {1.3}Contributions}{1}{section.1.3}% 
-\contentsline {section}{\numberline {1.4}Thesis Structure}{1}{section.1.4}% 
-\contentsline {section}{\numberline {1.5}Methodology}{2}{section.1.5}% 
-\contentsline {subsection}{\numberline {1.5.1}Agda Model}{2}{subsection.1.5.1}% 
-\contentsline {subsection}{\numberline {1.5.2}Haskell Library}{2}{subsection.1.5.2}% 
-\contentsline {subsection}{\numberline {1.5.3}Notational Conventions}{2}{subsection.1.5.3}% 
-\contentsline {chapter}{\numberline {2}Background}{3}{chapter.2}% 
-\contentsline {section}{\numberline {2.1}Type Theory}{3}{section.2.1}% 
-\contentsline {subsection}{\numberline {2.1.1}Intuitionistic Type Theory}{3}{subsection.2.1.1}% 
-\contentsline {subsection}{\numberline {2.1.2}The Curry-Howard Equivalence}{3}{subsection.2.1.2}% 
-\contentsline {paragraph}{\textbf {Example}}{4}{table.2.1}% 
-\contentsline {paragraph}{\textbf {Example}}{4}{table.2.1}% 
-\contentsline {subsection}{\numberline {2.1.3}Dependent Types}{5}{subsection.2.1.3}% 
-\contentsline {paragraph}{\textbf {Example}}{5}{table.2.2}% 
-\contentsline {section}{\numberline {2.2}Agda}{5}{section.2.2}% 
-\contentsline {subsection}{\numberline {2.2.1}Codata and Sized Types}{5}{subsection.2.2.1}% 
-\contentsline {paragraph}{\textbf {Example}}{6}{subsection.2.2.1}% 
-\contentsline {paragraph}{\textbf {Example}}{6}{subsection.2.2.1}% 
-\contentsline {subsection}{\numberline {2.2.2}Universe Polymorphism}{7}{subsection.2.2.2}% 
-\contentsline {section}{\numberline {2.3}Generic Programming and Type Universes}{8}{section.2.3}% 
-\contentsline {subsection}{\numberline {2.3.1}Design Pattern}{8}{subsection.2.3.1}% 
-\contentsline {paragraph}{\textbf {Example}}{8}{Item.3}% 
-\contentsline {subsection}{\numberline {2.3.2}Example Universes}{8}{subsection.2.3.2}% 
-\contentsline {paragraph}{Regular Types}{8}{subsection.2.3.2}% 
-\contentsline {paragraph}{Indexed Containers}{9}{subsection.2.3.2}% 
-\contentsline {paragraph}{Indexed Descriptions}{9}{subsection.2.3.2}% 
-\contentsline {chapter}{\numberline {3}Literature Review}{11}{chapter.3}% 
-\contentsline {section}{\numberline {3.1}Libraries for Property Based Testing}{11}{section.3.1}% 
-\contentsline {subsection}{\numberline {3.1.1}QuickCheck}{11}{subsection.3.1.1}% 
-\contentsline {subsection}{\numberline {3.1.2}(Lazy) SmallCheck}{12}{subsection.3.1.2}% 
-\contentsline {subsection}{\numberline {3.1.3}LeanCheck}{12}{subsection.3.1.3}% 
-\contentsline {subsection}{\numberline {3.1.4}Hegdgehog}{12}{subsection.3.1.4}% 
-\contentsline {subsection}{\numberline {3.1.5}Feat}{12}{subsection.3.1.5}% 
-\contentsline {subsection}{\numberline {3.1.6}QuickChick: QuickCheck for Coq}{13}{subsection.3.1.6}% 
-\contentsline {subsection}{\numberline {3.1.7}QuickSpec: Automatic Generation of Specifications}{13}{subsection.3.1.7}% 
-\contentsline {section}{\numberline {3.2}Generating Constrained Test Data}{13}{section.3.2}% 
-\contentsline {subsection}{\numberline {3.2.1}Lambda Terms}{13}{subsection.3.2.1}% 
-\contentsline {subsection}{\numberline {3.2.2}Inductive Relations in Coq}{14}{subsection.3.2.2}% 
-\contentsline {section}{\numberline {3.3}Generic Programming \& Type Universes}{14}{section.3.3}% 
-\contentsline {subsection}{\numberline {3.3.1}SOP (Sum of Products)}{14}{subsection.3.3.1}% 
-\contentsline {subsection}{\numberline {3.3.2}W-Types}{14}{subsection.3.3.2}% 
+\contentsline {section}{\numberline {1.1}Problem Statement}{1}{section.1.1}% 
+\contentsline {section}{\numberline {1.2}Research Question and Goals}{2}{section.1.2}% 
+\contentsline {section}{\numberline {1.3}Contributions}{2}{section.1.3}% 
+\contentsline {section}{\numberline {1.4}Thesis Structure}{3}{section.1.4}% 
+\contentsline {chapter}{\numberline {2}Background \& Related Work}{5}{chapter.2}% 
+\contentsline {section}{\numberline {2.1}Type Theory}{5}{section.2.1}% 
+\contentsline {subsection}{\numberline {2.1.1}Intuitionistic Type Theory}{5}{subsection.2.1.1}% 
+\contentsline {subsection}{\numberline {2.1.2}The Curry-Howard Equivalence}{5}{subsection.2.1.2}% 
+\contentsline {paragraph}{\textbf {Example}}{6}{table.2.1}% 
+\contentsline {paragraph}{\textbf {Example}}{6}{table.2.1}% 
+\contentsline {subsection}{\numberline {2.1.3}Dependent Types}{7}{subsection.2.1.3}% 
+\contentsline {paragraph}{\textbf {Example}}{7}{table.2.2}% 
+\contentsline {section}{\numberline {2.2}Agda}{7}{section.2.2}% 
+\contentsline {subsection}{\numberline {2.2.1}Codata and Sized Types}{7}{subsection.2.2.1}% 
+\contentsline {paragraph}{\textbf {Example}}{8}{subsection.2.2.1}% 
+\contentsline {paragraph}{\textbf {Example}}{8}{subsection.2.2.1}% 
+\contentsline {subsection}{\numberline {2.2.2}Universe Polymorphism}{9}{subsection.2.2.2}% 
+\contentsline {section}{\numberline {2.3}Generic Programming and Type Universes}{10}{section.2.3}% 
+\contentsline {subsection}{\numberline {2.3.1}Design Pattern}{10}{subsection.2.3.1}% 
+\contentsline {paragraph}{\textbf {Example}}{10}{Item.3}% 
+\contentsline {subsection}{\numberline {2.3.2}Example Universes}{10}{subsection.2.3.2}% 
+\contentsline {paragraph}{Regular Types}{10}{subsection.2.3.2}% 
+\contentsline {paragraph}{Indexed Containers}{11}{subsection.2.3.2}% 
+\contentsline {paragraph}{Indexed Descriptions}{11}{subsection.2.3.2}% 
+\contentsline {section}{\numberline {2.4}Libraries for Property Based Testing}{11}{section.2.4}% 
+\contentsline {subsection}{\numberline {2.4.1}QuickCheck}{11}{subsection.2.4.1}% 
+\contentsline {subsection}{\numberline {2.4.2}(Lazy) SmallCheck}{12}{subsection.2.4.2}% 
+\contentsline {subsection}{\numberline {2.4.3}LeanCheck}{12}{subsection.2.4.3}% 
+\contentsline {subsection}{\numberline {2.4.4}Hegdgehog}{12}{subsection.2.4.4}% 
+\contentsline {subsection}{\numberline {2.4.5}Feat}{12}{subsection.2.4.5}% 
+\contentsline {subsection}{\numberline {2.4.6}QuickChick: QuickCheck for Coq}{13}{subsection.2.4.6}% 
+\contentsline {subsection}{\numberline {2.4.7}QuickSpec: Automatic Generation of Specifications}{13}{subsection.2.4.7}% 
+\contentsline {section}{\numberline {2.5}Generating Constrained Test Data}{13}{section.2.5}% 
+\contentsline {subsection}{\numberline {2.5.1}Lambda Terms}{13}{subsection.2.5.1}% 
+\contentsline {subsection}{\numberline {2.5.2}Inductive Relations in Coq}{14}{subsection.2.5.2}% 
+\contentsline {section}{\numberline {2.6}Generic Programming \& Type Universes}{14}{section.2.6}% 
+\contentsline {subsection}{\numberline {2.6.1}SOP (Sum of Products)}{14}{subsection.2.6.1}% 
+\contentsline {subsection}{\numberline {2.6.2}W-Types}{14}{subsection.2.6.2}% 
 \contentsline {paragraph}{\textbf {Example}}{15}{Item.5}% 
-\contentsline {subsection}{\numberline {3.3.3}Indexed Functors}{16}{subsection.3.3.3}% 
-\contentsline {subsection}{\numberline {3.3.4}Combinatorial Species}{16}{subsection.3.3.4}% 
-\contentsline {chapter}{\numberline {4}A Combinator Library for Generators}{17}{chapter.4}% 
-\contentsline {section}{\numberline {4.1}The Type of Generators}{17}{section.4.1}% 
-\contentsline {subsection}{\numberline {4.1.1}Examples in Existing Libraries}{17}{subsection.4.1.1}% 
-\contentsline {subsection}{\numberline {4.1.2}Separating Structure and Interpretation}{17}{subsection.4.1.2}% 
-\contentsline {subsection}{\numberline {4.1.3}The \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } Datatype}{18}{subsection.4.1.3}% 
-\contentsline {subsection}{\numberline {4.1.4}Generator Interpretations}{19}{subsection.4.1.4}% 
-\contentsline {section}{\numberline {4.2}Generalization to Indexed Datatypes}{20}{section.4.2}% 
-\contentsline {section}{\numberline {4.3}Interpreting Generators as Enumerations}{21}{section.4.3}% 
-\contentsline {section}{\numberline {4.4}Properties for Enumerations}{22}{section.4.4}% 
-\contentsline {section}{\numberline {4.5}Generating Function Types}{22}{section.4.5}% 
-\contentsline {section}{\numberline {4.6}Monadic Generators}{22}{section.4.6}% 
-\contentsline {chapter}{\numberline {5}Generic Generators for Regular types}{23}{chapter.5}% 
-\contentsline {section}{\numberline {5.1}The universe of regular types}{23}{section.5.1}% 
-\contentsline {paragraph}{\textbf {Example}}{23}{figure.5.2}% 
-\contentsline {subsection}{\numberline {5.1.1}Non-regular data types}{25}{subsection.5.1.1}% 
-\contentsline {section}{\numberline {5.2}Generic Generators for regular types}{25}{section.5.2}% 
-\contentsline {subsection}{\numberline {5.2.1}Defining functions over codes}{25}{subsection.5.2.1}% 
-\contentsline {subsection}{\numberline {5.2.2}Composing generic generators}{25}{subsection.5.2.2}% 
-\contentsline {paragraph}{\textbf {Example}}{26}{subsection.5.2.2}% 
-\contentsline {section}{\numberline {5.3}Constant Types}{26}{section.5.3}% 
-\contentsline {paragraph}{\textbf {Example}}{26}{section.5.3}% 
-\contentsline {subsection}{\numberline {5.3.1}Definition and Semantics}{27}{subsection.5.3.1}% 
-\contentsline {paragraph}{\textbf {Example}}{27}{subsection.5.3.1}% 
-\contentsline {subsection}{\numberline {5.3.2}Generic Generators for Constant Typse}{27}{subsection.5.3.2}% 
-\contentsline {section}{\numberline {5.4}Complete Enumerators For Regular Types}{28}{section.5.4}% 
-\contentsline {subsection}{\numberline {5.4.1}Combinator Correctness}{28}{subsection.5.4.1}% 
-\contentsline {subsection}{\numberline {5.4.2}Completeness for Constant Types}{29}{subsection.5.4.2}% 
-\contentsline {subsection}{\numberline {5.4.3}Generator Monotonicity}{30}{subsection.5.4.3}% 
-\contentsline {subsection}{\numberline {5.4.4}Final Proof Sketch}{30}{subsection.5.4.4}% 
-\contentsline {chapter}{\numberline {6}Deriving Generators for Indexed Containers}{31}{chapter.6}% 
-\contentsline {section}{\numberline {6.1}Universe Description}{31}{section.6.1}% 
-\contentsline {subsection}{\numberline {6.1.1}Definition}{31}{subsection.6.1.1}% 
-\contentsline {subsection}{\numberline {6.1.2}Example Signatures}{32}{subsection.6.1.2}% 
-\contentsline {paragraph}{\textbf {Example}}{32}{subsection.6.1.2}% 
-\contentsline {paragraph}{\textbf {Example}}{33}{subsection.6.1.2}% 
-\contentsline {paragraph}{\textbf {Example}}{34}{subsection.6.1.2}% 
-\contentsline {section}{\numberline {6.2}Generic Generators for Indexed Containers}{34}{section.6.2}% 
-\contentsline {subsection}{\numberline {6.2.1}Restricting Operations and Arities}{34}{subsection.6.2.1}% 
-\contentsline {paragraph}{\textbf {Example}}{34}{figure.6.3}% 
-\contentsline {subsection}{\numberline {6.2.2}Generating Function Types}{35}{subsection.6.2.2}% 
-\contentsline {subsection}{\numberline {6.2.3}Constructing the Generator}{36}{subsection.6.2.3}% 
-\contentsline {chapter}{\numberline {7}Deriving Generators for Indexed Descriptions}{37}{chapter.7}% 
-\contentsline {section}{\numberline {7.1}Universe Description}{37}{section.7.1}% 
-\contentsline {subsection}{\numberline {7.1.1}Definition}{37}{subsection.7.1.1}% 
-\contentsline {paragraph}{\textbf {Example}}{38}{figure.7.2}% 
-\contentsline {subsection}{\numberline {7.1.2}Exmample: describing well typed lambda terms}{39}{subsection.7.1.2}% 
-\contentsline {subsubsection}{Modelling SLC in Agda}{39}{subsection.7.1.2}% 
-\contentsline {subsubsection}{Describing well typed terms}{40}{figure.7.5}% 
-\contentsline {section}{\numberline {7.2}Generic Generators for Indexed Descriptions}{42}{section.7.2}% 
-\contentsline {section}{\numberline {7.3}Completeness Proof for Generators Derived From Indexed Descriptions}{42}{section.7.3}% 
-\contentsline {chapter}{\numberline {8}Program Term Generation}{43}{chapter.8}% 
-\contentsline {chapter}{\numberline {9}Implementation in Haskell}{45}{chapter.9}% 
-\contentsline {chapter}{\numberline {10}Conclusion \& Further Work}{47}{chapter.10}% 
-\contentsline {chapter}{\numberline {A}Datatype Definitions}{49}{appendix.A}% 
-\contentsline {section}{\numberline {A.1}Natural numbers}{49}{section.A.1}% 
-\contentsline {section}{\numberline {A.2}Finite Sets}{49}{section.A.2}% 
-\contentsline {section}{\numberline {A.3}Vectors}{50}{section.A.3}% 
-\contentsline {section}{\numberline {A.4}Simple Types}{50}{section.A.4}% 
-\contentsline {section}{\numberline {A.5}Contexts}{50}{section.A.5}% 
-\contentsline {section}{\numberline {A.6}Raw Lambda Terms}{51}{section.A.6}% 
-\contentsline {section}{\numberline {A.7}Lists}{51}{section.A.7}% 
-\contentsline {section}{\numberline {A.8}Well-scoped Lambda Terms}{51}{section.A.8}% 
+\contentsline {subsection}{\numberline {2.6.3}Indexed Functors}{16}{subsection.2.6.3}% 
+\contentsline {subsection}{\numberline {2.6.4}Combinatorial Species}{16}{subsection.2.6.4}% 
+\contentsline {chapter}{\numberline {3}Generic Generators for Regular types}{17}{chapter.3}% 
+\contentsline {section}{\numberline {3.1}The universe of regular types}{17}{section.3.1}% 
+\contentsline {paragraph}{\textbf {Example}}{17}{figure.3.2}% 
+\contentsline {subsection}{\numberline {3.1.1}Non-regular data types}{19}{subsection.3.1.1}% 
+\contentsline {section}{\numberline {3.2}Generic Generators for regular types}{19}{section.3.2}% 
+\contentsline {subsection}{\numberline {3.2.1}Defining functions over codes}{19}{subsection.3.2.1}% 
+\contentsline {subsection}{\numberline {3.2.2}Composing generic generators}{19}{subsection.3.2.2}% 
+\contentsline {paragraph}{\textbf {Example}}{20}{subsection.3.2.2}% 
+\contentsline {section}{\numberline {3.3}Constant Types}{20}{section.3.3}% 
+\contentsline {paragraph}{\textbf {Example}}{20}{section.3.3}% 
+\contentsline {subsection}{\numberline {3.3.1}Definition and Semantics}{21}{subsection.3.3.1}% 
+\contentsline {paragraph}{\textbf {Example}}{21}{subsection.3.3.1}% 
+\contentsline {subsection}{\numberline {3.3.2}Generic Generators for Constant Typse}{21}{subsection.3.3.2}% 
+\contentsline {section}{\numberline {3.4}Complete Enumerators For Regular Types}{22}{section.3.4}% 
+\contentsline {subsection}{\numberline {3.4.1}Combinator Correctness}{22}{subsection.3.4.1}% 
+\contentsline {subsection}{\numberline {3.4.2}Completeness for Constant Types}{23}{subsection.3.4.2}% 
+\contentsline {subsection}{\numberline {3.4.3}Generator Monotonicity}{24}{subsection.3.4.3}% 
+\contentsline {subsection}{\numberline {3.4.4}Final Proof Sketch}{24}{subsection.3.4.4}% 
+\contentsline {chapter}{\numberline {4}Deriving Generators for Indexed Containers}{25}{chapter.4}% 
+\contentsline {section}{\numberline {4.1}Universe Description}{25}{section.4.1}% 
+\contentsline {subsection}{\numberline {4.1.1}Definition}{25}{subsection.4.1.1}% 
+\contentsline {subsection}{\numberline {4.1.2}Example Signatures}{26}{subsection.4.1.2}% 
+\contentsline {paragraph}{\textbf {Example}}{26}{subsection.4.1.2}% 
+\contentsline {paragraph}{\textbf {Example}}{27}{subsection.4.1.2}% 
+\contentsline {paragraph}{\textbf {Example}}{28}{subsection.4.1.2}% 
+\contentsline {section}{\numberline {4.2}Generic Generators for Indexed Containers}{28}{section.4.2}% 
+\contentsline {subsection}{\numberline {4.2.1}Restricting Operations and Arities}{28}{subsection.4.2.1}% 
+\contentsline {paragraph}{\textbf {Example}}{28}{figure.4.3}% 
+\contentsline {subsection}{\numberline {4.2.2}Generating Function Types}{29}{subsection.4.2.2}% 
+\contentsline {subsection}{\numberline {4.2.3}Constructing the Generator}{30}{subsection.4.2.3}% 
+\contentsline {chapter}{\numberline {5}Deriving Generators for Indexed Descriptions}{31}{chapter.5}% 
+\contentsline {section}{\numberline {5.1}Universe Description}{31}{section.5.1}% 
+\contentsline {subsection}{\numberline {5.1.1}Definition}{31}{subsection.5.1.1}% 
+\contentsline {paragraph}{\textbf {Example}}{32}{figure.5.2}% 
+\contentsline {subsection}{\numberline {5.1.2}Exmample: describing well typed lambda terms}{33}{subsection.5.1.2}% 
+\contentsline {subsubsection}{Modelling SLC in Agda}{33}{subsection.5.1.2}% 
+\contentsline {subsubsection}{Describing well typed terms}{34}{figure.5.5}% 
+\contentsline {section}{\numberline {5.2}Generic Generators for Indexed Descriptions}{36}{section.5.2}% 
+\contentsline {section}{\numberline {5.3}Completeness Proof for Enumerators Derived From Indexed Descriptions}{37}{section.5.3}% 
+\contentsline {chapter}{\numberline {6}Implementation in Haskell}{39}{chapter.6}% 
+\contentsline {section}{\numberline {6.1}General Approach}{39}{section.6.1}% 
+\contentsline {section}{\numberline {6.2}Representing Indexed Descriptions In Haskell}{39}{section.6.2}% 
+\contentsline {subsection}{\numberline {6.2.1}Generalized coproducts}{40}{subsection.6.2.1}% 
+\contentsline {subsection}{\numberline {6.2.2}The \ensuremath {\leavevmode \begingroup \color {hsblue4}`\endgroup \mitSigma } combinator}{40}{subsection.6.2.2}% 
+\contentsline {subsection}{\numberline {6.2.3}Semantics}{41}{subsection.6.2.3}% 
+\contentsline {section}{\numberline {6.3}Deriving Generators for Indexed Descriptions in Haskell}{41}{section.6.3}% 
+\contentsline {subsection}{\numberline {6.3.1}The generator type}{42}{subsection.6.3.1}% 
+\contentsline {subsection}{\numberline {6.3.2}A singleton instance for descriptions}{42}{subsection.6.3.2}% 
+\contentsline {subsection}{\numberline {6.3.3}Deriving generators}{43}{subsection.6.3.3}% 
+\contentsline {section}{\numberline {6.4}Examples}{45}{section.6.4}% 
+\contentsline {subsection}{\numberline {6.4.1}Finite sets}{45}{subsection.6.4.1}% 
+\contentsline {subsection}{\numberline {6.4.2}Well-typed lambda terms}{46}{subsection.6.4.2}% 
+\contentsline {chapter}{\numberline {7}Discussion}{49}{chapter.7}% 
+\contentsline {chapter}{\numberline {A}Datatype Definitions}{51}{appendix.A}% 
+\contentsline {section}{\numberline {A.1}Natural numbers}{51}{section.A.1}% 
+\contentsline {section}{\numberline {A.2}Finite Sets}{51}{section.A.2}% 
+\contentsline {section}{\numberline {A.3}Vectors}{52}{section.A.3}% 
+\contentsline {section}{\numberline {A.4}Simple Types}{52}{section.A.4}% 
+\contentsline {section}{\numberline {A.5}Contexts}{52}{section.A.5}% 
+\contentsline {section}{\numberline {A.6}Raw Lambda Terms}{53}{section.A.6}% 
+\contentsline {section}{\numberline {A.7}Lists}{53}{section.A.7}% 
+\contentsline {section}{\numberline {A.8}Well-scoped Lambda Terms}{53}{section.A.8}% 

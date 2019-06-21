@@ -4,7 +4,9 @@
 
 open import AgdaGen.Base
 open import AgdaGen.Combinators
-open import AgdaGen.Generic.Isomorphism renaming (_≅_ to _≃_) 
+open import AgdaGen.Enumerate
+open import AgdaGen.Generic.Isomorphism
+open import AgdaGen.Data using (_∈_ ; here ; there)
 open import Level renaming (zero to zeroL ; suc to sucL)
 
 open import Data.Product
@@ -169,7 +171,7 @@ toTerm : ∀ {Γ τ} → Γ ⊢ τ → RT
 %</toterm>
 
 \begin{code}
-toTerm = {!!}
+toTerm = λ _ → tvar zero
 
 module Inductive where 
 \end{code}
@@ -263,12 +265,11 @@ module E where
     cong (λ x → In (▻ ∙ , ((σ , τ) , refl) , α , x)) wtIso₂
   wtIso₂ {Γ} {σ `→ τ} {In ((▻ (▻ ∙)) , σ' , _ , _)}                =
     cong₂ (λ x y → In (▻ ▻ ∙ , σ' , x , y)) wtIso₂ wtIso₂
-
 \end{code}
 
 %<*desciso>
 \begin{code}
-  desc≃ : ∀ {Γ τ} → Fix Inductive.wt (Γ , τ) ≃ Fix Constrained.wt (Γ , τ)
+  desc≃ : ∀ {Γ τ} → Fix Inductive.wt (Γ , τ) ≅ Fix Constrained.wt (Γ , τ)
 \end{code}
   %</desciso>
 
@@ -285,4 +286,114 @@ module E where
 \begin{code}
   wt≃ = {!!}
 \end{code}
-`Σ : (S : Set) → (S → Description) → Description
+
+%<*idescm>
+\begin{code}
+data IDescM {I : Set} (P : Set → Set) : IDesc I → Set where
+\end{code}
+%</idescm>
+
+\begin{code}
+  `var~ : ∀ {i : I} → IDescM P (`var i)
+    
+  `1~ : IDescM P `1
+    
+  _`×~_ : ∀ {d₁ d₂ : IDesc I} → IDescM P d₁
+          → IDescM P d₂ → IDescM P (d₁ `× d₂)
+          
+  `σ~ :  ∀ {n : ℕ} {T : Sl n → IDesc I} → ((fn : Sl n) → IDescM P (T fn))
+      →  IDescM P (`σ n T)
+\end{code}
+
+
+
+%<*idescmsigma>
+\begin{code}
+  `Σ~ :  ∀ {S : Set} {T : S → IDesc I} → P S → ((s : S) → IDescM P (T s))
+      →  IDescM P (`Σ S T)
+\end{code}
+%</idescmsigma>
+
+\begin{code}
+Sl-gen : (n : ℕ) → Genᵢ (Sl n) Sl n
+Sl-gen zero = empty
+Sl-gen (suc n) = ⦇ ∙ ⦈ ∥ ⦇ ▻ (μᵢ n) ⦈
+
+module C where
+\end{code}
+
+%<*idescgen>
+\begin{code}
+  IDesc-gen :  ∀ {I} {i : I} → (δ : IDesc I) → (φ : I → IDesc I)
+            →  Genᵢ (⟦ δ ⟧ (Fix φ)) (λ i → ⟦ φ i ⟧ (Fix φ)) i
+\end{code}
+%</idescgen>
+
+\begin{code}
+  IDesc-gen (`var i)    φ = ⦇ In (μᵢ i) ⦈
+  IDesc-gen `1          φ = Pureᵢ tt
+  IDesc-gen {i} (δₗ `× δᵣ)  φ = ⦇ _,_ (IDesc-gen δₗ φ) (IDesc-gen δᵣ φ) ⦈
+  IDesc-gen (`Σ S T) φ = {!!}
+\end{code}
+
+%<*idescgencop>
+\begin{code}
+  IDesc-gen {i = i} (`σ n T) φ = do
+    sl ← Callᵢ {x = i} n Sl-gen
+    t  ← IDesc-gen (T sl) φ
+    pure (_,_ {B = λ sl → ⟦ T sl ⟧ (Fix φ)} sl t)
+\end{code}
+%</idescgencop>
+
+\begin{code}
+module D where
+
+  IDesc-gen : ∀ {I} {i : I} → (δ : IDesc I) → (φ : I → IDesc I) → IDescM (λ a → Gen a a) δ → Genᵢ (⟦ δ ⟧ (Fix φ)) (λ i → ⟦ φ i ⟧ (Fix φ)) i
+  IDesc-gen (`var i) φ m = {!!}
+  IDesc-gen `1 φ m = {!!}
+  IDesc-gen (δ `× δ₁) φ m = {!!}
+  IDesc-gen (`σ n T) φ m = {!!}
+\end{code}
+
+%<*idescgensigma>
+\begin{code}
+  IDesc-gen (`Σ S T) φ (`Σ~ S~ T~) = do
+    s ← Call S~
+    t ← IDesc-gen (T s) φ (T~ s)
+    pure (_,_ {B = λ s → ⟦ T s ⟧ (Fix φ ) } s t)
+\end{code}
+%</idescgensigma>
+
+%<*describe>
+\begin{code}
+record Describe {I} (A : I → Set) : Set where
+  field D : Σ[ φ ∈ (I → IDesc I) ] ((i : I) → A i ≅ Fix φ i) 
+\end{code}
+%</describe>
+
+%<*completeness>
+\begin{code}
+Complete : ∀ {I} {P : I → Set} → (i : I) → ((i : I) → Genᵢ (P i) P i) → Set
+Complete {I} {P} i gen = ∀ {x : P i} → ∃[ n ] (x ∈ interpretᵢ gen i (gen i) n)
+\end{code}
+%</completeness>
+
+\begin{code}
+_∣ᵢ_↝_ : ∀ {I} {A : Set} {P : I → Set} {i : I} → Genᵢ A P i → ((i : I) → Genᵢ (P i) P i) → A → Set
+_∣ᵢ_↝_ = {!!}
+\end{code}
+
+%<*bindcomplete>
+\begin{code}
+>>=-Complete :  ∀ {I A} {P : A → Set} {T : I → Set} {x y}
+                  {g : Genᵢ A T x} {g' : (v : A) → Genᵢ (P v) T y}
+                  {x : Σ A P} {tg : (i : I) → Genᵢ (T i) T i}
+                → g ∣ᵢ tg ↝ proj₁ x
+                → g' (proj₁ x) ∣ᵢ tg ↝ proj₂ x
+                → (g >>= λ y → ⦇ (λ v → y , v) (g' y) ⦈) ∣ᵢ tg ↝ x 
+\end{code}
+%</bindcomplete>
+\begin{code}
+>>=-Complete = {!!}
+\end{code}
+

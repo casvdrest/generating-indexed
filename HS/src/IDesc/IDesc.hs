@@ -151,10 +151,10 @@ module IDesc.IDesc where
   -- | Derive a generator from a description
   idesc_gen :: forall (d :: IDesc a i) . (Singleton i) => SingIDesc d -> G i a (Interpret d)
   idesc_gen SOne                               = pure ()
-  idesc_gen SEmpty                             = G None
-  idesc_gen (SVar v)                           = mu v 
+  idesc_gen SEmpty                             = empty
+  idesc_gen (SVar v)                           = G (Mu v)
   idesc_gen (dl :*:~ dr)                       = (,) <$> idesc_gen dl <*> idesc_gen dr
-  idesc_gen (SZero2 :+>~ SVNil)                = G None
+  idesc_gen (SZero2 :+>~ SVNil)                = empty
   idesc_gen (SSuc2 SZero2 :+>~ (d :::~ SVNil)) = idesc_gen d
   idesc_gen (SSuc2 (SSuc2 n) :+>~ (d :::~ ds)) =
         Left  <$> idesc_gen d 

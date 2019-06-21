@@ -2,40 +2,44 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces W-types defined with separate codes and semantics}}{15}{figure.2.1}% 
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Wℕ}\endgroup }}}{15}{figure.2.2}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces W-types defined with separate codes and semantics}}{15}{figure.3.1}% 
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Wℕ}\endgroup }}}{15}{figure.3.2}% 
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The universe of regular types}}{17}{figure.3.1}% 
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Semantics of the universe of regular types}}{18}{figure.3.2}% 
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ'}\endgroup }}}{18}{figure.3.3}% 
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Metadata structure carrying additional information for constant types}}{21}{figure.3.4}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Definition of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } datatype}}{18}{figure.4.1}% 
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Definitiong of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Genᵢ}\endgroup } datatype}}{21}{figure.4.2}% 
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Interpretation of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } datatype as an enumeration}}{21}{figure.4.3}% 
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Signatures}}{25}{figure.4.1}% 
+\contentsline {figure}{\numberline {4.2}{\ignorespaces The semantics of a signature}}{26}{figure.4.2}% 
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Indexed containers with restricted operations and arities}}{29}{figure.4.3}% 
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Definition of \ensuremath {\leavevmode \begingroup \color {hsblue5}\mathit {cogenerate}\endgroup }}}{30}{figure.4.4}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces The universe of regular types}}{23}{figure.5.1}% 
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Semantics of the universe of regular types}}{24}{figure.5.2}% 
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {ℕ'}\endgroup }}}{24}{figure.5.3}% 
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Metadata structure carrying additional information for constant types}}{27}{figure.5.4}% 
+\contentsline {figure}{\numberline {5.1}{\ignorespaces The Universe of indexed descriptions}}{31}{figure.5.1}% 
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Semantics of the IDesc universe}}{32}{figure.5.2}% 
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Fix}\endgroup \tmspace +\thickmuskip {.2777em}\leavevmode \begingroup \color {hsblue5}\mathit {finD}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Fin}\endgroup }}}{33}{figure.5.3}% 
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Context membership in Agda}}{34}{figure.5.4}% 
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Well-typed lambda terms as a two way relation}}{34}{figure.5.5}% 
+\contentsline {figure}{\numberline {5.6}{\ignorespaces A description for well typed terms using induction on the index type}}{35}{figure.5.6}% 
+\contentsline {figure}{\numberline {5.7}{\ignorespaces A description for well typed terms using explicit constraints}}{35}{figure.5.7}% 
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Completeness for the bind operator}}{37}{figure.5.8}% 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Signatures}}{31}{figure.6.1}% 
-\contentsline {figure}{\numberline {6.2}{\ignorespaces The semantics of a signature}}{32}{figure.6.2}% 
-\contentsline {figure}{\numberline {6.3}{\ignorespaces Indexed containers with restricted operations and arities}}{35}{figure.6.3}% 
-\contentsline {figure}{\numberline {6.4}{\ignorespaces Definition of \ensuremath {\leavevmode \begingroup \color {hsblue5}\mathit {cogenerate}\endgroup }}}{36}{figure.6.4}% 
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces The Universe of indexed descriptions}}{37}{figure.7.1}% 
-\contentsline {figure}{\numberline {7.2}{\ignorespaces Semantics of the IDesc universe}}{38}{figure.7.2}% 
-\contentsline {figure}{\numberline {7.3}{\ignorespaces Isomorphism between \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Fix}\endgroup \tmspace +\thickmuskip {.2777em}\leavevmode \begingroup \color {hsblue5}\mathit {finD}\endgroup } and \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Fin}\endgroup }}}{39}{figure.7.3}% 
-\contentsline {figure}{\numberline {7.4}{\ignorespaces Context membership in Agda}}{40}{figure.7.4}% 
-\contentsline {figure}{\numberline {7.5}{\ignorespaces Well-typed lambda terms as a two way relation}}{40}{figure.7.5}% 
-\contentsline {figure}{\numberline {7.6}{\ignorespaces A description for well typed terms using induction on the index type}}{41}{figure.7.6}% 
-\contentsline {figure}{\numberline {7.7}{\ignorespaces A description for well typed terms using explicit constraints}}{41}{figure.7.7}% 
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Definition of \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {IDesc}\endgroup \tmspace +\thickmuskip {.2777em}\leavevmode \begingroup \color {hsblue5}\mathit {a}\endgroup \tmspace +\thickmuskip {.2777em}\leavevmode \begingroup \color {hsblue5}\mathit {i}\endgroup } in Haskell}}{40}{figure.6.1}% 
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Semantics of the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {IDesc}\endgroup } type}}{41}{figure.6.2}% 
+\contentsline {figure}{\numberline {6.3}{\ignorespaces The \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {Gen}\endgroup } type in Haskell}}{42}{figure.6.3}% 
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Singleton instance for the \ensuremath {\leavevmode \begingroup \color {hsblue3}\mathit {IDesc}\endgroup } type}}{42}{figure.6.4}% 
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Singleton instance for the \ensuremath {\mitSigma } constructor}}{43}{figure.6.5}% 
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Description expansion}}{44}{figure.6.6}% 
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Description expansion for singletons}}{44}{figure.6.7}% 
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Type level description of well typed terms}}{47}{figure.6.8}% 
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Singleton description of well typed terms}}{47}{figure.6.9}% 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{49}{figure.A.1}% 
-\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{49}{figure.A.2}% 
-\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{50}{figure.A.3}% 
-\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{50}{figure.A.4}% 
-\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{50}{figure.A.5}% 
-\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw lambda terms in Haskell and Agda}}{51}{figure.A.6}% 
-\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{51}{figure.A.7}% 
-\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped lambda terms in Agda}}{51}{figure.A.8}% 
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Definition of natural numbers in Haskell and Agda}}{51}{figure.A.1}% 
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Definition of finite sets in Agda}}{51}{figure.A.2}% 
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Definition of vectors (size-indexed listst) in Agda}}{52}{figure.A.3}% 
+\contentsline {figure}{\numberline {A.4}{\ignorespaces Definition of simple types in Haskell and Agda}}{52}{figure.A.4}% 
+\contentsline {figure}{\numberline {A.5}{\ignorespaces Definition of contexts in Haskell and Agda}}{52}{figure.A.5}% 
+\contentsline {figure}{\numberline {A.6}{\ignorespaces Definition of raw lambda terms in Haskell and Agda}}{53}{figure.A.6}% 
+\contentsline {figure}{\numberline {A.7}{\ignorespaces Definition lists and Agda}}{53}{figure.A.7}% 
+\contentsline {figure}{\numberline {A.8}{\ignorespaces Definition well-scoped lambda terms in Agda}}{53}{figure.A.8}% 

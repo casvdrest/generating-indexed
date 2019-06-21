@@ -31,12 +31,12 @@ module code where
     xs = 1 ∷ 2 ∷ []
     ys = ℕ ∷ Bool ∷ []
 
-  open import Data.Unit hiding (_≟_)
+  open import Data.Unit hiding (_≟_; _≤_)
   open import Data.Product hiding (map)
   open import Level hiding (suc; zero)
   open import Data.List hiding (map; length)
   open import Data.Sum hiding (map)
-  open import Data.Fin  hiding (_≟_ ; _+_)
+  open import Data.Fin  hiding (_≟_ ; _+_; _≤_)
 
   open import Relation.Binary.PropositionalEquality
 
@@ -188,3 +188,13 @@ P ∨ ¬ P
 \begin{code}
   P∨¬P {P} = {!!}
 \end{code}
+
+%<*sorted>
+\begin{code}
+  data Sorted : (xs : List ℕ) → Set where
+    nil     :  Sorted []
+    single  :  ∀ {n} → Sorted (n ∷ [])
+    step    :  ∀ {n m xs} → n ≤ m → Sorted (m ∷ xs)
+            →  Sorted (n ∷ m ∷ xs)
+\end{code}
+%</sorted>

@@ -194,7 +194,7 @@
 
   \end{example}
 
-\subsection{Generic Generators for Constant Typse}
+\subsection{Generic Generators for Constant Typse}\label{sec:genericgenreg}
 
   When attempting to define |deriveGen| on |K s|, we run into a problem. We need to 
   return a generator that produces values of type |s|, but we have no information 

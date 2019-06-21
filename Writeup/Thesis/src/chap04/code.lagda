@@ -97,7 +97,7 @@ module code where
 
 %<*gennat>
 \begin{code}
-  nat : 𝔾 ℕ
+  nat : Gen ℕ ℕ
   nat  =  ⦇ zero   ⦈
        ∥  ⦇ suc μ  ⦈
 \end{code}

@@ -482,7 +482,67 @@ Abstract
 \chapter{Introduction}
 This thesis concerns itself with the generation of complex test data in the context of property based testing specifically, and generic programming for indexed datatypes in general. 
 
-\section{Motivation}
+\section{Problem Statement}
+
+  In \emph{property based testing} is a technique in which the correctness of a program is asserted by defining properties that should hold over a program's output and behavior, and checking that those properties are true for a collection of input values. There exist many libraries for property based testing, of which QuickCheck \cite{claessen2011quickcheck} and SmallCheck \cite{runciman2008smallcheck} are perhaps the most notable in the realm of functional programming. 
+
+  At first glance defining properties that capture the desired behavior of a program may seem like the most challenging aspect of property based testing. While this certainly can be difficult, one should not underestimate the effort that goes into generation of suitable test data. For example, suppose we are testing a function that operates on sorted lists. To do so, we would need a generator that produces sorted lists. Suppose we have a predicate that asserts sortedness: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{isSorted}\HSSym{::}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}\HSSym{\to} \HSCon{Bool}{}\<[E]%
+\\
+\>[B]{}\HSVar{isSorted}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[20]%
+\>[20]{}\HSSym{\mathrel{=}}\HSCon{True}{}\<[E]%
+\\
+\>[B]{}\HSVar{isSorted}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSVar{x}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[20]%
+\>[20]{}\HSSym{\mathrel{=}}\HSCon{True}{}\<[E]%
+\\
+\>[B]{}\HSVar{isSorted}\;\HSSpecial{(}\HSVar{x}\HSCon{\mathbin{:}}\HSVar{y}\HSCon{\mathbin{:}}\HSVar{xs}\HSSpecial{)}{}\<[20]%
+\>[20]{}\HSSym{\mathrel{=}}\HSVar{x}\HSSym{\leq} \HSVar{y}\HSSym{\mathrel{\wedge}}\HSVar{isSorted}\;\HSSpecial{(}\HSVar{y}\HSCon{\mathbin{:}}\HSVar{xs}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We can use this predicate as a precondition for some property (i.e. a function \ensuremath{\HSVar{prop}\HSSym{::}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}\HSSym{\to} \HSCon{Bool}}) that expects a sorted list as its input. However, this causes some problems. 
+
+\begin{tabbing}\ttfamily
+~Test\char46{}QuickCheck\char62{}~quickCheck~\char40{}sorted~xs\char41{}~\char61{}\char61{}\char62{}~prop~xs\char41{}\\
+\ttfamily ~\char42{}\char42{}\char42{}~Gave~up\char33{}~Passed~only~70~tests\char59{}~1000~discarded~tests\char46{}
+\end{tabbing}
+
+  QuickCheck was not able to find enough lists that satisfy the predicate sorted! As it turns out, only \emph{very few} random lists actually turn out to be sorted. The trouble does not stop there, since from those lists that QuickCheck is able to find that are sorted, most will only contain very few elements. This is simply a result of the fact that a small random list has a much higher probability of being sorted than a larger list. The way forward in this case is actually to define a custom generator that is specifically designed to produce sorted lists. 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{gen\char95 sorted}\HSSym{::}\HSCon{Gen}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
+\\
+\>[B]{}\HSVar{gen\char95 sorted}\HSSym{\mathrel{=}}\HSVar{arbitrary}\HSSym{\bind} \HSVar{return}\HSSym{\mathbin{\circ}}\HSVar{diff}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSKeyword{where}\;{}\<[10]%
+\>[10]{}\HSVar{diff}\HSSym{::}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}\HSSym{\to} \HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
+\\
+\>[10]{}\HSVar{diff}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[23]%
+\>[23]{}\HSSym{\mathrel{=}}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
+\\
+\>[10]{}\HSVar{diff}\;\HSSpecial{(}\HSVar{x}\HSCon{\mathbin{:}}\HSVar{xs}\HSSpecial{)}{}\<[23]%
+\>[23]{}\HSSym{\mathrel{=}}\HSVar{x}\HSCon{\mathbin{:}}\HSVar{map}\;\HSSpecial{(}\HSSym{+}\HSVar{x}\HSSpecial{)}\;\HSSpecial{(}\HSVar{diff}\;\HSVar{xs}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  In this case, the custom generator is not too complicated. However, as the preconditions of our properties grow more complex, so do their generators. For example, when testing a compiler, well-formedness of input programs is often a precondition of the test data. Generating well-formed programs is hard. Even synthesizing well-typed lambda terms is a surprisingly tricky problem \cite{palka2011testing, grygiel2013counting, claessen2015generating}.
+
+  We observe that the desired precondition of test data can often be expressed as using an \emph{indexed family}. For example, the following indexed family describes sortedness for lists: 
+
+\includeagda{2}{sorted}
+
+  Given a value of type \ensuremath{\HSCon{Sorted}\;\HSVar{xs}}, it is easy to convert it to a value of type \ensuremath{\HSCon{List}\;\HSCon{ℕ}}. This means that if we are able to generate values that inhabit an indexed family such as \ensuremath{\HSCon{Sorted}}, we are able to generate constrained test data. Some research has been done in this direction \cite{lampropoulos2017generating}, but a generic procedure for generation of indexed families does not exist yet in the literature. 
 
 \section{Research Question and Goals}
 
@@ -492,37 +552,46 @@ This thesis concerns itself with the generation of complex test data in the cont
     How can we obtain constrained test data by generically deriving enumeration and/or sampling mechanisms for indexed datatypes?
   }\end{center}
 
-  In addition to a theoretical exploration of this question, we intend to supply the following deliverables:
-
-  \begin{itemize}
-    \item A formalization in Agda of the various type universe explored in this thesis.
-    
-    \item A haskell library that demonstrates how the ideas developed in this thesis can be applied in a more practical setting. 
-  \end{itemize}
+  By obtaining a way to generically generate values of indexed families, we hope to be able to generate constrained test data without having to define custom generation procedures.
 
 \section{Contributions}
+
+  This thesis makes the following contributions: 
+
+  \begin{itemize}
+    \item 
+      A formalization in Agda of enumerative generators for \emph{regular datatypes}, together with a proof that these generators satisfy a completeness property. 
+
+    \item 
+      A formalization in Agda of enumerative generators for inductive families that can be described as an \emph{indexed container}. 
+
+    \item 
+      A formalization in Agda of enumerative generators for inductive families that can be described as an \emph{indexed description}, together with a proof that they satisfy a completeness property. 
+
+    \item 
+      A small Haskell library that implements the enumerative generator for indexed description, and is able to generate constrained test data. 
+  \end{itemize}
 
 \section{Thesis Structure}
 
   This thesis is structured as follows: in chapter 2 we discuss some relevant 
-  theoretical background, and in chapter 3 we describe some of the work related to 
-  this thesis. Chapter 4 sketches the design of our generator combinator library. 
-  Chapter 5 through 7 describe various type universes, and show how we may derive 
+  theoretical background and some of the work related to 
+  this thesis. Chapters 3 through 5 describe various type universes, and show how we may derive 
   generators for any type in those universes. Additionally, we sketch how we may prove 
-  that the associated enumerations are complete. Chapter 8 and 9 are concerned with 
+  that the associated enumerations are complete. Chapter 6 is concerned with 
   how we can implement these ideas in Haskell, and provide a comprehensive framework 
-  for the generation of well formed programs. Finally, chapter 10 provides a 
-  conclusion and lists some of the possible future work.
+  for the generation of well formed programs. Finally, chapter 7 provides a discussion 
+  of the work and lists some of the possible future work.
 
-\section{Methodology}
+%% \section{Methodology}
 
-\subsection{Agda Model}
+%% \subsection{Agda Model}
 
-\subsection{Haskell Library}
+%% \subsection{Haskell Library}
 
-\subsection{Notational Conventions}
+%% \subsection{Notational Conventions}
 
-\chapter{Background}
+\chapter{Background \& Related Work}
 In this section, we will briefly discuss some of the relevant theoretical background 
 for this thesis. We assume the reader to be familiar with the general concepts of both 
 Haskell and Agda, as well as functional programming in general. We shortly touch upon 
@@ -900,8 +969,7 @@ $\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$
     recursive subtrees have indices that cannot be uniquely determined from the 
     index of a value. 
 
-\chapter{Literature Review}
-In this section, we discuss some of the existing literature that is relevant in the 
+    In this section, we discuss some of the existing literature that is relevant in the 
 domain of generating test data for property based testing. We take a look at some 
 existing testing libraries, techniques for generation of constrained test data, and a 
 few type universes beyond those we used that aim to describe (at least a subset of) 
@@ -1193,155 +1261,6 @@ indexed datatypes.
   Haskell’s ADTs (or regular types in general) can be described by definining familiar 
   combinators for species, such as sum and product.
 
-\chapter{A Combinator Library for Generators}
-\section{The Type of Generators}
-
-  We have not yet specified what it is exactly that we mean when we talk about \textit{generators}. In the context of property based testing, it makes sense to think of generators as entities that produce values of a certain type; the machinery that is responsible for supplying suitable test values. As we saw in section \cref{sec:literature}, this can mean different things depending on the library that you are using. \textit{SmallCheck} and \textit{LeanCheck} generators are functions that take a size parameter as input and produce an exhaustive list of all values that are smaller than the generator's input, while \textit{QuickCheck} generators randomly sample values of the desired type. Though various libraries use different terminology to refer to the mechanisms used to produce test values, we will use \textit{generator} as an umbrella term to refer to the test data producing parts of existing libraries. 
-
-  \subsection{Examples in Existing Libraries}
-  
-   When comparing generator definitions across libraries, we see that their definition is often more determined by the structure of the datatype they ought to produce values of than the type of the generator itself. Let us consider the \ensuremath{\HSCon{Nat}} datatype (definition \ref{defnat}). In QuickCheck, we could define a generator for the \ensuremath{\HSCon{Nat}} datatype as follows: 
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[3]{}\HSVar{genNat}\HSSym{::}\HSCon{Gen}\;\HSCon{Nat}{}\<[E]%
-\\
-\>[3]{}\HSVar{genNat}\HSSym{\mathrel{=}}\HSVar{oneof}\;\HSSpecial{\HSSym{[\mskip1.5mu} }{}\<[21]%
-\>[21]{}\HSVar{pure}\;\HSCon{Zero}\HSSpecial{,}\HSCon{Suc}\HSSym{<\$>}\HSVar{genNat}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-  QuickCheck includes many combinators to finetune the distribution of values of the generated type, which are omitted in this case since they do not structurally alter the generator. Compare the above generator to its SmallCheck equivalent: 
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{24}{@{}>{\hspre}c<{\hspost}@{}}%
-\column{24E}{@{}l@{}}%
-\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\HSKeyword{instance}\;\HSCon{Serial}\;\HSVar{m}\;\HSCon{Nat}\;\HSKeyword{where}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\HSVar{series}\HSSym{\mathrel{=}}\HSVar{cons0}\;\HSCon{Zero}{}\<[24]%
-\>[24]{}\HSSym{\char92 /}{}\<[24E]%
-\>[28]{}\HSCon{Cons1}\;\HSCon{Suc}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-  Both generator definitions have a strikingly similar structure, marking a choice between the two available constructors (\ensuremath{\HSCon{Zero}} and \ensuremath{\HSCon{Suc}}) and employing a appropriate combinators to produce values for said constructors. Despite this structural similarity, the underlying types of the respective generators are wildly different, with \ensuremath{\HSVar{genNat}} being an \ensuremath{\HSCon{IO}} operation that samples random values and the \ensuremath{\HSCon{Serial}} instance being a function taking a depth and producing all values up to that depth. 
-
-\subsection{Separating Structure and Interpretation}
-
-  The previous example suggests that there is a case to be made for separating a generators structure from the format in which test values are presented. Additionally, by having a single datatype representing a generator's structure, we shift the burden of proving termination from a generator's definition to its interpretation, which in Agda is a considerable advantage. In practice this means that we define some datatype \ensuremath{\HSCon{Gen}\;\HSVar{a}} that marks the structure of a generator, and a function \ensuremath{\HSVar{interpret}\HSCon{\mathbin{:}}\HSCon{Gen}\;\HSVar{a}\HSSym{\to} \HSCon{T}\;\HSVar{a}} that maps an input structure to some \ensuremath{\HSCon{T}\;\HSVar{a}}, where \ensuremath{\HSCon{T}} which actually produces test values. In our case, we will almost exclusively consider an interpretation of generators to functions of type \ensuremath{\HSCon{ℕ}\HSSym{→}\HSCon{List}\;\HSVar{a}}, but we could have chosen \ensuremath{\HSCon{T}} to by any other type of collection of values of type \ensuremath{\HSVar{a}}. An implication of this separation is that, given suitable interpretation functions, a user only has to define a single generator in order to be able to employ different strategies for generating test values, potentially allowing for both random and enumerative testing to be combined into a single framework. 
-
-  This approach means that generator combinators are not functions that operate on a a generator's result, such as merging two streams of values, but rather a constructor of some abstract generator type; \ensuremath{\HSCon{Gen}} in our case. This datatype represents generators in a tree-like structure, not unlike the more familiar abstract syntax trees used to represent parsed programs. 
-
-\subsection{The \ensuremath{\HSCon{Gen}} Datatype}
-
-  We define the datatype of generators, \ensuremath{\HSCon{Gen}\;\HSVar{a}\;\HSVar{t}}, to be a family of types indexed by two types \footnote{The listed definition will not be accepted by Agda due to inconsistencies in the universe levels. This is also the case for many code examples to come. To keep things readable, we will not concern ourselves with universe levels throughout this thesis.}. One signifying the type of values that are produced by the generator, and one specifying the type of values produced by recursive positions. 
-
-\includeagdalisting{4}{gendef}{Definition of the \ensuremath{\HSCon{Gen}} datatype}{lst:gendef}
-
-  \textit{Closed} generators are then generators produce that produce the values of the same type as their recursive positions: 
-
-\includeagda{4}{gdef}
-
-  The \ensuremath{\HSCon{Pure}} and \ensuremath{\HSCon{Ap}} constructors make \ensuremath{\HSCon{Gen}} an instance of \ensuremath{\HSCon{Applicative}}, meaning that we can (given a fancy operator for denoting choice) denote generators in way that is very similar to their definition: 
-
-\includeagda{4}{gennat}
-
-  This serves to emphasize that the structure of generators can, in the case of simpler datatypes, be mechanically derived from the structure of a datatype. We will see how this can be done in chapter \cref{chap:derivingregular}. 
-
-  The question remains how to deal with constructors that refer to \textit{other} types. For example, consider the type of lists (definition \ref{deflist}). We can define an appropriate generator following the structure of the datatype definition: 
-
-\includeagda{4}{listgenhole}
-
-  It is however not immediately clear what value to supply to the remaining interaction point. If we inspect its goal type we see that we should supply a value of type \ensuremath{\HSCon{Gen}\;\HSVar{a}\;\HSSpecial{(}\HSCon{List}\;\HSVar{a}\HSSpecial{)}}: a generator producing values of type \ensuremath{\HSVar{a}}, with recursive positions producing values of type \ensuremath{\HSCon{List}\;\HSVar{a}}. This makes little sense, as we would rather be able to invoke other \textit{closed generators} from within a generator. To do so, we add another constructor to the \ensuremath{\HSCon{Gen}} datatype, that signifies the invokation of a closed generator for another datatype: 
-
-\includeagda{4}{calldef}
-
-  Using this definition of \ensuremath{\HSCon{Call}}, we can complete the previous definition for \ensuremath{\HSVar{list}}: 
-
-\includeagda{4}{listgen}
-
-\subsection{Generator Interpretations}
-
-  We can view a generator's interpretation as any function mapping generators to some type, where the output type is parameterized by the type of values produced by a generator: 
-
-\includeagda{4}{intdef}
-
-  From this definition of \ensuremath{\HSCon{Interpretation}}, we can define concrete interpretations. For example, if we want to behave our generators similar to SmallCheck's \ensuremath{\HSCon{Series}}, we might define the following concrete instantiation of the \ensuremath{\HSCon{Interpretation}} type: 
-
-\includeagda{4}{scdef}
-
-  We can then define a generator's behiour by supplying a definition that inhabits the \ensuremath{\HSCon{GenAsList}} type: 
-
-\includeagda{4}{scint}
-
-  The goal type of the open interaction point is then $\mathbb{N}$\ensuremath{\HSSym{→}\HSCon{List}\;\HSVar{a}}. We will see in \cref{sec:enuminterpretation} how we can flesh out this particular interpretation. We could however have chosen any other result type, depending on what suits our particular needs. An alternative would be to interpret generators as a \ensuremath{\HSCon{Colist}}, omitting the depth bound altogether:
-
-\includeagda{4}{intcolist}
-
-\section{Generalization to Indexed Datatypes}
-
-  A first approximation towards a generalization of the \ensuremath{\HSCon{Gen}} type to indexed types might be to simply lift the existing definition from \ensuremath{\HSCon{Set}} to \ensuremath{\HSCon{I}\HSSym{→}\HSCon{Set}}. 
-
-\includeagda{4}{liftgen}
-
-  However, by doing so we implicitly impose the constraint that the recursive positions of a value have the same index as the recursive positions within it. Consider, for example, the \ensuremath{\HSCon{Fin}} type (definition \ref{findef}). If we attempt to define a generator using the lifted type, we run into a problem. 
-
-\includeagda{4}{finhole}
-
-  Any attempt to fill the open interaction point with the \ensuremath{\HSVar{μ}} constructor fails, as it expects a value of \ensuremath{\HSCon{Gen}\;\HSSpecial{(}\HSCon{Fin}\;\HSVar{n}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Fin}\;\HSVar{suc}\;\HSVar{n}\HSSpecial{)}}, but \ensuremath{\HSVar{μ}} requires both its type parameters to be equal. We can circumvent this issue by using direct recursion. 
-
-\includeagda{4}{findirect}
-
-  It is however clear that this approach becomes a problem once we attempt to define generators for datatypes with recursive positions which have indices that are not structurally smaller than the index they target. To overcome these limitations we resolve to a separate deep embedding of generators for indexed types. 
-
-\includeagdalisting{4}{genidef}{Definitiong of the \ensuremath{\HSCon{Genᵢ}} datatype}{lst:genidef}
-
-  And consequently the type of closed indexed generators. 
-
-\includeagda{4}{gidef}
-
-  Notice how the \ensuremath{\HSCon{Apᵢ}} constructor allows for its second argument to have a different index. The reason for this becomes clear when we 
-
-  With the same combinators as used for the \ensuremath{\HSCon{Gen}} type, we can now define a generator for the \ensuremath{\HSCon{Fin}} type. 
-
-\includeagda{4}{genfin}
-
-  Now defining generators for datatypes with recursive positions whose indices are not structurally smaller than the index of the datatype itself can be done without complaints from the termination checker, such as well-scoped $\lambda$-terms (definition \ref{defwellscoped}). 
-
-\includeagda{4}{wellscoped}
-
-  It is important to note that it is not possible to call indexed generators from simple generators and vice versa with this setup. We can allow this by either parameterizing the \ensuremath{\HSCon{Call}} and \ensuremath{\HSVar{iCall}} constructors with the datatype they refer to, or by adding extra constructors to the \ensuremath{\HSCon{Gen}} and \ensuremath{\HSCon{Genᵢ}} datatypes, making them mutually recursive. 
-
-\section{Interpreting Generators as Enumerations}\label{sec:enuminterpretation}
-
-  We will now consider an example interpretation of generators where we map values of the \ensuremath{\HSCon{Gen}} or \ensuremath{\HSCon{Genᵢ}} datatypes to functions of type $\mathbb{N}$\ensuremath{\HSSym{→}\HSCon{List}\;\HSVar{a}}. The constructors of both datatypes mimic the combinators used Haskell's \ensuremath{\HSCon{Applicative}} and \ensuremath{\HSCon{Alternative}} typeclasses, so we can use the \ensuremath{\HSCon{List}} instances of these typeclasses for guidance when defining an enumerative interpretation.  
-
-\includeagdalisting{4}{tolist}{Interpretation of the \ensuremath{\HSCon{Gen}} datatype as an enumeration}{lst:tolist}
-
-  Similarly, we can define such an interpretation for the \ensuremath{\HSCon{Genᵢ}} datatype similar to listing \ref{lst:tolist} with the only difference being the appropriate indices getting passed to recursive calls. Notice how our generator's behaviour - most notably the intended semantics of the input depth bound - is entirely encoded within the definition of the interpretation. In this case by decrementing \ensuremath{\HSVar{n}} anytime a recursive position is encountered.  
-
-\section{Properties for Enumerations}
-
-\section{Generating Function Types}
-
-\section{Monadic Generators}
-
-  There are some cases in which the applicative combinators are not expressive enough to capture the desired generator. For example, if we were to define a construction for generation of $\Sigma$ types, we encounter some problems. 
-
-\includeagda{4}{sigmagenhole}
-
-  We can extend the \ensuremath{\HSCon{Gen}} datatype with a \ensuremath{\HSCon{Bind}} operation that mimics the monadic bind operator (\ensuremath{\HSSym{\bind} }) to allow for such dependencies to exist between generated values.
-
-\includeagda{4}{sigmagen}
-
 \chapter{Generic Generators for Regular types}
 
   A large class of recursive algebraic data types can be described with the universe 
@@ -1537,7 +1456,7 @@ indexed datatypes.
 
   \end{example}
 
-\subsection{Generic Generators for Constant Typse}
+\subsection{Generic Generators for Constant Typse}\label{sec:genericgenreg}
 
   When attempting to define \ensuremath{\HSVar{deriveGen}} on \ensuremath{\HSCon{K}\;\HSVar{s}}, we run into a problem. We need to 
   return a generator that produces values of type \ensuremath{\HSVar{s}}, but we have no information 
@@ -1843,7 +1762,7 @@ for constant types}{lst:mdstructure}
 
 \subsection{Constructing the Generator}
 
-  We are now ready to construct a the generic generator for indexed descriptions. Recall that \ensuremath{\HSVar{deriveGen}\;\HSVar{r}\;\HSVar{r}} returns a generator for the regular type represented by r. 
+  We are now ready to construct a the generic generator for indexed descriptions. Recall that \ensuremath{\HSVar{deriveGen}} returns a generator for the regular type represented by r. 
 
 \includeagda{6}{gensignature}
 
@@ -1856,9 +1775,7 @@ for constant types}{lst:mdstructure}
 
 We use the generic description for indexed datatypes proposed by Dagand \cite{dagand2013cosmology} in his PhD thesis. First, we give the definition and semantics of this universe, before showing how a generator can be derived from codes in this universe. Finally, we prove that the enumerations resulting from these generators are complete. 
 
-\section{Universe Description}
-
-  
+\section{Universe Description}\label{sec:idescdesc}
 
 \subsection{Definition}\label{sec:idescdef}
 
@@ -1910,6 +1827,10 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
   \end{example}
 
 \includeagdalisting{7}{idescfiniso}{Isomorphism between \ensuremath{\HSCon{Fix}\;\HSVar{finD}} and \ensuremath{\HSCon{Fin}}}{lst:finiso}
+
+  We generalize the notion of datatypes that can be described in the universe of indexed descriptions by again constructing a record that stores a description and a proof that said description is isomorphic to the type we are describing: 
+
+\includeagda{7}{describe}
 
 \subsection{Exmample: describing well typed lambda terms}
 
@@ -1975,15 +1896,810 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 
 \section{Generic Generators for Indexed Descriptions}
 
+  The process of deriving a generator for indexed descriptions is mostly the same as for regular types. There are a few subtle differences, which we will outline in this section. We define a function \ensuremath{\HSCon{IDesc}\HSSym{-}\HSVar{gen}} that derives a generator from an indexed description. Let us first look at its type signature: 
+
+\includeagda{7}{idescgen}
+
+  We take a value of type \ensuremath{\HSCon{IDesc}\;\HSCon{I}} (the description we are inducting over) and a function \ensuremath{\HSCon{I}\HSSym{\to} \HSCon{IDesc}\;\HSCon{I}} (describing the type for which we are deriving a generator) as input. We return an \emph{indexed} generator, which produces values of the type dictated by the semantics of the input description. The definition for \ensuremath{\HSSpecial{`}\HSVar{var}}, \ensuremath{\HSSpecial{`}\HSNumeral{1}} and \ensuremath{\HSSpecial{`}\HSSym{×}} can be readily transferred from the definition of \ensuremath{\HSVar{deriveGen}}. The generic generators for the generalized coproduct and the \ensuremath{\HSSpecial{`}\Sigma } constructor are slightly more involved, since the both have to produce dependent pairs. Since the generalized coproduct is a particular instantiation of \ensuremath{\HSSpecial{`}\Sigma }, we will consider it first. 
+
+\includeagda{7}{idescgencop}
+
+  Here we assume that \ensuremath{\HSCon{Sl}}-\ensuremath{\HSVar{gen}\HSCon{\mathbin{:}}\HSSpecial{(}\HSVar{n}\HSCon{\mathbin{:}}\HSCon{ℕ}\HSSpecial{)}\HSSym{→}\HSCon{Genᵢ}\;\HSSpecial{(}\HSCon{Sl}\;\HSVar{n}\HSSpecial{)}\;\HSCon{Sl}\;\HSVar{n}} is in scope, producing values of the selector type. We capture the dependency between the generated first element of the pair, and the type of the second element using the monadic bind of the generator type, similar to when we were defining a generator for the universe of indexed containers. The definition is pretty straightforward, although we need to pass around some metavariables in order to convince Agda that everything is in order. 
+
+  We can reuse this exact same structure when defining a generator for \ensuremath{\HSSpecial{`}\Sigma }, however since the type of its first element is chosen by the user, we cannot define a generator for it in adavance, as we did for the selector type. We use the same approach using a metadata structure as for regular types to have the programmer pass appropriate generators as input to \ensuremath{\HSCon{IDesc}\HSSym{-}\HSVar{gen}}. We define this metadata structure as a datatype \ensuremath{\HSKeyword{data}\;\HSCon{IDescM}\;\HSSpecial{\HSSym{\{\mskip1.5mu} }\HSCon{I}\HSSpecial{\HSSym{\mskip1.5mu\}}}\;\HSSpecial{(}\HSCon{P}\HSCon{\mathbin{:}}\HSCon{Set}\HSSym{→}\HSCon{Set}\HSSpecial{)}\HSCon{\mathbin{:}}\HSCon{IDesc}\;\HSCon{I}\HSSym{→}\HSCon{Set}}. Its constructors are largely equivalent to the metadata structure used for regular types (\cref{sec:genericgenreg}), with the key difference being that we now require the programmer to store a piece of data depending on the type of the first element of a \ensuremath{\HSSpecial{`}\Sigma }: 
+
+\includeagda{7}{idescmsigma}
+
+  The constructor of the \ensuremath{\HSCon{IDescM}} type associated with the generalized coproduct follows the same structure as \ensuremath{\HSSpecial{`}\Sigma \HSSym{\mathrel{\sim}}}, but without a value argument, and with \ensuremath{\HSCon{S}} instantiated to the selector type. 
+
+  If we now assume that \ensuremath{\HSCon{IDesc}\HSSym{-}\HSVar{gen}} is parameterized over a metadata structure containing generators for the first argument of the \ensuremath{\HSSpecial{`}\Sigma } constructor, we can define a generator for its interpretation: 
+
+\includeagda{7}{idescgensigma}
+
+  By using an instance of \ensuremath{\HSCon{Describe}}, we may use the isomorphism stored within to convert the values generated by \ensuremath{\HSCon{IDesc}\HSSym{-}\HSVar{gen}} to the type we are describing. 
+ 
+\section{Completeness Proof for Enumerators Derived From Indexed Descriptions}
+
+  We aim to prove the same completeness property for generators derived from indexed descriptions as we did for generators derived from regular types. Since both universes and the functions that we use to derive generators from their inhabitants are structurally quite similar, so are their completeness proofs. This means that we can recycle a considerable portion of the proof for regular types. 
+
+  Let us first look at the exact property we aim to prove. Since we deal with indexed generators, the desired completeness property changes slightly. In natural language, we might say that our goal is to prove that \emph{for every index \ensuremath{\HSVar{i}} and value \ensuremath{\HSVar{x}} of type \ensuremath{\HSCon{P}\;\HSVar{i}}, there is a depth such that \ensuremath{\HSVar{x}} occurs in the enumeration we derive from the code describing \ensuremath{\HSCon{P}}}. In Agda we formalize this property as follows: 
+
+\includeagda{7}{completeness}
+
+  Which is essentially the same property we used for regular types, adapted for usage with indexed types. The completeness proofs for \ensuremath{\HSSpecial{`}\HSVar{var}}, \ensuremath{\HSSpecial{`}\HSNumeral{1}} and \ensuremath{\HSSpecial{`}\HSSym{×}} can be transplanted from the proof for regular types with only a few minor changes. However, generators for \ensuremath{\HSSpecial{`}\sigma } and \ensuremath{\HSSpecial{`}\Sigma } are assembled using \emph{monadic bind}, for which we have not yet proven that it satisfies our notion of completeness. Defining what completeness even means for \ensuremath{\HSSym{\bind} } is very difficult in itself, but luckily since both usages in \ensuremath{\HSCon{IDesc}\HSSym{-}\HSVar{gen}} follow the same structure, we only have to prove a completeness property over our specific use of the bind operator. We replace \ensuremath{\HSCon{Complete}} with a slight variation that makes the value \ensuremath{\HSVar{x}} we are quantifying over explicit in the type. 
+
+\includeagdalisting{7}{bindcomplete}{Completeness for the bind operator}{lst:bindcomplete}
+
+   Given that the proof is supplied with a metadata structure that provides generators with completeness proofs for all \ensuremath{\HSSpecial{`}\Sigma } in a description, and that we have a completeness proof over the generator for the selection type in scope, we can complete the proof for the case of \ensuremath{\HSSpecial{`}\sigma } and \ensuremath{\HSSpecial{`}\Sigma } with a call to \ensuremath{\HSVar{bind}\HSSym{-}\HSCon{Complete}}. 
+
+  It is worth noting that, since the universe of indexed descriptions exposes a product combinator, we require a proof of \emph{monotonicity} for generators derived using \ensuremath{\HSCon{IDesc}\HSSym{-}\HSVar{gen}} as well. We will not go into how to assemble this proof here (since its structure is essentially the same as the monotonicity proof for regular types), but it is obviously not possible to assemble this proof without proving the monotonicity property over our bind operation first. 
 
 
-\section{Completeness Proof for Generators Derived From Indexed Descriptions}
-
-\chapter{Program Term Generation}
+%% \chapter{A Combinator Library for Generators}
+%% %include src/chap04/body.lhs
 
 \chapter{Implementation in Haskell}
+We implement part of the ideas described in this thesis in Haskell to show their practical applicability. More specifically, we port the universe of indexed descriptions as described in \cref{sec:idescdesc} together with the accompanying generic generator to Haskell. We show that it is possible using this approach to generate constrained test data by describing constrained data as an inductive datatype, and generating inhabitants of that datatype. 
 
-\chapter{Conclusion \& Further Work}
+\section{General Approach}
+
+  The general structure of our approach is not much different from how we derived generators for indexed descriptions in Agda, and consists of the following steps: 
+
+  \begin{enumerate}
+    \item 
+      First we define an abstract generator type, together with a mapping to enumerators (i.e. functions with type \ensuremath{\HSCon{Int}\HSSym{\to} \HSSpecial{\HSSym{[\mskip1.5mu} }\HSVar{a}\HSSpecial{\HSSym{\mskip1.5mu]}}}). 
+
+    \item 
+      Next, we define a datatype for indexed descriptions, \ensuremath{\HSCon{IDesc}}, together with its semantics
+
+    \item 
+      Then we write a function that derives a generator from a value of type \ensuremath{\HSCon{IDesc}}, producing elements of a type dictated by the semantics of th input description. 
+
+    \item 
+      Finally, we convert the generated values to some user defined "raw" datatype.  
+  \end{enumerate}
+
+Dagand originally defines the universe in a dependently typed setting \cite{dagand2013cosmology}, and we make extensive use of both dependent pairs and dependent function types in our definition in Agda. Haskell's type system does not facilitate such relations between types. We will use a lot of \emph{singleton types} \cite{eisenberg2013dependently} to work around this limitation. Singleton types is a technique to simulate a restricted for of dependent types in a non dependently typed language. They are intended to work together with the \emph{DataKinds} extension \cite{ghcdocsdatakinds}. A singleton type is indexed by some promoted datatype, and has exactly one inhabitant for every inhabitant of the type it is indexed with.   
+
+\section{Representing Indexed Descriptions In Haskell}
+
+  We take the datatype described in \cref{sec:idescdesc} as an example. We add an extra type parameter \ensuremath{\HSVar{a}\HSSym{::}\HSSym{*}} besides a parameter describing the index type, which is the raw type we will be converting to. Listing \ref{idescdef} contains tbe definition of \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}}, with constructors for \emph{empty types}, \emph{unit types}, \emph{recursive positions} and \emph{product types}. We purposefully omit the constructors for the generalized coproduct and the \ensuremath{\HSSpecial{`}\Sigma } combinator, since transferring them to Haskell is slightly more involved. 
+
+\begin{listing}{Definition of \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}} in Haskell}{lst:idescdef}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{IDesc}\;\HSSpecial{(}\HSVar{a}\HSSym{::}\HSSym{*}\HSSpecial{)}\;\HSSpecial{(}\HSVar{i}\HSSym{::}\HSSym{*}\HSSpecial{)}\;\HSKeyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{One}{}\<[10]%
+\>[10]{}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Empty}{}\<[10]%
+\>[10]{}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Var}{}\<[10]%
+\>[10]{}\HSSym{::}\HSVar{i}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}\HSSym{:*:}\HSSpecial{)}{}\<[10]%
+\>[10]{}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+\subsection{Generalized coproducts}
+
+  Recall that the generalized coproduct in Dagand's representation was given by a natural number \ensuremath{\HSVar{n}}, and a function taking a finite type of size \ensuremath{\HSVar{n}} and returning a description. We choose to use a \emph{size indexed list} or \emph{vector} in favor of a function from finite type to description. Assuming a type \ensuremath{\HSCon{Nat}} is in scope, we use the following GADT to describe a vector: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{Vec}\;\HSSpecial{(}\HSVar{a}\HSSym{::}\HSSym{*}\HSSpecial{)}\;\HSSpecial{(}\HSVar{n}\HSSym{::}\HSCon{Nat}\HSSpecial{)}\;\HSKeyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{VNil}{}\<[10]%
+\>[10]{}\HSSym{::}\HSCon{Vec}\;\HSVar{a}\;\HSCon{Zero}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}\HSSym{:::}\HSSpecial{)}{}\<[10]%
+\>[10]{}\HSSym{::}\HSVar{a}\HSSym{\to} \HSCon{Vec}\;\HSVar{a}\;\HSVar{n}\HSSym{\to} \HSCon{Vec}\;\HSVar{a}\;\HSSpecial{(}\HSCon{Suc}\;\HSVar{n}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Given a singleton instance of the \ensuremath{\HSCon{Nat}} datatype, \ensuremath{\HSCon{Sing}\;\HSVar{n}}, we can define a generalized coproduct:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[3]{}\HSSpecial{(}\HSSym{:+>}\HSSpecial{)}\HSSym{::}\HSCon{Sing}\;\HSVar{n}\HSSym{\to} \HSCon{Vec}\;\HSSpecial{(}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\;\HSVar{n}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Which describes a choice between \ensuremath{\HSVar{n}} descriptions. 
+
+\subsection{The \ensuremath{\HSSpecial{`}\Sigma } combinator}
+
+  Originally, the semantics of the \ensuremath{\HSSpecial{`}\Sigma } combinator is a dependent pair. However, we observe that this dependency between the first and second element of the pair is not necessary to represent any of the examples we have looked at. For this reason, we choose a slightly weaker version of the \ensuremath{\HSSpecial{`}\Sigma } combinator, which does not have a dependent pair as its semantics, but rather a regular pair, making it considerably easier to work with. 
+
+  In all the examples uses of \ensuremath{\HSSpecial{`}\Sigma } we have seen so far, the \emph{structure} of the description returned by the function stored as its second argument remained the same each time, with only the indices stored for recursive positins depending on the choice of first element. This implies that, if we choose the semantics of a recursive position \ensuremath{\HSCon{Var}\;\HSVar{i}} to be the raw type \ensuremath{\HSVar{a}}, the semantics of the description returned by the second element will remain constant, independent of the value chosen for the first element. This means that there is no dependency between the two elements of the pair, enabling us to interpret \ensuremath{\HSSpecial{`}\Sigma } as a regular pair. 
+
+  The question that remains is what description to supply for the second element of the pair. Since the values stored in recursive positions have no effect on the semantics of a description, neither has their types. This means that two descriptions with \emph{different} index types may map to the same interpretation, as long as their \emph{structure} is the same. Based on this observation, we use a description of type \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}} to describe the second element of a \ensuremath{\HSSpecial{`}\Sigma }, where \ensuremath{\HSVar{i}} is the index type of the description we are constructing, and \ensuremath{\HSVar{s}} the type stored in the first element of a \ensuremath{\HSSpecial{`}\Sigma }. This amounts to the following constructor of the \ensuremath{\HSCon{IDesc}} type: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[3]{}\Sigma \HSSym{::}\HSCon{Proxy}\;\HSVar{s}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+  
+  It is important to note that there exist a mapping from \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}} to \ensuremath{\HSVar{s}\HSSym{\to} \HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}}, such that the interpretation is equal for all possible arguments of type \ensuremath{\HSVar{s}}. We will make this mapping precise when we set out to derive generators from descriptions. 
+
+\subsection{Semantics}
+
+  We define the semantics of the \ensuremath{\HSCon{IDesc}} universe as a type family, mapping promoted values to their semantics. The interpretation of descriptions is relatively straightforward, and largely the same as for regular types. The semantics are shown in listing \ref{lst:idescsem}, without the generalized coproduct (\ensuremath{\HSSpecial{(}\HSSym{:+>}\HSSpecial{)}}) and \ensuremath{\Sigma }. Here \ensuremath{\HSCon{E}} is a type with no constructors, representing the empty type. 
+  
+\begin{listing}{Semantics of the \ensuremath{\HSCon{IDesc}} type}{lst:idescsem}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{57}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{family}\;\HSCon{Interpret}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\HSSym{::}\HSSym{*}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSCon{One}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSCon{Empty}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}\HSCon{E}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSCon{Var}\;\HSSym{\anonymous} \HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}\HSVar{a}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSVar{dl}\HSSym{:*:}\HSVar{dr}\HSSpecial{)}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{Interpret}\;\HSVar{dl}\HSSpecial{,}\HSCon{Interpret}\;\HSVar{dr}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+  For \ensuremath{\Sigma }, we need a type synonym to map a proxy to the type it carries: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSCon{UnProxy}\;\HSSpecial{(}\HSVar{p}\HSSym{::}\HSCon{Proxy}\;\HSVar{a}\HSSpecial{)}\HSSym{\mathrel{=}}\HSVar{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Given \ensuremath{\HSCon{UnProxy}}, its interpretation is now simply a pair with the type carried in the proxy, and the interpretation of the second element: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{57}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\Sigma \;\HSVar{p}\;\HSVar{fd}\HSSpecial{)}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{UnProxy}\;\HSVar{p}\HSSpecial{,}\HSCon{Interpret}\;\HSVar{fd}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  In case of the generalized coproduct, we would like to map a vector of descriptions to a type representing a choice between the interpretation of any of the descriptions carried in said vector. For example, we would map a vector \ensuremath{\HSVar{d1}\HSSym{:::}\HSVar{d2}\HSSym{:::}\HSCon{VNil}} to the type \ensuremath{\HSCon{Either}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{d1}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{d2}\HSSpecial{)}}. We build the appropriate type by induction over the length of the vector: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{57}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSCon{SZero}\HSSym{:+>}\HSCon{VNil}\HSSpecial{)}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}\HSCon{E}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSCon{SSuc}\;\HSCon{SZero}\HSSym{:+>}\HSSpecial{(}\HSVar{x}\HSSym{:::}\HSCon{VNil}\HSSpecial{)}\HSSpecial{)}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}\HSCon{Interpret}\;\HSVar{x}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Interpret}\;\HSSpecial{(}\HSCon{SSuc}\;\HSSpecial{(}\HSCon{SSuc}\;\HSVar{n}\HSSpecial{)}\HSSym{:+>}\HSSpecial{(}\HSVar{x}\HSSym{:::}\HSVar{xs}\HSSpecial{)}\HSSpecial{)}{}\<[57]%
+\>[57]{}\HSSym{\mathrel{=}}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Either}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{x}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Interpret}\;\HSSpecial{(}\HSCon{SSuc}\;\HSVar{n}\HSSym{:+>}\HSVar{xs}\HSSpecial{)}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We have two base cases, one for empty vectors and one for vectors containing one element. We do so to reduce the complexity of the resulting type, preventing a vector with one element, \ensuremath{\HSVar{d}\HSSym{:::}\HSCon{VNil}}, to be mapped to a coproduct of its interpretation and the empty type. 
+
+\section{Deriving Generators for Indexed Descriptions in Haskell}
+
+  Before we set out to describe how we derive generators from descriptions, we first briefly outline the generator type used, and describe the singleton for descriptions needed to describe the dependency between the input description, and the type of values produced by the returned generator. 
+
+\subsection{The generator type}
+
+  We again use an abstract generator type, representing a deep embedding of the combinators we use. The definition is shown in listing \ref{lst:hsgendef}, and is mostly the same as the definition we used in Agda. We choose to not have separate types for indexed and non-indexed generators, representing non-indexed types as types indexed by the unit type. 
+
+\begin{listing}{The \ensuremath{\HSCon{Gen}} type in Haskell}{lst:hsgendef}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{43}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{46}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}\;\HSKeyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{None}{}\<[9]%
+\>[9]{}\HSSym{::}{}\<[46]%
+\>[46]{}\HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Pure}{}\<[9]%
+\>[9]{}\HSSym{::}\HSVar{a}{}\<[43]%
+\>[43]{}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Or}{}\<[9]%
+\>[9]{}\HSSym{::}\HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}{}\<[43]%
+\>[43]{}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Ap}{}\<[9]%
+\>[9]{}\HSSym{::}\HSCon{Gen}\;\HSVar{i}\;\HSSpecial{(}\HSVar{b}\HSSym{\to} \HSVar{a}\HSSpecial{)}\;\HSVar{t}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{b}\;\HSVar{t}{}\<[43]%
+\>[43]{}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Bind}{}\<[9]%
+\>[9]{}\HSSym{::}\HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}\HSSym{\to} \HSSpecial{(}\HSVar{a}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{b}\;\HSVar{t}\HSSpecial{)}{}\<[43]%
+\>[43]{}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{b}\;\HSVar{t}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mu {}\<[9]%
+\>[9]{}\HSSym{::}\HSVar{i}{}\<[43]%
+\>[43]{}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{Call}{}\<[9]%
+\>[9]{}\HSSym{::}\HSSpecial{(}\HSVar{j}\HSSym{\to} \HSCon{Gen}\;\HSVar{j}\;\HSVar{a}\;\HSVar{a}\HSSpecial{)}\HSSym{\to} \HSVar{j}{}\<[43]%
+\>[43]{}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+  We define the following wrapper to allow generators to be an instance of \ensuremath{\HSCon{Functor}}, \ensuremath{\HSCon{Applicative}}, \ensuremath{\HSCon{Monad}} and \ensuremath{\HSCon{Alternative}}: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{newtype}\;\HSCon{G}\;\HSVar{i}\;\HSVar{t}\;\HSVar{a}\HSSym{\mathrel{=}}\HSCon{G}\;\HSSpecial{(}\HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{t}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  This allows us to use the functions associated with these typeclasses to define genrators. For example:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{bool}\HSSym{::}\HSCon{G}\;\HSSpecial{(}\HSSpecial{)}\;\HSCon{Bool}\;\HSCon{Bool}{}\<[E]%
+\\
+\>[B]{}\HSVar{bool}\HSSym{\mathrel{=}}\HSVar{pure}\;\HSCon{True}\HSSym{<∣>}\HSVar{pure}\;\HSCon{False}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{A singleton instance for descriptions}
+
+  Since our goal is eventually to define a function \ensuremath{\HSVar{idesc\char95 gen}\HSSym{::}\HSCon{Sing}\;\HSVar{d}\HSSym{\to} \HSCon{G}\;\HSVar{i}\;\HSVar{a}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{d}\HSSpecial{)}}, we require an appropriate singleton instance for the \ensuremath{\HSCon{IDesc}} type. We again start by defining this instance for \ensuremath{\HSCon{One}}, \ensuremath{\HSCon{Empty}}, \ensuremath{\HSCon{Var}} and \ensuremath{\HSSym{:*:}}, shown in listing \ref{lst:singidescdef}
+
+\begin{listing}{Singleton instance for the \ensuremath{\HSCon{IDesc}} type}{lst:singidescdef}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{41}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{41E}{@{}l@{}}%
+\column{45}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{SingIDesc}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\;\HSKeyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SOne}{}\<[11]%
+\>[11]{}\HSSym{::}{}\<[45]%
+\>[45]{}\HSCon{SingIDesc}\;\HSCon{One}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SEmpty}{}\<[11]%
+\>[11]{}\HSSym{::}{}\<[45]%
+\>[45]{}\HSCon{SingIDesc}\;\HSCon{Empty}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SVar}{}\<[11]%
+\>[11]{}\HSSym{::}\HSVar{forall}\;\HSSpecial{(}\HSVar{i'}\HSSym{::}\HSVar{i}\HSSpecial{)}\HSSym{\mathbin{\circ}}\HSVar{i}{}\<[41]%
+\>[41]{}\HSSym{\to} {}\<[41E]%
+\>[45]{}\HSCon{SingIDesc}\;\HSSpecial{(}\HSCon{Var}\;\HSVar{i'}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}\HSSym{:*:\char126 }\HSSpecial{)}{}\<[11]%
+\>[11]{}\HSSym{::}\HSCon{SingIDesc}\;\HSVar{l}\HSSym{\to} \HSCon{SingIDesc}\;\HSVar{r}\HSSym{\to} {}\<[45]%
+\>[45]{}\HSCon{SingIDesc}\;\HSSpecial{(}\HSVar{l}\HSSym{:*:}\HSVar{r}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+  In order to be able to define a singleton instance for the generalized coproduct, we require a singleton instance of \ensuremath{\HSCon{SNat}}. We assume this instance, denoted \ensuremath{\HSCon{SNat2}} is in scope: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSSpecial{(}\HSSym{:+>\char126 }\HSSpecial{)}\HSSym{::}\HSCon{SNat2}\;\HSVar{n}\HSSym{\to} \HSCon{SVec}\;\HSVar{xs}\HSSym{\to} \HSCon{SingIDesc}\;\HSSpecial{(}\HSVar{n}\HSSym{:+>}\HSVar{xs}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  The singleton definition for the \ensuremath{\Sigma } constructor (listing \ref{lst:singsigmadef}) has a few subtleties. First, the type stored in its first element is required to be a member of the \ensuremath{\HSCon{Promote}} typeclass. This typeclass describes types which are an instance of \ensuremath{\HSCon{Singleton}}, and for which we know how to promote a value of type \ensuremath{\HSVar{a}} to a value of type \ensuremath{\HSCon{Sing}\;\HSVar{a}}. The \ensuremath{\HSCon{Promote}} class has one associated function \ensuremath{\HSVar{promote}\HSSym{::}\HSVar{a}\HSSym{\to} \HSCon{Promoted}\;\HSVar{a}\;\HSCon{Sing}}, where \ensuremath{\HSCon{Promoted}} is defined as follows: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{Promoted}\;\HSSpecial{(}\HSVar{a}\HSSym{::}\HSSym{*}\HSSpecial{)}\;\HSSpecial{(}\HSVar{f}\HSSym{::}\HSVar{a}\HSSym{\to} \HSSym{*}\HSSpecial{)}\HSSym{\mathrel{=}}\HSVar{forall}\;\HSSpecial{(}\HSVar{x}\HSSym{::}\HSVar{a}\HSSpecial{)}\HSSym{\mathbin{\circ}}\HSCon{Promoted}\;\HSSpecial{(}\HSVar{f}\;\HSVar{x}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Storing singleton values, but hiding the the index. 
+
+\begin{listing}{Singleton instance for the \ensuremath{\Sigma } constructor}{lst:singsigmadef}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSCon{SSigma}{}\<[9]%
+\>[9]{}\HSSym{::}\HSCon{Promote}\;\HSVar{s}\HSSym{\Rightarrow} \HSCon{SingIDesc}\;\HSVar{d}{}\<[E]%
+\\
+\>[9]{}\HSSym{\to} \HSCon{G}\;\HSSpecial{(}\HSSpecial{)}\;\HSVar{s}\;\HSVar{s}{}\<[E]%
+\\
+\>[9]{}\HSSym{\to} \HSSpecial{(}\HSVar{forall}\;\HSVar{s'}\HSSym{\mathbin{\circ}}\HSCon{Sing}\;\HSVar{s'}\HSSym{\to} \HSCon{Interpret}\;\HSVar{d}\HSSym{:\char126 :}\HSCon{Interpret}\;\HSSpecial{(}\HSCon{Expand}\;\HSVar{d}\;\HSVar{s'}\HSSpecial{)}\HSSpecial{)}{}\<[E]%
+\\
+\>[9]{}\HSSym{\to} \HSCon{SingIDesc}\;\HSSpecial{(}\Sigma \;\HSSpecial{(}\HSCon{Proxy}\HSSym{::}\HSCon{Proxy}\;\HSVar{s}\HSSpecial{)}\;\HSVar{d}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+  The singleton instance for \ensuremath{\Sigma } also stores an explicit generator for values of type \ensuremath{\HSVar{s}}. We could have used a typeclass here, but as we will se when considering some examples, it is often more convenient to explicitly supply the generator to be used. Finally, we require a proof that the interpretation of the \emph{expansion} of the second argument is equal to the interpretation of the second argument, for all values of type \ensuremath{\HSVar{s}}. We require this proof in order unify the index types of the generator derived for a \ensuremath{\Sigma } and the generator derived from its second argument. We define the expansion operation a the type level using a mutually recursive type family, shown in listing \ref{lst:exptypefam}. 
+
+\begin{listing}{Description expansion}{lst:exptypefam}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{35}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{47}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{family}\;\HSCon{VExpand}\;\HSSpecial{(}\HSVar{sn}\HSSym{::}\HSCon{SNat}\;\HSVar{n}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}\HSVar{xs}\HSSym{::}\HSCon{Vec}\;\HSSpecial{(}\HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}\HSSpecial{)}\;\HSVar{n}\HSSpecial{)}\;\HSSpecial{(}\HSVar{x}\HSSym{::}\HSVar{s}\HSSpecial{)}\HSSym{::}\HSCon{Vec}\;\HSSpecial{(}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\;\HSVar{n}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{VExpand}\;\HSCon{SZero}\;{}\<[33]%
+\>[33]{}\HSCon{VNil}\;\HSVar{s}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSCon{VNil}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{VExpand}\;\HSSpecial{(}\HSCon{SSuc}\;\HSVar{sn}\HSSpecial{)}\;\HSSpecial{(}\HSVar{x}\HSSym{:::}\HSVar{xs}\HSSpecial{)}\;\HSVar{s}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSCon{Expand}\;\HSVar{x}\;\HSVar{s}\HSSym{:::}\HSCon{VExpand}\;\HSVar{sn}\;\HSVar{xs}\;\HSVar{s}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{family}\;\HSCon{Expand}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSSpecial{(}\HSVar{s}\HSSym{\to} \HSVar{i}\HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSVar{x}\HSSym{::}\HSVar{s}\HSSpecial{)}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Expand}\;\HSCon{One}\;{}\<[35]%
+\>[35]{}\HSVar{s}\HSSym{\mathrel{=}}\HSCon{One}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Expand}\;\HSCon{Empty}\;{}\<[35]%
+\>[35]{}\HSVar{s}\HSSym{\mathrel{=}}\HSCon{Empty}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Expand}\;\HSSpecial{(}\HSCon{Var}\;\HSVar{i}\HSSpecial{)}\;{}\<[35]%
+\>[35]{}\HSVar{s}\HSSym{\mathrel{=}}\HSCon{Var}\;\HSSpecial{(}\HSVar{i}\;\HSVar{s}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Expand}\;\HSSpecial{(}\HSVar{dl}\HSSym{:*:}\HSVar{dr}\HSSpecial{)}\;{}\<[35]%
+\>[35]{}\HSVar{s}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{Expand}\;\HSVar{dl}\;\HSVar{s}\HSSpecial{)}\HSSym{:*:}\HSSpecial{(}\HSCon{Expand}\;\HSVar{dr}\;\HSVar{s}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Expand}\;\HSSpecial{(}\HSVar{sn}\HSSym{:+>}\HSVar{xs}\HSSpecial{)}\;{}\<[35]%
+\>[35]{}\HSVar{s}\HSSym{\mathrel{=}}\HSVar{sn}\HSSym{:+>}\HSCon{VExpand}\;\HSVar{sn}\;\HSVar{xs}\;\HSVar{s}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{Expand}\;\HSSpecial{(}\Sigma \;\HSVar{p}\;\HSVar{d}\HSSpecial{)}\;{}\<[35]%
+\>[35]{}\HSVar{s}\HSSym{\mathrel{=}}\Sigma \;\HSVar{p}\;\HSSpecial{(}\HSCon{Expand}\;\HSVar{d}\;\HSVar{s}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+  Similarly, we use two mutually recursive functions to describe expansion for singleton descriptions (listing \ref{lst:expdef})
+
+\begin{listing}{Description expansion for singletons}{lst:expdef}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{vexpand}\HSSym{::}\HSSpecial{(}\HSCon{Singleton}\;\HSVar{s}\HSSpecial{)}\HSSym{\Rightarrow} \HSCon{Sing}\;\HSVar{sn}\HSSym{\to} \HSCon{Sing}\;\HSVar{xs}\HSSym{\to} \HSCon{Sing}\;\HSVar{s'}\HSSym{\to} \HSCon{SVec}\;\HSSpecial{(}\HSCon{VExpand}\;\HSVar{sn}\;\HSVar{xs}\;\HSVar{s'}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{vexpand}\;\HSCon{SZero2}\;{}\<[20]%
+\>[20]{}\HSCon{SVNil}\;{}\<[33]%
+\>[33]{}\HSVar{s}\HSSym{\mathrel{=}}\HSCon{SVNil}{}\<[E]%
+\\
+\>[B]{}\HSVar{vexpand}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSVar{sn}\HSSpecial{)}\;\HSSpecial{(}\HSVar{x}\HSSym{:::\char126 }\HSVar{xs}\HSSpecial{)}\;{}\<[33]%
+\>[33]{}\HSVar{s}\HSSym{\mathrel{=}}\HSVar{expand}\;\HSVar{x}\;\HSVar{s}\HSSym{:::\char126 }\HSVar{vexpand}\;\HSVar{sn}\;\HSVar{xs}\;\HSVar{s}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\HSVar{expand}\HSSym{::}\HSSpecial{(}\HSCon{Singleton}\;\HSVar{s}\HSSpecial{)}\HSSym{\Rightarrow} \HSCon{Sing}\;\HSVar{d}\HSSym{\to} \HSCon{Sing}\;\HSVar{s'}\HSSym{\to} \HSCon{Sing}\;\HSSpecial{(}\HSCon{Expand}\;\HSVar{d}\;\HSVar{s'}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{expand}\;\HSCon{SOne}\;{}\<[22]%
+\>[22]{}\HSVar{sv}\HSSym{\mathrel{=}}\HSCon{SOne}{}\<[E]%
+\\
+\>[B]{}\HSVar{expand}\;\HSCon{SEmpty}\;{}\<[22]%
+\>[22]{}\HSVar{sv}\HSSym{\mathrel{=}}\HSCon{SEmpty}{}\<[E]%
+\\
+\>[B]{}\HSVar{expand}\;\HSSpecial{(}\HSCon{SVar}\;\HSVar{ix}\HSSpecial{)}\;{}\<[22]%
+\>[22]{}\HSVar{sv}\HSSym{\mathrel{=}}\HSCon{SVar}\;\HSSpecial{(}\HSVar{ix}\;\HSVar{sv}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{expand}\;\HSSpecial{(}\HSVar{dl}\HSSym{:*:\char126 }\HSVar{dr}\HSSpecial{)}\;{}\<[22]%
+\>[22]{}\HSVar{sv}\HSSym{\mathrel{=}}\HSVar{expand}\;\HSVar{dl}\;\HSVar{sv}\HSSym{:*:\char126 }\HSVar{expand}\;\HSVar{dr}\;\HSVar{sv}{}\<[E]%
+\\
+\>[B]{}\HSVar{expand}\;\HSSpecial{(}\HSVar{sn}\HSSym{:+>\char126 }\HSVar{xs}\HSSpecial{)}\;{}\<[22]%
+\>[22]{}\HSVar{sv}\HSSym{\mathrel{=}}\HSVar{sn}\HSSym{:+>\char126 }\HSVar{vexpand}\;\HSVar{sn}\;\HSVar{xs}\;\HSVar{sv}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+\subsection{Deriving generators}
+
+  We now have all necessary ingredients in place to define a function \ensuremath{\HSVar{idesc\char95 gen}} that returns a generator based on its input description. It has the following type signature: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{idesc\char95 gen}\HSSym{::}\HSVar{forall}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\HSSym{\mathbin{\circ}}\HSSpecial{(}\HSCon{Singleton}\;\HSVar{i}\HSSpecial{)}\HSSym{\Rightarrow} \HSCon{SingIDesc}\;\HSVar{d}\HSSym{\to} \HSCon{G}\;\HSVar{i}\;\HSVar{a}\;\HSSpecial{(}\HSCon{Interpret}\;\HSVar{d}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  The definitions for the unit type, empty type, recursive positions and product type follow naturally: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSCon{SOne}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSVar{pure}\;\HSSpecial{(}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSCon{SEmpty}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSVar{empty}{}\<[E]%
+\\
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSCon{SVar}\;\HSVar{v}\HSSpecial{)}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSCon{G}\;\HSSpecial{(}\mu \;\HSVar{v}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSVar{dl}\HSSym{:*:\char126 }\HSVar{dr}\HSSpecial{)}{}\<[25]%
+\>[25]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSSpecial{,}\HSSpecial{)}\HSSym{<\$>}\HSVar{idesc\char95 gen}\;\HSVar{dl}\HSSym{<*>}\HSVar{idesc\char95 gen}\;\HSVar{dr}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We define a generator for the generalized coproduct by (again) inducting over the vector length, returning a choice between the generator derived from the head of the vector and the generator derived from the tail of the vector.  
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{47}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSCon{SZero2}\HSSym{:+>\char126 }\HSCon{SVNil}\HSSpecial{)}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSVar{empty}{}\<[E]%
+\\
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSCon{SZero2}\HSSym{:+>\char126 }\HSSpecial{(}\HSVar{d}\HSSym{:::\char126 }\HSCon{SVNil}\HSSpecial{)}\HSSpecial{)}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}\HSVar{idesc\char95 gen}\;\HSVar{d}{}\<[E]%
+\\
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSVar{n}\HSSpecial{)}\HSSym{:+>\char126 }\HSSpecial{(}\HSVar{d}\HSSym{:::\char126 }\HSVar{ds}\HSSpecial{)}\HSSpecial{)}{}\<[47]%
+\>[47]{}\HSSym{\mathrel{=}}{}\<[E]%
+\\
+\>[B]{}\hsindent{7}{}\<[7]%
+\>[7]{}\HSCon{Left}{}\<[13]%
+\>[13]{}\HSSym{<\$>}\HSVar{idesc\char95 gen}\;\HSVar{d}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSym{<|>}\HSCon{Right}\HSSym{<\$>}\HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSVar{n}\HSSym{:+>\char126 }\HSVar{ds}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  If we now turn our attention to the generator derived from the \ensuremath{\Sigma } combinator, it becomes clear why we need to define the expansion operator and the proof of equality between the interpretation of a description and the interpretation of its expansion.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSCon{SSigma}\;\HSVar{desc}\;\HSVar{gen}\;\HSVar{eq}\HSSpecial{)}\HSSym{\mathrel{=}}\HSKeyword{do}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSVar{x}\HSSym{\leftarrow} \HSCon{G}\;\HSSpecial{(}\HSCon{Call}\;\HSSpecial{(}\HSSym{\lambda} \HSSpecial{(}\HSSpecial{)}\HSSym{\to} \HSVar{unG}\;\HSVar{gen}\HSSpecial{)}\;\HSSpecial{(}\HSSpecial{)}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSKeyword{let}\;\HSVar{px}\HSSym{\mathrel{=}}\HSVar{promote}\;\HSVar{x}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSKeyword{case}\;\HSVar{px}\;\HSKeyword{of}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\HSCon{Promoted}\;\HSVar{x'}\HSSym{\to} \HSKeyword{do}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\HSVar{p}\HSSym{\leftarrow} \HSVar{idesc\char95 gen}\;\HSSpecial{(}\HSVar{expand}\;\HSVar{desc}\;\HSVar{x'}\HSSpecial{)}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\HSVar{pure}\;\HSSpecial{(}\HSVar{x}\HSSpecial{,}\HSVar{eqConv}\;\HSSpecial{(}\HSVar{eq}\;\HSVar{x'}\HSSpecial{)}\;\HSVar{p}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  First, we obtain a suitable value for the first element by calling the supplied generator. Next, we promote this value \ensuremath{\HSVar{x}} to get a singleton value \ensuremath{\HSVar{x'}} of type \ensuremath{\HSCon{Sing}\;\HSVar{x}}. We apply the promoted value \ensuremath{\HSVar{x'}} to the expansion of the second argument of \ensuremath{\Sigma }, which returns a generator producing values which have the type \ensuremath{\HSCon{Interpret}\;\HSSpecial{(}\HSCon{Expand}\;\HSVar{desc}\;\HSVar{s}\HSSpecial{)}}. We use this generator to get a value \ensuremath{\HSVar{p}} of this type, which we can cast to a value of type \ensuremath{\HSCon{Interpret}\;\HSVar{desc}} using the stored equality proof. 
+
+  With the definition of \ensuremath{\HSVar{idesc\char95 gen}} complete, we can define a function \ensuremath{\HSVar{genDesc}\HSSym{::}\HSVar{forall}\;\HSSpecial{(}\HSVar{d}\HSSym{::}\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}\HSSpecial{)}\HSSym{\to} \HSCon{Sing}\;\HSVar{d}\HSSym{\to} \HSCon{G}\;\HSVar{i}\;\HSVar{a}\;\HSVar{a}} that produces elements of the raw type represented by a description. Note that we need a conversion function \ensuremath{\HSVar{to}\HSSym{::}\HSCon{Interpret}\;\HSVar{d}\HSSym{\to} \HSVar{a}} to convert the values produced by \ensuremath{\HSVar{idesc\char95 gen}\;\HSVar{d}}. 
+
+\section{Examples}
+
+  We consider two small examples to see how we can use the approach described in this section to generate constrained test data. First we consider the type of finite sets (e.g. \ensuremath{\HSCon{Fin}}), and after that the recurring example of well-typed lambda terms. In order to be able to test the derived generators, we assume that a function \ensuremath{\HSVar{run}\HSSym{::}\HSSpecial{(}\HSVar{i}\HSSym{\to} \HSCon{Gen}\;\HSVar{i}\;\HSVar{a}\;\HSVar{a}\HSSpecial{)}\HSSym{\to} \HSVar{i}\HSSym{\to} \HSCon{Int}\HSSym{\to} \HSSpecial{\HSSym{[\mskip1.5mu} }\HSVar{a}\HSSpecial{\HSSym{\mskip1.5mu]}}} is in scope, interpreting abstract generators as an exhaustive enumeration up to a certain depth. 
+
+\subsection{Finite sets}
+
+  We assume the definition of \ensuremath{\HSCon{Fin}} given in listing \ref{}. If we erase the index of a value of type \ensuremath{\HSCon{Fin}\;\HSVar{n}}, we end up with a value of type \ensuremath{\HSCon{Nat}}, hence \ensuremath{\HSCon{Nat}} is the raw type of our description. The goal is then to derive a generator producing values of type \ensuremath{\HSCon{Nat}}, which we interpret as values of type \ensuremath{\HSCon{Fin}\;\HSVar{n}}, but with their indices erased. This means that if we choose \ensuremath{\HSVar{n}} as our index, the generator can only produce values that are \emph{less than} the chosen index \ensuremath{\HSVar{n}}. For example, index \ensuremath{\HSCon{Suc}\;\HSSpecial{(}\HSCon{Suc}\;\HSCon{Zero}\HSSpecial{)}} should only produce the values \ensuremath{\HSCon{Suc}\;\HSCon{Zero}} or \ensuremath{\HSCon{Zero}}, and using index \ensuremath{\HSCon{Zero}} should result in a generator producing no values at all. 
+
+  We start by defining a type family that maps indices to descriptions: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{family}\;\HSCon{FinDesc}\;\HSSpecial{(}\HSVar{n}\HSSym{::}\HSCon{Nat}\HSSpecial{)}\HSSym{::}\HSCon{IDesc}\;\HSCon{Nat}\;\HSCon{Nat}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{FinDesc}\;\HSCon{Zero}{}\<[32]%
+\>[32]{}\HSSym{\mathrel{=}}\HSCon{Empty}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{FinDesc}\;\HSSpecial{(}\HSCon{Suc}\;\HSVar{n}\HSSpecial{)}{}\<[32]%
+\>[32]{}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{SSuc}\;\HSSpecial{(}\HSCon{SSuc}\;\HSCon{SZero}\HSSpecial{)}\HSSpecial{)}\HSSym{:+>}\HSSpecial{(}\HSCon{One}\HSSym{:::}\HSCon{Var}\;\HSVar{n}\HSSym{:::}\HSCon{VNil}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  If the index is Zero, we return an empty description. Otherwise we have a choice between two constructors: \ensuremath{\HSCon{Suc}} and \ensuremath{\HSCon{Zero}}. Next, we need to a singleton value of this description: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{finSDesc}\HSSym{::}\HSCon{Sing}\;\HSVar{n}\HSSym{\to} \HSCon{SingIDesc}\;\HSSpecial{(}\HSCon{FinDesc}\;\HSVar{n}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{finSDesc}\;\HSCon{SZero}{}\<[19]%
+\>[19]{}\HSSym{\mathrel{=}}\HSCon{SEmpty}{}\<[E]%
+\\
+\>[B]{}\HSVar{finSDesc}\;\HSSpecial{(}\HSCon{SSuc}\;\HSVar{n}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{SSuc2}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSCon{SZero2}\HSSpecial{)}\HSSym{:+>\char126 }\HSSpecial{(}\HSCon{SOne}\HSSym{:::\char126 }\HSCon{SVar}\;\HSVar{n}\HSSym{:::\char126 }\HSCon{SVNil}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  In this case, the definition of \ensuremath{\HSVar{finSDesc}} is completely dictated by our definition of \ensuremath{\HSCon{FinDesc}}. Finally, we define a conversion function, mapping interpretations to values: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{toFin}\HSSym{::}\HSCon{Sing}\;\HSVar{n}\HSSym{\to} \HSCon{Interpret}\;\HSSpecial{(}\HSCon{FinDesc}\;\HSVar{n}\HSSpecial{)}\HSSym{\to} \HSCon{Nat}{}\<[E]%
+\\
+\>[B]{}\HSVar{toFin}\;\HSSpecial{(}\HSCon{SSuc}\;\HSVar{sn}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Left}\;\HSSpecial{(}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{Zero}{}\<[E]%
+\\
+\>[B]{}\HSVar{toFin}\;\HSSpecial{(}\HSCon{SSuc}\;\HSVar{sn}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Right}\;\HSVar{n}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{Suc}\;\HSVar{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We are now ready to generate values using the description for \ensuremath{\HSCon{Fin}}. We do this simply by promoting the provided index, and calling \ensuremath{\HSVar{genDesc}}.  
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{genFin}\HSSym{::}\HSVar{forall}\;\HSSpecial{(}\HSVar{n}\HSSym{::}\HSCon{Nat}\HSSpecial{)}\HSSym{\mathbin{\circ}}\HSCon{Nat}\HSSym{\to} \HSCon{G}\;\HSCon{Nat}\;\HSCon{Nat}\;\HSCon{Nat}{}\<[E]%
+\\
+\>[B]{}\HSVar{genFin}\;\HSVar{n}\HSSym{\mathrel{=}}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSKeyword{case}\;\HSVar{promote}\;\HSVar{n}\;\HSKeyword{of}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\HSSpecial{(}\HSCon{Promoted}\;\HSVar{sn}\HSSpecial{)}\HSSym{\to} \HSVar{genDesc}\;\HSVar{sn}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  If we now run \ensuremath{\HSVar{genFin}}, we see that it indeed produces the expected output: 
+
+\begin{tabbing}\ttfamily
+~λ\char62{}~run~genFin~Zero~10\\
+\ttfamily ~\char91{}\char93{}\\
+\ttfamily ~λ\char62{}~run~genFin~\char40{}Suc~\char40{}Suc~\char40{}Suc~Zero\char41{}\char41{}\char41{}~10\\
+\ttfamily ~\char91{}Zero\char44{}Suc~Zero\char44{}Suc~\char40{}Suc~Zero\char41{}\char93{}
+\end{tabbing}
+
+\subsection{Well-typed lambda terms}
+
+  The process for generating well-typed lambda terms is exactly the same as for finite sets albeit slightly more involved due to the complexity of the datatype describing well-formed involved. We use the description shown in listing \ref{lst:slcdescinductive} as a basis, based on the representation of well-typed terms used in Phil Wadler and Wen Kokke's PLFA \cite{wadler2019plfa}.  
+
+  We model types terms and contexts with the following datatypes:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{Type}\HSSym{\mathrel{=}}\HSCon{Type}\HSSym{:->}\HSCon{Type}\HSSym{\mid} \HSCon{T}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\HSKeyword{data}\;\HSCon{Term}\HSSym{\mathrel{=}}\HSCon{TVar}\;\HSCon{Nat}\HSSym{\mid} \HSCon{TAbs}\;\HSCon{Term}\HSSym{\mid} \HSCon{TApp}\;\HSCon{Term}\;\HSCon{Term}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\HSKeyword{type}\;\HSCon{Ctx}\HSSym{\mathrel{=}}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Type}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We use the datatype \ensuremath{\HSCon{CtxPos}} to describe a position in a context: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{data}\;\HSCon{CtxPos}\HSSym{\mathrel{=}}\HSCon{Here}\HSSym{\mid} \HSCon{There}\;\HSCon{CtxPos}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Next, we define a generator for context positions: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{genElem}\HSSym{::}\HSCon{Ctx}\HSSym{\to} \HSCon{Type}\HSSym{\to} \HSCon{G}\;\HSSpecial{(}\HSSpecial{)}\;\HSCon{CtxPos}\;\HSCon{CtxPos}{}\<[E]%
+\\
+\>[B]{}\HSVar{genElem}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSSpecial{\HSSym{\mskip1.5mu]}}\;\HSSym{\anonymous} {}\<[19]%
+\>[19]{}\HSSym{\mathrel{=}}\HSVar{empty}{}\<[E]%
+\\
+\>[B]{}\HSVar{genElem}\;\HSSpecial{(}\HSVar{t}\HSCon{\mathbin{:}}\HSVar{ts}\HSSpecial{)}\;\HSVar{t'}\HSSym{\mathrel{=}}\HSSpecial{(}\HSKeyword{if}\;\HSVar{t}\HSSym{\equiv} \HSVar{t'}\;\HSKeyword{then}\;\HSVar{pure}\;\HSCon{Here}\;\HSKeyword{else}\;\HSVar{empty}\HSSpecial{)}\HSSym{<|>}\HSSpecial{(}\HSCon{There}\HSSym{<\$>}\HSVar{genElem}\;\HSVar{ts}\;\HSVar{t'}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  Here, \ensuremath{\HSVar{genElem}} takes a context and a type, and returns all positions at which that type occurs in the context. Now that we have all the necessary prerequisites in place to generate well-typed terms, we start by defining a type family that captures an appropriate description, show in listing \ref{lst:wttermsdesc}. This is a direct translation of the description shown in chapter 7 \ref{lst:slcdescinductive}. Since we never need recursive indices at the type level, we use a type family \ensuremath{\HSCon{I}\;\HSSpecial{(}\HSVar{s}\HSSym{::}\HSSym{*}\HSSpecial{)}\HSSym{::}\HSVar{i}} as a placeholder for the recursive positions inside a \ensuremath{\Sigma }. 
+
+\begin{listing}{Type level description of well typed terms}{lst:wttermsdesc}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSKeyword{type}\;\HSCon{VarDesc}\HSSym{\mathrel{=}}\Sigma \;\HSSpecial{(}\HSCon{Proxy}\HSSym{::}\HSCon{Proxy}\;\HSCon{CtxPos}\HSSpecial{)}\;\HSCon{One}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSCon{AppDesc}\HSSym{\mathrel{=}}\Sigma \;\HSSpecial{(}\HSCon{Proxy}\HSSym{::}\HSCon{Proxy}\;\HSCon{Type}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Var}\;\HSCon{I}\HSSym{:*:}\HSCon{Var}\;\HSCon{I}\HSSpecial{)}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\HSKeyword{type}\;\HSKeyword{family}\;\HSCon{SLTCDesc}\;\HSSpecial{(}\HSVar{i}\HSSym{::}\HSSpecial{(}\HSCon{Ctx}\HSSpecial{,}\HSCon{Type}\HSSpecial{)}\HSSpecial{)}\HSSym{::}\HSCon{IDesc}\;\HSCon{Term}\;\HSSpecial{(}\HSCon{Ctx}\HSSpecial{,}\HSCon{Type}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{SLTCDesc}\;\HSSpecial{(}\HSSpecial{(}\HSSpecial{,}\HSSpecial{)}\;\Gamma \;\HSCon{T}\HSSpecial{)}\HSSym{\mathrel{=}}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SSuc}\;\HSSpecial{(}\HSCon{SSuc}\;\HSCon{SZero}\HSSpecial{)}\HSSym{:+>}\HSSpecial{(}\HSCon{VarDesc}\HSSym{:::}\HSCon{AppDesc}\HSSym{:::}\HSCon{VNil}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSKeyword{type}\;\HSKeyword{instance}\;\HSCon{SLTCDesc}\;\HSSpecial{(}\HSSpecial{(}\HSSpecial{,}\HSSpecial{)}\;\Gamma \;\HSSpecial{(}\HSVar{t1}\HSSym{:->}\HSVar{t2}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSCon{SSuc}\;\HSSpecial{(}\HSCon{SSuc}\;\HSSpecial{(}\HSCon{SSuc}\;\HSCon{SZero}\HSSpecial{)}\HSSpecial{)}\HSSym{:+>}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\HSSpecial{(}\HSCon{VarDesc}\HSSym{:::}\HSCon{Var}\;\HSSpecial{(}\HSSpecial{(}\HSSpecial{,}\HSSpecial{)}\;\HSSpecial{(}\HSVar{t1}\HSCon{\mathbin{:}}\Gamma \HSSpecial{)}\;\HSVar{t2}\HSSpecial{)}\HSSym{:::}\HSCon{AppDesc}\HSSym{:::}\HSCon{VNil}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+  Next we define a singleton value that inhabits this description (listing \ref{lst:wtsingdesc}). Its structure is again dictated completely by the type family \ensuremath{\HSCon{SLTCDesc}}. It now becomes clear why we chose to have the programmer explicitly supply a generator to a \ensuremath{\Sigma }, since we can conveniently apply the index context and type to \ensuremath{\HSVar{genElem}} to obtain a generator that produces the required context positions. 
+
+\begin{listing}{Singleton description of well typed terms}{lst:wtsingdesc}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{3E}{@{}l@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{sltcDesc}\HSSym{::}\HSCon{Sing}\;\HSVar{i}\HSSym{\to} \HSCon{Sing}\;\HSSpecial{(}\HSCon{SLTCDesc}\;\HSVar{i}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{sltcDesc}\;\HSSpecial{(}\HSCon{SPair}\;\Gamma \;\HSCon{ST}\HSSpecial{)}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{SSuc2}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSCon{SZero2}\HSSpecial{)}\HSSpecial{)}\HSSym{:+>\char126 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}{}\<[3E]%
+\>[9]{}\HSCon{SSigma}\;\HSCon{SOne}\;\HSSpecial{(}\HSVar{genElem}\;\Gamma \;\HSCon{T}\HSSpecial{)}\;\HSSpecial{(}\HSSym{\char92 \char95 }\HSSym{\to} \HSCon{Refl}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSym{:::\char126 }{}\<[3E]%
+\>[9]{}\HSCon{SSigma}\;{}\<[17]%
+\>[17]{}\HSSpecial{(}\HSCon{SVar}\;\HSSpecial{(}\HSSym{\lambda} \sigma \HSSym{\to} \HSSpecial{(}\Gamma \HSSpecial{,}\sigma \HSSym{:->}\HSCon{T}\HSSpecial{)}\HSSpecial{)}\HSSym{:*:\char126 }\HSCon{SVar}\;\HSSpecial{(}\Gamma \HSSpecial{,}\HSSpecial{)}\HSSpecial{)}\;{}\<[E]%
+\\
+\>[17]{}\HSVar{genType}\;\HSSpecial{(}\HSSym{\char92 \char95 }\HSSym{\to} \HSCon{Refl}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSym{:::\char126 }{}\<[3E]%
+\>[9]{}\HSCon{SVNil}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{sltcDesc}\;\HSSpecial{(}\HSCon{SPair}\;\Gamma \;\HSSpecial{(}\HSVar{t1}\HSSym{:->\$}\HSVar{t2}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}\HSSpecial{(}\HSCon{SSuc2}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSSpecial{(}\HSCon{SSuc2}\;\HSCon{SZero2}\HSSpecial{)}\HSSpecial{)}\HSSpecial{)}\HSSym{:+>\char126 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSpecial{(}{}\<[3E]%
+\>[9]{}\HSCon{SSigma}\;\HSCon{SOne}\;\HSSpecial{(}\HSVar{genElem}\;\HSSpecial{(}\Gamma \HSSpecial{)}\;\HSSpecial{(}\HSVar{t1}\HSSym{:->}\HSVar{t2}\HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSSym{\char92 \char95 }\HSSym{\to} \HSCon{Refl}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSym{:::\char126 }{}\<[3E]%
+\>[9]{}\HSCon{SVar}\;\HSSpecial{(}\HSVar{t1}\HSCon{\mathbin{:}}\Gamma \HSSpecial{,}\HSVar{t2}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSym{:::\char126 }{}\<[3E]%
+\>[9]{}\HSCon{SSigma}\;{}\<[17]%
+\>[17]{}\HSSpecial{(}\HSCon{SVar}\;\HSSpecial{(}\HSSym{\lambda} \sigma \HSSym{\to} \HSSpecial{(}\Gamma \HSSpecial{,}\sigma \HSSym{:->}\HSSpecial{(}\HSVar{t1}\HSSym{:->}\HSVar{t2}\HSSpecial{)}\HSSpecial{)}\HSSpecial{)}\HSSym{:*:\char126 }\HSCon{SVar}\;\HSSpecial{(}\Gamma \HSSpecial{,}\HSSpecial{)}\HSSpecial{)}\;{}\<[E]%
+\\
+\>[9]{}\hsindent{7}{}\<[16]%
+\>[16]{}\HSVar{genType}\;\HSSpecial{(}\HSSym{\char92 \char95 }\HSSym{\to} \HSCon{Refl}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSSym{:::\char126 }{}\<[3E]%
+\>[9]{}\HSCon{SVNil}\HSSpecial{)}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{listing}
+
+  We now only have to define a convertion function that takes generated values and produces raw terms: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{toTerm}\HSSym{::}\HSCon{Sing}\;\HSVar{i}\HSSym{\to} \HSCon{Interpret}\;\HSSpecial{(}\HSCon{SLTCDesc}\;\HSVar{i}\HSSpecial{)}\HSSym{\to} \HSCon{Term}{}\<[E]%
+\\
+\>[B]{}\HSVar{toTerm}\;\HSSpecial{(}\HSCon{SPair}\;\HSSym{\anonymous} \;\HSCon{ST}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Left}\;\HSSpecial{(}\HSVar{n}\HSSpecial{,}\HSSpecial{(}\HSSpecial{)}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{TVar}\;\HSSpecial{(}\HSVar{toNat}\;\HSVar{n}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{toTerm}\;\HSSpecial{(}\HSCon{SPair}\;\HSSym{\anonymous} \;\HSCon{ST}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Right}\;\HSSpecial{(}\HSSym{\anonymous} \HSSpecial{,}\HSSpecial{(}\HSVar{t1}\HSSpecial{,}\HSVar{t2}\HSSpecial{)}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{TApp}\;\HSVar{t1}\;\HSVar{t2}{}\<[E]%
+\\
+\>[B]{}\HSVar{toTerm}\;\HSSpecial{(}\HSCon{SPair}\;\HSSym{\anonymous} \;\HSSpecial{(}\HSSym{\anonymous} \HSSym{:->\$}\HSSym{\anonymous} \HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Left}\;\HSSpecial{(}\HSVar{n}\HSSpecial{,}\HSSpecial{(}\HSSpecial{)}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{TVar}\;\HSSpecial{(}\HSVar{toNat}\;\HSVar{n}\HSSpecial{)}{}\<[E]%
+\\
+\>[B]{}\HSVar{toTerm}\;\HSSpecial{(}\HSCon{SPair}\;\HSSym{\anonymous} \;\HSSpecial{(}\HSSym{\anonymous} \HSSym{:->\$}\HSSym{\anonymous} \HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Right}\;\HSSpecial{(}\HSCon{Left}\;\HSVar{y}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{TAbs}\;\HSVar{y}{}\<[E]%
+\\
+\>[B]{}\HSVar{toTerm}\;\HSSpecial{(}\HSCon{SPair}\;\HSSym{\anonymous} \;\HSSpecial{(}\HSSym{\anonymous} \HSSym{:->\$}\HSSym{\anonymous} \HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSCon{Right}\;\HSSpecial{(}\HSCon{Right}\;\HSSpecial{(}\HSSym{\anonymous} \HSSpecial{,}\HSSpecial{(}\HSVar{t1}\HSSpecial{,}\HSVar{t2}\HSSpecial{)}\HSSpecial{)}\HSSpecial{)}\HSSpecial{)}\HSSym{\mathrel{=}}\HSCon{TApp}\;\HSVar{t1}\;\HSVar{t2}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We now have everything needed in pace to start generating well-typed terms. We do this again by promoting the supplied index, and calling \ensuremath{\HSVar{genDesc}} with this value: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\HSVar{termGen}\HSSym{::}\HSSpecial{(}\HSCon{Ctx}\HSSpecial{,}\HSCon{Type}\HSSpecial{)}\HSSym{\to} \HSCon{G}\;\HSSpecial{(}\HSCon{Ctx}\HSSpecial{,}\HSCon{Type}\HSSpecial{)}\;\HSCon{Term}\;\HSCon{Term}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\HSVar{termGen}\;\HSVar{i}\HSSym{\mathrel{=}}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\HSKeyword{case}\;\HSVar{promote}\;\HSVar{i}\;\HSKeyword{of}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\HSSpecial{(}\HSCon{Promoted}\;\HSVar{i'}\HSSpecial{)}\HSSym{\to} \HSVar{genDesc}\;\HSVar{i'}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+  We can now use \ensuremath{\HSVar{run}\;\HSVar{termGen}} to produce well-typed given a context and a goal type: 
+
+\begin{tabbing}\ttfamily
+~λ\char62{}~run~termGen~\char40{}\char91{}T~\char44{}~T~\char58{}\char45{}\char62{}~T\char93{}~\char44{}~T\char41{}~3\\
+\ttfamily ~\char91{}TVar~Zero\char44{}TApp~\char40{}TVar~\char46{}\char46{}\char46{}~\char46{}\char46{}\char46{}~\char46{}\char46{}\char46{}~\char40{}TVar~\char40{}Suc~\char40{}Suc~\char40{}Suc~Zero\char41{}\char41{}\char41{}\char41{}\char41{}\char41{}\char93{}
+\end{tabbing}
+
+  To assert that the produced values are indeed type correct, we define a function \ensuremath{\HSVar{check}\HSSym{::}\HSCon{Ctx}\HSSym{\to} \HSCon{Type}\HSSym{\to} \HSCon{Term}\HSSym{\to} \HSCon{Bool}} that checks whether a raw term has a certain type under certain context. 
+
+\begin{tabbing}\ttfamily
+~λ\char62{}~all~\char40{}check~\char91{}T~\char44{}~T~\char58{}\char45{}\char62{}~T\char93{}~T\char41{}~\char36{}~run~termGen~\char40{}\char91{}T~\char44{}~T~\char58{}\char45{}\char62{}~T\char93{}~\char44{}~T\char41{}~3\\
+\ttfamily ~True
+\end{tabbing}
+
+\chapter{Discussion}
 
 \appendix
 \chapter{Datatype Definitions}
@@ -2129,7 +2845,7 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 
 \backmatter
 \listoffigures
-\listoftables
+%% \listoftables
 
 \bibliographystyle{acm}
 \bibliography{references}
