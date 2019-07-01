@@ -1,31 +1,20 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE DataKinds, MultiParamTypeClasses, FlexibleInstances, DeriveGeneric, DeriveAnyClass, RankNTypes, PolyKinds, TypeOperators, TypeFamilies, GADTs, UndecidableInstances, ScopedTypeVariables #-}
 
-module IDesc.Instances where
+module Examples.Instances where
 
   import Data.Proxy
   import Gen
-  import Enumerate
-  import Depth
+  import Interpret
+  import Generic.Depth
   import Control.Applicative
   import Unsafe.Coerce
-  import Instances
   import qualified GHC.Generics as Generics
 
   import Singleton 
-  import Data
+  import Datatypes
 
-  import IDesc.IDesc
+  import IDesc.Universe
+  import IDesc.Generator
 
   ----------------------------------------------------------------------------
   -- Finite sets
@@ -48,7 +37,7 @@ module IDesc.Instances where
     sdesc = finSDesc
     to    = toFin
 
-  genFin :: forall (n :: Nat) . Nat -> G Nat Nat Nat 
+  genFin :: forall (n :: Nat) . Nat -> G Nat Nat 
   genFin n = 
     case promote n of 
       (Promoted sn) -> genDesc (Proxy :: Proxy T_FIN) sn
@@ -77,7 +66,7 @@ module IDesc.Instances where
     sdesc = vecSDesc Proxy
     to    = toVec Proxy
 
-  genVec :: forall a (n :: Nat) . Generatable a => Nat -> G Nat [a] [a] 
+  genVec :: forall a (n :: Nat) . Generatable a => Nat -> G Nat [a]
   genVec n = 
     case promote n of 
       (Promoted sn) -> genDesc (Proxy :: Proxy T_VEC) sn
@@ -117,12 +106,12 @@ module IDesc.Instances where
     sdesc = sTreeSDesc
     to    = toTree
 
-  genSTree :: Nat -> G Nat Tree Tree 
+  genSTree :: Nat -> G Nat Tree
   genSTree n =
     case promote n of 
       (Promoted n') -> genDesc (Proxy :: Proxy T_STREE) n' 
 
-  reversePlus :: Nat -> G () (Nat, Nat) (Nat , Nat)
+  reversePlus :: Nat -> G () (Nat, Nat)
   reversePlus Zero = pure (Zero , Zero)
   reversePlus (Suc n) =  pure (Suc n , Zero)
                       <|> ((\(x, y) -> (x , Suc y)) <$> reversePlus n)
@@ -138,9 +127,9 @@ module IDesc.Instances where
                    | RoseNil'
                    | RoseCons' (RoseTree' a) (RoseTree' a)
 
-  genRose' :: Generatable a => RLabel -> G RLabel (RoseTree' a) (RoseTree' a)
+  genRose' :: Generatable a => RLabel -> G RLabel (RoseTree' a)
   genRose' RL = pure RoseNil' <|> RoseCons' <$> mu RT <*> mu RL
-  genRose' RT = RoseNode' <$> G (Call (\() -> unG gen) ()) <*> mu RL
+  genRose' RT = RoseNode' <$> Call (trivial gen) () <*> mu RL
 
   toRose :: RoseTree' a -> Rose a
   toRose (RoseNode' v rs) = v :> toRose' rs 
@@ -149,8 +138,8 @@ module IDesc.Instances where
   toRose' RoseNil' = []
   toRose' (RoseCons' x xs) = toRose x : toRose' xs
 
-  genRose :: Generatable a => RLabel -> G RLabel (Rose a) (Rose a)
-  genRose l = toRose <$> (G (Call (unG . genRose') RT))
+  genRose :: Generatable a => RLabel -> G RLabel (Rose a)
+  genRose l = toRose <$> (Call genRose' RT)
 
-  runRoseGen :: Int -> [Rose Bool]
-  runRoseGen = run genRose RT
+  runRoseGen :: Generatable a => BoundedList (Rose a)
+  runRoseGen = interpret genRose RT

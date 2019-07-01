@@ -1,5 +1,15 @@
 {-# LANGUAGE GADTs #-}
 
+{-|
+Module      : QC
+Description : QuickCheck interpretation for generators
+Copyright   : (c) Cas van der Rest, 2019
+Maintainer  : c.r.vanderrest@students.uu.nl
+Stability   : experimental
+
+This module contains a generator interpretation that maps abstract generators
+to a quickcheck generator 
+-}
 module QC where
 
   import qualified Gen
@@ -11,6 +21,7 @@ module QC where
 
   import Debug.Trace 
 
+  -- TODO: return value as maybe in case sampling fails
   toQcGen' :: Gen.Gen i a t -> (i -> Gen.Gen i t t) -> Gen a
   toQcGen' (Gen.Pure x) tg = pure x
   toQcGen' (Gen.Or g1 g2) tg = oneof [toQcGen' g1 tg, toQcGen' g2 tg]

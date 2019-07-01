@@ -1,16 +1,18 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE DataKinds , DeriveGeneric, DeriveAnyClass, KindSignatures, GADTs, PolyKinds, TypeOperators, RankNTypes #-}
 
-module Data where 
+{-|
+Module      : Datatypes
+Description : Various datatypes used acrooss the library
+Copyright   : (c) Cas van der Rest, 2019
+Maintainer  : c.r.vanderrest@students.uu.nl
+Stability   : experimental
+
+Contains some datatypes that are used in various places throughout this library
+-}
+module Datatypes where 
 
   import GHC.Generics
-  import Depth
+  import Generic.Depth
 
   -- | Natural numbers
   data Nat = Zero 

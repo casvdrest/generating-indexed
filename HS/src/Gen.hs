@@ -1,97 +1,81 @@
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE GADTs, RankNTypes, DeriveGeneric, DeriveAnyClass, UnicodeSyntax #-}
 
+{-|
+Module      : Gen
+Description : The abstract type of generators
+Copyright   : (c) Cas van der Rest, 2019
+Maintainer  : c.r.vanderrest@students.uu.nl
+Stability   : experimental
+
+This module contains the definition of the type of abstract generators, which 
+only mark the structure of a generator without making any choices of the type 
+it will eventually be mapped to. They are an instance of Functor, Applicative, 
+Monad and Alternative, with additional recursion and the possibility to refer
+to the results of other generators. 
+-}
 module Gen where 
 
-  import Depth
+  import Generic.Depth
   import GHC.Generics
   import Control.Applicative
   import Unsafe.Coerce
 
   -- | The type of abstract generators 
-  data Gen i a t where 
-    None  ::                                   Gen i a t 
-    Pure  :: a                              -> Gen i a t 
-    Or    :: Gen i a t -> Gen i a t         -> Gen i a t 
-    Ap    :: Gen i (b -> a) t -> Gen i b t  -> Gen i a t
-    Bind  :: Gen i a t -> (a -> Gen i b t)  -> Gen i b t
-    Mu    :: i                              -> Gen i a a
-    Call  :: (j -> Gen j a a) -> j          -> Gen i a t
+  data Gen i t a where 
+    None  ::                                   Gen i t a 
+    Pure  :: a                              -> Gen i t a 
+    Or    :: Gen i t a -> Gen i t a         -> Gen i t a 
+    Ap    :: Gen i t (b -> a) -> Gen i t b  -> Gen i t a
+    Bind  :: Gen i t a -> (a -> Gen i t b)  -> Gen i t b
+    Mu    :: i                              -> Gen i t t
+    Call  :: (j -> Gen j a a) -> j          -> Gen i t a
 
-  -- | Wrapper to allow generators to be an instance of 
-  --   the required typeclasses
-  newtype G i t a = G (Gen i a t)
+  type G i a = Gen i a a 
+  type G_ a  = Gen () a a 
 
-  -- | Convert a wrapped generator into a generator
-  unG :: G i t a -> Gen i a t 
-  unG (G g) = g
-
-  ----------------------------------------------------------------------------
-  -- Show instance printing a generator's structure (for debuggin purposes)
-  
-  p :: String -> String
-  p s = "(" <> s <> ")"
-
-  s :: [String] -> String
-  s []     = ""
-  s (x:xs) = x ++ " " ++ s xs  
-
-  instance Show (Gen i a t) where
-    show None = "None"
-    show (Pure _) = "Pure"
-    show (Or l r) = p (s ["Or" , show l , show r])
-    show (Ap f g) = p (s ["Ap" , show f , show g])
-    show (Bind f g) = p (s ["Bind" , show f , "# -> #"])
-    show (Mu _) = "Mu"
-    show (Call g i) = p (s ["Call" , show (g i)])
-
-  instance Show (G i a t) where
-    show (G g) = "G " ++ show g
-
-  ----------------------------------------------------------------------------
-  -- Typeclasses for generatable non-indexed datatypes
+  -- | Typeclass for generatable non-indexed datatypes
   class Generatable a where 
-    gen :: G () a a
+    gen :: G_ a
 
+  -- | Typeclass for generatable non-indexed function types
   class CoGeneratable a where 
-    cogen :: (Generatable b) => G () (a -> b) (a -> b)
+    cogen :: (Generatable b) => G_ (a -> b)
 
   ----------------------------------------------------------------------------
   -- Typeclass instances
      
-  instance Functor (G i t) where 
-    fmap f (G gen) = G (Ap (Pure f) gen)
+  instance Functor (Gen i t) where 
+    fmap f = Ap (Pure f)
 
-  instance Applicative (G i t) where
-    pure              = G . Pure
-    (G g1) <*> (G g2) = G (Ap g1 g2) 
+  instance Applicative (Gen i t) where
+    pure   = Pure
+    (<*>)  = Ap 
 
-  instance Monad (G i t) where 
-    return        = G . Pure 
-    (G g1) >>= g2 = G (Bind g1 (unG . g2))
+  instance Monad (Gen i t) where 
+    return  = Pure 
+    (>>=)   = Bind
 
-  instance Alternative (G i t) where 
-    empty             = G None 
-    (G g1) <|> (G g2) = G (Or g1 g2)
+  instance Alternative (Gen i t) where 
+    empty     = None 
+    (<|>)     = Or
 
   ----------------------------------------------------------------------------
   -- Smart constructors for generator compositions
 
-  mu :: i -> G i t t 
-  mu = G . Mu
+  -- | denotes a recursive position - intended for use with lhs2TeX (where 'mu') is 
+  --   turned into the greek letter mu. 
+  mu :: i -> G i t
+  mu = Mu
 
-  call :: Generatable a => G () t a
-  call = G (Call (\() -> unG gen) ())
+  -- | Calls a non indexed generator, omitting the need to work with the trival index
+  call :: Generatable a => Gen () t a
+  call = Call (trivial gen) ()
 
-  call' :: (CoGeneratable a, Generatable b) => G () t (a -> b)
-  call' = G (Call (\() -> unG cogen) ())
+  -- | Lifts a value from 'a' to '() -> a' 
+  trivial :: a -> () -> a 
+  trivial = const
 
-  -- | Lifts a value from a to () -> a 
-  triv :: a -> () -> a 
-  triv = const
-
-  oneof :: [a] -> G i a a 
+  -- | Marks choice over a list of options 
+  --   TODO: use a tree-like structure instead of simply folding the list
+  oneof :: [a] -> G i a 
   oneof = foldr1 (<|>) . map pure

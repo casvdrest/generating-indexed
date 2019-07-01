@@ -17,7 +17,7 @@
 \RequirePackage[colorlinks=false]{hyperref}
 \RequirePackage{cleveref}
 \RequirePackage{catchfilebetweentags}
-\RequirePackage[conor]{agda}
+\RequirePackage{agda}
 
 %% Declaring our Options
 

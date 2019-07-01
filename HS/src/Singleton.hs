@@ -1,23 +1,23 @@
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE InstanceSigs #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE RankNTypes, TypeOperators, DataKinds, KindSignatures, PolyKinds, TypeFamilies, GADTs, InstanceSigs, MultiParamTypeClasses, FlexibleInstances #-}
 
+{-|
+Module      : Singleton
+Description : A simple singleton interface, with some instances
+Copyright   : (c) Cas van der Rest, 2019
+Maintainer  : c.r.vanderrest@students.uu.nl
+Stability   : experimental
+
+Contains a bare-bones interface for working with singleton types, with additionally 
+instances for common types (such as Bool, Nat, (,) and Either). Additionally this 
+module contains a typeclass that describes how values of a ground type may be promoted
+to a singleton value. 
+-}
 module Singleton where
 
-  import Data
+  import Datatypes
   import Gen
   import Data.Proxy
   import Control.Applicative
-
-  ---------------------------------------------------------------------------
-  -- Singleton types
 
   -- | The class of types for which there exists a singleton type.
   --
@@ -34,7 +34,7 @@ module Singleton where
   --   Captures those types of which we are able to generate values of the
   --   associated singleton type.
   class Promote s => SingGeneratable s where
-    genSing :: G () (Promoted s Sing) (Promoted s Sing)
+    genSing :: Gen () (Promoted s Sing) (Promoted s Sing)
 
     -- | Tags used to tag various indexed datatypes. We need this to
   --   distinguish between different indexed datatypes that are mapped
@@ -57,45 +57,25 @@ module Singleton where
   class InType (t :: GenTag) where
     type InputType (p :: Proxy t) :: *
 
-  -- | Class of tagged singleton generators
-  class (Promote a, InType t) => TSingGeneratable (t :: GenTag) (a :: *) where
-    taggedGen :: Proxy t -> InputType ('Proxy :: Proxy t) -> G () (Promoted a Sing) (Promoted a Sing)
-
-  data Pair' = forall a . Eq a => InPair' a a
-
-  instance InType GT_EQUAL where
-    type InputType ('Proxy :: Proxy GT_EQUAL) = Pair'
-
-  instance TSingGeneratable GT_EQUAL () where
-    taggedGen _ (InPair' x y) | x == y    = pure (Promoted SUnit_)
-                              | otherwise = empty
-
-  instance InType GT_CHOOSE where 
-    type InputType ('Proxy :: Proxy GT_CHOOSE) = ()
-
-  instance (Promote a , SingGeneratable a) 
-    => TSingGeneratable GT_CHOOSE a where 
-    taggedGen _ () = genSing
-
   -- | Singleton generator for natural numbers
   instance SingGeneratable Nat where
-    genSing :: G () (Promoted Nat SNat) (Promoted Nat SNat)
+    genSing :: Gen () (Promoted Nat SNat) (Promoted Nat SNat)
     genSing  =  (pure (Promoted SZero))
             <|> ((\(Promoted r) -> Promoted (SSuc r)) <$> mu ())
 
   -- | Singleton generators for pairs
   instance (SingGeneratable a , SingGeneratable b) => SingGeneratable (a , b) where
-    genSing :: G () (Promoted (a, b) SPair) (Promoted (a, b) SPair)
+    genSing :: Gen () (Promoted (a, b) SPair) (Promoted (a, b) SPair)
     genSing = do
-      Promoted x <- G $ Call (\() -> unG genSing) ()
-      Promoted y <- G $ Call (\() -> unG genSing) ()
+      Promoted x <- Call (\() -> genSing) ()
+      Promoted y <- Call (\() -> genSing) ()
       pure (Promoted (SPair x y))
 
   -- | Singleton generators for lists 
   instance SingGeneratable a => SingGeneratable [a] where 
     genSing  =  pure (Promoted SNil) 
             <|> ((\(Promoted x) (Promoted xs) -> Promoted (SCons x xs)) 
-                <$> (G $ Call (\() -> unG genSing) ()) <*> genSing)
+                <$> (Call (\() -> genSing) ()) <*> genSing)
 
   -- | Associated singleton type for natural numbers
   data SNat (n :: Nat) where
@@ -243,19 +223,24 @@ module Singleton where
       case promote x of
         (Promoted x') -> Promoted (SJust x')
 
+  -- The associtated singleton type for 'Bool'
   data SBool :: Bool -> * where 
     STrue  :: SBool True 
     SFalse :: SBool False
 
+  -- Singleton instance for 'Bool'
   instance Singleton Bool where 
     type Sing = SBool 
     dm STrue  = True 
     dm SFalse = False
 
+  -- Promote instance for 'Bool'
   instance Promote Bool where 
     promote True = Promoted STrue 
     promote False = Promoted SFalse
 
+  -- | Singleton natural types 
+  --   TODO: splice with TH
   type S0 = SZero 
   type S1 = SSuc SZero
   type S2 = SSuc (SSuc SZero)
@@ -264,6 +249,8 @@ module Singleton where
   type S5 = SSuc (SSuc (SSuc (SSuc (SSuc SZero))))
   type S6 = SSuc (SSuc (SSuc (SSuc (SSuc (SSuc SZero)))))
 
+  -- | (Second order) singleton natural values
+  --   TODO: splice with TH
   s0 = SZero2 
   s1 = SSuc2 SZero2
   s2 = SSuc2 (SSuc2 SZero2)

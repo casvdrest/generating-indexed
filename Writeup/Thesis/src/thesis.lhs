@@ -147,10 +147,11 @@ Abstract
 %include src/chap08/body.lhs
 
 \chapter{Discussion}
+%include src/chap09/body.lhs
 
-\appendix
-\chapter{Datatype Definitions}
-%include src/appA/body.lhs
+%% \appendix
+%% \chapter{Datatype Definitions}
+%% %include src/appA/body.lhs
 
 \backmatter
 \listoffigures

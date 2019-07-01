@@ -393,7 +393,7 @@ _∣ᵢ_↝_ = {!!}
                 → (g >>= λ y → ⦇ (λ v → y , v) (g' y) ⦈) ∣ᵢ tg ↝ x 
 \end{code}
 %</bindcomplete>
-\begin{code}
+\begin{code} ∣ 
 >>=-Complete = {!!}
 \end{code}
 

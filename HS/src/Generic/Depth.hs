@@ -1,14 +1,6 @@
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE DefaultSignatures #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators, MultiParamTypeClasses, FlexibleInstances, FlexibleContexts, DeriveGeneric, DeriveAnyClass, UndecidableInstances, DefaultSignatures, ScopedTypeVariables #-}
 
-module Depth where 
+module Generic.Depth where 
 
   import GHC.Generics
   import Data.Proxy

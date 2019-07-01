@@ -1,18 +1,11 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE DataKinds, TypeOperators, KindSignatures, GADTs, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, TypeFamilies #-}
 
-module IDesc.Term where
+module Examples.Term where
 
   import Singleton 
-  import IDesc.IDesc
+  import IDesc.Universe
   import Data.Proxy
-  import Data
+  import Datatypes
   import Gen
 
   import Control.Applicative
@@ -73,10 +66,10 @@ module IDesc.Term where
   ab (TApp t1 t2) = TApp (ab t1) (ab t2)
 
 
-  genElem :: Ctx -> Type -> G () CtxPos CtxPos 
+  genElem :: Ctx -> Type -> G () CtxPos 
   genElem [] _      = empty
   genElem (t:ts) t' = (if t == t' then pure Here else empty) <|> (There <$> genElem ts t')
 
-  genType :: G () Type Type  
+  genType :: G () Type  
   genType = pure T <|> ((:->) <$> mu () <*> mu ())
 
