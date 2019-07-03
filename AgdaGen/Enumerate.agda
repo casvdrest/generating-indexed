@@ -9,66 +9,32 @@ open import Function
 open import Level renaming (zero to zeroL ; suc to sucL)
 
 module AgdaGen.Enumerate where
-
-  mutual
-    -- Interpretation function for generators. Interprets a a value of the Gen type as a
-    -- function from `ℕ` to `List a`.
-    --
-    -- The first parameter is the generator to be interpreted, the second parameter is a
-    -- closed generator that is referred to by recursive positions.
-    interpret : ∀ {ℓ k} {a t : Set ℓ} → Gen {ℓ} {k} a t → 𝔾 t → ℕ → List a
-    interpret (g         ) tg zero = []
-    interpret (Or g₁ g₂  ) tg (suc n) =
-      merge (interpret g₁ tg (suc n)) (interpret g₂ tg (suc n))
-    interpret (Ap g₁ g₂  ) tg (suc n) =
-      concatMap (λ f → map f (interpret g₂ tg (suc n)))
-        (interpret g₁ tg (suc n))
-    interpret (Pure x    ) tg (suc n) = [ x ]
-    interpret (Bind g₁ g₂) tg (suc n) =
-      (flip concatMap) (interpret g₁ tg (suc n))
-        (λ x → interpret (g₂ x) tg (suc n))
-    interpret (None      ) tg (suc n) = []
-    interpret (μ         ) tg (suc n) =
-      interpret tg tg n
-    interpret (` g       ) tg (suc n) = 
-      interpret g g (suc n)
-    interpret ⟨ x ` g ⟩ tg (suc n) =
-      interpretᵢ g x (g x) (suc n)
-
     
     -- Interpret a generator as a function from recursive depth to List of elements
-    interpretᵢ :
-      ∀ {ℓ k} {i : Set k} {a : Set ℓ} {t : i → Set ℓ}
-      → ((y : i) → Genᵢ (t y) t y) → (x : i) → Genᵢ a t x → ℕ → List a
-    interpretᵢ tg x g zero = []
-    interpretᵢ tg x (Pureᵢ x₁) (suc n) = [ x₁ ]
-    interpretᵢ tg x (Apᵢ {y = y} g₁ g₂) (suc n) =
-      concatMap (λ f → map f (interpretᵢ tg y g₂ (suc n))) (interpretᵢ tg x g₁ (suc n))
-    interpretᵢ tg x (Bindᵢ {y = y} g₁ fg) (suc n) =
-      concatMap (λ v → interpretᵢ tg x (fg v) (suc n)) (interpretᵢ tg y g₁ (suc n))
-    interpretᵢ tg x (Orᵢ g₁ g₂) (suc n) =
-      merge (interpretᵢ tg x g₁ (suc n)) (interpretᵢ tg x g₂ (suc n))
-    interpretᵢ tg x (μᵢ .x) (suc n) = interpretᵢ tg x (tg x) n
-    interpretᵢ tg x Noneᵢ (suc n) = []
-    interpretᵢ tg x (Call g) (suc n) = interpret g g (suc n)
-    interpretᵢ tg x (Callᵢ y g) (suc n) = interpretᵢ g y (g y) (suc n)
-
-  -- Interpret a closed generator as a function from `ℕ` to `List a`
-  ⟨_⟩ : ∀ {ℓ k} {a : Set ℓ} → Gen {ℓ} {k} a a → ℕ → List a
-  ⟨ g ⟩ = interpret g g
+  enumerate :
+    ∀ {ℓ k} {i : Set k} {a : Set ℓ} {t : i → Set ℓ}
+    → ((y : i) → Gen (t y) t y) → (x : i) → Gen a t x → ℕ → List a
+  enumerate tg x g zero = []
+  enumerate tg x (Pure x₁) (suc n) = [ x₁ ]
+  enumerate tg x (Ap {y = y} g₁ g₂) (suc n) =
+    concatMap (λ f → map f (enumerate tg y g₂ (suc n))) (enumerate tg x g₁ (suc n))
+  enumerate tg x (Bind {y = y} g₁ fg) (suc n) =
+    concatMap (λ v → enumerate tg x (fg v) (suc n)) (enumerate tg y g₁ (suc n))
+  enumerate tg x (Or g₁ g₂) (suc n) =
+    merge (enumerate tg x g₁ (suc n)) (enumerate tg x g₂ (suc n))
+  enumerate tg x (μ .x) (suc n) = enumerate tg x (tg x) n
+  enumerate tg x None (suc n) = []
+  enumerate tg x (Call y g) (suc n) = enumerate g y (g y) (suc n)
 
   -- Interpretation of closed indexed generators
-  ⟨_⟩ᵢ : ∀ {ℓ k} {i : Set k} {f : i → Set ℓ} → ((x : i) → 𝔾ᵢ f x) → (x : i) → ℕ → List (f x)
-  ⟨ g ⟩ᵢ x = interpretᵢ g x (g x)
+  ⟨_⟩ : ∀ {ℓ k} {i : Set k} {f : i → Set ℓ} → ((x : i) → 𝔾 f x) → (x : i) → ℕ → List (f x)
+  ⟨ g ⟩ x = enumerate g x (g x)
 
   -- Type of eneumerations
-  Enum : ∀ {ℓ} → Set ℓ → Set ℓ
-  Enum a = ℕ → List a
+  Enumeration : ∀ {ℓ} → Set ℓ → Set ℓ
+  Enumeration a = ℕ → List a
 
   -- Generator interpration as enumerations
   instance
-    ⟦⟧≡Enum : ∀ {ℓ k} → ⟦Generator⟧ {ℓ} {k} Enum
-    ⟦⟧≡Enum =
-      record { ⟦_⟧gen  = ⟨_⟩
-             ; ⟦_⟧genᵢ = ⟨_⟩ᵢ
-             }
+    ⟦⟧≡Enum : ∀ {ℓ k} → ⟦Generator⟧ {ℓ} {k} Enumeration
+    ⟦⟧≡Enum = record { ⟦_⟧gen = ⟨_⟩ }

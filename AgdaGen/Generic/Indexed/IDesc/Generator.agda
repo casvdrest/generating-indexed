@@ -24,10 +24,10 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   open GMonad       ⦃...⦄
 
   -- Generate selectors
-  Sl-gen : ∀ {ℓ} (n : Lift ℓ ℕ) → 𝔾ᵢ {ℓ} Sl n
+  Sl-gen : ∀ {ℓ} (n : Lift ℓ ℕ) → 𝔾 {ℓ} Sl n
   Sl-gen (lift zero)    = empty 
-  Sl-gen (lift (suc n)) = ⦇ ▻_ (μᵢ (lift n)) ⦈
-                        ∥ ⦇ ∙         ⦈
+  Sl-gen (lift (suc n)) = ⦇ ▻_ (μBase (lift n)) ⦈
+                        ∥ ⦇ ∙                    ⦈
 
   ⟦⟧subst :
     ∀ {ℓ} {I : Set} {φ φ' : func ℓ I I} {δ : IDesc ℓ I} {ix : I}
@@ -48,21 +48,21 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
     → (ix : I)
 
       -- Metadata for the current description
-    → IDescM (𝔾 {ℓ} {0ℓ}) δ
+    → IDescM (λ S → 𝔾 {ℓ} {0ℓ} (λ _ → S) tt) δ
 
       -- Returns a generator producting values of the fixed point of
       -- the interpreted description
-    → Genᵢ {ℓ} (⟦ δ ⟧ (μ φ)) (λ x → ⟦ func.out φ x ⟧ (μ φ)) ix
+    → Gen {ℓ} (⟦ δ ⟧ (μ φ)) (λ x → ⟦ func.out φ x ⟧ (μ φ)) ix
 
-  IDesc-gen {ℓ} {I} {`var i} {φ} ix m = ⦇ ⟨ (μᵢ i) ⟩ ⦈ 
+  IDesc-gen {ℓ} {I} {`var i} {φ} ix `var~ = ⦇ ⟨ (μBase i) ⟩ ⦈
   IDesc-gen {ℓ} {I} {`1} {φ} ix `1~ = ⦇ (lift tt) ⦈
   IDesc-gen {ℓ} {I} {δₗ `× δᵣ} {φ} ix (mₗ `×~ mᵣ) =
     ⦇ (IDesc-gen ix mₗ) , (IDesc-gen ix mᵣ) ⦈
   IDesc-gen {ℓ} {I} {`σ n T} {φ} ix (`σ~ mT) =
-    _>>=_ {i = I} {x = ix} {y = ix} (Callᵢ (lift n) (λ n' → Sl-gen n'))
+    _>>=_ {i = I} {x = ix} {y = ix} (Call (lift n) (λ n' → Sl-gen n'))
       (λ sl → ⦇ (λ x → (sl , x)) (IDesc-gen ix (mT sl)) ⦈)
   IDesc-gen {ℓ} {I} {`Σ S T} {φ} ix (`Σ~ gS mT) =
-    _>>=_ (Call {x = ix} gS) λ s → ⦇ (λ x → s , x) (IDesc-gen ix (mT s)) ⦈
+    _>>=_ (Call {x = ix} tt (λ _ → gS)) λ s → ⦇ (λ x → s , x) (IDesc-gen ix (mT s)) ⦈
   
   infix 30 _⇑_
 
@@ -83,10 +83,10 @@ module AgdaGen.Generic.Indexed.IDesc.Generator where
   IDesc-isoGen :
     ∀ {ℓ} {I : Set} {P : I → Set ℓ} ⦃ p : ≅IDesc P ⦄
     → (ix : I)
-    → ((y : I) → IDescM 𝔾 (func.out (getφ p) y))
-    → 𝔾ᵢ {ℓ} {0ℓ} (λ x → P x ⇑ ℓ) ix
+    → ((y : I) → IDescM (λ S → 𝔾 (λ _ → S) tt) (func.out (getφ p) y))
+    → 𝔾 {ℓ} {0ℓ} (λ x → P x ⇑ ℓ) ix
   IDesc-isoGen {I = I} {δ} ⦃ p = record { W = φ , iso } ⦄ ix m
     = _>>=_ {y = ix}
-      (Callᵢ ix (λ y → IDesc-gen {δ = func.out φ y} {φ = φ} y (m y)))
+      (Call ix (λ y → IDesc-gen {δ = func.out φ y} {φ = φ} y (m y)))
       (λ r → pure (_≅_.to (iso ix) ⟨ r ⟩))
   

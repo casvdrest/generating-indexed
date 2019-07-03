@@ -116,6 +116,7 @@ isoFin₂ {suc _} {In (▻ ∙  , _)}  = cong (λ x → In (▻ ∙ , x)) isoFin
 \end{code}
 %</idescfiniso>
 
+%<*lambdadatatypes>
 \begin{code}
 data RT : Set where
   tvar : ℕ → RT
@@ -128,22 +129,25 @@ data Ty : Set where
 
 data Ctx : Set where
   ∅      : Ctx
-  _,_∶_  : Ctx → ℕ → Ty → Ctx
+  _,'_   : Ctx → Ty → Ctx
+\end{code}
+<%/lambdadatatypes>
 
-infix 30 _,_∶_
+\begin{code}
+infix 30 _,'_
 infix 20 _∋_
 \end{code}
 
 %<*ctxmembership>
 \begin{code}
 data _∋_ : Ctx → Ty → Set where
-  [Pop]  :  ∀ {Γ α τ}
-            -------------
-         →  Γ , α ∶ τ ∋ τ
+  [Pop]  :  ∀ {Γ τ}
+            ----------
+         →  Γ ,' τ ∋ τ
 
-  [Top]  :  ∀ {Γ α τ σ} → Γ ∋ τ
-            --------------------
-         →  Γ , α ∶ σ ∋ τ
+  [Top]  :  ∀ {Γ τ σ} → Γ ∋ τ
+            -----------------
+         →  Γ ,' σ ∋ τ
 \end{code}
 %</ctxmembership>
 
@@ -154,8 +158,8 @@ data _⊢_ : Ctx → Ty → Set where
             ----------------
          →  Γ ⊢ τ
 
-  [Abs]  :  ∀ {Γ α σ τ} → Γ , α ∶ σ ⊢ τ
-            ---------------------------
+  [Abs]  :  ∀ {Γ σ τ} → Γ ,' σ ⊢ τ
+            ----------------------
          →  Γ ⊢ (σ `→ τ)
 
   [App]  :  ∀ {Γ σ τ} → Γ ⊢ (σ `→ τ) → Γ ⊢ σ
@@ -176,6 +180,17 @@ toTerm = λ _ → tvar zero
 module Inductive where 
 \end{code}
 
+\begin{code}
+  varDesc : Ctx × Ty → IDesc (Ctx × Ty)
+  varDesc (Γ , τ) = `Σ (Γ ∋ τ) λ _ → `1
+
+  absDesc : Ctx × Ty × Ty  → IDesc (Ctx × Ty)
+  absDesc (Γ , σ , τ) = `Σ ℕ (λ α → `var (Γ ,' σ , τ))
+
+  appDesc : Ctx × Ty → IDesc (Ctx × Ty)
+  appDesc (Γ , τ) = `Σ Ty (λ σ → `var (Γ , σ `→ τ) `× `var (Γ , σ))
+\end{code}
+
 %<*slcdescinductive>
 \begin{code}
   wt : Ctx × Ty → IDesc (Ctx × Ty)
@@ -186,13 +201,7 @@ module Inductive where
       ; (τ₁ `→ τ₂) →
         `σ 3 λ { ∙        → varDesc (Γ , τ)
                ; (▻ ∙)    → absDesc (Γ , τ₁ , τ₂)
-               ; (▻ ▻ ∙)  → appDesc (Γ , τ) } } 
-    where varDesc : Ctx × Ty → IDesc (Ctx × Ty)
-          varDesc (Γ , τ) = `Σ (Γ ∋ τ) λ _ → `1
-          absDesc : Ctx × Ty × Ty  → IDesc (Ctx × Ty)
-          absDesc (Γ , σ , τ) = `Σ ℕ (λ α → `var (Γ , α ∶ σ , τ))
-          appDesc : Ctx × Ty → IDesc (Ctx × Ty)
-          appDesc (Γ , τ) = `Σ Ty (λ σ → `var (Γ , σ `→ τ) `× `var (Γ , σ))
+               ; (▻ ▻ ∙)  → appDesc (Γ , τ) } }
 \end{code}
 %</slcdescinductive>
 
@@ -200,15 +209,27 @@ module Inductive where
 module Constrained where
 \end{code}
 
+%<*sltcconstructordesc>
+\begin{code}
+  varDesc : Ctx × Ty → IDesc (Ctx × Ty)
+  varDesc (Γ , τ) = `Σ (Γ ∋ τ) λ _ → `1
+
+  absDesc : Ctx × Ty × Ty  → IDesc (Ctx × Ty)
+  absDesc (Γ , σ , τ) = `Σ ℕ (λ α → `var (Γ ,' σ , τ))
+
+  appDesc : Ctx × Ty → IDesc (Ctx × Ty)
+  appDesc (Γ , τ) = `Σ Ty (λ σ → `var (Γ , σ `→ τ) `× `var (Γ , σ))
+\end{code}
+%</slcdescconstrained>
+
 %<*slcdescconstrained>
 \begin{code}
   wt : Ctx × Ty → IDesc (Ctx × Ty)
   wt (Γ , τ) =
-    `σ 3 λ  { ∙          → `Σ (Γ ∋ τ) λ _ → `1
+    `σ 3 λ  { ∙          → varDesc (Γ , τ)
             ; (▻ ∙)      → `Σ (Σ (Ty × Ty) λ { (σ , τ') → τ ≡ σ `→ τ' })
-                             λ { ((σ , τ') , refl)
-                                 → `Σ ℕ (λ α → `var (Γ , α ∶ σ , τ')) }
-            ; (▻ (▻ ∙))  → `Σ Ty λ {σ → `var (Γ , σ `→ τ) `× `var (Γ , σ) }
+                            λ { ((σ , τ') , refl) → absDesc (Γ , (σ , τ')) }
+            ; (▻ (▻ ∙))  → appDesc (Γ , τ)
             }
 \end{code}
 %</slcdescconstrained>
@@ -220,6 +241,7 @@ module E where
 \end{code}
 
 \begin{code}
+  
   fromInductive : ∀ {Γ τ} → Fix Inductive.wt (Γ , τ) → Fix Constrained.wt (Γ , τ)
   fromInductive {Γ} {`τ}      (In (∙ , Γ∋ , tt))               =
     In (∙ , Γ∋ , tt)
@@ -265,6 +287,7 @@ module E where
     cong (λ x → In (▻ ∙ , ((σ , τ) , refl) , α , x)) wtIso₂
   wtIso₂ {Γ} {σ `→ τ} {In ((▻ (▻ ∙)) , σ' , _ , _)}                =
     cong₂ (λ x y → In (▻ ▻ ∙ , σ' , x , y)) wtIso₂ wtIso₂
+
 \end{code}
 
 %<*desciso>
@@ -326,13 +349,16 @@ module C where
 \begin{code}
   IDesc-gen :  ∀ {I} {i : I} → (δ : IDesc I) → (φ : I → IDesc I)
             →  Genᵢ (⟦ δ ⟧ (Fix φ)) (λ i → ⟦ φ i ⟧ (Fix φ)) i
-\end{code}
+\end{code} 
 %</idescgen>
 
 \begin{code}
   IDesc-gen (`var i)    φ = ⦇ In (μᵢ i) ⦈
-  IDesc-gen `1          φ = Pureᵢ tt
-  IDesc-gen {i} (δₗ `× δᵣ)  φ = ⦇ _,_ (IDesc-gen δₗ φ) (IDesc-gen δᵣ φ) ⦈
+  IDesc-gen `1          φ = pure tt
+  IDesc-gen (δₗ `× δᵣ)  φ = ⦇ (IDesc-gen δₗ φ) , (IDesc-gen δᵣ φ) ⦈
+\end{code}
+
+\begin{code}
   IDesc-gen (`Σ S T) φ = {!!}
 \end{code}
 
@@ -367,7 +393,8 @@ module D where
 %<*describe>
 \begin{code}
 record Describe {I} (A : I → Set) : Set where
-  field D : Σ[ φ ∈ (I → IDesc I) ] ((i : I) → A i ≅ Fix φ i) 
+  field φ : I → IDesc I
+  field iso : (i : I) → A i ≅ Fix φ i
 \end{code}
 %</describe>
 

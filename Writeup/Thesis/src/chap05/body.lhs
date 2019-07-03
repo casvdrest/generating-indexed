@@ -12,12 +12,12 @@
   is generally regarded to consist of the \emph{empty type} (or $\mathbb{0}$), the 
   unit type (or $\mathbb{1}$) and constants types. It is closed under both products 
   and coproducts \footnote{This roughly corresponds to datatypes in Haskell 98}. We 
-  can define a datatype for this universe in Agda as shown in lising \ref{lst:regular}
+  can define a datatype for this universe in Agda as shown in lising \ref{lst:regular}, 
+  with its associated semantics of type |Reg -> Set -> Set| shown in listing \ref{lst:regsem}.
 
 \includeagdalisting{5}{regular}{The universe of regular types}{lst:regular}
 
-  The semantics associated with the |Reg| datatype, as shown in listing \ref
-  {lst:regsem}, map a code to a functorial representation of a datatype, commonly 
+  The semantics of the universe of regular types map a code to a functorial representation of the datatype it describes, commonly 
   known as its \emph{pattern functor}. The datatype that is represented by a code is 
   isomorphic to the least fixpoint of its pattern functor. We fix pattern functors 
   using the following fixpoint combinator: 
@@ -57,13 +57,11 @@
 
   Although there are many algebraic datatypes that can be described in the universe 
   of regular types, some cannot. Perhaps the most obvious limitation the is lack of 
-  ability to caputure data families indexed with values. The regular univeres 
-  imposes the implicit restriction that a datatype is uniform in the sens that all 
-  recursive subtrees are of the same type. Indexed families, however, allow for 
+  ability to capture data families indexed with values. The regular universe 
+  imposes the implicit restriction that a datatype is uniform in the sense that all 
+  recursive subtrees are of the same type. Indexed families, such as |Vec| and |Fin|, on the other hand allow for 
   recursive subtrees to have a structure that is different from the structure of the 
-  datatype they are a part of. 
-
-  Furethermore, any family of mutually recursive datatypes cannot be described as a 
+  datatype they are a part of. Furethermore, any family of mutually recursive datatypes cannot be described as a 
   regular type; again, this is a result of the restriction that recursive positions 
   allways refer to a datatype with the same structure. 
 
@@ -72,31 +70,24 @@
   We can derive generators for all regular types by induction over their associated 
   codes. Furthermore, we will show in section \cref{regularproof} that, once 
   interpreted as enumerators, these generators are complete; i.e. any value will 
-  eventually show up in the enumerator, provided we supply a sufficiently large size 
-  parameter.  
+  eventually show up in the enumerator.
 
 \subsection{Defining functions over codes}
 
   If we apply the approach described in \cref{sec:tudesignpattern} without care, we 
   run into problems. Simply put, we cannot work with values of type |Fix c|, since 
   this implicitly imposes the restriction that any |I| in |c| refers to |Fix c|. 
-  However, as we descent into recursive calls, the code we are working with changes, 
+  However, as we descend into recursive calls, the code we are working with changes, 
   and with it the type associated with recursive positions. For example: the |I| in (|
   U ⊕ I|) refers to values of type |Fix (U ⊕ I)|, not |Fix I|. We need to make a 
-  distinction between the code we are currently working on, and the code that 
-  recursive positions refer to. For this reason, we cannot define the generic 
-  generator, |deriveGen|, with the following type signature: 
-
-\includeagda{5}{genericgen}
-
-  If we observe that |⟦ c ⟧ (Fix c) ≃ Fix c|, we may alter the type signature of |
-  deriveGen| slightly, such that it takes two input codes instead of one
+  distinction between the code we are currently working on, and the code that describes the type of recursive positions. 
+  For this reason, we cannot define the generic generator, |deriveGen|, with the following type signature. We observe that |⟦ c ⟧ (Fix c)| is isomorphic to |Fix c|, thus if we define a function |deriveGen| with the following type signature, and supply it with two equal codes, the resulting generator produces elements that are isomorphic to values of type |Fix c|. 
 
 \includeagda{5}{genericgen2}
 
-  This allows us to induct over the first input code, while still being able to have 
-  recursive positions reference the correct \emph{top-level code}. Notice that the 
-  first and second type parameter of |Gen| are different. This is intensional, as we 
+  This intermediate step allows us to perform induction over the first input code, while still being able to have 
+  recursive positions reference the correct \emph{top-level code}. The 
+  first and second type parameter of |Gen| are different. This is intentional, as we 
   would otherwise not be able to use the $\mu$ constructor to mark recursive 
   positions.  
 
@@ -114,7 +105,7 @@
 
   In case of the |I| combinator, we cannot simply use the $\mu$ constructor right 
   away. In this context, $\mu$ has the type |Gen (⟦ c' ⟧ (Fix c')) ( ⟦ c' ⟧ (Fix c'))|
-  . However, since |⟦ I ⟧ (Fix c)| equals |Fix c|, the types do not lign up. We need 
+  . However, since |⟦ I ⟧ (Fix c)| equals |Fix c|, the types do not align. We need 
   to map the |In| constructor over $\mu$ to fix this: 
 
 \includeagda{5}{genericgenI}
@@ -176,12 +167,8 @@
   In order to be able to refer to other recursive datatypes, the universe of regular 
   types often includes a constructor marking \emph{constant types}: 
 
-\includeagda{5}{constantdef}
-
   The |K| constructor takes one parameter of type |Set|, marking the type it 
   references. The semantics of |K| is simply the type it carries: 
-
-\includeagda{5}{constantsemantics}
 
   \begin{example}
     
@@ -203,7 +190,7 @@
   two options: either we restrict the types that |K| may carry to those types for 
   which we can generically derive a generator, or we require the programmer to supply 
   a generator for every constant type in a code. We choose the latter, since it has 
-  the advantage that we can generate a larger set of types. 
+  the advantage of being more flexible. 
 
   We have the programmer supply the necessary generators by defining a \emph{metadata} 
   structure, indexed by a code, that carries additional information for every |K| 
@@ -240,7 +227,7 @@ for constant types}{lst:mdstructure}
 
   Just as was the case with deriving generators for codes, we need to take into the 
   account the difference between the code we are currently working with, and the top 
-  level code. To this end, we alter the previous statement slightly. 
+  level code. To this end, we generalize the previous statement slightly. 
 
 \includeagda{5}{derivegencomplete}
 
@@ -345,7 +332,7 @@ for constant types}{lst:mdstructure}
   depth value, and a proof that a value occurs in the enumeration at that depth. 
   However, we need to return just such a dependent pair stating that a pair of both 
   values does occur in the enumeration at a certain depth. The question is what depth 
-  to use. The logical choice would be to take the maximum of both dephts. This comes 
+  to use. The logical choice would be to take the maximum of both depths. This comes 
   with the problem that we can only combine completeness proofs when they have the 
   same depth value. 
 

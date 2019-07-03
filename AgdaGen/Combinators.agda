@@ -12,18 +12,11 @@ open import Level renaming (suc to sucL; zero to zeroL)
 -- necessary operators. 
 module AgdaGen.Combinators where
 
-  -- 'map' for generators. We define this in terms of '<*>' and 'pure'
-  -- in order to limit the number of constructors exposed
-  genMap :
-    ∀ {ℓ k} {a b t : Set ℓ}
-    → (a → b) → Gen {ℓ} {k} a t → Gen {ℓ} {k} b t
-  genMap f g = Ap (Pure f) g
-
   -- 'map', but for indexed generators
-  genMapᵢ :
+  genMap :
     ∀ {ℓ k} {i : Set k} {a b : Set ℓ} {t : i → Set ℓ} {x : i}
-    → (a → b) → Genᵢ a t x → Genᵢ b t x
-  genMapᵢ {x = x} f g = Apᵢ (Pureᵢ f) g
+    → (a → b) → Gen a t x → Gen b t x
+  genMap {x = x} f g = Ap (Pure f) g
 
   -- Functor typeclass for generators 
   record GFunctor {ℓ k} {i : Set k} (f : Set ℓ → i → Set (sucL ℓ ⊔ sucL k)) :
@@ -65,63 +58,32 @@ module AgdaGen.Combinators where
     → m a y → m b x → m b x
   f >> g = f >>= λ _ → g
 
-
-  ------- Instances for non-indexed generators ------
-
-  instance
-    Gen-Functor :
-      ∀ {ℓ} {t : Set ℓ}
-      → GFunctor {i = Lift ℓ ⊤} λ a _ → Gen {ℓ} {0ℓ} a t
-    Gen-Functor =
-      record { _<$>_ = genMap }
-
-  instance
-    Gen-Applicative :
-      ∀ {ℓ} {t : Set ℓ}
-      → GApplicative {i = Lift ℓ ⊤} λ a _ → Gen {ℓ} {0ℓ} a t
-    Gen-Applicative =
-      record { pure = Pure ; _<*>_ = Ap }
-
-  instance
-    Gen-Monad :
-      ∀ {ℓ} {t : Set ℓ}
-      → GMonad {i = Lift ℓ ⊤} λ a _ → Gen {ℓ} {0ℓ} a t
-    Gen-Monad =
-      record { _>>=_ = Bind }
-
-  instance 
-    Gen-Alternative :
-      ∀ {ℓ} {t : Set ℓ}
-      → GAlternative {k = ℓ} {i = Lift ℓ ⊤} λ a tt → Gen {ℓ} {0ℓ} a t
-    Gen-Alternative =
-      record { _∥_ = Or ; empty = None }
-
   ------ Indexed generators ------
 
   instance
     Genᵢ-Functor :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
-      → GFunctor (λ a x → Genᵢ a t x)
+      → GFunctor (λ a x → Gen a t x)
     Genᵢ-Functor =
-      record { _<$>_ = genMapᵢ } 
+      record { _<$>_ = genMap } 
 
   instance
     Genᵢ-Applicative :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
-      → GApplicative λ a x → Genᵢ a t x
+      → GApplicative λ a x → Gen a t x
     Genᵢ-Applicative =
-      record { pure = Pureᵢ ; _<*>_ = Apᵢ }
+      record { pure = Pure ; _<*>_ = Ap }
 
   instance
     Genᵢ-Monad :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
-      → GMonad λ a x → Genᵢ a t x
+      → GMonad λ a x → Gen a t x
     Genᵢ-Monad =
-      record { _>>=_  = Bindᵢ }
+      record { _>>=_  = Bind }
 
   instance
     Genᵢ-Alternative :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
-      → GAlternative λ a x → Genᵢ a t x
+      → GAlternative λ a x → Gen a t x
     Genᵢ-Alternative =
-      record { _∥_ = Orᵢ ; empty = Noneᵢ }
+      record { _∥_ = Or ; empty = None }

@@ -15,17 +15,17 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
   A generalized coproduct, |`|$\sigma$, that denotes choice between $n$ constructors, in favor of the |⊕| combinator. 
 
   \item 
-  A combinator denoting dependent pairs. 
+  A combinator, |`|$\Sigma$, denoting dependent pairs. 
 
   \item 
-  Recursive positions storing the index of recursive values. 
+  Recursive positions, |`var|, storing the index of recursive values. 
 \end{enumerate}
 
   This amounts to the Agda datatype describing indexed descriptions shown in listing \ref{lst:idesc}. 
 
 \includeagdalisting{7}{idesc}{The Universe of indexed descriptions}{lst:idesc}
 
-  Notice how we retain the regular product of codes as a first order construct in our universe. The |Sl| datatype is used to select the right branch from the generic coproduct, and is isomorphic to the |Fin| datatype. 
+  Notice how we retain the regular product of codes as a first-order construct in our universe. The |Sl| datatype is used to select the right branch from the generic coproduct, and is isomorphic to the |Fin| datatype. 
 
 \includeagda{7}{sl}
 
@@ -60,17 +60,21 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 
 \subsection{Exmample: describing well typed lambda terms}
 
-  To demonstrate the expressiveness of the |IDesc| universe, and to show how one might model a more complex datatype, we consider simply typed lambda terms as an example. We assume raw terms as described in listing \ref{lst:defrawterm}. We type terms using the universe described in listing \ref{lst:defstype}. 
+  To demonstrate the expressiveness of the |IDesc| universe, and to show how one might model a more complex datatype, we consider simply typed lambda terms as an example. We model the simply typed lambda calculus in Agda according to the representation used in Philip Wadler and Wen Kokke's PLFA \cite{wadler2019plfa}. 
 
 \subsubsection{Modelling SLC in Agda}
 
-  We write $\Gamma \ni \alpha : \tau$ to signify that $\alpha$ has type $\tau$ in $\Gamma$. Context membership is described by the following inference rules: 
+  Wadler and Kokke use a representation using De Bruijn indices \cite{de1972lambda}, which represents variables as a natural denoting the number of lambda abstractions between the variable and the binder it refers to. Using De Bruijn indices has the clear advantage that $\alpha$-equivalent terms have the same representation. Listing \ref{lst:lambdadatatypes} contains the datatype definitions for raw terms, types and contexts. Raw terms represent untyped lambda terms. Types can be either the ground type |`|$\tau$, or a function type $sigma$|`->|$\tau$. Since we are using De Bruijn indices, we do not need to store variable names in the context, only types. Hence the |Ctx| type is isomorphic to |List Ty|. 
+
+\includeagdalisting{7}{lambdadatatypes}{Datatypes for raw terms, types and contexts}{lst:lambdadatatypes}
+
+  We write $\Gamma \ni \tau$ to signify that a variable with type $\tau$ is bound in context $\Gamma$. Context membership is described by the following inference rules: 
 
 \begin{equation*}
 \texttt{[Top]}
-  \frac{}{\Gamma , \alpha : \tau \ni \alpha : \tau} \quad 
+  \frac{}{\Gamma , \tau \ni \alpha : \tau} \quad 
 \texttt{[Pop]}
-  \frac{\Gamma \ni \alpha : \tau}{\Gamma , \beta : \sigma \ni \alpha : \tau}
+  \frac{\Gamma \ni \tau}{\Gamma , \sigma \ni \alpha : \tau}
 \end{equation*}
 
   We describe these inference rules in Agda using an inductive datatype, shown in listing \ref{lst:ctxmem}, indexed with a type and a context, whose inhabitants correspond to all proofs that a context $\Gamma$ contains a variable of type $\tau$. 
@@ -88,11 +92,11 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
   \frac{\Gamma \vdash t1 : \sigma \rightarrow \tau \quad \Gamma \vdash t2 : \sigma}{\Gamma \vdash t_1\ t_2 : \tau}
 \end{equation*} 
 
-  We model these inference rules in Agda using a two way relation between contexts and types whose inhabitants correspond to all terms that have a given type under a given context (listing \ref{lst:wflambda})
+  We model these inference rules in Agda using a binary relation between contexts and types whose inhabitants correspond to all terms that have a given type under a given context (listing \ref{lst:wflambda})
 
-\includeagdalisting{7}{typejudgement}{Well-typed lambda terms as a two way relation}{lst:wflambda}
+\includeagdalisting{7}{typejudgement}{Well-typed lambda terms as a binary relation}{lst:wflambda}
 
-  Given an inhabitant $\Gamma$ |⊢| $\tau$ of this relationship, we can write a function |toTerm| that transforms the typing judgement to its corresponding untyped term. 
+  Given an inhabitant $\Gamma$ |⊢| $\tau$ of this relationship, we can write a function |toTerm| that transforms the typing judgement to its corresponding untyped term, which simply \emph{erases} the indices of a proof $\Gamma \vdash \tau$ to obtain an untyped term. 
 
 \includeagda{7}{toterm}
 
@@ -100,16 +104,18 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 
 \subsubsection{Describing well typed terms}
 
-  In \cref{sec:idescdef}, we saw that we can describe the |Fin| both by induction on the index, as well as by adding explicit constraints. Similarly, we can choose to define a description in two ways: either by induction on the type of the terms we are describing, or by including an explicit constraint that the index type is a function type for the description of the abstraction rule. If we consider a description for lambda terms using induction on the index (listing \ref{slcdescinductive}), we see that it has a downside. The same constructor may yield a value with different index patterns. 
+  In \cref{sec:idescdef}, we saw that we can describe the |Fin| both by induction on the index, as well as by adding explicit constraints. Similarly, we can choose to define a description for well-typed terms in two ways: either by induction on the type of the terms we are describing, or by including an explicit constraint that the index type is a function type for the description of the abstraction rule. In either case, we start by defining descriptions for each of the three possible constructors (listing \ref{lst:sltcconstructordesc}). 
 
-\includeagdalisting{7}{slcdescinductive}{A description for well typed terms using induction on the index type}{lst:slcdescinductive}
+\includeagdalisting{7}{sltcconstructordesc}{Descriptions for the constructors of the simply typed lambda calculus}{lst:sltcconstructordesc}
 
-  For example, the application rule may yield both a function type as well as a ground type, we need to include a description for this constructor in both branches when pattern matching on the input type. If we compare the inductive description to a version that explicitly includes a constraint that the input type is a function type in case of the description for the abstraction rule, we end up with a much more succinct description. 
+  Given the descriptions for the individual constructors, we can assemble a description for the entire datatype by pattern matchin on the index type, and returning for each branch a coproduct of the descriptions of all constructors that could have been used to create a value with that particular index (listing \ref{lst:slcdescinductive}). 
 
-  However, using such a description comes at a price. The descriptions used will become more complex, hence their interpretation will too. Additionally, we delay the point at which it becomes apparent that a constructor could not have been used to create a value with the input index. This makes the generators for indexed descriptions, which we will derive in the next section, potentially more computationally intensive to run when derived from a description that uses explicit constraints, compared to an equivalent description that is defined by induction on the index. 
+\includeagdalisting{7}{slcdescinductive}{Inductive description of the simply typed lambda calculus}{lst:slcdescinductive}
 
-\includeagdalisting{7}{slcdescconstrained}{A description for well typed terms using explicit constraints}{lst:slcdescconstrained} 
-
+  Alternatively, we can describe the simply typed lambda calculus as a coproduct of the descriptions of all its constructors, and adding an explicit constraint in the case of the abstraction rule that requires a proof that the index type is a function type (listing \ref{lst:slcdescconstrained}). 
+  
+\includeagdalisting{7}{slcdescconstrained}{Description of the simply typed lambda calculus with explicit constraints}{lst:slcdescconstrained}
+  
   To convince ourselves that these descriptions do indeed describe the same type, we can show that their fixpoints are isomorphic: 
 
 \includeagda{7}{desciso}
@@ -119,6 +125,10 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 \includeagda{7}{constrainediso}
 
   Using the transitivity of |_≃_|, we can show that the inductive description also describes well typed terms. 
+
+  Both variations are equally valid descriptions of the simply typed lambda calculus (they are isomorphic), but depending on the situation one might prefer one over the other. A downside to defining descriptions by induction over the index type is that we often end up with at least some code duplication, making them unnecessarily verbose. Descriptions with explicit constraints do not have this downside. We could even substitute |varDesc|, |absDesc| and |appDesc| for their respective definitions, since they are only referred to once. This often results in descriptions that are much more succinct, but arguably less straightforward. 
+
+  When looking ahead to the derivation of generators from descriptions, we see that using a description with explicit constraints has the side effect that we delay the point at which we find out that a certain constructor could not have been used to construct a value with a particular index. In the case of inductive descriptions, we find out this fact relatively early, since the set of available operations explicitly depends on the index, so this set will never include descriptions that could not have been used in the first place. Contrary, when using a description that explicitly includes constraints, we only find that a particular constructor could not have been used when we fail to synthesize the required equality proof. In the end this means that the choice of descriptions style comes down to a tradeof between brevity and efficiency. Throughout the remainder of this thesis, we will stick with the inductive style of defining descriptions. 
 
 \section{Generic Generators for Indexed Descriptions}
 

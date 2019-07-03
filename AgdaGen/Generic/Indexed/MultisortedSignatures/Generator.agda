@@ -29,19 +29,16 @@ module AgdaGen.Generic.Indexed.MultisortedSignatures.Generator where
   open GAlternative ⦃...⦄
   open GMonad       ⦃...⦄
   
-  Gen-Σ : ∀ {i : Set} {P : i → Set} → 𝔾 i → ((x : i) → 𝔾ᵢ P x) → 𝔾 (Σ[ x ∈ i ] P x)
-  Gen-Σ g₁ g₂ = (` g₁) >>= λ x → ⟨ x ` g₂ ⟩ >>= λ y → Pure (x , y)
-
-  Gen-Π : ∀ {i : Set} {P : i → Set} → (∀ {a} → 𝔾 (i → a)) → ((x : i) → 𝔾 (P x)) → 𝔾 (Π i P)
-  Gen-Π g₁ g₂ = (` g₁) >>= λ x → pure (x {!!})
+  Gen-Σ : ∀ {i : Set} {P : i → Set} → 𝔾 (λ _ → i) tt → ((x : i) → 𝔾 P x) → 𝔾 (λ _ → Σ[ x ∈ i ] P x) tt
+  Gen-Σ g₁ g₂ = (Call tt (λ _ → g₁)) >>= λ x → Call x g₂ >>= λ y → Pure (x , y)
 
   {-# TERMINATING #-}
   deriveGenᵢ :
     ∀ {i : Set} {Σ : Sig i}
-    → ((x : i) → RegInfo (λ op → 𝔾 op × Π𝔾 op) (Sig.Op Σ x))
-    → ((x : i) → (op : Fix (Sig.Op Σ x)) → RegInfo (λ ar → 𝔾 ar × Π𝔾 ar) (Sig.Ar Σ op))
-    → (x : i) → 𝔾ᵢ (λ x → ⟦ Σ ⟧ₛ (Fixₛ Σ) x) x
+    → ((x : i) → RegInfo (λ op → 𝔾 (λ _ → op) tt × Π𝔾 op) (Sig.Op Σ x))
+    → ((x : i) → (op : Fix (Sig.Op Σ x)) → RegInfo (λ ar → 𝔾 (λ _ → ar) tt × Π𝔾 ar) (Sig.Ar Σ op))
+    → (x : i) → 𝔾 (λ x → ⟦ Σ ⟧ₛ (Fixₛ Σ) x) x
   deriveGenᵢ {i} {Op ◃ Ar ∣ Ty} sig₁ sig₂ x =
-    do op ← Call {x = x} (deriveGen (map-reginfo proj₁ (sig₁ x)))
-       ar ← Call {x = x} (derivePiGen (map-reginfo proj₂ (sig₂ x (In op))) λ ar → ⦇ Inₛ ⟨ Ty (In ar) ` deriveGenᵢ sig₁ sig₂ ⟩ ⦈)
+    do op ← Call {x = x} tt (λ _ → deriveGen (map-reginfo proj₁ (sig₁ x)))
+       ar ← Call {x = x} tt (λ _ → derivePiGen (map-reginfo proj₂ (sig₂ x (In op))) λ ar → ⦇ Inₛ (Call (Ty (In ar)) (deriveGenᵢ sig₁ sig₂)) ⦈)
        pure (In op , λ { (In x) → ar x })

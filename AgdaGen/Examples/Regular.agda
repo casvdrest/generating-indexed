@@ -24,6 +24,7 @@ open import Data.List
 open import Data.Product
 open import Data.Sum
 open import Data.Empty
+open import Data.Unit
 
 open import Relation.Binary.PropositionalEquality
 
@@ -36,56 +37,56 @@ module AgdaGen.Examples.Regular where
 
   ------ Bool -----
 
-  bool : 𝔾 Bool
+  bool : 𝔾 (λ _ → Bool) tt
   bool = ⦇ true  ⦈
        ∥ ⦇ false ⦈
 
-  bool-Complete : Complete bool bool
+  bool-Complete : Completeᵢ bool (λ _ → bool)
   bool-Complete {false} = 1 , there here
   bool-Complete {true} = 1 , here
   
-  bool' : 𝔾 Bool
-  bool' = isoGen Bool (U~ ⊕~ U~)
+  bool' : 𝔾 (λ _ → Bool) tt
+  bool' = isoGen (λ _ → Bool) (U~ ⊕~ U~)
 
-  bool∼bool' : bool ∼ bool'
+  bool∼bool' : (λ _ → bool) ∼ (λ _ → bool')
   bool∼bool' =
-    Complete→eq {g₁ = bool} {g₂ = bool'}
+    Complete→eq {g₁ = λ _ → bool} {g₂ = λ _ → bool'}
       bool-Complete (isoGen-Complete (U~ ⊕~ U~))
-
 
   ------ Maybe ------
 
-  maybe : ∀ {a : Set} → 𝔾 a → 𝔾 (Maybe a)
+  maybe : ∀ {a : Set} → 𝔾 (λ _ → a) tt → 𝔾 (λ _ → Maybe a) tt
   maybe a = ⦇ nothing    ⦈
-          ∥ ⦇ just (` a) ⦈
+          ∥ ⦇ just (Call tt λ _ → a) ⦈
   
-  maybe' : ∀ {a : Set} → 𝔾 a → 𝔾 (Maybe a)
+  maybe' : ∀ {a : Set} → 𝔾 (λ _ → a) tt → 𝔾 (λ _ → Maybe a) tt
   maybe' {a = a} gen =
-    isoGen (Maybe a) (K~ gen ⊕~ U~)
+    isoGen (λ _ → Maybe a) (K~ gen ⊕~ U~)
 
   maybe-Complete :
     ∀ {a : Set}
     → (sig :
-        Σ[ gen ∈ 𝔾 a ] (
-          Complete gen gen × (∀ {x : a} → Depth-Monotone gen x gen))
-      ) → Complete (maybe (proj₁ sig)) (maybe (proj₁ sig))
-  maybe-Complete (gen , fst , snd) {just x} =
-    ∥-complete-right (constr-preserves-elem (`-complete fst))
+        Σ[ gen ∈ 𝔾 (λ _ → a) tt ] (
+          Completeᵢ gen (λ _ → gen) × (∀ {x : a} → Depth-Monotoneᵢ gen (λ _ → gen) x))
+      ) → Completeᵢ (maybe (proj₁ sig)) (λ _ → maybe (proj₁ sig))
+  maybe-Complete (gen , fst , snd) {just x} with fst {x}
+  maybe-Complete (gen , fst , snd) {just x} | zero , ()
+  maybe-Complete (gen , fst , snd) {just x} | suc n , elem =
+    ∥ᵢ-complete-right (constrᵢ-preserves-elem (suc n , elem))
   maybe-Complete (gen , prf) {nothing} =
-    ∥-complete-left pure-complete
+    ∥ᵢ-complete-left (1 , here)
 
-  
   maybe∼maybe' :
     ∀ {a : Set}
     → (sig :
-        Σ[ gen ∈ 𝔾 a ] (
-          Complete gen gen × (∀ {x : a} → Depth-Monotone gen x gen))
-        ) → maybe (proj₁ sig) ∼ maybe' (proj₁ sig)
+        Σ[ gen ∈ 𝔾 (λ _ → a) tt ] (
+          Completeᵢ gen (λ _ → gen) × (∀ {x : a} → Depth-Monotoneᵢ gen (λ _ → gen) x))
+        ) → (λ _ → maybe (proj₁ sig)) ∼ (λ _ → maybe' (proj₁ sig))
   maybe∼maybe' {a} sig =
-    Complete→eq {g₁ = maybe (proj₁ sig)} {g₂ = maybe' (proj₁ sig)}
+    Complete→eq {g₁ = λ _ → maybe (proj₁ sig)} {g₂ = λ _ → maybe' (proj₁ sig)}
       (maybe-Complete sig) (isoGen-Complete (K~ sig ⊕~ U~))
 
-  
+{-  
   ------ Naturals ------
 
   nat : 𝔾 ℕ
@@ -268,3 +269,4 @@ module AgdaGen.Examples.Regular where
     Complete→eq
      (either-Complete sig₁ sig₂)
      (isoGen-Complete ((K~ sig₁) ⊕~ (K~ sig₂))) 
+-}

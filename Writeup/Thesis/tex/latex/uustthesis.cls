@@ -18,6 +18,7 @@
 \RequirePackage{cleveref}
 \RequirePackage{catchfilebetweentags}
 \RequirePackage{agda}
+\RequirePackage{bm}
 
 %% Declaring our Options
 
@@ -247,3 +248,5 @@
 \newunicodechar{◃}{\ensuremath{{\scriptscriptstyle\triangleleft}}}
 \newunicodechar{⊚}{\ensuremath{\circledcirc}}
 \newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{𝓢}{\ensuremath{\mathcal{S}}}
+\newunicodechar{↝}{\ensuremath{\leadsto}}

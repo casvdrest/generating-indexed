@@ -452,7 +452,7 @@
 }
 
 
-\title{Thesis title}
+\title{Generating Constrained Test Data using Datatype Generic Programming}
 
 \author{C.R. van der Rest}
 
@@ -474,7 +474,7 @@ stated otherwise by reference or acknowledgment, the work presented is entirely 
 own.
 
 \chapter{Abstract}
-Abstract
+The generation of suitable test data is an essential part of \emph{property based testing}. Obtaining test data is simple enough when there are no additional constraints, however things become more complicated once we require data with a richer structure, for example well-formed programs when testing a compiler. We observe that we can often describe constrained data as an \emph{indexed family}. By generating values of an indexed family that describes a set of constrained test data, we simultaneously obtain a way to generate the constrained data itself. To achieve this goal, we consider three increasingly expressive type universes: \emph{regular types}, \emph{indexed containers} and \emph{indexed descriptions}. We show how generators can be derived from codes in these universes, and for \emph{regular types} and \emph{indexed descriptions} we show that these derived generators are \emph{complete}. We implement the generic generator for indexed descriptions in Haskell, and use this implementation to generate constrained test data, such as well-typed lambda terms. 
 
 %% Starts the mainmatter
 \mainmatter
@@ -765,99 +765,6 @@ $\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$
   program we write is simultaneously a proof of the proposition associated with its 
   type. Through this mechanism, Agda serves a dual purpose as a proof assistent. 
 
-\subsection{Codata and Sized Types}\label{codata}
-
-  All definitions in Agda are required to be \textit{total}, meaning that they must be 
-  defined on all possible inputs, produce a result in finite time. To enforce this 
-  requirement, Agda needs to check whether the definitions we provide are terminating. 
-  As stated by the \emph{Halting Problem}, it is not possible to define a general 
-  procedure to perform this check. Instead, Agda uses a \emph{sound approximation}, in 
-  which it requires at least one argument of any recursive call to be \emph
-  {syntactically smaller} than its corresponding function argument. A consequence of 
-  this approach is that there are Agda programs that terminate, but are rejected by 
-  the termination checker. This means that we cannot work with infinite data in the 
-  same way as in the same way as in Haskell, which does not care about termination. 
-  
-  \begin{example}
-
-    The following definition is perfectly fine in Haskell: 
-
-\begin{myhaskellnv}
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\HSVar{nats}\HSSym{::}\HSSpecial{\HSSym{[\mskip1.5mu} }\HSCon{Int}\HSSpecial{\HSSym{\mskip1.5mu]}}{}\<[E]%
-\\
-\>[B]{}\HSVar{nats}\HSSym{\mathrel{=}}\HSNumeral{0}\HSCon{\mathbin{:}}\HSVar{map}\;\HSSpecial{(}\HSSym{+}\HSNumeral{1}\HSSpecial{)}\;\HSVar{nats}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-\end{myhaskellnv}
-
-    Meanwhile, an equivalent definition in Agda gets rejected by the Termination 
-    checker. The recursive call to \ensuremath{\HSVar{nats}} has no arguments, so none are structurally 
-    smaller, thus the termination checker flags this call.  
-
-\includeagda{2}{natsnonterminating}
-
-  \end{example}
-
-  However, as long as we use \ensuremath{\HSVar{nats}} sensibly, there does not need to be a problem. 
-  Nonterminating programs only arise with improper use of such a definition, for 
-  example by calculating the length of \ensuremath{\HSVar{nats}}. We can prevent the termination 
-  checker from flagging these kind of operations by making the lazy semantics 
-  explicit, using \textit{codata} and {sized types}. Codata is a general term for 
-  possible inifinite data, often described by a co-recursive definition. Sized types 
-  extend the space of function definitions that are recognized by the termination 
-  checker as terminating by tracking information about the size of values in types 
-  \cite{abel2010miniagda}. In the case of lists, this means that we explicitly 
-  specify that the recursive argument to the \ensuremath{\HSSym{\anonymous} \HSSym{∷\char95 }} constructor is a \textit{Thunk}, 
-  which should only be evaluated when needed: 
-
-\includeagda{2}{colist}
-
-  We can now define \ensuremath{\HSVar{nats}} in Agda by wrapping the recursive call in a thunk, 
-  explicitly marking that it is not to be evaluated until needed.  
-
-\includeagda{2}{natsterminating}
-
-  Since colists are possible infinite structures, there are some functions we can 
-  define on lists, but not on colists. 
-    
-  \begin{example} Consider a function that attempts to calculate the length of a \ensuremath{\HSCon{Colist}}: 
-
-\includeagdanv{2}{lengthdef}
-
-    In this case \ensuremath{\HSVar{length}} is not accepted by the termination checker because the input 
-    colist is indexed with size \ensuremath{\HSSym{∞}}, meaning that there is no finite upper bound on 
-    its size. Hence, there is no guarantee that our function terminates when 
-    inductively defined on the input colist. 
-
-  \end{example}
-  
-  There are some cases in which we can convince the termination checker that our definition is terminating by using sized types. Consider the folowing function that increments every element in a list of naturals with its position: 
-
-\includeagda{2}{incposdef}
-
-  The recursive call to \ensuremath{\HSVar{incpos}} gets flagged by the termination checker; we know 
-  that \ensuremath{\HSVar{map}} does not alter the length of a list, but the termination checker cannot 
-  see this. For all it knows \ensuremath{\HSVar{map}} equals \ensuremath{\HSVar{const}\;\HSSpecial{\HSSym{[\mskip1.5mu} }\HSNumeral{1}\HSSpecial{\HSSym{\mskip1.5mu]}}}, which would make \ensuremath{\HSVar{incpos}} 
-  non-terminating. The size-preserving property of \ensuremath{\HSVar{map}} is not reflected in its 
-  type. To mitigate this issue, we can define an alternative version of the \ensuremath{\HSCon{List}} 
-  datatype indexed with \ensuremath{\HSCon{Size}}, which tracks the depth of a value in its type. 
-
-\includeagda{2}{sizedlistdef}
-
-  Here \ensuremath{\HSSym{↑}\HSVar{i}} means that the depth of a value constructed using the $::$ constructor 
-  is one deeper than its recursive argument. Incidently, the recursive depth of a 
-  list is equal to its size (or length), but this is not necessarily the case. By 
-  indexing values of \ensuremath{\HSCon{List}} with their size, we can define a version of \ensuremath{\HSVar{map}} which 
-  reflects in its type that the size of the input argument is preserved: 
-
-\includeagda{2}{sizedmapdef}
-
-  Using this definition of \ensuremath{\HSVar{map}}, the definition of \ensuremath{\HSVar{incpos}} is no longer rejected 
-  by the termination checker. 
-
 \subsection{Universe Polymorphism}
 
   Contrary to Haskell, Agda does not have separate notions for \emph{types}, 
@@ -1009,30 +916,6 @@ indexed datatypes.
   not too difficult, however once we require more complex test data, such as 
   well-formed programs, this is quite a challenging task. 
 
-\subsection{Lambda Terms} 
-
-  A problem often considered in literature is the generation of (well-typed) lambda 
-  terms \cite{palka2011testing, grygiel2013counting, claessen2015generating}. Good 
-  generation of arbitrary program terms is especially interesting in the context of 
-  testing compiler infrastructure, and lambda terms provide a natural first step 
-  towards that goal. 
-
-  An alternative approach centered around the semantics of the simply typed lambda 
-  calculus is described by Pa{\l}ka et al. \cite{palka2011testing}. Contrary to the 
-  work done by Claessen and Duregaard \cite{claessen2015generating}, where 
-  typechecking is viewed as a black box, they utilize definition of the typing rules 
-  to devise an algorithm for generation of random lambda terms. The basic approach is 
-  to take some input type, and randomly select an inference rule from the set of rules 
-  that could have been applied to arrive at the goal type. Obviously, such a procedure 
-  does not guarantee termination, as repeated application of the function application 
-  rule will lead to an arbitrarily large goal type. As such, the algorithm requires a 
-  maximum search depth and backtracking in order to guarantee that a suitable term 
-  will eventually be generated, though it is not guaranteed that such a term exists if 
-  a bound on term size is enforced \cite{moczurad2000statistical}. 
-
-  Wang \cite{wang2005generating} considers the problem of generating closed untyped 
-  lambda terms. 
-
 \subsection{W-Types}\label{sec:wtypes}
 
   Introduced by Per Martin-Löf \cite{martin1984intuitionistic}, \emph{W-types} 
@@ -1095,12 +978,12 @@ indexed datatypes.
   is generally regarded to consist of the \emph{empty type} (or $\mathbb{0}$), the 
   unit type (or $\mathbb{1}$) and constants types. It is closed under both products 
   and coproducts \footnote{This roughly corresponds to datatypes in Haskell 98}. We 
-  can define a datatype for this universe in Agda as shown in lising \ref{lst:regular}
+  can define a datatype for this universe in Agda as shown in lising \ref{lst:regular}, 
+  with its associated semantics of type \ensuremath{\HSCon{Reg}\HSSym{\to} \HSCon{Set}\HSSym{\to} \HSCon{Set}} shown in listing \ref{lst:regsem}.
 
 \includeagdalisting{5}{regular}{The universe of regular types}{lst:regular}
 
-  The semantics associated with the \ensuremath{\HSCon{Reg}} datatype, as shown in listing \ref
-  {lst:regsem}, map a code to a functorial representation of a datatype, commonly 
+  The semantics of the universe of regular types map a code to a functorial representation of the datatype it describes, commonly 
   known as its \emph{pattern functor}. The datatype that is represented by a code is 
   isomorphic to the least fixpoint of its pattern functor. We fix pattern functors 
   using the following fixpoint combinator: 
@@ -1140,13 +1023,11 @@ indexed datatypes.
 
   Although there are many algebraic datatypes that can be described in the universe 
   of regular types, some cannot. Perhaps the most obvious limitation the is lack of 
-  ability to caputure data families indexed with values. The regular univeres 
-  imposes the implicit restriction that a datatype is uniform in the sens that all 
-  recursive subtrees are of the same type. Indexed families, however, allow for 
+  ability to capture data families indexed with values. The regular universe 
+  imposes the implicit restriction that a datatype is uniform in the sense that all 
+  recursive subtrees are of the same type. Indexed families, such as \ensuremath{\HSCon{Vec}} and \ensuremath{\HSCon{Fin}}, on the other hand allow for 
   recursive subtrees to have a structure that is different from the structure of the 
-  datatype they are a part of. 
-
-  Furethermore, any family of mutually recursive datatypes cannot be described as a 
+  datatype they are a part of. Furethermore, any family of mutually recursive datatypes cannot be described as a 
   regular type; again, this is a result of the restriction that recursive positions 
   allways refer to a datatype with the same structure. 
 
@@ -1155,29 +1036,23 @@ indexed datatypes.
   We can derive generators for all regular types by induction over their associated 
   codes. Furthermore, we will show in section \cref{regularproof} that, once 
   interpreted as enumerators, these generators are complete; i.e. any value will 
-  eventually show up in the enumerator, provided we supply a sufficiently large size 
-  parameter.  
+  eventually show up in the enumerator.
 
 \subsection{Defining functions over codes}
 
   If we apply the approach described in \cref{sec:tudesignpattern} without care, we 
   run into problems. Simply put, we cannot work with values of type \ensuremath{\HSCon{Fix}\;\HSVar{c}}, since 
   this implicitly imposes the restriction that any \ensuremath{\HSCon{I}} in \ensuremath{\HSVar{c}} refers to \ensuremath{\HSCon{Fix}\;\HSVar{c}}. 
-  However, as we descent into recursive calls, the code we are working with changes, 
+  However, as we descend into recursive calls, the code we are working with changes, 
   and with it the type associated with recursive positions. For example: the \ensuremath{\HSCon{I}} in (\ensuremath{\HSCon{U}\HSSym{⊕}\HSCon{I}}) refers to values of type \ensuremath{\HSCon{Fix}\;\HSSpecial{(}\HSCon{U}\HSSym{⊕}\HSCon{I}\HSSpecial{)}}, not \ensuremath{\HSCon{Fix}\;\HSCon{I}}. We need to make a 
-  distinction between the code we are currently working on, and the code that 
-  recursive positions refer to. For this reason, we cannot define the generic 
-  generator, \ensuremath{\HSVar{deriveGen}}, with the following type signature: 
-
-\includeagda{5}{genericgen}
-
-  If we observe that \ensuremath{\HSSym{⟦}\HSVar{c}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}\HSSym{≃}\HSCon{Fix}\;\HSVar{c}}, we may alter the type signature of \ensuremath{\HSVar{deriveGen}} slightly, such that it takes two input codes instead of one
+  distinction between the code we are currently working on, and the code that describes the type of recursive positions. 
+  For this reason, we cannot define the generic generator, \ensuremath{\HSVar{deriveGen}}, with the following type signature. We observe that \ensuremath{\HSSym{⟦}\HSVar{c}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}} is isomorphic to \ensuremath{\HSCon{Fix}\;\HSVar{c}}, thus if we define a function \ensuremath{\HSVar{deriveGen}} with the following type signature, and supply it with two equal codes, the resulting generator produces elements that are isomorphic to values of type \ensuremath{\HSCon{Fix}\;\HSVar{c}}. 
 
 \includeagda{5}{genericgen2}
 
-  This allows us to induct over the first input code, while still being able to have 
-  recursive positions reference the correct \emph{top-level code}. Notice that the 
-  first and second type parameter of \ensuremath{\HSCon{Gen}} are different. This is intensional, as we 
+  This intermediate step allows us to perform induction over the first input code, while still being able to have 
+  recursive positions reference the correct \emph{top-level code}. The 
+  first and second type parameter of \ensuremath{\HSCon{Gen}} are different. This is intentional, as we 
   would otherwise not be able to use the $\mu$ constructor to mark recursive 
   positions.  
 
@@ -1195,7 +1070,7 @@ indexed datatypes.
 
   In case of the \ensuremath{\HSCon{I}} combinator, we cannot simply use the $\mu$ constructor right 
   away. In this context, $\mu$ has the type \ensuremath{\HSCon{Gen}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}\;\HSSpecial{(}\HSSym{⟦}\HSVar{c'}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c'}\HSSpecial{)}\HSSpecial{)}}
-  . However, since \ensuremath{\HSSym{⟦}\HSCon{I}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}} equals \ensuremath{\HSCon{Fix}\;\HSVar{c}}, the types do not lign up. We need 
+  . However, since \ensuremath{\HSSym{⟦}\HSCon{I}\HSSym{⟧}\HSSpecial{(}\HSCon{Fix}\;\HSVar{c}\HSSpecial{)}} equals \ensuremath{\HSCon{Fix}\;\HSVar{c}}, the types do not align. We need 
   to map the \ensuremath{\HSCon{In}} constructor over $\mu$ to fix this: 
 
 \includeagda{5}{genericgenI}
@@ -1257,12 +1132,8 @@ indexed datatypes.
   In order to be able to refer to other recursive datatypes, the universe of regular 
   types often includes a constructor marking \emph{constant types}: 
 
-\includeagda{5}{constantdef}
-
   The \ensuremath{\HSCon{K}} constructor takes one parameter of type \ensuremath{\HSCon{Set}}, marking the type it 
   references. The semantics of \ensuremath{\HSCon{K}} is simply the type it carries: 
-
-\includeagda{5}{constantsemantics}
 
   \begin{example}
     
@@ -1284,7 +1155,7 @@ indexed datatypes.
   two options: either we restrict the types that \ensuremath{\HSCon{K}} may carry to those types for 
   which we can generically derive a generator, or we require the programmer to supply 
   a generator for every constant type in a code. We choose the latter, since it has 
-  the advantage that we can generate a larger set of types. 
+  the advantage of being more flexible. 
 
   We have the programmer supply the necessary generators by defining a \emph{metadata} 
   structure, indexed by a code, that carries additional information for every \ensuremath{\HSCon{K}} 
@@ -1321,7 +1192,7 @@ for constant types}{lst:mdstructure}
 
   Just as was the case with deriving generators for codes, we need to take into the 
   account the difference between the code we are currently working with, and the top 
-  level code. To this end, we alter the previous statement slightly. 
+  level code. To this end, we generalize the previous statement slightly. 
 
 \includeagda{5}{derivegencomplete}
 
@@ -1423,7 +1294,7 @@ for constant types}{lst:mdstructure}
   depth value, and a proof that a value occurs in the enumeration at that depth. 
   However, we need to return just such a dependent pair stating that a pair of both 
   values does occur in the enumeration at a certain depth. The question is what depth 
-  to use. The logical choice would be to take the maximum of both dephts. This comes 
+  to use. The logical choice would be to take the maximum of both depths. This comes 
   with the problem that we can only combine completeness proofs when they have the 
   same depth value. 
 
@@ -1608,17 +1479,17 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
   A generalized coproduct, \ensuremath{\HSSpecial{`}}$\sigma$, that denotes choice between $n$ constructors, in favor of the \ensuremath{\HSSym{⊕}} combinator. 
 
   \item 
-  A combinator denoting dependent pairs. 
+  A combinator, \ensuremath{\HSSpecial{`}}$\Sigma$, denoting dependent pairs. 
 
   \item 
-  Recursive positions storing the index of recursive values. 
+  Recursive positions, \ensuremath{\HSSpecial{`}\HSVar{var}}, storing the index of recursive values. 
 \end{enumerate}
 
   This amounts to the Agda datatype describing indexed descriptions shown in listing \ref{lst:idesc}. 
 
 \includeagdalisting{7}{idesc}{The Universe of indexed descriptions}{lst:idesc}
 
-  Notice how we retain the regular product of codes as a first order construct in our universe. The \ensuremath{\HSCon{Sl}} datatype is used to select the right branch from the generic coproduct, and is isomorphic to the \ensuremath{\HSCon{Fin}} datatype. 
+  Notice how we retain the regular product of codes as a first-order construct in our universe. The \ensuremath{\HSCon{Sl}} datatype is used to select the right branch from the generic coproduct, and is isomorphic to the \ensuremath{\HSCon{Fin}} datatype. 
 
 \includeagda{7}{sl}
 
@@ -1653,17 +1524,21 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 
 \subsection{Exmample: describing well typed lambda terms}
 
-  To demonstrate the expressiveness of the \ensuremath{\HSCon{IDesc}} universe, and to show how one might model a more complex datatype, we consider simply typed lambda terms as an example. We assume raw terms as described in listing \ref{lst:defrawterm}. We type terms using the universe described in listing \ref{lst:defstype}. 
+  To demonstrate the expressiveness of the \ensuremath{\HSCon{IDesc}} universe, and to show how one might model a more complex datatype, we consider simply typed lambda terms as an example. We model the simply typed lambda calculus in Agda according to the representation used in Philip Wadler and Wen Kokke's PLFA \cite{wadler2019plfa}. 
 
 \subsubsection{Modelling SLC in Agda}
 
-  We write $\Gamma \ni \alpha : \tau$ to signify that $\alpha$ has type $\tau$ in $\Gamma$. Context membership is described by the following inference rules: 
+  Wadler and Kokke use a representation using De Bruijn indices \cite{de1972lambda}, which represents variables as a natural denoting the number of lambda abstractions between the variable and the binder it refers to. Using De Bruijn indices has the clear advantage that $\alpha$-equivalent terms have the same representation. Listing \ref{lst:lambdadatatypes} contains the datatype definitions for raw terms, types and contexts. Raw terms represent untyped lambda terms. Types can be either the ground type \ensuremath{\HSSpecial{`}}$\tau$, or a function type $sigma$\ensuremath{\HSSpecial{`}\HSSym{\to} }$\tau$. Since we are using De Bruijn indices, we do not need to store variable names in the context, only types. Hence the \ensuremath{\HSCon{Ctx}} type is isomorphic to \ensuremath{\HSCon{List}\;\HSCon{Ty}}. 
+
+\includeagdalisting{7}{lambdadatatypes}{Datatypes for raw terms, types and contexts}{lst:lambdadatatypes}
+
+  We write $\Gamma \ni \tau$ to signify that a variable with type $\tau$ is bound in context $\Gamma$. Context membership is described by the following inference rules: 
 
 \begin{equation*}
 \texttt{[Top]}
-  \frac{}{\Gamma , \alpha : \tau \ni \alpha : \tau} \quad 
+  \frac{}{\Gamma , \tau \ni \alpha : \tau} \quad 
 \texttt{[Pop]}
-  \frac{\Gamma \ni \alpha : \tau}{\Gamma , \beta : \sigma \ni \alpha : \tau}
+  \frac{\Gamma \ni \tau}{\Gamma , \sigma \ni \alpha : \tau}
 \end{equation*}
 
   We describe these inference rules in Agda using an inductive datatype, shown in listing \ref{lst:ctxmem}, indexed with a type and a context, whose inhabitants correspond to all proofs that a context $\Gamma$ contains a variable of type $\tau$. 
@@ -1681,11 +1556,11 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
   \frac{\Gamma \vdash t1 : \sigma \rightarrow \tau \quad \Gamma \vdash t2 : \sigma}{\Gamma \vdash t_1\ t_2 : \tau}
 \end{equation*} 
 
-  We model these inference rules in Agda using a two way relation between contexts and types whose inhabitants correspond to all terms that have a given type under a given context (listing \ref{lst:wflambda})
+  We model these inference rules in Agda using a binary relation between contexts and types whose inhabitants correspond to all terms that have a given type under a given context (listing \ref{lst:wflambda})
 
-\includeagdalisting{7}{typejudgement}{Well-typed lambda terms as a two way relation}{lst:wflambda}
+\includeagdalisting{7}{typejudgement}{Well-typed lambda terms as a binary relation}{lst:wflambda}
 
-  Given an inhabitant $\Gamma$ \ensuremath{\HSSym{⊢}} $\tau$ of this relationship, we can write a function \ensuremath{\HSVar{toTerm}} that transforms the typing judgement to its corresponding untyped term. 
+  Given an inhabitant $\Gamma$ \ensuremath{\HSSym{⊢}} $\tau$ of this relationship, we can write a function \ensuremath{\HSVar{toTerm}} that transforms the typing judgement to its corresponding untyped term, which simply \emph{erases} the indices of a proof $\Gamma \vdash \tau$ to obtain an untyped term. 
 
 \includeagda{7}{toterm}
 
@@ -1693,16 +1568,18 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 
 \subsubsection{Describing well typed terms}
 
-  In \cref{sec:idescdef}, we saw that we can describe the \ensuremath{\HSCon{Fin}} both by induction on the index, as well as by adding explicit constraints. Similarly, we can choose to define a description in two ways: either by induction on the type of the terms we are describing, or by including an explicit constraint that the index type is a function type for the description of the abstraction rule. If we consider a description for lambda terms using induction on the index (listing \ref{slcdescinductive}), we see that it has a downside. The same constructor may yield a value with different index patterns. 
+  In \cref{sec:idescdef}, we saw that we can describe the \ensuremath{\HSCon{Fin}} both by induction on the index, as well as by adding explicit constraints. Similarly, we can choose to define a description for well-typed terms in two ways: either by induction on the type of the terms we are describing, or by including an explicit constraint that the index type is a function type for the description of the abstraction rule. In either case, we start by defining descriptions for each of the three possible constructors (listing \ref{lst:sltcconstructordesc}). 
 
-\includeagdalisting{7}{slcdescinductive}{A description for well typed terms using induction on the index type}{lst:slcdescinductive}
+\includeagdalisting{7}{sltcconstructordesc}{Descriptions for the constructors of the simply typed lambda calculus}{lst:sltcconstructordesc}
 
-  For example, the application rule may yield both a function type as well as a ground type, we need to include a description for this constructor in both branches when pattern matching on the input type. If we compare the inductive description to a version that explicitly includes a constraint that the input type is a function type in case of the description for the abstraction rule, we end up with a much more succinct description. 
+  Given the descriptions for the individual constructors, we can assemble a description for the entire datatype by pattern matchin on the index type, and returning for each branch a coproduct of the descriptions of all constructors that could have been used to create a value with that particular index (listing \ref{lst:slcdescinductive}). 
 
-  However, using such a description comes at a price. The descriptions used will become more complex, hence their interpretation will too. Additionally, we delay the point at which it becomes apparent that a constructor could not have been used to create a value with the input index. This makes the generators for indexed descriptions, which we will derive in the next section, potentially more computationally intensive to run when derived from a description that uses explicit constraints, compared to an equivalent description that is defined by induction on the index. 
+\includeagdalisting{7}{slcdescinductive}{Inductive description of the simply typed lambda calculus}{lst:slcdescinductive}
 
-\includeagdalisting{7}{slcdescconstrained}{A description for well typed terms using explicit constraints}{lst:slcdescconstrained} 
-
+  Alternatively, we can describe the simply typed lambda calculus as a coproduct of the descriptions of all its constructors, and adding an explicit constraint in the case of the abstraction rule that requires a proof that the index type is a function type (listing \ref{lst:slcdescconstrained}). 
+  
+\includeagdalisting{7}{slcdescconstrained}{Description of the simply typed lambda calculus with explicit constraints}{lst:slcdescconstrained}
+  
   To convince ourselves that these descriptions do indeed describe the same type, we can show that their fixpoints are isomorphic: 
 
 \includeagda{7}{desciso}
@@ -1712,6 +1589,10 @@ We use the generic description for indexed datatypes proposed by Dagand \cite{da
 \includeagda{7}{constrainediso}
 
   Using the transitivity of \ensuremath{\HSSym{\anonymous} \HSSym{≃\char95 }}, we can show that the inductive description also describes well typed terms. 
+
+  Both variations are equally valid descriptions of the simply typed lambda calculus (they are isomorphic), but depending on the situation one might prefer one over the other. A downside to defining descriptions by induction over the index type is that we often end up with at least some code duplication, making them unnecessarily verbose. Descriptions with explicit constraints do not have this downside. We could even substitute \ensuremath{\HSVar{varDesc}}, \ensuremath{\HSVar{absDesc}} and \ensuremath{\HSVar{appDesc}} for their respective definitions, since they are only referred to once. This often results in descriptions that are much more succinct, but arguably less straightforward. 
+
+  When looking ahead to the derivation of generators from descriptions, we see that using a description with explicit constraints has the side effect that we delay the point at which we find out that a certain constructor could not have been used to construct a value with a particular index. In the case of inductive descriptions, we find out this fact relatively early, since the set of available operations explicitly depends on the index, so this set will never include descriptions that could not have been used in the first place. Contrary, when using a description that explicitly includes constraints, we only find that a particular constructor could not have been used when we fail to synthesize the required equality proof. In the end this means that the choice of descriptions style comes down to a tradeof between brevity and efficiency. Throughout the remainder of this thesis, we will stick with the inductive style of defining descriptions. 
 
 \section{Generic Generators for Indexed Descriptions}
 
@@ -2519,11 +2400,15 @@ Dagand originally defines the universe in a dependently typed setting \cite{daga
 \end{tabbing}
 
 \chapter{Discussion}
-In this chapter we will discuss the work presented in this thesis, together with possible avenues for further work. 
+This chapter discusses some of the work related to the work presented in this thesis, together with a discussion of the results and a brief overview of possible avenues for further work. 
 
 \section{Related Work}
 
+  Property based testing, and the problem of obtaining suitable test data has been extensively studied in the literature. Here, we briefly discuss some of it. 
+
 \subsection{Libraries for property based testing}
+
+  There are many existing libraries that aim to aid a user with conducting property based testing for their programs. They differ in various aspects, including the type used for generators, whether they use generic programming to automatically derive generators for user-defined types, and other features such as the schrinking of counterexamples and the ability to concurrently run tests. 
 
 \subsubsection{QuickCheck}
 
@@ -2598,6 +2483,8 @@ In this chapter we will discuss the work presented in this thesis, together with
 
 \subsection{Type universes}
 
+  !! TODO: write a short introduction to this part
+
 \subsubsection{Indexed Functors}
 
   Löh and Magalhães propose in their paper \emph{Generic Programming with Indexed 
@@ -2667,43 +2554,53 @@ In this chapter we will discuss the work presented in this thesis, together with
 
 \section{Conclusion}
 
+  !! TODO: introduce this section
+
+\subsection{Summary of Results}
+
   In this thesis, we have explored various approaches to the generation of test data using datatype generic programming, with the ultimate goal being to be able to synthesize well-formed program terms. Based on the observation that constrained test data can often be described as an indexed family, we approached this problem by looking at how to generate values of indexed families. We have looked at three distinct type universes, starting with the universe of Regular types, which is able to describe a set of algebraic datatypes roughly equal to the algebraic datatypes in Haskell 98 \cite{jones2003haskell}. We described this universe in Agda, and showed how a generator can be derived from a code in this universe. Although the exact generator type is kept abstract in this derivation, we have described an example instantiation where generators are functions of type \ensuremath{\HSCon{Int}\HSSym{\to} \HSCon{List}\;\HSVar{a}}, similar to SmallCheck's \ensuremath{\HSCon{Series}} \cite{runciman2008smallcheck}. For this particular generator type, we have proved that the generator derived from a code is \emph{complete}. That is, every value of the type described by the input code will eventually end up in the enumeration. 
 
   Next, we looked at two more complicated type universes that are able to describe (some) indexed datatypes: \emph{Indexed Containers} \cite{altenkirch2015indexed} and \emph{Indexed Descriptions} \cite{dagand2013cosmology}. For both universes, we described how a generic generator may be constructed from codes in these universes. For the universe of indexed descriptions, we also proved that the enumerative instantiation of the generator type satisfied our completeness property. For indexed containers, we were unfortuantely not able to complete this proof. Attempts to construct a proof using the same structure as used to construct the completeness proofs for regular types and indexed descriptions failed, as this approach would require induction over function types. 
 
-  Having constructed a mechanism that allows generation for arbitrary indexed families in Agda, we implemented the generic generator for indexed descriptions in Haskell. Although in order to enforce correctness of the generated data in Haskell's type system we needed to impose some restrictions on the descriptions that could be used, we were still able to describe all the example datatypes. We used this implementation to generate some example constrained test data, including well-typed lambda terms. 
+  Having constructed a mechanism that allows generation for arbitrary indexed families in Agda, we implemented the generic generator for indexed descriptions in Haskell. Although in order to enforce correctness of the generated data in Haskell's type system we needed to impose some restrictions on the descriptions that could be used, we were still able to describe all the example datatypes. We used this implementation to generate some example constrained test data, including well-typed lambda terms. The final result is a Haskell library that is able to generate constrained test data, given that the user provides a description of an indexed family that describes the desired test data. 
+  
+\subsection{Remaing Problems}
 
-  The final result is a Haskell library that is able to generate constrained test data, given that the user provides a description of an indexed family that describes the desired test data. Although theoretically we could use this library to generate values of arbitrary indexed families, there are some caveats. First, finding a description that accurately describes an indexed family is all but trivial. Often, there exist multiple descriptions that all describe the same datatype. These different descriptions are all mapped to distinct generators, which may not necessarily exhibit the same behavior in terms of computational efficiency, or the order in which elements are generated. The fact that Haskell's type system in no way enforces the semantics of the input description to be actually isomorphic to the datatype it describes leaves room for mistakes when defining descriptions and the conversion between their semantics and the desired datatype. Furthermore, it is hard to say how well this approach scales when we require more complex test data, especially since this would require the programmer to come up with increasingly complex descriptions. Although our Agda formalization allows us to be reasonably confident that the generators we derive indeed produce values of the intended datatype, we have no knowledge about how efficient they are at doing this, and to what extent a generator's efficiency depends on the structure of the derived generator. 
+  Although theoretically our one could use our library to generate values of arbitrary indexed families, there are some caveats. First, finding a description that accurately describes an indexed family is all but trivial. Often, there exist multiple descriptions that all describe the same datatype. These different descriptions are all mapped to distinct generators, which may not necessarily exhibit the same behavior in terms of computational efficiency, or the order in which elements are generated. The fact that Haskell's type system in no way enforces the semantics of the input description to be actually isomorphic to the datatype it describes leaves room for mistakes when defining descriptions and the conversion between their semantics and the desired datatype. Furthermore, it is hard to say how well this approach scales when we require more complex test data, especially since this would require the programmer to come up with increasingly complex descriptions. Although our Agda formalization allows us to be reasonably confident that the generators we derive indeed produce values of the intended datatype, we have no knowledge about how efficient they are at doing this, and to what extent a generator's efficiency depends on the structure of the derived generator. 
+
+\subsection{Instantiation of the abstract generator type}
+
+  !! Write a bit here about codata and sized types + explain why we abandoned this approach in the first place ... 
 
 \section{Future Work}
 
   As highlighted in the previous section, there is plenty of room for improvement upon the current state of the work. Hence, there are many possible paths of future work. In this section we will discuss a few of the possibilities. 
 
-\subsection{Generator optimizations}
+\subsubsection{Generator optimizations}
 
   As of yet, no work has been done to make generators more efficient. In practice, this means that the derived generators are likely to be too slow to generate usable data for most practical applications. One of the more promising approaches to fix this is by memoization. It is likely that a generator solves the same subproblem many times, so it could greatly benefit in terms of efficiency by reusing previous solutions. For example, when generating a well-typed lambda term, the generator might encounter the same combination of goal context and type multiple times, meaning that it solves the same subproblem more often than it needs to. We might find inspiration in the work done by Claessen and Dureg{\aa}rd \cite{duregaard2013feat}, who devised a memoization strategy that allows for efficient indexing of the enumeration of algebraic datatypes. 
 
-\subsection{Generating mutually recursive families}
+\subsubsection{Generating mutually recursive families}
 
   As of yet, the library we have developed cannot be used to generate inhabitants of mutually recursive datatypes. This is a severe limitation, as many abstract syntax datatypes utilize mutual recursion. Type universes that are able to represent mutually recursive types exist \cite{miraldo2018sums , yakushev2009generic}, however they are not necessarily able to represent arbitrary indexed families. Bringert and Ranta \cite{bringert2006pattern} propose a pattern for converting mutually recursive types to a GADT, indexed with a tag that marks which datatype of the mutually recursive family a recursive position refers to. Yakushev et al. \cite{yakushev2009generic} use this technique for their approach. Our Haskell library is expressive enough to generate values for these GADT's, so this appears to be a promising approach to generation of mutualy recursive indexed families. 
 
-\subsection{Integration with existing testing frameworks}
+\subsubsection{Integration with existing testing frameworks}
 
   We have provided a sample instantiation of the abstract generator type as a bounded enumeration. However, theoretically it is possible to transform the abstract generator type to any desired generator type, as long as we are able to come up with a suitable mapping. This allows our library to be potentially integrated with external testing libaries by defining a mapping between the abstract generator type, and the type of generators used by a particular library. For SmallCheck, this is simple enough, as their generator type is almost exactly equal to our example instantiation. However, when transforming abstract generators to sampling generators (such as used in QuickCheck and Hedgehog), this mapping is not at all trivial. Most notably, it is not immediately clear how we should deal with generators that produce no elements, and recursive positions. Especially deriving \emph{sized} generators for the QuickCheck library is challenging without including additional information in the abstract generator type. 
 
-\subsection{Property based testing for GADT's}
+\subsubsection{Property based testing for GADT's}
 
   Most testing frameworks for Haskell currently only include functionality to generate values of regular algebraic datatypes. If we were to test a function that has a GADT as its input type, we are only left with the possibility of defining a custom generator for the type. Since the universe of indexed descriptions is potentially expressive enough to describe any GADT, we could leverage the work from this thesis to extend existing testing libraries with the possibility to automatically derive generators for GADT's. 
 
-\subsection{Increasing usability and practicality of the Haskell Library}
+\subsubsection{Increasing usability and practicality of the Haskell Library}
 
   Currently, the provided library that implements generic generators for indexed descriptions is very basic, and requires the user to supply both a type family describing the datatype, as well as a singleton value. Additionally, they need to write a conversion function that converts the generated values to a non-indexed type. In terms of practicality and usability there is much to be gained by further automating this process. Possibilities include the definition of smart constructors to abstract over common patterns, and using template Haskell \cite{sheard2002template} to (partially) automate the definition of the singleton description from the type level description. 
 
-\subsection{Generation of function types}
+\subsubsection{Generation of function types}
 
   As of yet, we only briefly touched upon the subject of generating function types when deriving generators for indexed containers. However, the ability to generate functions may come in useful, for example when representing programs using \emph{Higher Order Abstract Syntax} (HOAS) \cite{pfenning1988higher}. This would require the co-enumerative generators described in section \ref{} to be extended to be able to derive generators producing function types from indexed descriptions. 
 
-\subsection{Generating well-formed programs in a realistic programming language}
+\subsubsection{Generating well-formed programs in a realistic programming language}
 
   The examples presented in this thesis are mostly relatively simple indexed families. In order to further investigate the practical applicability of our work, we think that it is essential to study how our approach applies to a more complex example. Prime candidates for this purpose are more complex variations on the simply typed lambda calculus, such as \emph{system F}, which often serve as the compilation target of higher-level languages (such as Haskell)
 

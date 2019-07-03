@@ -22,26 +22,26 @@ module AgdaGen.Generic.Regular.Generator where
 
   deriveGen :
     ∀ {f g : Reg}
-    → RegInfo 𝔾 f
-    → Gen (⟦ f ⟧ (Fix g)) (⟦ g ⟧ (Fix g))
+    → RegInfo (λ S → 𝔾 (λ _ → S) tt) f
+    → Gen (⟦ f ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt
   deriveGen {U} {g} c = pure tt
   deriveGen {f₁ ⊕ f₂}  {g} (c₁ ⊕~ c₂) =
     ⦇ inj₁ (deriveGen c₁) ⦈ ∥ ⦇ inj₂ (deriveGen c₂) ⦈
   deriveGen {f₁ ⊗ f₂}  {g} (c₁ ⊗~ c₂) =
     ⦇ (deriveGen c₁) , (deriveGen c₂) ⦈
-  deriveGen {I} {g} c   = ⦇ In μ ⦈
-  deriveGen {K a} {g} (K~ gₖ) = ` gₖ
+  deriveGen {I} {g} c   = ⦇ In (μ tt) ⦈
+  deriveGen {K a} {g} (K~ gₖ) = Call tt λ _ → gₖ
   deriveGen {Z} Z~ = None
 
   isoGen :
-    ∀ (a : Set) → ⦃ p : Regular a ⦄
-    → RegInfo (𝔾) (getPf p) → 𝔾 a
+    ∀ (a : ⊤ → Set) → ⦃ p : Regular (a tt) ⦄
+    → RegInfo (λ S → 𝔾 (λ _ → S) tt) (getPf p) → 𝔾 a tt
   isoGen a ⦃ record { W = f , iso } ⦄ reginfo =
-    ⦇ (_≅_.to iso ∘ In) (` deriveGen reginfo) ⦈
+    ⦇ (_≅_.to iso ∘ In) (Call tt λ _ → deriveGen reginfo) ⦈
 
   isoCogen :
-    ∀ (a : Set) → ⦃ p : Regular a ⦄
-    → RegInfo co𝔾 (getPf p) → co𝔾 a
+    ∀ (a : ⊤ → Set) → ⦃ p : Regular (a tt) ⦄
+    → RegInfo (λ S → co𝔾 (λ _ → S) tt) (getPf p) → co𝔾 a tt
   isoCogen a ⦃ record { W = f , iso } ⦄ reginfo {b} gₐ =
     ⦇ (λ f → f ∘ (λ { (In x) → x }) ∘ _≅_.from iso)
-      (` deriveCogen {g = f} reginfo gₐ) ⦈
+      (Call (Level.lift tt) (λ _ → deriveCogen {g = f} reginfo gₐ)) ⦈

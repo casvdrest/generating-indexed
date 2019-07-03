@@ -27,7 +27,6 @@ module AgdaGen.Generic.Indexed.IDesc.Lambda where
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
   open GMonad       ⦃...⦄
-  open GNullable    ⦃...⦄
 
   data Ty : Set where
     `τ   : Ty

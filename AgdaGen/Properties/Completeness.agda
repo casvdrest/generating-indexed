@@ -30,176 +30,79 @@ module AgdaGen.Properties.Completeness where
 
   ------ General Properties ------
 
-  -- Generator productivity: we say that a generator produces
-  -- Some value 'x' if there is some n ∈ ℕ such that 'x' is in
-  -- the list we get by applying 'n' to the generator. 
-  _∣_↝_ : ∀ {a t : Set} → Gen {k = 0ℓ} a t → 𝔾 t → a → Set
-  f ∣ tg ↝ x =
-    -- 'g' produces 'x' under 'tg' if 'x' is an element of the enumeration
-    -- of 'g' under 'tg' at some depth 'n'
-    ∃[ n ] (x ∈ interpret f tg n)
-
   -- Productivity property for indexed generators. 
   _∣ᵢ_↝_ :
     ∀ {I : Set} {a : Set} {t : I → Set} {i : I}
-    → Genᵢ a t i → ((i : I) → 𝔾ᵢ t i) → a → Set
+    → Gen a t i → ((i : I) → 𝔾 t i) → a → Set
   _∣ᵢ_↝_ {i = i} g tg x =
     -- Generator 'g' with top level generator 'tg' will produce 'x'
     -- if there is an 'n ∈ ℕ' such that x is an element of the enumeration
     -- of 'g' under top level generator 'tg' with depth n
-    ∃[ n ] (x ∈ interpretᵢ tg i g n)
-
-  -- Generator Completeness: A generator is complete if we can produce
-  -- a productivity proof for all values of its type
-  Complete : ∀ {a t : Set} → Gen a t → 𝔾 t → Set
-  Complete {a} f tg =
-    -- 'f' is complete iff ∀ x:a . f produces x
-    ∀ {x : a} → f ∣ tg ↝ x
+    ∃[ n ] (x ∈ enumerate tg i g n)
 
   -- Completeness for indexed generators. 
   Completeᵢ :
     ∀ {I : Set} {a : Set} {t : I → Set} {i : I}
-    → Genᵢ a t i  → ((i : I) → 𝔾ᵢ t i) → Set
+    → Gen a t i  → ((i : I) → 𝔾 t i) → Set
   Completeᵢ {a = a} {i = i} g tg =
     -- 'g' is complete iff ∀ x:a . g produces x
     ∀ {x : a} → _∣ᵢ_↝_ {a = a} g tg x 
-
-  -- Call to external generator completeness
-  --
-  -- Requires a completeness proof of the generator that is called
-  `-complete :
-    ∀ {a t : Set} {tg : 𝔾 t} {g : 𝔾 a} {x : a}
-    → g ∣ g ↝ x → (` g) ∣ tg ↝ x
-  `-complete (suc n , elem) =
-    suc n , elem
-
-  -- Completeness for calls to externall generators, from indexed generators
-  --
-  -- Requires a completeness proof of the generator that is called
-  Call-complete :
-    ∀ {I : Set} {a : ⊤ → Set} {t : I → Set} {i : I}
-      {x : a tt} {tg : (i : I) → 𝔾ᵢ t i} {g : 𝔾 (a tt)}
-    → g ∣ g ↝ x
-    → _∣ᵢ_↝_ {i = i} (Call g) tg x
-  Call-complete (suc n , elem) =
-    -- We simply copy the proof, but the pattern match on 'suc n' is required in
-    -- order to guarantee that both enumerations do not default to the empty list.
-    suc n , elem
-
-  -- Completeness of recursive positions. A recursive position is complete, given
-  -- that the generator it refers to is complete. 
-  μ-complete :
-    ∀ {a : Set} {tg : 𝔾 a} {x : a}
-    → tg ∣ tg ↝ x → μ ∣ tg ↝ x
-  μ-complete (n , elem)
-    -- Elements that occur at depth 'n' in a generator
-    -- occur at 'suc n' if μ refers to that generator
-    = suc n , elem
 
   -- Completeness for indexed recursive positions. Complete if the generator the refer
   -- is complete. 
   μᵢ-complete :
     ∀ {I : Set} {a : I → Set}
-      {tg : (i : I) → 𝔾ᵢ a i} {i : I} {x : a i}
-    → _∣ᵢ_↝_ {a = a i} (tg i) tg x → _∣ᵢ_↝_ {a = a i} (μᵢ i) tg x
+      {tg : (i : I) → 𝔾 a i} {i : I} {x : a i}
+    → _∣ᵢ_↝_ {a = a i} (tg i) tg x → _∣ᵢ_↝_ {a = a i} (μ i) tg x
   μᵢ-complete (n , elem)
     -- Elements that occur at depth 'n' in an indexed generator indexed with 'i'
     -- will occur at depth 'suc n' when if 'μᵢ i' refers to that generator
     = (suc n) , elem  
 
-  -- Proof that values lifted into the generator type will produce that value
-  pure-complete :
-    ∀ {a t : Set} {tg : 𝔾 t} {x : a} → ⦇ x ⦈ ∣ tg ↝ x
-  pure-complete =
-    -- Trivial as 'pure x' will only produce the list '[ x ]'
-    1 , here
-
   -- Proof that values lifted into indexed generators will produce 
   pureᵢ-complete :
     ∀ {I : Set} {a t : I → Set}
-      {i : I} {tg : (i : I) → 𝔾ᵢ a i}  {x : a i}
+      {i : I} {tg : (i : I) → 𝔾 a i}  {x : a i}
     → _∣ᵢ_↝_ {a = a i} {i = i} ⦇ x ⦈ tg x
   pureᵢ-complete = 1 , here
 
 
   ------ Generator Choice ------
 
-  -- Choice between two generators produces an element, given that it is
-  -- produced by its left option
-  ∥-complete-left :
-    ∀ {a t : Set} {x : a} {f g : Gen a t} {tg : 𝔾 t}
-    → f ∣ tg ↝ x
-    → (f ∥ g) ∣ tg ↝ x
-  ∥-complete-left (suc n , p) =
-    -- depth remains the same, but transform p from x ∈ xs to x ∈ merge xs ys
-    suc n , merge-complete-left p
-
   -- Choice between two indexed generators will produce an element if it is produced
   -- by the left generator
   ∥ᵢ-complete-left :
     ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
-      {f g : Genᵢ (a i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+      {f g : Gen (a i) t i} {tg : (i : I) → 𝔾 t i}
     → _∣ᵢ_↝_ {a = a i} f tg x
     → _∣ᵢ_↝_ {a = a i} (f ∥ g) tg x
   ∥ᵢ-complete-left (suc n , p) =
     -- Again, we transform p from x ∈ xs to x ∈ merge xs ys
     (suc n) , merge-complete-left p
 
-  -- Choice between two generators produces an element, given that it is produced
-  -- by its right option
-  ∥-complete-right :
-    ∀ {a t : Set} {x : a} {f g : Gen a t} {tg : 𝔾 t}
-    → g ∣ tg ↝ x
-    → (f ∥ g) ∣ tg ↝ x
-  ∥-complete-right (zero , ())
-  ∥-complete-right (suc n , p) =
-    -- p transformed from y ∈ ys → y ∈ merge xs ys
-    suc n , merge-complete-right p
-
   ∥ᵢ-complete-right :
     ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
-      {f g : Genᵢ (a i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+      {f g : Gen (a i) t i} {tg : (i : I) → 𝔾 t i}
     → _∣ᵢ_↝_ {a = a i} g tg x
     → _∣ᵢ_↝_ {a = a i} (f ∥ g) tg x
   ∥ᵢ-complete-right (suc n , p) =
     -- p transformed from y ∈ ys → y ∈ merge xs ys
     (suc n) , merge-complete-right p
 
-  -- If an element is produced by choice between two generators, it is either
-  -- produced by the left option or by the right option
-  ∥-sound :
-    ∀ {a t : Set} {x : a} {n : ℕ} {f g : Gen a t} {tg : 𝔾 t}
-    → (f ∥ g) ∣ tg ↝ x
-    → (f ∣ tg ↝ x) ⊎ (g ∣ tg ↝ x)
-  ∥-sound (zero , ())
-  ∥-sound (suc n , p) =
-    ⊕-bimap (λ x → suc n , x) (λ y → suc n , y) (merge-sound p)
-
   -- Indexed generators, too, are sound
   ∥ᵢ-sound :
     ∀ {I : Set} {a t : I → Set} {i : I} {x : a i}
-      {f g : Genᵢ (a i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+      {f g : Gen (a i) t i} {tg : (i : I) → 𝔾 t i}
     → _∣ᵢ_↝_ {a = a i} (f ∥ g) tg x
     → (_∣ᵢ_↝_ {a = a i} f tg x) ⊎ (_∣ᵢ_↝_ {a = a i} g tg x)
   ∥ᵢ-sound (suc n , p) =
     ⊕-bimap (λ x → suc n , x) (λ y → suc n , y) (merge-sound p)
   
   ------ Generator Product ------
-  
-  -- Applying a constructor to a generator does not affect
-  -- its production
-  constr-preserves-elem :
-    ∀ {a b t : Set} {f : a → b}
-      {g : Gen a t} {tg : 𝔾 t} {x : a}
-    → g ∣ tg ↝ x
-    → ⦇ f g ⦈ ∣ tg ↝ f x
-  constr-preserves-elem (zero , ())
-  constr-preserves-elem {f = f} (suc n , elem) =
-    suc n , list-ap-complete {fs = [ f ]} here elem
 
   constrᵢ-preserves-elem :
     ∀ {I : Set} {a b t : I → Set} {i₁ i₂ : I} {f : a i₁ → b i₂}
-      {g : Genᵢ (a i₁) t i₁} {tg : (i : I) → 𝔾ᵢ t i} {x : a i₁}
+      {g : Gen (a i₁) t i₁} {tg : (i : I) → 𝔾 t i} {x : a i₁}
     →  _∣ᵢ_↝_ {a = a i₁} g tg x
     →  _∣ᵢ_↝_ {a = b i₂} {i = i₂} ⦇ f g ⦈ tg (f x)
   constrᵢ-preserves-elem {f = f} (suc n , elem) = 
@@ -233,22 +136,10 @@ module AgdaGen.Properties.Completeness where
   
   -- If f produces x and g produces y, then ⦇ C f g ⦈, where C is any
   -- 2-arity constructor, produces C x y
-  ⊛-complete :
-    ∀ {a b c t : Set} {x : a} {y : b} {tg : 𝔾 t}
-      {f : Gen a t} {g : Gen b t} {C : a → b → c}
-    → (p₁ : f ∣ tg ↝ x) → (p₂ : g ∣ tg ↝ y)
-    → Depth-Monotone f x tg → Depth-Monotone g y tg
-    → ⦇ C f g ⦈ ∣ tg ↝ C x y
-  ⊛-complete {a} {b} {c} {f = f} {g = g} {C = C}
-    ((suc n) , snd₁) ((suc m) , snd₂) mt₁ mt₂  =  
-    max (suc n) (suc m) , list-ap-constr {C = C}
-      (mt₁ (lemma-max₁ {n = suc n} {m = suc m}) snd₁)
-      (mt₂ (lemma-max₂ {n = suc n} {m = suc m}) snd₂)
-
   ⊛-completeᵢ :
     ∀ {I : Set} {a b c t : I → Set} {i₁ i₂ i₃ : I}
-      {x : a i₁} {y : b i₂} {tg : (i : I) → 𝔾ᵢ t i}
-      {f : Genᵢ (a i₁) t i₁} {g : Genᵢ (b i₂) t i₂} {C : a i₁ → b i₂ → c i₃}
+      {x : a i₁} {y : b i₂} {tg : (i : I) → 𝔾 t i}
+      {f : Gen (a i₁) t i₁} {g : Gen (b i₂) t i₂} {C : a i₁ → b i₂ → c i₃}
     → (p₁ : _∣ᵢ_↝_ {a = a i₁} f tg x) → (p₂ : _∣ᵢ_↝_ {a = b i₂} g tg y)
     → Depth-Monotoneᵢ f tg x → Depth-Monotoneᵢ g tg y 
     → _∣ᵢ_↝_ {a = c i₃} {i = i₃} ⦇ C f g ⦈ tg (C x y)
@@ -260,22 +151,9 @@ module AgdaGen.Properties.Completeness where
   
   ------ Combinator Completeness ------
 
-  -- Completeness of the ∥ combinator, using coproducts to unify
-  -- option types
-  ∥-Complete :
-    ∀ {a b t : Set} {f : Gen a t} {g : Gen b t} {tg : 𝔾 t}
-    → Complete f tg → Complete g tg
-    → Complete (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈) tg
-  ∥-Complete {f = f} {g = g} p₁ p₂ {inj₁ x} =
-    ∥-complete-left {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
-    (constr-preserves-elem {g = f} p₁)
-  ∥-Complete {f = f} {g = g} p₁ p₂ {inj₂ y} =
-    ∥-complete-right {f = ⦇ inj₁ f ⦈} {g = ⦇ inj₂ g ⦈}
-    (constr-preserves-elem {g = g} p₂)
-
   ∥-Completeᵢ :
-    ∀ {I : Set} {a b t : I → Set} {i : I} {f : Genᵢ (a i) t i}
-      {g : Genᵢ (b i) t i} {tg : (i : I) → 𝔾ᵢ t i}
+    ∀ {I : Set} {a b t : I → Set} {i : I} {f : Gen (a i) t i}
+      {g : Gen (b i) t i} {tg : (i : I) → 𝔾 t i}
     → Completeᵢ {a = a i} f tg → Completeᵢ {a = b i} g tg
     → Completeᵢ {a = a i ⊎ b i} (⦇ inj₁ f ⦈ ∥ ⦇ inj₂ g ⦈) tg
   ∥-Completeᵢ {a = a} {b = b} {f = f} {g = g} p₁ p₂ {inj₁ x} =

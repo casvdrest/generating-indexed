@@ -97,7 +97,7 @@
 }
 
 
-\title{Thesis title}
+\title{Generating Constrained Test Data using Datatype Generic Programming}
 
 \author{C.R. van der Rest}
 
@@ -120,7 +120,7 @@ stated otherwise by reference or acknowledgment, the work presented is entirely 
 own.
 
 \chapter{Abstract}
-Abstract
+The generation of suitable test data is an essential part of \emph{property based testing}. Obtaining test data is simple enough when there are no additional constraints, however things become more complicated once we require data with a richer structure, for example well-formed programs when testing a compiler. We observe that we can often describe constrained data as an \emph{indexed family}. By generating values of an indexed family that describes a set of constrained test data, we simultaneously obtain a way to generate the constrained data itself. To achieve this goal, we consider three increasingly expressive type universes: \emph{regular types}, \emph{indexed containers} and \emph{indexed descriptions}. We show how generators can be derived from codes in these universes, and for \emph{regular types} and \emph{indexed descriptions} we show that these derived generators are \emph{complete}. We implement the generic generator for indexed descriptions in Haskell, and use this implementation to generate constrained test data, such as well-typed lambda terms. 
 
 %% Starts the mainmatter
 \mainmatter
