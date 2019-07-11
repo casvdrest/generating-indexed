@@ -190,7 +190,9 @@
   \vfill
 %%%%%%%%%%%%
 %% Date
-  {\large Submitted for the degree "Master of Science" on \@date} 
+  {\large A thesis submitted for the degree of "Master of Science"} 
+  \vskip 1em
+  {\large \@date}
   \vfill\newpage
 \end{center}
 %%%%%%%%%%%%

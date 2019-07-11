@@ -3,7 +3,7 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
 \contentsline {section}{\numberline {1.1}Problem Statement}{1}{section.1.1}% 
 \contentsline {section}{\numberline {1.2}Research Question and Goal}{3}{section.1.2}% 
-\contentsline {section}{\numberline {1.3}Thesis Structure}{3}{section.1.3}% 
+\contentsline {section}{\numberline {1.3}Contributions}{3}{section.1.3}% 
 \contentsline {section}{\numberline {1.4}Deliverables}{4}{section.1.4}% 
 \contentsline {section}{\numberline {1.5}Methodology}{4}{section.1.5}% 
 \contentsline {paragraph}{Notational conventions}{4}{section.1.5}% 
@@ -18,103 +18,107 @@
 \contentsline {subsection}{\numberline {2.4.1}Generator interpretations}{11}{subsection.2.4.1}% 
 \contentsline {subsection}{\numberline {2.4.2}Generator completeness}{11}{subsection.2.4.2}% 
 \contentsline {subsection}{\numberline {2.4.3}Generators for non-indexed types}{12}{subsection.2.4.3}% 
-\contentsline {chapter}{\numberline {3}Regular types}{13}{chapter.3}% 
-\contentsline {section}{\numberline {3.1}The universe of regular types}{13}{section.3.1}% 
-\contentsline {paragraph}{\textbf {Example}}{14}{figure.3.2}% 
-\contentsline {subsection}{\numberline {3.1.1}Non-regular data types}{15}{subsection.3.1.1}% 
-\contentsline {section}{\numberline {3.2}Generic Generators for regular types}{15}{section.3.2}% 
-\contentsline {subsection}{\numberline {3.2.1}Performing induction over codes}{15}{subsection.3.2.1}% 
-\contentsline {subsection}{\numberline {3.2.2}Composing generic generators}{16}{subsection.3.2.2}% 
-\contentsline {subsubsection}{The empty (Z) and unit (U) type}{16}{subsection.3.2.2}% 
-\contentsline {subsubsection}{Recursive positions (I)}{17}{subsection.3.2.2}% 
-\contentsline {subsubsection}{Products (\ensuremath {\leavevmode \begingroup \color {hsblue4}⊗\endgroup }) and coproducts (\ensuremath {\leavevmode \begingroup \color {hsblue4}⊕\endgroup })}{17}{subsection.3.2.2}% 
-\contentsline {subsubsection}{Wrapping up}{17}{subsection.3.2.2}% 
-\contentsline {paragraph}{\textbf {Example}}{18}{subsection.3.2.2}% 
-\contentsline {section}{\numberline {3.3}Constant Types}{18}{section.3.3}% 
-\contentsline {subsection}{\numberline {3.3.1}Metadata structure}{18}{subsection.3.3.1}% 
-\contentsline {subsection}{\numberline {3.3.2}Deriving a generator for constant types}{18}{subsection.3.3.2}% 
-\contentsline {section}{\numberline {3.4}Complete Enumerators For Regular Types}{19}{section.3.4}% 
-\contentsline {subsection}{\numberline {3.4.1}Proof structure}{20}{subsection.3.4.1}% 
-\contentsline {subsection}{\numberline {3.4.2}Combinator Correctness}{20}{subsection.3.4.2}% 
-\contentsline {subsubsection}{Empty (Z) and unit (U) types}{20}{subsection.3.4.2}% 
-\contentsline {subsubsection}{Recursive positions (I)}{21}{subsection.3.4.2}% 
-\contentsline {subsubsection}{Products and coproducts}{21}{subsection.3.4.2}% 
-\contentsline {paragraph}{Coproducts}{21}{Item.10}% 
-\contentsline {paragraph}{Products}{22}{Item.10}% 
-\contentsline {subsection}{\numberline {3.4.3}Completeness for Constant Types}{22}{subsection.3.4.3}% 
-\contentsline {subsection}{\numberline {3.4.4}Generator Monotonicity}{24}{subsection.3.4.4}% 
-\contentsline {subsection}{\numberline {3.4.5}Extending completeness to all regular types}{24}{subsection.3.4.5}% 
-\contentsline {chapter}{\numberline {4}Indexed Containers}{27}{chapter.4}% 
-\contentsline {section}{\numberline {4.1}Universe Description}{27}{section.4.1}% 
-\contentsline {subsection}{\numberline {4.1.1}Universe definition}{27}{subsection.4.1.1}% 
-\contentsline {subsubsection}{W-types}{27}{subsection.4.1.1}% 
-\contentsline {paragraph}{\textbf {Example}}{28}{Item.12}% 
-\contentsline {subsubsection}{Indexed Containers}{29}{Item.12}% 
-\contentsline {subsubsection}{Proving isomorphisms}{30}{figure.4.3}% 
-\contentsline {subsection}{\numberline {4.1.2}Example Signatures}{30}{subsection.4.1.2}% 
-\contentsline {subsubsection}{Natural numbers}{30}{subsection.4.1.2}% 
-\contentsline {subsubsection}{Finite sets}{31}{subsection.4.1.2}% 
-\contentsline {subsubsection}{Vectors}{32}{subsection.4.1.2}% 
-\contentsline {section}{\numberline {4.2}Generic Generators for Indexed Containers}{32}{section.4.2}% 
-\contentsline {subsection}{\numberline {4.2.1}Restricting Operations and Arities}{32}{subsection.4.2.1}% 
-\contentsline {paragraph}{\textbf {Example}}{33}{figure.4.4}% 
-\contentsline {subsection}{\numberline {4.2.2}Generating Function Types}{34}{subsection.4.2.2}% 
-\contentsline {subsection}{\numberline {4.2.3}Constructing the Generator}{35}{subsection.4.2.3}% 
-\contentsline {chapter}{\numberline {5}Indexed Descriptions}{37}{chapter.5}% 
-\contentsline {section}{\numberline {5.1}Universe Definition}{37}{section.5.1}% 
-\contentsline {subsection}{\numberline {5.1.1}Definition \& Semantics}{37}{subsection.5.1.1}% 
-\contentsline {paragraph}{\textbf {Example}}{39}{figure.5.2}% 
-\contentsline {subsection}{\numberline {5.1.2}Exmample: describing well typed lambda terms}{40}{subsection.5.1.2}% 
-\contentsline {subsubsection}{Modelling SLC in Agda}{40}{subsection.5.1.2}% 
-\contentsline {subsubsection}{An indexed description for well-typed terms}{42}{figure.5.5}% 
-\contentsline {section}{\numberline {5.2}Generic Generators for Indexed Descriptions}{44}{section.5.2}% 
-\contentsline {subsection}{\numberline {5.2.1}Unit, product and recursive positions}{44}{subsection.5.2.1}% 
-\contentsline {subsection}{\numberline {5.2.2}Generalized coproduct}{44}{subsection.5.2.2}% 
-\contentsline {subsection}{\numberline {5.2.3}Dependent pairs}{45}{subsection.5.2.3}% 
-\contentsline {subsection}{\numberline {5.2.4}Example: deriving a generator for well-typed lambda terms}{46}{subsection.5.2.4}% 
-\contentsline {section}{\numberline {5.3}Completeness Proof for Enumerators Derived From Indexed Descriptions}{47}{section.5.3}% 
-\contentsline {subsection}{\numberline {5.3.1}Unit, product and recursive positions}{48}{subsection.5.3.1}% 
-\contentsline {subsection}{\numberline {5.3.2}Generalized coproducts and dependent pairs}{48}{subsection.5.3.2}% 
-\contentsline {subsection}{\numberline {5.3.3}Wrapping up the proof}{49}{subsection.5.3.3}% 
-\contentsline {chapter}{\numberline {6}Haskell Implementation}{51}{chapter.6}% 
-\contentsline {section}{\numberline {6.1}General Approach}{51}{section.6.1}% 
-\contentsline {section}{\numberline {6.2}Representing Indexed Descriptions In Haskell}{52}{section.6.2}% 
-\contentsline {subsection}{\numberline {6.2.1}Generalized coproducts}{52}{subsection.6.2.1}% 
-\contentsline {subsection}{\numberline {6.2.2}The \ensuremath {\leavevmode \begingroup \color {hsblue4}`\endgroup \mitSigma } combinator}{52}{subsection.6.2.2}% 
-\contentsline {subsection}{\numberline {6.2.3}Semantics}{53}{subsection.6.2.3}% 
-\contentsline {section}{\numberline {6.3}Deriving Generators for Indexed Descriptions in Haskell}{54}{section.6.3}% 
-\contentsline {subsection}{\numberline {6.3.1}The generator type}{54}{subsection.6.3.1}% 
-\contentsline {subsection}{\numberline {6.3.2}A singleton type for descriptions}{55}{subsection.6.3.2}% 
-\contentsline {subsection}{\numberline {6.3.3}Deriving generators}{57}{subsection.6.3.3}% 
-\contentsline {section}{\numberline {6.4}Examples}{59}{section.6.4}% 
-\contentsline {subsection}{\numberline {6.4.1}Finite sets}{59}{subsection.6.4.1}% 
-\contentsline {subsection}{\numberline {6.4.2}Well-typed lambda terms}{60}{subsection.6.4.2}% 
-\contentsline {chapter}{\numberline {7}Discussion}{65}{chapter.7}% 
-\contentsline {section}{\numberline {7.1}Related Work}{65}{section.7.1}% 
-\contentsline {subsection}{\numberline {7.1.1}Libraries for property based testing}{65}{subsection.7.1.1}% 
-\contentsline {subsubsection}{QuickCheck}{65}{subsection.7.1.1}% 
-\contentsline {subsubsection}{SmallCheck}{66}{subsection.7.1.1}% 
-\contentsline {subsubsection}{LeanCheck}{66}{subsection.7.1.1}% 
-\contentsline {subsubsection}{Feat}{66}{subsection.7.1.1}% 
-\contentsline {subsubsection}{Hedgehog}{66}{subsection.7.1.1}% 
-\contentsline {subsubsection}{QuickChick}{67}{subsection.7.1.1}% 
-\contentsline {subsubsection}{QuickSpec}{67}{subsection.7.1.1}% 
-\contentsline {subsection}{\numberline {7.1.2}Type universes}{67}{subsection.7.1.2}% 
-\contentsline {subsubsection}{Indexed Functors}{67}{subsection.7.1.2}% 
-\contentsline {subsubsection}{Combinatorial species}{67}{subsection.7.1.2}% 
-\contentsline {subsubsection}{Mutually recursive sums of product}{68}{subsection.7.1.2}% 
-\contentsline {subsection}{\numberline {7.1.3}Techniques for generating constrained test data}{68}{subsection.7.1.3}% 
-\contentsline {subsection}{\numberline {7.1.4}Generating well-typed lambda terms}{68}{subsection.7.1.4}% 
-\contentsline {section}{\numberline {7.2}Conclusion}{69}{section.7.2}% 
-\contentsline {subsection}{\numberline {7.2.1}Summary of Results}{69}{subsection.7.2.1}% 
-\contentsline {subsection}{\numberline {7.2.2}Remaing Problems}{70}{subsection.7.2.2}% 
-\contentsline {subsection}{\numberline {7.2.3}Instantiation of the abstract generator type}{70}{subsection.7.2.3}% 
-\contentsline {section}{\numberline {7.3}Reflection}{70}{section.7.3}% 
-\contentsline {section}{\numberline {7.4}Future Work}{70}{section.7.4}% 
-\contentsline {subsubsection}{Generator optimizations}{71}{section.7.4}% 
-\contentsline {subsubsection}{Generating mutually recursive families}{71}{section.7.4}% 
-\contentsline {subsubsection}{Integration with existing testing frameworks}{71}{section.7.4}% 
-\contentsline {subsubsection}{Property based testing for GADT's}{72}{section.7.4}% 
-\contentsline {subsubsection}{Increasing usability and practicality of the Haskell Library}{72}{section.7.4}% 
-\contentsline {subsubsection}{Generation of function types}{72}{section.7.4}% 
-\contentsline {subsubsection}{Generating well-formed programs in a realistic programming language}{72}{section.7.4}% 
+\contentsline {part}{I\hspace {1em}Theoretical Model}{13}{part.1}% 
+\contentsline {chapter}{\numberline {3}Regular types}{15}{chapter.3}% 
+\contentsline {section}{\numberline {3.1}Universe definition}{15}{section.3.1}% 
+\contentsline {paragraph}{\textbf {Example}}{16}{figure.3.2}% 
+\contentsline {subsection}{\numberline {3.1.1}Non-regular data types}{17}{subsection.3.1.1}% 
+\contentsline {section}{\numberline {3.2}Deriving generators}{17}{section.3.2}% 
+\contentsline {subsection}{\numberline {3.2.1}Performing induction over codes}{17}{subsection.3.2.1}% 
+\contentsline {subsection}{\numberline {3.2.2}Composing generic generators}{18}{subsection.3.2.2}% 
+\contentsline {subsubsection}{The empty (Z) and unit (U) type}{18}{subsection.3.2.2}% 
+\contentsline {subsubsection}{Recursive positions (I)}{19}{subsection.3.2.2}% 
+\contentsline {subsubsection}{Products ({\agdafontinline \color {agdacolor}⊗}) and coproducts ({\agdafontinline \color {agdacolor}⊕})}{19}{subsection.3.2.2}% 
+\contentsline {subsubsection}{Wrapping up}{19}{subsection.3.2.2}% 
+\contentsline {paragraph}{\textbf {Example}}{20}{subsection.3.2.2}% 
+\contentsline {section}{\numberline {3.3}Constant Types}{20}{section.3.3}% 
+\contentsline {subsection}{\numberline {3.3.1}Metadata structure}{20}{subsection.3.3.1}% 
+\contentsline {subsection}{\numberline {3.3.2}Deriving a generator for constant types}{20}{subsection.3.3.2}% 
+\contentsline {section}{\numberline {3.4}Proving completeness}{21}{section.3.4}% 
+\contentsline {subsection}{\numberline {3.4.1}Proof structure}{22}{subsection.3.4.1}% 
+\contentsline {subsection}{\numberline {3.4.2}Combinator Correctness}{22}{subsection.3.4.2}% 
+\contentsline {subsubsection}{Empty (Z) and unit (U) types}{22}{subsection.3.4.2}% 
+\contentsline {subsubsection}{Recursive positions (I)}{23}{subsection.3.4.2}% 
+\contentsline {subsubsection}{Products and coproducts}{23}{subsection.3.4.2}% 
+\contentsline {paragraph}{Coproducts}{23}{Item.10}% 
+\contentsline {paragraph}{Products}{24}{Item.10}% 
+\contentsline {subsection}{\numberline {3.4.3}Completeness for Constant Types}{24}{subsection.3.4.3}% 
+\contentsline {subsection}{\numberline {3.4.4}Generator Monotonicity}{26}{subsection.3.4.4}% 
+\contentsline {subsection}{\numberline {3.4.5}Extending completeness to all regular types}{26}{subsection.3.4.5}% 
+\contentsline {chapter}{\numberline {4}Indexed Containers}{29}{chapter.4}% 
+\contentsline {section}{\numberline {4.1}Universe Definition}{29}{section.4.1}% 
+\contentsline {subsection}{\numberline {4.1.1}Defintion and semantics}{29}{subsection.4.1.1}% 
+\contentsline {subsubsection}{W-types}{29}{subsection.4.1.1}% 
+\contentsline {paragraph}{\textbf {Example}}{30}{Item.12}% 
+\contentsline {subsubsection}{Indexed Containers}{31}{Item.12}% 
+\contentsline {subsubsection}{Proving isomorphisms}{32}{figure.4.3}% 
+\contentsline {subsection}{\numberline {4.1.2}Example Signatures}{32}{subsection.4.1.2}% 
+\contentsline {subsubsection}{Natural numbers}{32}{subsection.4.1.2}% 
+\contentsline {subsubsection}{Finite sets}{33}{subsection.4.1.2}% 
+\contentsline {subsubsection}{Vectors}{34}{subsection.4.1.2}% 
+\contentsline {section}{\numberline {4.2}Deriving generators}{34}{section.4.2}% 
+\contentsline {subsection}{\numberline {4.2.1}Restricting Operations and Arities}{34}{subsection.4.2.1}% 
+\contentsline {paragraph}{\textbf {Example}}{35}{figure.4.4}% 
+\contentsline {subsection}{\numberline {4.2.2}Generating Function Types}{36}{subsection.4.2.2}% 
+\contentsline {subsection}{\numberline {4.2.3}Constructing the Generator}{37}{subsection.4.2.3}% 
+\contentsline {chapter}{\numberline {5}Indexed Descriptions}{39}{chapter.5}% 
+\contentsline {section}{\numberline {5.1}Universe Definition}{39}{section.5.1}% 
+\contentsline {subsection}{\numberline {5.1.1}Definition \& Semantics}{39}{subsection.5.1.1}% 
+\contentsline {paragraph}{\textbf {Example}}{41}{figure.5.2}% 
+\contentsline {subsection}{\numberline {5.1.2}Exmample: describing well typed lambda terms}{42}{subsection.5.1.2}% 
+\contentsline {subsubsection}{Modelling SLC in Agda}{42}{subsection.5.1.2}% 
+\contentsline {subsubsection}{An indexed description for well-typed terms}{44}{figure.5.5}% 
+\contentsline {section}{\numberline {5.2}Deriving generators}{46}{section.5.2}% 
+\contentsline {subsection}{\numberline {5.2.1}Unit, product and recursive positions}{46}{subsection.5.2.1}% 
+\contentsline {subsection}{\numberline {5.2.2}Generalized coproduct}{46}{subsection.5.2.2}% 
+\contentsline {subsection}{\numberline {5.2.3}Dependent pairs}{47}{subsection.5.2.3}% 
+\contentsline {subsection}{\numberline {5.2.4}Example: deriving a generator for well-typed lambda terms}{48}{subsection.5.2.4}% 
+\contentsline {section}{\numberline {5.3}Proving completeness}{48}{section.5.3}% 
+\contentsline {subsection}{\numberline {5.3.1}Unit, product and recursive positions}{50}{subsection.5.3.1}% 
+\contentsline {subsection}{\numberline {5.3.2}Generalized coproducts and dependent pairs}{50}{subsection.5.3.2}% 
+\contentsline {subsection}{\numberline {5.3.3}Wrapping up the proof}{51}{subsection.5.3.3}% 
+\contentsline {part}{II\hspace {1em}Implementation}{53}{part.2}% 
+\contentsline {chapter}{\numberline {6}Generators for Indexed Descriptions in Haskell}{55}{chapter.6}% 
+\contentsline {section}{\numberline {6.1}General Approach}{55}{section.6.1}% 
+\contentsline {section}{\numberline {6.2}Representing Indexed Descriptions In Haskell}{56}{section.6.2}% 
+\contentsline {subsection}{\numberline {6.2.1}Generalized coproducts}{56}{subsection.6.2.1}% 
+\contentsline {subsection}{\numberline {6.2.2}The \ensuremath {\leavevmode \begingroup \color {hsblue4}`\endgroup \mitSigma } combinator}{56}{subsection.6.2.2}% 
+\contentsline {subsection}{\numberline {6.2.3}Semantics}{57}{subsection.6.2.3}% 
+\contentsline {section}{\numberline {6.3}Deriving Generators}{58}{section.6.3}% 
+\contentsline {subsection}{\numberline {6.3.1}The generator type}{58}{subsection.6.3.1}% 
+\contentsline {subsection}{\numberline {6.3.2}A singleton type for descriptions}{59}{subsection.6.3.2}% 
+\contentsline {subsection}{\numberline {6.3.3}Deriving generators}{60}{subsection.6.3.3}% 
+\contentsline {section}{\numberline {6.4}Examples}{62}{section.6.4}% 
+\contentsline {subsection}{\numberline {6.4.1}Finite sets}{63}{subsection.6.4.1}% 
+\contentsline {subsection}{\numberline {6.4.2}Well-typed lambda terms}{64}{subsection.6.4.2}% 
+\contentsline {chapter}{\numberline {7}Discussion}{67}{chapter.7}% 
+\contentsline {section}{\numberline {7.1}Conclusion}{67}{section.7.1}% 
+\contentsline {section}{\numberline {7.2}Reflection}{68}{section.7.2}% 
+\contentsline {subsection}{\numberline {7.2.1}Remaining problems}{68}{subsection.7.2.1}% 
+\contentsline {subsection}{\numberline {7.2.2}Design choices}{68}{subsection.7.2.2}% 
+\contentsline {subsubsection}{Instantiation of the abstract generator type}{69}{subsection.7.2.2}% 
+\contentsline {subsubsection}{Usage of existing libraries}{69}{subsection.7.2.2}% 
+\contentsline {subsubsection}{Completeness property}{69}{subsection.7.2.2}% 
+\contentsline {section}{\numberline {7.3}Related Work}{70}{section.7.3}% 
+\contentsline {subsection}{\numberline {7.3.1}Libraries for property based testing}{70}{subsection.7.3.1}% 
+\contentsline {subsubsection}{QuickCheck}{70}{subsection.7.3.1}% 
+\contentsline {subsubsection}{SmallCheck}{70}{subsection.7.3.1}% 
+\contentsline {subsubsection}{LeanCheck}{70}{subsection.7.3.1}% 
+\contentsline {subsubsection}{Feat}{71}{subsection.7.3.1}% 
+\contentsline {subsubsection}{Hedgehog}{71}{subsection.7.3.1}% 
+\contentsline {subsubsection}{QuickChick}{71}{subsection.7.3.1}% 
+\contentsline {subsubsection}{QuickSpec}{71}{subsection.7.3.1}% 
+\contentsline {subsection}{\numberline {7.3.2}Type universes}{71}{subsection.7.3.2}% 
+\contentsline {subsubsection}{Indexed Functors}{72}{subsection.7.3.2}% 
+\contentsline {subsubsection}{Combinatorial species}{72}{subsection.7.3.2}% 
+\contentsline {subsubsection}{Mutually recursive sums of product}{72}{subsection.7.3.2}% 
+\contentsline {subsection}{\numberline {7.3.3}Generating constrained test data}{72}{subsection.7.3.3}% 
+\contentsline {subsection}{\numberline {7.3.4}Generating well-typed lambda terms}{73}{subsection.7.3.4}% 
+\contentsline {section}{\numberline {7.4}Next steps \& Future work}{73}{section.7.4}% 
+\contentsline {subsubsection}{Generator optimizations}{74}{section.7.4}% 
+\contentsline {subsubsection}{Generating mutually recursive families}{74}{section.7.4}% 
+\contentsline {subsubsection}{Integration with existing testing frameworks}{74}{section.7.4}% 
+\contentsline {subsubsection}{Property based testing for GADT's}{75}{section.7.4}% 
+\contentsline {subsubsection}{Increasing usability and practicality of the Haskell Library}{75}{section.7.4}% 
+\contentsline {subsubsection}{Generation of function types}{75}{section.7.4}% 
+\contentsline {subsubsection}{Generating well-formed programs in a realistic programming language}{75}{section.7.4}% 

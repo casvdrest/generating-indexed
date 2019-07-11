@@ -4,9 +4,20 @@
 \usepackage{mdframed}
 \usepackage{setspace}
 \usepackage{fontspec}
+\usepackage{mathtools}
+
+
 \newfontfamily{\agdafont}{DejaVu Sans Mono}[Scale=MatchLowercase]
+\newfontfamily{\agdafontinline}{DejaVu Sans Mono}[Scale=MatchLowercase]
 \renewcommand{\figurename}{Listing}
 \renewcommand{\listfigurename}{Code listings}
+
+\let\oldemph\emph
+\renewcommand\emph[1]{{\large\oldemph{#1}}}
+
+\definecolor{agdacolor}{rgb}{ 0.15 , 0 , 0.6 }
+
+\newcommand{\agda}[1]{{\agdafontinline\color{agdacolor}#1}}
 
 %% Listings 
 \newenvironment{listing}[2] %% #1 = caption #2 = label
@@ -96,6 +107,16 @@
   \end{center}
 }
 
+%format <$> = "\ {\color{gray}\mathbin{<\hspace{-1.6pt}\mathclap{\raisebox{0.1pt}{\scalebox{.8}{\$}}}\hspace{-1.6pt}>}}\ "
+%format <*> = "\ {\color{gray}\mathbin{<\hspace{-1.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{1.2}{$*$}}}\hspace{-1.1pt}>} }\ "
+%format :*: = "\ {\color{gray}\mathbin{:\hspace{-0.3pt}\mathclap{\raisebox{0.1pt}{\scalebox{1.2}{$*$}}}\hspace{-0.3pt}:}}\ "
+%format :+> = "\ {\color{gray}\mathbin{:\hspace{-0.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{.9}{$+$}}}\hspace{-0.3pt}>}}\ "
+%format :*:$ = "\ {\color{gray}\mathbin{:\hspace{-0.3pt}\mathclap{\raisebox{0.1pt}{\scalebox{1.2}{$*$}}}\hspace{-0.3pt}:}{\scalebox{1}{\$}}}\ "
+%format :+>$ = "\ {\color{gray}\mathbin{:\hspace{-0.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{.9}{$+$}}}\hspace{-0.3pt}>}{\scalebox{1}{\$}}}\ "
+%format :::$ = "\ {\color{gray}\mathbin{:\hspace{-0.3pt}:\hspace{-0.3pt}:\hspace{-0.3pt}\hspace{-0.1pt}}{\scalebox{1}{\$}}}\ "
+%format :-> = "\ {\color{gray}\mathbin{:\hspace{-0.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{.9}{$-$}}}\hspace{-0.3pt}>}}\ "
+%format :->$ = "\ {\color{gray}\mathbin{:\hspace{-0.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{.9}{$-$}}}\hspace{-0.3pt}>}{\scalebox{1}{\$}}}\ "
+%format . = "\ .\ "
 
 \title{Generating Constrained Test Data using Datatype Generic Programming}
 
@@ -134,6 +155,8 @@ The generation of suitable test data is an essential part of \emph{property base
 \chapter{Background \& Prerequisites}
 %include src/chap023/body.lhs 
 
+\part{Theoretical Model}
+
 \chapter{Regular types}
 %include src/chap05/body.lhs
 
@@ -146,7 +169,9 @@ The generation of suitable test data is an essential part of \emph{property base
 %% \chapter{A Combinator Library for Generators}
 %% %include src/chap04/body.lhs
 
-\chapter{Haskell Implementation}
+\part{Implementation}
+
+\chapter{Generators for Indexed Descriptions in Haskell}
 %include src/chap08/body.lhs
 
 \chapter{Discussion}
@@ -158,7 +183,6 @@ The generation of suitable test data is an essential part of \emph{property base
 
 \backmatter
 \listoffigures
-%% \listoftables
 
 \bibliographystyle{acm}
 \bibliography{references}

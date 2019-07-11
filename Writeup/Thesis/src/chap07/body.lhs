@@ -5,12 +5,12 @@ thesis. We structure this chapter in the same way as the previous two chapter, b
 first giving the definition and semantics of the universe, before showing how a 
 generator can be derived from codes in this universe and proving that these generators 
 are complete under our enumerative interpretation. 
-\ref
+
 \section{Universe Definition}\label{sec:idescdesc}
 
   We first give the definition of the universe, together with its semantics and 
   fixpoint operation, before considering well-typed lambda terms as an example to 
-  demonstrate how we might model a more complex datatype in this universe and to show 
+  demonstrate how we might model a more complex datatype in this universe and to show its
   we can capture datatypes that cannot be described as a regular type or indexed 
   container. 
 
@@ -22,45 +22,44 @@ are complete under our enumerative interpretation.
 
 \begin{enumerate}
   \item 
-  A type parameter |I : Set|, describing the type of indices.
+  A type parameter \agda{I : Set}, describing the type of indices.
 
   \item 
-  A generalized coproduct, |`|$\sigma$, that denotes choice between $n$ constructors, 
-  in favor of the |⊕| combinator. 
+  A generalized coproduct, \agda{`σ}, that denotes choice between $n$ constructors, 
+  in favor of the \agda{\_⊕\_} constructor. 
 
   \item 
-  A combinator, |`|$\Sigma$, denoting dependent pairs. 
+  A combinator, \agda{`Σ}, denoting dependent pairs. 
 
   \item 
-  Recursive positions, |`var|, storing the index of recursive values. 
+  Recursive positions, \agda{`var}, storing the index of recursive values. 
 \end{enumerate}
 
   This amounts to the Agda datatype describing indexed descriptions shown in listing 
-  \ref{lst:idesc}. Types are not described by a value of type |IDesc I|, but rather as 
-  a function from index to description, |I -> IDesc I|. 
+  \ref{lst:idesc}. Types are not described by a value of type \agda{IDesc I}, but rather as 
+  a function from index to description, \agda{I → IDesc I}. 
 
 \includeagdalisting{7}{idesc}{The Universe of indexed descriptions}{lst:idesc}
 
   We retain the product of two descriptions as a first order construct of the universe 
   while including a generalized notion for coproducts, which does not present a choice 
-  between 2, but rather any possible number of operations. The |Sl| datatype is used 
-  to select these operations, and is isomorphic to |Fin|. We will require a lot of 
-  pattern matches this datatype to build descriptions, and by using |Sl| over |Fin| we 
-  end up with slightly more succinct descriptions. The definition of |Sl| is included 
+  between 2, but rather any possible number of operations. The \agda{Sl} datatype is used 
+  to select these operations, and is isomorphic to \agda{Fin}. We will require a lot of 
+  pattern matches this datatype to build descriptions, and by using \agda{Sl} over \agda{Fin} we 
+  end up with slightly more succinct descriptions. The definition of \agda{Sl} is included 
   below: 
 
 \includeagda{7}{sl}
 
-  The semantics associated with the |IDesc| universe is mostly the same as the 
+  The semantics associated with the \agda{IDesc} universe is mostly the same as the 
   semantics of the universe of regular types, the key difference being is that we do 
-  not map codes to a functor |Set → Set|, but rather to a function of type |I → (I → 
-  Set) → Set|. The semantics is shown in listing \ref{lst:idescsem}.
+  not map codes to a functor \agda{Set → Set}, but rather to a function of type \agda{I → (I → 
+  Set) → Set}. The semantics is shown in listing \ref{lst:idescsem}.
 
 \includeagdalisting{7}{idescsem}{Semantics of the IDesc universe}{lst:idescsem}
 
   The universe does not contain a separate constructor representing the empty type, 
-  since we can simply encode it as a coproduct of zero constructors: |`|$\sigma$ |0| 
-  $\lambda$ |()|. 
+  since we can simply encode it as a coproduct of zero constructors: \agda{`σ 0 λ()}.
 
   We calculate the fixpoint of a description's semantics using the following fixpoint 
   operation: 
@@ -68,21 +67,21 @@ are complete under our enumerative interpretation.
 \includeagda{7}{idescfix}
 
   \begin{example}
-    We can describe the |Fin| datatype as follows using a code in the universe of 
+    We can describe the \agda{Fin} datatype as follows using a code in the universe of 
     indexed descriptions: 
 
 \includeagdanv{7}{idescfin}
 
-    If the index is |zero|, there are no inhabitants, so we return a coproduct of zero 
-    choices. Otherwise, we may choose between two constructors: |zero| or |suc|. 
+    If the index is \agda{zero}, there are no inhabitants, so we return a coproduct of zero 
+    choices. Otherwise, we may choose between two constructors: \agda{zero} or \agda{suc}. 
     Notice that we describe the datatype by induction on the index type. This is not 
     required, although convenient in this case. A different, but equally valid 
-    description exists, in which we use the |`|$\Sigma$ constructor to explicitly 
-    enforce the constraint that the index |n| is the successor of some |n'|. 
+    description exists, in which we use the \agda{`Σ} constructor to explicitly 
+    enforce the constraint that the index \agda{n} is the successor of some \agda{n'}. 
     
 \includeagdanv{7}{idescfin2}
     
-    We then have that |Fix finD n| is isomorphic to |Fin n|. 
+    We then have that \agda{Fix finD n} is isomorphic to \agda{Fin n}. 
 
   \end{example}
 
@@ -96,7 +95,7 @@ are complete under our enumerative interpretation.
 
 \subsection{Exmample: describing well typed lambda terms}
 
-  To demonstrate the expressiveness of the |IDesc| universe, and to show how one might 
+  To demonstrate the expressiveness of the \agda{IDesc} universe, and to show how one might 
   model a more complex datatype, we consider simply typed lambda terms as an example. 
   We model the simply typed lambda calculus in Agda according to the representation 
   used in Philip Wadler and Wen Kokke's PLFA \cite{wadler2019plfa}. 
@@ -109,9 +108,9 @@ are complete under our enumerative interpretation.
   clear advantage that $\alpha$-equivalent terms have the same representation. Listing 
   \ref{lst:lambdadatatypes} contains the datatype definitions for raw terms, types and 
   contexts. Raw terms represent untyped lambda terms. Types can be either the ground 
-  type |`|$\tau$, or a function type $sigma$|`->|$\tau$. Since we are using De Bruijn 
+  type \agda{`τ}, or a function type \agda{σ `→ τ}. Since we are using De Bruijn 
   indices, we do not need to store variable names in the context, only types. Hence 
-  the |Ctx| type is isomorphic to |List Ty|. 
+  the \agda{Ctx} type is isomorphic to \agda{List Ty}. 
 
 \includeagdalisting{7}{lambdadatatypes}{Datatypes for raw terms, types and contexts}
 {lst:lambdadatatypes}
@@ -128,7 +127,8 @@ are complete under our enumerative interpretation.
 
   We describe these inference rules in Agda using an inductive datatype, shown in 
   listing \ref{lst:ctxmem}, indexed with a type and a context, whose inhabitants 
-  correspond to all proofs that a context $\Gamma$ contains a variable of type $\tau$. 
+  correspond to all proofs that a context \agda{Γ} contains a variable of type 
+  \agda{τ}. 
 
 \includeagdalisting{7}{ctxmembership}{Context membership in Agda}{lst:ctxmem}
 
@@ -155,18 +155,18 @@ are complete under our enumerative interpretation.
 \includeagdalisting{7}{typejudgement}{Well-typed lambda terms as a binary relation}
 {lst:wflambda}
 
-  Given an inhabitant $\Gamma$ |⊢| $\tau$ of this relationship, we can write a 
-  function |toTerm| that transforms the typing judgement to its corresponding untyped 
-  term, which simply \emph{erases} the indices of a proof $\Gamma \vdash \tau$ to 
+  Given an inhabitant of type \agda{Γ ⊢ τ} , we can write a 
+  function \agda{toTerm} that transforms the typing judgement to its corresponding untyped 
+  term, which simply \emph{erases} the indices of a proof with type \agda{Γ ⊢ τ} to 
   obtain an untyped term. 
 
 \includeagda{7}{toterm}
 
-  The term returned by |toTerm| will has type $\tau$ under context $\Gamma$. 
+  The term returned by \agda{toTerm} will has type \agda{τ} under context \agda{Γ}. 
 
 \subsubsection{An indexed description for well-typed terms}
 
-  In \cref{sec:idescdef}, we saw that we can describe the |Fin| both by induction on 
+  In \cref{sec:idescdef}, we saw that we can describe the \agda{Fin} both by induction on 
   the index, as well as by adding explicit constraints. Similarly, we can choose to 
   define a description for well-typed terms in two ways: either by induction on the 
   type of the terms we are describing, or by including an explicit constraint that the 
@@ -214,7 +214,7 @@ calculus with explicit constraints}{lst:slcdescconstrained}
   other. A downside to defining descriptions by induction over the index type is that 
   we often end up with at least some code duplication, making them unnecessarily 
   verbose. Descriptions with explicit constraints do not have this downside. We could 
-  even substitute |varDesc|, |absDesc| and |appDesc| for their respective definitions, 
+  even substitute \agda{varDesc}, \agda{absDesc} and \agda{appDesc} for their respective definitions, 
   since they are only referred to once. This often results in descriptions that are 
   much more succinct, but arguably less straightforward. 
 
@@ -231,38 +231,35 @@ calculus with explicit constraints}{lst:slcdescconstrained}
   brevity and efficiency. Throughout the remainder of this thesis, we will stick with 
   the inductive style of defining descriptions. 
 
-\section{Generic Generators for Indexed Descriptions}
+\section{Deriving generators}
 
   The process of deriving a generator for indexed descriptions is mostly the same as 
   for regular types. There are a few subtle differences, which we will outline in this 
-  section. We define a function |IDesc-gen| that derives a generator from an indexed 
+  section. We define a function \agda{IDesc-gen} that derives a generator from an indexed 
   description. Let us first look at its type signature: 
 
 \includeagda{7}{idescgen}
 
-  We take a value of type |IDesc I| (the description we are inducting over) and a 
-  function |I -> IDesc I| (describing the type for which we are deriving a generator) 
+  We take a value of type \agda{IDesc I} (the description we are inducting over) and a 
+  function \agda{I → IDesc I} (describing the type for which we are deriving a generator) 
   as input. We return an \emph{indexed} generator, which produces values of the type 
   dictated by the semantics of the input description. We build this generator by 
-  defining it for the various constructors of the |IDesc| type. 
+  defining it for the various constructors of the \agda{IDesc} type. 
 
 \subsection{Unit, product and recursive positions}
   
-  The definition for |`var|, |`1| and |`×| can be readily transferred from the 
-  definition of |deriveGen|. Their definition is included below: 
+  The definition for \agda{`var}, \agda{`1} and \agda{`×} can be readily transferred from the 
+  definition of \agda{deriveGen}. Their definition is included below: 
 
 \includeagda{7}{idescgentrivial}
   
 \subsection{Generalized coproduct}
 
-  The generic generators for the generalized coproduct and the |`Sigma| constructor 
-  are slightly more involved, since the both have to produce dependent pairs. Since 
-  the generalized coproduct is a particular instantiation of |`Sigma|, we will 
-  consider it first. 
+  The generic generators for the generalized coproduct are slightly more involved, since we have to return a generator that produces dependent pairs. This is tricky, because the applicative combinators are not expressive enough to capture the dependency between the generated \emph{value} of the first element, and the \emph{type} of the second element. This means that we have to utilize the monadic structure of the generator type in order to be able to capture this dependency. 
 
 \includeagda{7}{idescgencop}
 
-  Here we assume that |Sl|-|gen : (n : ℕ) → Genᵢ (Sl n) Sl n| is in scope, producing 
+  Here we assume that \agda{Sl-gen : (n : ℕ) → Genᵢ (Sl n) Sl n} is in scope, producing 
   values of the selector type. We capture the dependency between the generated first 
   element of the pair, and the type of the second element using the monadic bind of 
   the generator type, similar to when we were defining a generator for the universe of 
@@ -272,43 +269,42 @@ calculus with explicit constraints}{lst:slcdescconstrained}
 
 \subsection{Dependent pairs}
 
-  We can reuse this exact same structure when defining a generator for |`Sigma|, 
+  We can reuse this exact same structure when defining a generator for \agda{`Σ}, 
   however since the type of its first element is chosen by the user, we cannot define 
   a generator for it in adavance, as we did for the selector type. We use the same 
   approach using a metadata structure as for regular types to have the programmer pass 
-  appropriate generators as input to |IDesc-gen|. We define this metadata structure as 
-  a datatype |data IDescM {I} (P : Set → Set) : IDesc I → Set|. Its constructors are 
+  appropriate generators as input to \agda{IDesc-gen}. We define this metadata structure as 
+  a datatype \agda{data IDescM {I} (P : Set → Set) : IDesc I → Set}. Its constructors are 
   largely equivalent to the metadata structure used for regular types (\cref
   {sec:genericgenreg}), with the key difference being that we now require the 
-  programmer to store a piece of data depending on the type of the first element of a |
-  `Sigma|: 
+  programmer to store a piece of data depending on the type of the first element of a \agda{`Σ}:
 
 \includeagda{7}{idescmsigma}
 
-  The constructor of the |IDescM| type associated with the generalized coproduct 
-  follows the same structure as |`Sigma~|, but without a value argument, and with |S| 
+  The constructor of the \agda{IDescM} type associated with the generalized coproduct 
+  follows the same structure as \agda{`Σ$sim$}, but without a value argument, and with \agda{S} 
   instantiated to the selector type. 
 
-  If we now assume that |IDesc-gen| is parameterized over a metadata structure 
-  containing generators for the first argument of the |`Sigma| constructor, we can 
+  If we now assume that \agda{IDesc-gen} is parameterized over a metadata structure 
+  containing generators for the first argument of the \agda{`Σ} constructor, we can 
   define a generator for its interpretation: 
 
 \includeagda{7}{idescgensigma}
 
-  By using an instance of |Describe|, we may use the isomorphism stored within to 
-  convert the values generated by |IDesc-gen| to the type we are describing. 
+  By using an instance of \agda{Describe}, we may use the isomorphism stored within to 
+  convert the values generated by \agda{IDesc-gen} to the type we are describing. 
  
 \subsection{Example: deriving a generator for well-typed lambda terms}
 
-  Let us look at an example in which we use |deriveGen| to derive a generator in order 
+  Let us look at an example in which we use \agda{deriveGen} to derive a generator in order 
   to get a feel for how the generic mechanism defined in this section works out when 
   we actually try to use it. We will use the inductive description of well-typed terms 
   to derive a generator from. 
 
-  Looking at the description, we see that we use the |`|$\Sigma$ combinator to build 
-  dependent pairs that have either a proof that some $\tau$ is an element of a context 
-  $\Gamma$, or a type as their first element. This means that we require generators 
-  that produce elements of type $\Gamma \ni \tau$ and |Ty|: 
+  Looking at the description, we see that we use the \agda{`Σ} combinator to build 
+  dependent pairs that have either a proof that some \agda{τ} is an element of a context 
+  \agda{Γ}, or a type as their first element. This means that we require generators 
+  that produce elements of type \agda{Γ ∋ τ } and \agda{Ty}: 
 
 \includeagda{7}{genelem}
 
@@ -323,8 +319,8 @@ calculus with explicit constraints}{lst:slcdescconstrained}
   Given that the required generators are in scope, we define a metadata structure 
   indexed by the inductive description of well-typed lambda terms, shown in listing 
   \ref{lst:wtmeta}. The structure of this metadata structure is entirely dependent on 
-  how we defined the description in the first place. We only really have a choiice for 
-  the first element of |Sigma~|. 
+  how we defined the description in the first place. We only really have a choice for 
+  the first element of \agda{`Σ$sim$}. 
 
 \includeagdalisting{7}{wtmeta}{Metadata structure for the inductive description of 
 well-type lambda terms}{lst:wtmeta}
@@ -336,7 +332,7 @@ well-type lambda terms}{lst:wtmeta}
   provide the necessary generator, allowing them to choose whatever approach best 
   suits their needs. 
 
-\section{Completeness Proof for Enumerators Derived From Indexed Descriptions}
+\section{Proving completeness}
 
   We aim to prove the same completeness property for generators derived from indexed 
   descriptions as we did for generators derived from regular types. Since both 
@@ -347,9 +343,9 @@ well-type lambda terms}{lst:wtmeta}
 
   Let us first look at the exact property we aim to prove. Since we deal with indexed 
   generators, the desired completeness property changes slightly. In natural language, 
-  we might say that our goal is to prove that \emph{for every index |i| and value |x| 
-  of type |P i|, there is a depth such that |x| occurs in the enumeration we derive 
-  from the code describing |P|}. In Agda we formalize this property as follows: 
+  we might say that our goal is to prove that \emph{for every index \agda{i} and value \agda{x} 
+  of type \agda{P i}, there is a depth such that \agda{x} occurs in the enumeration we derive 
+  from the code describing \agda{P}}. In Agda we formalize this property as follows: 
 
 \includeagda{7}{completeness}
 
@@ -367,11 +363,11 @@ well-type lambda terms}{lst:wtmeta}
 \includeagda{7}{idesccompletetype}
 
   We will show how to define a proof for this lemma by considering the various 
-  constructors of the |IDesc| type. 
+  constructors of the \agda{IDesc} type. 
 
 \subsection{Unit, product and recursive positions}
 
-  The completeness proofs for |`var|, |`1| and |`×| can again be transplanted almost 
+  The completeness proofs for \agda{`var}, \agda{`1} and \agda{`×} can again be transplanted almost 
   without changes from the proof for regular types:  
 
 \includeagda{7}{idesccompletetrivial}
@@ -388,10 +384,10 @@ well-type lambda terms}{lst:wtmeta}
 \includeagdalisting{7}{bindcomplete}{Completeness for the bind operator}
 {lst:bindcomplete}
 
-  Since the generators for |`sigma| and |`Sigma| are assembled using \emph{monadic 
+  Since the generators for \agda{`Σ} and \agda{`σ} are assembled using \emph{monadic 
   bind}, we need to prove that this operation is completeness preserving. Defining 
-  what completeness even means for |>>=| is very difficult in itself, but since both 
-  usages in |IDesc-gen| follow the same structure, we can get away with proving a 
+  what completeness even means for \agda{>>=} is very difficult in itself, but since both 
+  usages in \agda{IDesc-gen} follow the same structure, we can get away with proving a 
   completeness property over our specific use of the bind operator. The lemma we use 
   is shown in listing \ref{lst:bindcomplete}. 
 
@@ -404,7 +400,7 @@ well-type lambda terms}{lst:wtmeta}
 
   It is worth noting that, since the universe of indexed descriptions exposes a 
   product combinator, we require a proof of \emph{monotonicity} for generators derived 
-  using |IDesc-gen| as well. We will not go into how to assemble this proof here 
+  using \agda{IDesc-gen} as well. We will not go into how to assemble this proof here 
   (since its structure is essentially the same as the monotonicity proof for regular 
   types), but it is obviously not possible to assemble this proof without proving the 
   monotonicity property over our bind operation first. 
