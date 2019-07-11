@@ -30,12 +30,12 @@ the following subjects:
 
   \subsection{Intuitionistic Type Theory}
 
-  In Intuitionistic type theory consists of terms, types and judgements $a : A$ 
+  In intuitionistic type theory consists of terms, types and judgements $a : A$ 
   stating that terms have a certain type. Generally we have the following two finite 
   constructions: $\mathbb{0}$ or the \emph{empty type}, containing no terms, and 
   $\mathbb{1}$ or the \emph{unit type} which contains exactly $1$ term. Additionally,
   the \emph{equality type}, $=$, captures the notion of equality for both terms and 
-  types. The equalit type is constructed from \emph{reflexivity}, i.e. it is 
+  types. The equality type is constructed from \emph{reflexivity}, i.e. it is 
   inhabited by one term $refl$ of the type $a = a$. 
 
   Types may be combined using three constructions. The \emph{function type}, $a 

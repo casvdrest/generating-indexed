@@ -253,3 +253,4 @@
 \newunicodechar{⊢}{\ensuremath{\vdash}}
 \newunicodechar{𝓢}{\ensuremath{\mathcal{S}}}
 \newunicodechar{↝}{\ensuremath{\leadsto}}
+\newunicodechar{∥}{\ensuremath{\parallel}}

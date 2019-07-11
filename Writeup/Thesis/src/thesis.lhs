@@ -136,8 +136,9 @@
 \tableofcontents
 
 \chapter{Declaration}
-Thanks to family, supervisor, friends and hops!
-\\ \\
+I am very grateful to my advisors Wouter Swierstra and Manuel Chakravarty, without whom this work would not have been what it is today. Their encouragement, guidance and constructive criticism has been invaluable to me, and I am glad to have had the opportunity to conduct my Master's thesis under their supervision. Furthermore, I am thankful to the members of IOHK's Plutus team for finding time in their schedule to discuss the project with me, and for the financial support provided by IOHK. 
+
+Of course I am also very grateful to my peers Joris, Joris, Lars, Ivo and Rik, who shared many long days in the Minnaert building with me, presenting numerous opportunities for some rubber ducking or a friendly chat. Their friendship and company have made the last 7 months a lot more enjoyable than they would have been on my own. \\ \\
 I declare that this thesis has been composed solely by myself and that it has not been
 submitted, in whole or in part, in any previous application for a degree. Except where
 stated otherwise by reference or acknowledgment, the work presented is entirely my
@@ -149,7 +150,7 @@ The generation of suitable test data is an essential part of \emph{property base
 %% Starts the mainmatter
 \mainmatter
 
-\chapter{Introduction}
+\chapter{Introduction}\label{sec:introduction}
 %include src/chap01/body.lhs
 
 \chapter{Background \& Prerequisites}
@@ -157,7 +158,7 @@ The generation of suitable test data is an essential part of \emph{property base
 
 \part{Theoretical Model}
 
-\chapter{Regular types}
+\chapter{Regular Types}
 %include src/chap05/body.lhs
 
 \chapter{Indexed Containers}

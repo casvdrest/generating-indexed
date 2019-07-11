@@ -1,5 +1,5 @@
 
-  We can desribe a large class of recursive algebraic data types with the universe 
+  We can describe a large class of recursive algebraic data types with the universe 
   of \emph{regular types}. In this section we describe this universe together with its 
   semantics, and demonstrate how we may define functions over regular types by 
   induction over their codes. We will then show how we can derive a generator from 
@@ -55,27 +55,10 @@
   By instantiating \agda{Regular} for a type, we may use any generic functionality that is 
   defined over regular types. 
 
-\subsection{Non-regular data types}
-
-  Although we can describe many familiar datatypes with a code in the universe of 
-  regular types, there are some limitations. Most notably, we cannot describe any 
-  family of mutually recursive types. The way the universe is set up includes the 
-  implicit assumption that all occurences of \agda{I} reference the same type. If we 
-  attempt to describe a datatype that is a composite of more than one recursive 
-  algebraic datatype, such as for example the type of \emph{rose trees}: 
-
-\includeagda{5}{defrose}
-
-  The other obvious shortcoming is that this universe only allows us to describe 
-  non-indexed datatypes. Despite these limitations it is still useful to consider how 
-  we might derive generators for types in this universe, as we the overall approach 
-  and design pattern to a large extent also applies to the universes we will consider 
-  in later chapters. 
-
-\section{Deriving generators}
+\section{Deriving generators}\label{sec:genericgenreg}
 
   We can derive generators for all regular types by induction over their associated 
-  codes. Furthermore, in \cref{regularproof} we will prove that the generators we 
+  codes. Furthermore, in \cref{sec:regularproof} we will prove that the generators we 
   derive from codes are complete under the enumerative interpretation we defined in 
   \cref{sec:generators}. 
 
@@ -183,7 +166,7 @@
 
 \includeagda{5}{isogen}
 
-\section{Constant Types}\label{sec:constanttypes}
+\section{Constant types}\label{sec:constanttypes}
 
   We have not yet discussed how to derive a generator for constant types. The reason 
   for this is that a constant type, \agda{K s} can carry any type in \agda{Set}. This means that 
@@ -225,7 +208,7 @@ for constant types}{lst:mdstructure}
 
   With this, we have completed the definition of \agda{deriveGen}. 
 
-\section{Proving completeness}
+\section{Proving completeness}\label{sec:regularproof}
 
   We set out to prove that by applying the enumerative interpretation to our generic 
   generator for regular types we obtain a complete enumeration for regular types. 
@@ -270,7 +253,7 @@ for constant types}{lst:mdstructure}
 
   \end{itemize}
 
-\subsection{Combinator Correctness}
+\subsection{Combinator correctness}
 
   We start our proof by asserting that the used combinators are indeed complete. That 
   is, we show for every constructor of \agda{Reg} that the generator we return in \agda{
@@ -351,7 +334,7 @@ for constant types}{lst:mdstructure}
   We can again extend this lemma to a proof that the enumerative interpretation of 
   product types is completeness preserving. 
 
-\subsection{Completeness for Constant Types}
+\subsection{Completeness for constant types}
 
   Since the completeness proof relies on completeness of the generators for constant 
   types, we need the programmer to supply a completness proof for the generators 
@@ -378,7 +361,7 @@ for constant types}{lst:mdstructure}
 
 \includeagda{5}{mdtransform}
 
-  Wich results in the following final type for \agda{deriveGen-Complete}. 
+  Which results in the following final type for \agda{deriveGen-Complete}. 
 
 \includeagda{5}{derivegenwithmd}
 
@@ -388,7 +371,7 @@ for constant types}{lst:mdstructure}
   generators that were supplied to \agda{deriveGen}, so we complete the proof for constant 
   types simply by returning the proof that is stored in the metadata structure. 
   
-\subsection{Generator Monotonicity}
+\subsection{Generator monotonicity}
 
   There is one crucial detail we ignored when describing how to prove completeness for 
   generators derived from product types. Since existential quantification is modelled 
@@ -412,7 +395,7 @@ for constant types}{lst:mdstructure}
   proof that some value \agda{x} occurs in the enumeration at depth \agda{k} into a proof that \agda{
   x} occurs in the enumeration at 
   depth \agda{k'}, given that $k \leq k'$. In other words, the set of values that occurs in 
-  an enumeration monotoneously increases with the enumeration depth. We thus require a 
+  an enumeration monotonously increases with the enumeration depth. We thus require a 
   proof of the following lemma in order to finish the completeness proof: 
 
 \includeagda{5}{derivegenmonotone}
@@ -451,3 +434,16 @@ for constant types}{lst:mdstructure}
   more expressive type universes. As we will see in the upcoming chapters, the 
   approach described in this chapter is to a large extent applicable to other type 
   universes as well. 
+
+  Although we can describe many familiar datatypes with a code in the universe of 
+  regular types, there are some limitations. Most notably, we cannot describe any 
+  family of mutually recursive types. The way the universe is set up includes the 
+  implicit assumption that all occurrences of \agda{I} reference the same type. If we 
+  attempt to describe a datatype that is a composite of more than one recursive 
+  algebraic datatype, such as for example the type of \emph{rose trees}: 
+
+\includeagda{5}{defrose}
+
+  The other obvious shortcoming is that this universe only allows us to describe 
+  non-indexed datatypes. In the following chapters we will consider two type 
+  universes that \emph{can} do this. 

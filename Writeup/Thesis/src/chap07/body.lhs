@@ -1,12 +1,11 @@
-\ref
 To be able to represent arbitrary indexed families, we use the universe of \emph
-{Indexed Descriptinos}, as proposed by Dagand \cite{dagand2013cosmology} in his PhD 
+{Indexed Descriptions}, as proposed by Dagand \cite{dagand2013cosmology} in his PhD 
 thesis. We structure this chapter in the same way as the previous two chapter, by 
 first giving the definition and semantics of the universe, before showing how a 
 generator can be derived from codes in this universe and proving that these generators 
 are complete under our enumerative interpretation. 
 
-\section{Universe Definition}\label{sec:idescdesc}
+\section{Universe definition}\label{sec:idescdesc}
 
   We first give the definition of the universe, together with its semantics and 
   fixpoint operation, before considering well-typed lambda terms as an example to 
@@ -14,7 +13,7 @@ are complete under our enumerative interpretation.
   we can capture datatypes that cannot be described as a regular type or indexed 
   container. 
 
-\subsection{Definition \& Semantics}\label{sec:idescdef}
+\subsection{definition \& Semantics}\label{sec:idescdef}
 
   Where indexed containers can be viewed as an extension to W-types, indexed 
   description take the universe of regular types as a basis and extend it to be able 
@@ -93,14 +92,14 @@ are complete under our enumerative interpretation.
 
   This allows us to use Agda's instance arguments to define functionality generically. 
 
-\subsection{Exmample: describing well typed lambda terms}
+\subsection{Example: well-typed lambda terms}
 
   To demonstrate the expressiveness of the \agda{IDesc} universe, and to show how one might 
   model a more complex datatype, we consider simply typed lambda terms as an example. 
   We model the simply typed lambda calculus in Agda according to the representation 
   used in Philip Wadler and Wen Kokke's PLFA \cite{wadler2019plfa}. 
 
-\subsubsection{Modelling SLC in Agda}
+\subsubsection{Modelling well-typed terms in Agda}
 
   Wadler and Kokke use a representation using De Bruijn indices \cite{de1972lambda}, 
   which represents variables as a natural denoting the number of lambda abstractions 

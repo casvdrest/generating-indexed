@@ -480,8 +480,9 @@
 \tableofcontents
 
 \chapter{Declaration}
-Thanks to family, supervisor, friends and hops!
-\\ \\
+I am very grateful to my advisors Wouter Swierstra and Manuel Chakravarty, without whom this work would not have been what it is today. Their encouragement, guidance and constructive criticism has been invaluable to me, and I am glad to have had the opportunity to conduct my Master's thesis under their supervision. Furthermore, I am thankful to the members of IOHK's Plutus team for finding time in their schedule to discuss the project with me, and for the financial support provided by IOHK. 
+
+Of course I am also very grateful to my peers Joris, Joris, Lars, Ivo and Rik, who shared many long days in the Minnaert building with me, presenting numerous opportunities for some rubber ducking or a friendly chat. Their friendship and company have made the last 7 months a lot more enjoyable than they would have been on my own. \\ \\
 I declare that this thesis has been composed solely by myself and that it has not been
 submitted, in whole or in part, in any previous application for a degree. Except where
 stated otherwise by reference or acknowledgment, the work presented is entirely my
@@ -493,10 +494,10 @@ The generation of suitable test data is an essential part of \emph{property base
 %% Starts the mainmatter
 \mainmatter
 
-\chapter{Introduction}
+\chapter{Introduction}\label{sec:introduction}
 A proven method for assuring ourselves that the programs we write behave according to our intentions is simply running them, and observing their behavior. This approach, where we do not try to reason about a program by looking at its code, but rather treat it as a black box which we expect to have a certain behavior is commonly known as \emph{property based testing}. Of course, this requires us to come up with suitable \emph{input values} to run our program on. This thesis concerns itself with the question of \emph{how} we can find these input values, specifically if our input data is subject to \emph{constraints}. For example, if we want to test that the code generation stage of a compiler produces correct results, we need well-formed programs to run it on. We approach this problem by developing a general framework with which we can both describe and generate many kinds of constrained data. 
 
-\section{Problem Statement}
+\section{Problem statement}
 
   At first glance defining properties that capture the desired behavior of a program may seem like the most challenging aspect of property based testing. While properly capturing a program's behavior in terms of a few universal properties is certainly hard, so is generating suitable test data to run it on. To illustrate this, we consider a simple example in the context of QuickCheck \cite{claessen2011quickcheck}. Suppose we are writing an implementation of \emph{insertion sort}, and we want to make sure that we can insert an element into a sorted list while preserving its sortedness. We write the following predicate that checks whether a list of integers is sorted: 
 
@@ -555,7 +556,7 @@ A proven method for assuring ourselves that the programs we write behave accordi
     The test cases that QuickCheck finds that satisfy the precondition are \emph{very 
     likely} to be extremely short lists, often with only 0, 1 or 2 elements. This is 
     simply a result of the fact that the probability that a random list is sorted 
-    exponentially decreases with the lengh of the randomly generated list. 
+    exponentially decreases with the length of the randomly generated list. 
     Consequently there is a heavy bias towards short lists, making it unlikely that we 
     test the \ensuremath{\HSVar{insert}} function on any larger inputs. 
 \end{enumerate}
@@ -613,7 +614,7 @@ A proven method for assuring ourselves that the programs we write behave accordi
   generic description of a set of (indexed) datatypes, and deriving generators from 
   the codes in these universes
 
-\section{Research Question and Goal}
+\section{Research question and goals}
 
   The main research question that this thesis attempts to answer is the following: 
   \begin{center}
@@ -712,7 +713,7 @@ A proven method for assuring ourselves that the programs we write behave accordi
 
 \vspace{-0.25cm}
 
-  \paragraph{Universe Polymorphism} All Agda snippets throughout this thesis have been 
+  \paragraph{Universe polymorphism} All Agda snippets throughout this thesis have been 
   compiled with the \agda{\{-\# OPTIONS --type-in-type \#-\}} pragma, since this makes them 
   much more readable than their universe polymorphic counterparts. In the Agda model 
   accompanying this thesis we have avoided this option wherever possible in order to 
@@ -735,7 +736,7 @@ In this section, we will briefly discuss some of the theoretical background that
 
 \end{itemize}
 
-\section{Type Theory}
+\section{Type theory}
 
   \emph{Type theory} is the mathematical foundation that underlies the \emph{type 
   systems} of many modern programming languages. In type theory, we reason about \emph\
@@ -781,16 +782,16 @@ $\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$
 
   Due to the aforementioned correspondence between types and propositions, any Agda 
   program we write is simultaneously a proof of the proposition associated with its 
-  type. Through this mechanism, Agda serves a dual purpose as a proof assistent. 
+  type. Through this mechanism, Agda serves a dual purpose as a proof assistant. 
 
-\section{Generic Programming and Type Universes}
+\section{Generic programming and type universes}
 
   In \emph{Datatype generic programming}, we define functionality not for individual 
   types, but rather by induction on \emph{structure} of types. This means that generic 
   functions will not take values of a particular type as input, but a \emph{code} that 
   describes the structure of a type. 
 
-\subsection{Design Pattern}\label{sec:tudesignpattern}
+\subsection{Design pattern}\label{sec:tudesignpattern}
 
   Datatype generic programming often follows a common design pattern that is 
   independent of the structural representation of types involved. In general 
@@ -880,9 +881,9 @@ $\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$
 
 \part{Theoretical Model}
 
-\chapter{Regular types}
+\chapter{Regular Types}
 
-  We can desribe a large class of recursive algebraic data types with the universe 
+  We can describe a large class of recursive algebraic data types with the universe 
   of \emph{regular types}. In this section we describe this universe together with its 
   semantics, and demonstrate how we may define functions over regular types by 
   induction over their codes. We will then show how we can derive a generator from 
@@ -938,27 +939,10 @@ $\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$
   By instantiating \agda{Regular} for a type, we may use any generic functionality that is 
   defined over regular types. 
 
-\subsection{Non-regular data types}
-
-  Although we can describe many familiar datatypes with a code in the universe of 
-  regular types, there are some limitations. Most notably, we cannot describe any 
-  family of mutually recursive types. The way the universe is set up includes the 
-  implicit assumption that all occurences of \agda{I} reference the same type. If we 
-  attempt to describe a datatype that is a composite of more than one recursive 
-  algebraic datatype, such as for example the type of \emph{rose trees}: 
-
-\includeagda{5}{defrose}
-
-  The other obvious shortcoming is that this universe only allows us to describe 
-  non-indexed datatypes. Despite these limitations it is still useful to consider how 
-  we might derive generators for types in this universe, as we the overall approach 
-  and design pattern to a large extent also applies to the universes we will consider 
-  in later chapters. 
-
-\section{Deriving generators}
+\section{Deriving generators}\label{sec:genericgenreg}
 
   We can derive generators for all regular types by induction over their associated 
-  codes. Furthermore, in \cref{regularproof} we will prove that the generators we 
+  codes. Furthermore, in \cref{sec:regularproof} we will prove that the generators we 
   derive from codes are complete under the enumerative interpretation we defined in 
   \cref{sec:generators}. 
 
@@ -1066,7 +1050,7 @@ $\forall\ x\ .\ P\ x$                        & $\Pi_{(x : A)} P(x)$
 
 \includeagda{5}{isogen}
 
-\section{Constant Types}\label{sec:constanttypes}
+\section{Constant types}\label{sec:constanttypes}
 
   We have not yet discussed how to derive a generator for constant types. The reason 
   for this is that a constant type, \agda{K s} can carry any type in \agda{Set}. This means that 
@@ -1108,7 +1092,7 @@ for constant types}{lst:mdstructure}
 
   With this, we have completed the definition of \agda{deriveGen}. 
 
-\section{Proving completeness}
+\section{Proving completeness}\label{sec:regularproof}
 
   We set out to prove that by applying the enumerative interpretation to our generic 
   generator for regular types we obtain a complete enumeration for regular types. 
@@ -1153,7 +1137,7 @@ for constant types}{lst:mdstructure}
 
   \end{itemize}
 
-\subsection{Combinator Correctness}
+\subsection{Combinator correctness}
 
   We start our proof by asserting that the used combinators are indeed complete. That 
   is, we show for every constructor of \agda{Reg} that the generator we return in \agda{
@@ -1234,7 +1218,7 @@ for constant types}{lst:mdstructure}
   We can again extend this lemma to a proof that the enumerative interpretation of 
   product types is completeness preserving. 
 
-\subsection{Completeness for Constant Types}
+\subsection{Completeness for constant types}
 
   Since the completeness proof relies on completeness of the generators for constant 
   types, we need the programmer to supply a completness proof for the generators 
@@ -1261,7 +1245,7 @@ for constant types}{lst:mdstructure}
 
 \includeagda{5}{mdtransform}
 
-  Wich results in the following final type for \agda{deriveGen-Complete}. 
+  Which results in the following final type for \agda{deriveGen-Complete}. 
 
 \includeagda{5}{derivegenwithmd}
 
@@ -1271,7 +1255,7 @@ for constant types}{lst:mdstructure}
   generators that were supplied to \agda{deriveGen}, so we complete the proof for constant 
   types simply by returning the proof that is stored in the metadata structure. 
   
-\subsection{Generator Monotonicity}
+\subsection{Generator monotonicity}
 
   There is one crucial detail we ignored when describing how to prove completeness for 
   generators derived from product types. Since existential quantification is modelled 
@@ -1295,7 +1279,7 @@ for constant types}{lst:mdstructure}
   proof that some value \agda{x} occurs in the enumeration at depth \agda{k} into a proof that \agda{
   x} occurs in the enumeration at 
   depth \agda{k'}, given that $k \leq k'$. In other words, the set of values that occurs in 
-  an enumeration monotoneously increases with the enumeration depth. We thus require a 
+  an enumeration monotonously increases with the enumeration depth. We thus require a 
   proof of the following lemma in order to finish the completeness proof: 
 
 \includeagda{5}{derivegenmonotone}
@@ -1335,6 +1319,19 @@ for constant types}{lst:mdstructure}
   approach described in this chapter is to a large extent applicable to other type 
   universes as well. 
 
+  Although we can describe many familiar datatypes with a code in the universe of 
+  regular types, there are some limitations. Most notably, we cannot describe any 
+  family of mutually recursive types. The way the universe is set up includes the 
+  implicit assumption that all occurrences of \agda{I} reference the same type. If we 
+  attempt to describe a datatype that is a composite of more than one recursive 
+  algebraic datatype, such as for example the type of \emph{rose trees}: 
+
+\includeagda{5}{defrose}
+
+  The other obvious shortcoming is that this universe only allows us to describe 
+  non-indexed datatypes. In the following chapters we will consider two type 
+  universes that \emph{can} do this. 
+
 \chapter{Indexed Containers}
   This chapter discusses the universe of \emph{indexed containers} \cite
   {altenkirch2015indexed}, which provide a generic framework to describe datatypes 
@@ -1348,7 +1345,7 @@ for constant types}{lst:mdstructure}
   derived from this universe, hence we will give a short outline of why we were unable 
   to do so using the approach we used for regular types. 
 
-\section{Universe Definition}
+\section{Universe definition}
 
   We choose to follow the representation used by Dagand in \emph{The Essence Of 
   Ornaments} \cite{dagand2017essence}, which provides an good introduction to indexed 
@@ -1406,7 +1403,7 @@ for constant types}{lst:mdstructure}
 
   \end{example}
 
-\subsubsection{Indexed Containers}
+\subsubsection{Indexed containers}
 
   \emph{Indexed containers} extend the notion of a W-type by parameterizing the shape 
   and position over the index type, and including a typing discipline that describes 
@@ -1451,7 +1448,7 @@ for constant types}{lst:mdstructure}
   We need this postulate to define isomorphisms both for W-types as well as indexed 
   containers. 
   
-\subsection{Example Signatures}
+\subsection{Examples}
 
   We consider a few example datatypes represented as indexed containers, in order to 
   get a feel for how we can represent types in this universe. 
@@ -1509,9 +1506,9 @@ for constant types}{lst:mdstructure}
 
 \subsubsection{Vectors}
 
-  One aspect we have not yet addressed is how to represent parameterized types, such 
-  as \agda{Vec a} (listing \ref{lst:defvec}). Indexed containers do not have an explicit 
-  way to refer to other types, such as is the case with regular types, but rather 
+  One aspect we have not yet addressed is how to represent types that refer to other types, such 
+  as \agda{Vec a}. Indexed containers do not have an explicit 
+  way to reference other types, such as regular types. Rather they
   include this kind of information as part of a type's operations. We consider the \agda{
   Vec} type as an example, defining the following operations: 
 
@@ -1531,10 +1528,10 @@ for constant types}{lst:mdstructure}
   steps we need to take: restricting the set of possible operations and arities, and 
   defining \emph{co-generators} for regular types. 
 
-\subsection{Restricting Operations and Arities}
+\subsection{Restricting operations and arities}
   
   The set of operations of a signature, \agda{Op}, is a value in \agda{Set}. This means that we 
-  agian run into the problem that we have no way to generate values of type \agda{Op i} 
+  again run into the problem that we have no way to generate values of type \agda{Op i} 
   without any further input of the programmer. The same problem occurs with arities. 
   We solve this problem by restricting operations and arities to regular types. By 
   doing this, we can reuse the generators we defined for regular types to generate 
@@ -1561,7 +1558,7 @@ arities}{lst:sigreg}
 
   \end{example}
 
-\subsection{Generating Function Types}
+\subsection{Generating function types}
 
   To derive a generator from a signature, we need, in addition to generic generators 
   for regular types, a way to generate function types whose input argument is a 
@@ -1590,7 +1587,7 @@ arities}{lst:sigreg}
   virtually the same, but we need to make the dependency between argument and result 
   type explicit in the type. 
 
-\subsection{Constructing the Generator}
+\subsection{Constructing generators}
 
   We are now ready to construct a the generic generator for indexed descriptions. 
   Recall that \agda{genericGen c} returns a generator for the regular type represented by \agda{
@@ -1621,15 +1618,14 @@ arities}{lst:sigreg}
   induction over function types in order to complete the proof. 
 
 \chapter{Indexed Descriptions}
-\ref
 To be able to represent arbitrary indexed families, we use the universe of \emph
-{Indexed Descriptinos}, as proposed by Dagand \cite{dagand2013cosmology} in his PhD 
+{Indexed Descriptions}, as proposed by Dagand \cite{dagand2013cosmology} in his PhD 
 thesis. We structure this chapter in the same way as the previous two chapter, by 
 first giving the definition and semantics of the universe, before showing how a 
 generator can be derived from codes in this universe and proving that these generators 
 are complete under our enumerative interpretation. 
 
-\section{Universe Definition}\label{sec:idescdesc}
+\section{Universe definition}\label{sec:idescdesc}
 
   We first give the definition of the universe, together with its semantics and 
   fixpoint operation, before considering well-typed lambda terms as an example to 
@@ -1637,7 +1633,7 @@ are complete under our enumerative interpretation.
   we can capture datatypes that cannot be described as a regular type or indexed 
   container. 
 
-\subsection{Definition \& Semantics}\label{sec:idescdef}
+\subsection{definition \& Semantics}\label{sec:idescdef}
 
   Where indexed containers can be viewed as an extension to W-types, indexed 
   description take the universe of regular types as a basis and extend it to be able 
@@ -1716,14 +1712,14 @@ are complete under our enumerative interpretation.
 
   This allows us to use Agda's instance arguments to define functionality generically. 
 
-\subsection{Exmample: describing well typed lambda terms}
+\subsection{Example: well-typed lambda terms}
 
   To demonstrate the expressiveness of the \agda{IDesc} universe, and to show how one might 
   model a more complex datatype, we consider simply typed lambda terms as an example. 
   We model the simply typed lambda calculus in Agda according to the representation 
   used in Philip Wadler and Wen Kokke's PLFA \cite{wadler2019plfa}. 
 
-\subsubsection{Modelling SLC in Agda}
+\subsubsection{Modelling well-typed terms in Agda}
 
   Wadler and Kokke use a representation using De Bruijn indices \cite{de1972lambda}, 
   which represents variables as a natural denoting the number of lambda abstractions 
@@ -2069,7 +2065,7 @@ generate constrained test data by describing constrained data as an inductive da
  and generating inhabitants of that datatype. We again consider well-typed lambda 
  terms as an example. 
 
-\section{General Approach}
+\section{General approach}
 
   The general structure of our approach is not much different from how we derived 
   generators for indexed descriptions in Agda, and consists of the following steps: 
@@ -2101,11 +2097,11 @@ language. They are intended to work together with the \emph{DataKinds} extension
 {ghcdocsdatakinds}. A singleton type is indexed by some promoted datatype, and has 
 exactly one inhabitant for every inhabitant of the type it is indexed with.   
 
-\section{Representing Indexed Descriptions In Haskell}
+\section{Representing indexed descriptions in Haskell}
 
   We take the datatype described in \cref{sec:idescdesc} as our basis, adding an extra 
   type parameter \ensuremath{\HSVar{a}\HSSym{::}\HSSym{*}} , describing the raw (non-indexed) type we will be 
-  converting to. Listing \ref{idescdef} contains the definition of this type ,\ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}}, with constructors for \emph{empty types}, \emph{unit types}, \emph{recursive 
+  converting to. Listing \ref{lst:idescdef} contains the definition of this type, \ensuremath{\HSCon{IDesc}\;\HSVar{a}\;\HSVar{i}}, with constructors for \emph{empty types}, \emph{unit types}, \emph{recursive 
   positions} and \emph{product types} taken almost directly from the corresponding 
   Agda type. 
 
@@ -2175,7 +2171,7 @@ exactly one inhabitant for every inhabitant of the type it is indexed with.
   We then require a singleton type for natural numbers to relate the first parameter 
   of \ensuremath{\HSSpecial{(}\ {\color{gray}\mathbin{:\hspace{-0.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{.9}{$+$}}}\hspace{-0.3pt}>}}\ \HSSpecial{)}} with the length of its second parameter. 
 
-\subsection{The \ensuremath{\HSSpecial{`}\Sigma } combinator}
+\subsection{The \ensuremath{\HSSpecial{`}\Sigma } constructor}
 
   Originally, we defined semantics of the \ensuremath{\HSSpecial{`}\Sigma } combinator as a dependent pair. 
   However, Haskell's type system does not easily facilitate this kind of type level 
@@ -2280,11 +2276,11 @@ exactly one inhabitant for every inhabitant of the type it is indexed with.
   prevent derived generators from including large amounts of empty generators, which 
   often come with a serious performance penalty. 
 
-\section{Deriving Generators}
+\section{Deriving generators}
 
   Before we set out to describe how we derive generators from descriptions, we first 
   briefly outline the generator type used, and describe the singleton type for 
-  descriptions needed to caputure the dependency between the input description and the 
+  descriptions needed to capture the dependency between the input description and the 
   type of values produced by the returned generator. 
 
 \subsection{The generator type}
@@ -2435,9 +2431,9 @@ exactly one inhabitant for every inhabitant of the type it is indexed with.
 \end{hscode}\resethooks
 \end{listing}
 
-  This results in the complete definition of \ensuremath{\HSCon{SingIDesc}} shown in listing \ref{singidesc}
+  This results in the complete definition of \ensuremath{\HSCon{SingIDesc}} shown in listing \ref{lst:singidesccomplete}.
 
-\begin{listing}{Singleton indexed description}{lst:singidesc}
+\begin{listing}{Singleton indexed description}{lst:singidesccomplete}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -2482,8 +2478,6 @@ exactly one inhabitant for every inhabitant of the type it is indexed with.
   type \ensuremath{\HSVar{s}}. We could have used a typeclass here, but as we will see, when considering 
   some examples, that it is often more convenient to explicitly supply the generator 
   to be used. 
-
-
   
   Finally, we require a proof that the interpretation of the \emph{expansion} of the 
   second argument is equal to the interpretation of the second argument, for all 
@@ -2594,7 +2588,7 @@ exactly one inhabitant for every inhabitant of the type it is indexed with.
 \end{hscode}\resethooks
 \end{listing}
 
-\subsection{Deriving generators}
+\subsection{Constructing the generator}
 
   We now have all necessary ingredients in place to define a function \ensuremath{\HSVar{idesc\char95 gen}} that 
   returns a generator based on its input description. It has the following type 
@@ -2712,7 +2706,7 @@ exactly one inhabitant for every inhabitant of the type it is indexed with.
 
 \subsection{Finite sets}
 
-  We assume the definition of \ensuremath{\HSCon{Fin}} given in listing \ref{}. If we erase the index of 
+  We assume the canonical definition of \ensuremath{\HSCon{Fin}}, shown in listing \ref{}. If we erase the index of 
   a value of type \ensuremath{\HSCon{Fin}\;\HSVar{n}}, we end up with a value of type \ensuremath{\HSCon{Nat}}, hence \ensuremath{\HSCon{Nat}} is the 
   raw type of our description. The goal is then to derive a generator producing values 
   of type \ensuremath{\HSCon{Nat}}, which we interpret as values of type \ensuremath{\HSCon{Fin}\;\HSVar{n}}, but with their indices 
@@ -3058,7 +3052,7 @@ In this final chapter, we will discuss the work presented in this thesis and pla
   described how a generic generator may be constructed from codes in these universes. 
   For the universe of indexed descriptions, we also proved that the enumerative 
   instantiation of the generator type satisfied our completeness property. For indexed 
-  containers, we were unfortuantely not able to complete this proof. Attempts to 
+  containers, we were unfortunately not able to complete this proof. Attempts to 
   construct a proof using the same structure as used to construct the completeness 
   proofs for regular types and indexed descriptions failed, as this approach would 
   require induction over function types. 
@@ -3239,7 +3233,7 @@ In this final chapter, we will discuss the work presented in this thesis and pla
   representations of indexed families have been developed as well. Here we briefly discuss 
   some alternative type universes. 
 
-\subsubsection{Indexed Functors}
+\subsubsection{Indexed functors}
 
   Löh and Magalhães propose in their paper \emph{Generic Programming with Indexed 
   Functors} \cite{loh2011generic} a type universe for generic programming in Agda, 
@@ -3257,7 +3251,7 @@ In this final chapter, we will discuss the work presented in this thesis and pla
   originally developed as a mathematical framework, but can also be used as an 
   alternative way of looking at datatypes. A species can, in terms of functional 
   programming, be thought of as a type constructor with one polymorphic argument. 
-  Haskell’s ADTs (or regular types in general) can be described by definining familiar 
+  Haskell’s algebraid datatypes (or regular types in general) can be described by definining familiar 
   combinators for species, such as sum and product.
 
 \subsubsection{Mutually recursive sums of product}
@@ -3266,7 +3260,7 @@ In this final chapter, we will discuss the work presented in this thesis and pla
   \cite{de2014true}, where datatypes are respresented as a choice between an arbitrary 
   amount of constructors, each of which can have any arity. This view corresponds to 
   how datatypes are defined in Haskell, and is closely related to the universe of 
-  regular types. As we will see (for example in section \ref{patternfunctors}), other 
+  regular types. As we have seen when discussing regular types, other 
   universes too employ sum and product combinators to describe the structure of 
   datatypes, though they do not necessarily enforce the representation to be in 
   disjunctive normal form. Sum of Products, in its simplest form, cannot represent 
@@ -3283,7 +3277,7 @@ In this final chapter, we will discuss the work presented in this thesis and pla
   the same common pattern on which the work in this thesis is based, where the required 
   test data is of a simple type, but constrained by some precondition. The precondition 
   can then be modeled as some inductive dependent relation indexed by said simple type. 
-  The \ensuremath{\HSCon{Sorted}} datatype shown in section \ref{sec:introduction} is a good example of 
+  The \ensuremath{\HSCon{Sorted}} datatype shown in chapter \ref{sec:introduction} is a good example of 
   this
 
   They derive generators for such datatypes by abstracting over dependent inductive 
@@ -3328,7 +3322,7 @@ In this final chapter, we will discuss the work presented in this thesis and pla
   specifically apply their work to the problem of generating well-typed lambda terms, 
   considering this particular problem as a running example throughout their paper.  
 
-\section{Next steps \& Future work}
+\section{Next steps \& future work}
 
   As highlighted in the previous section, there is plenty of room for improvement upon 
   the current state of the work. Hence, there are many possible paths of future work. 
@@ -3360,7 +3354,7 @@ In this final chapter, we will discuss the work presented in this thesis and pla
   recursive family a recursive position refers to. Yakushev et al. \cite
   {yakushev2009generic} use this technique for their approach. Our Haskell library is 
   expressive enough to generate values for these GADT's, so this appears to be a 
-  promising approach to generation of mutualy recursive indexed families. 
+  promising approach to generation of mutually recursive indexed families. 
 
 \subsubsection{Integration with existing testing frameworks}
 
