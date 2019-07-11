@@ -16,7 +16,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 module AgdaGen.Base where
 
   data Gen {ℓ k} {i : Set k} : 
-    (Set ℓ) → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where
+    Set ℓ → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where
 
     -- Lifts values into the Genᵢ type
     Pure : ∀ {a : Set ℓ} {t : i → Set ℓ} {x : i} → a → Gen a t x

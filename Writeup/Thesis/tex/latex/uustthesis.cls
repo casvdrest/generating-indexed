@@ -1,7 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{uustthesis}[2018/07/04 Utrecht University Software Technology Thesis Template]
 %% We'll build on top of the 'book' class.
-\LoadClass[oneside]{book}
+\LoadClass[oneside, 11pt]{book}
 
 %% Basic Commands
 
@@ -17,7 +17,7 @@
 \RequirePackage[colorlinks=false]{hyperref}
 \RequirePackage{cleveref}
 \RequirePackage{catchfilebetweentags}
-\RequirePackage{agda}
+\RequirePackage[conor]{agda}
 \RequirePackage{bm}
 
 %% Declaring our Options
@@ -107,23 +107,23 @@
 %% Choosing STIX Two as our font
 %%
 %% This also loads some fancier stylistic sets for \mathcal and stuff.
-\setmathfont{STIX Two Math}[StylisticSet={1,2,8}, version=stix2_128]
-\setmathfont{STIX Two Math}[version=stix2_128]
-\setmainfont{Linux Libertine}
-\mathversion{stix2_128}
+% \setmathfont{STIX Two Math}[StylisticSet={1,2,8}, version=stix2_128]
+% \setmathfont{STIX Two Math}[version=stix2_128]
+% \setmainfont{STIX Two Math}
+% \mathversion{stix2_128}
 
 %% Choosing XITS as our font
 % \setmathfont{XITS Math}[version=xits]
-% \setmainfont{XITS}
+% \setmainfont{Linux Libertine}
 % \mathversion{xits}
 
 %% Choosing Libertine as our font
 % \setmainfont{Linux Libertine}
 
 %% Choosing TeX Gyre Pagella as our font
-%\setmathfont{TeX Gyre Pagella Math}[version=pagella]
-%\setmainfont{TeX Gyre Pagella}
-%\mathversion{pagella}
+\setmathfont{TeX Gyre Pagella Math}[version=pagella]
+\setmainfont{TeX Gyre Pagella}
+\mathversion{pagella}
 
 %% Fancy Chapter Headers
 \RequirePackage{quotchap}
@@ -159,7 +159,7 @@
   ~
   \begin{minipage}{0.7\textwidth}%
   \begin{flushleft}
-  \textsc{\huge Universiteit Utrecht}\vskip 1.5em
+  \textsc{\huge Utrecht University}\vskip 1.5em
   \textsc{\Large Faculty of Science}\vskip 0.5em
   \textsc{\large Dept. of Information and Computing Sciences}%
   \end{flushleft}
@@ -182,14 +182,15 @@
   ~
   \begin{minipage}{0.4\textwidth}
   \begin{flushright}\large
-  \textit{Supervisor}\vskip .5em
+  \textit{Supervised by:}\vskip .5em
   \@supervisor
   \end{flushright}
   \end{minipage}
-  \vfill\vfill\vfill
+  \vfill\vfill
+  \vfill
 %%%%%%%%%%%%
 %% Date
-  {\large\@date} 
+  {\large Submitted for the degree "Master of Science" on \@date} 
   \vfill\newpage
 \end{center}
 %%%%%%%%%%%%
@@ -229,7 +230,7 @@
 
 \usepackage{newunicodechar}
 \newunicodechar{∷}{\ensuremath{∷}}
-\newunicodechar{▻}{\ensuremath{▻}}
+%% \newunicodechar{▻}{\ensuremath{{\scriptscriptstyle\triangleright}}}
 \newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
 \newunicodechar{⦇}{\ensuremath{\llparenthesis}}
 \newunicodechar{⦈}{\ensuremath{\rrparenthesis}}

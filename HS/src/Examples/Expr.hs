@@ -40,7 +40,12 @@ module Expr where
     LEQ   :: Expr 'Nat -> Expr 'Nat -> Expr 'Bool
     ValE  :: Itp ty -> Expr ty 
 
-  data Expr' = AddE' Expr' Expr' | MulE' Expr' Expr' | ITE' Expr' Expr' Expr' | LEQ' Expr' Expr' | ValN Nat | ValB Bool deriving Show
+  data Expr' = AddE' Expr' Expr' 
+             | MulE' Expr' Expr' 
+             | ITE' Expr' Expr' Expr' 
+             | LEQ' Expr' Expr' 
+             | ValN Nat 
+             | ValB Bool deriving Show
 
   check :: Expr' -> Type -> Bool 
   check (AddE' e1 e2) Nat  = check e1 Nat && check e2 Nat

@@ -5,7 +5,7 @@
 open import AgdaGen.Base
 open import AgdaGen.Combinators
 open import AgdaGen.Enumerate
-open import AgdaGen.Generic.Isomorphism
+open import AgdaGen.Generic.Isomorphism renaming (_≅_ to _≃_)
 open import AgdaGen.Data using (_∈_ ; here ; there)
 open import Level renaming (zero to zeroL ; suc to sucL)
 
@@ -28,8 +28,8 @@ open GMonad       ⦃...⦄
 %<*sl>
 \begin{code}
 data Sl : ℕ → Set where
-    ∙  : ∀ {n} → Sl (suc n)
-    ▻_ : ∀ {n} → Sl n → Sl (suc n)
+    ∙   : ∀ {n} → Sl (suc n)
+    ▻_  : ∀ {n} → Sl n → Sl (suc n)
 \end{code}
 %</sl>
 
@@ -72,8 +72,8 @@ module A where
   finD : ℕ → IDesc ℕ
   finD zero     = `σ 0 λ()
   finD (suc n)  = `σ 2 λ
-    { ∙      → `1
-    ; (▻ ∙)  → `var n
+    {   ∙     → `1
+    ;  (▻ ∙)  → `var n
     }
 \end{code}
 %</idescfin>
@@ -86,8 +86,8 @@ module B where
 \begin{code}
   finD : ℕ → IDesc ℕ
   finD = λ n → `Σ ℕ λ m → `Σ (n ≡ suc m) λ { refl →
-    `σ 2 λ { ∙      → `1
-           ; (▻ ∙)  → `var n
+    `σ 2 λ {   ∙     → `1
+           ;  (▻ ∙)  → `var n
            }}
 \end{code}
 %</idescfin2>
@@ -95,26 +95,6 @@ module B where
 \begin{code}
 open A
 \end{code}
-
-%<*idescfiniso>
-\begin{code}
-fromFin : ∀ {n} → Fin n → Fix finD n
-fromFin {suc _} zero      = In (∙    , tt)
-fromFin {suc _} (suc fn)  = In (▻ ∙  , fromFin fn)
-
-toFin : ∀ {n} → Fix finD n → Fin n
-toFin {suc _} (In (∙    , _))  = zero
-toFin {suc _} (In (▻ ∙  , r))  = suc (toFin r)
-
-isoFin₁ : ∀ {n fn} → toFin {n} (fromFin fn) ≡ fn
-isoFin₁ {suc _} {zero}   = refl
-isoFin₁ {suc _} {suc _}  = cong suc isoFin₁
-
-isoFin₂ : ∀ {n fn} → fromFin {n} (toFin fn) ≡ fn
-isoFin₂ {suc _} {In (∙    , _)}  = refl
-isoFin₂ {suc _} {In (▻ ∙  , _)}  = cong (λ x → In (▻ ∙ , x)) isoFin₂
-\end{code}
-%</idescfiniso>
 
 %<*lambdadatatypes>
 \begin{code}
@@ -131,7 +111,7 @@ data Ctx : Set where
   ∅      : Ctx
   _,'_   : Ctx → Ty → Ctx
 \end{code}
-<%/lambdadatatypes>
+%</lambdadatatypes>
 
 \begin{code}
 infix 30 _,'_
@@ -141,12 +121,11 @@ infix 20 _∋_
 %<*ctxmembership>
 \begin{code}
 data _∋_ : Ctx → Ty → Set where
+
   [Pop]  :  ∀ {Γ τ}
-            ----------
          →  Γ ,' τ ∋ τ
 
-  [Top]  :  ∀ {Γ τ σ} → Γ ∋ τ
-            -----------------
+  [Top]  :  ∀ {Γ τ σ} →  Γ ∋ τ 
          →  Γ ,' σ ∋ τ
 \end{code}
 %</ctxmembership>
@@ -154,16 +133,14 @@ data _∋_ : Ctx → Ty → Set where
 %<*typejudgement>
 \begin{code}
 data _⊢_ : Ctx → Ty → Set where
+
   [Var]  :  ∀ {Γ τ} → Γ ∋ τ
-            ----------------
          →  Γ ⊢ τ
 
   [Abs]  :  ∀ {Γ σ τ} → Γ ,' σ ⊢ τ
-            ----------------------
          →  Γ ⊢ (σ `→ τ)
 
   [App]  :  ∀ {Γ σ τ} → Γ ⊢ (σ `→ τ) → Γ ⊢ σ
-            --------------------------------
          →  Γ ⊢ τ
 \end{code}
 %</typejudgement>
@@ -185,10 +162,11 @@ module Inductive where
   varDesc (Γ , τ) = `Σ (Γ ∋ τ) λ _ → `1
 
   absDesc : Ctx × Ty × Ty  → IDesc (Ctx × Ty)
-  absDesc (Γ , σ , τ) = `Σ ℕ (λ α → `var (Γ ,' σ , τ))
+  absDesc (Γ , σ , τ) = `var (Γ ,' σ , τ)
 
   appDesc : Ctx × Ty → IDesc (Ctx × Ty)
-  appDesc (Γ , τ) = `Σ Ty (λ σ → `var (Γ , σ `→ τ) `× `var (Γ , σ))
+  appDesc (Γ , τ) = `Σ Ty (λ σ  →  `var (Γ , σ `→ τ)
+                                `× `var (Γ , σ))
 \end{code}
 
 %<*slcdescinductive>
@@ -196,12 +174,12 @@ module Inductive where
   wt : Ctx × Ty → IDesc (Ctx × Ty)
   wt (Γ , τ) =
     case τ of λ { `τ →
-        `σ 2 λ { ∙      → varDesc (Γ , τ)
-               ; (▻ ∙)  → appDesc (Γ , τ) }
+        `σ 2 λ {   ∙     → varDesc (Γ , τ)
+               ;  (▻ ∙)  → appDesc (Γ , τ) }
       ; (τ₁ `→ τ₂) →
-        `σ 3 λ { ∙        → varDesc (Γ , τ)
-               ; (▻ ∙)    → absDesc (Γ , τ₁ , τ₂)
-               ; (▻ ▻ ∙)  → appDesc (Γ , τ) } }
+        `σ 3 λ {   ∙       → varDesc (Γ , τ)
+               ;  (▻ ∙)    → absDesc (Γ , τ₁ , τ₂)
+               ;  (▻ ▻ ∙)  → appDesc (Γ , τ) } }
 \end{code}
 %</slcdescinductive>
 
@@ -218,18 +196,20 @@ module Constrained where
   absDesc (Γ , σ , τ) = `Σ ℕ (λ α → `var (Γ ,' σ , τ))
 
   appDesc : Ctx × Ty → IDesc (Ctx × Ty)
-  appDesc (Γ , τ) = `Σ Ty (λ σ → `var (Γ , σ `→ τ) `× `var (Γ , σ))
+  appDesc (Γ , τ) = `Σ Ty (λ σ  →   `var (Γ , σ `→ τ)
+                                `×  `var (Γ , σ))
 \end{code}
-%</slcdescconstrained>
+%</sltcconstructordesc>
 
 %<*slcdescconstrained>
 \begin{code}
   wt : Ctx × Ty → IDesc (Ctx × Ty)
   wt (Γ , τ) =
-    `σ 3 λ  { ∙          → varDesc (Γ , τ)
-            ; (▻ ∙)      → `Σ (Σ (Ty × Ty) λ { (σ , τ') → τ ≡ σ `→ τ' })
-                            λ { ((σ , τ') , refl) → absDesc (Γ , (σ , τ')) }
-            ; (▻ (▻ ∙))  → appDesc (Γ , τ)
+    `σ 3 λ  {  ∙         → varDesc (Γ , τ)
+            ; (▻ ∙)      →
+              `Σ  (Σ (Ty × Ty) λ { (σ , τ') → τ ≡ σ `→ τ' })
+                  λ { ((σ , τ') , _) → absDesc (Γ , (σ , τ')) }
+            ; (▻ ▻ ∙)  → appDesc (Γ , τ)
             }
 \end{code}
 %</slcdescconstrained>
@@ -240,65 +220,12 @@ module E where
   open Inductive
 \end{code}
 
-\begin{code}
-  
-  fromInductive : ∀ {Γ τ} → Fix Inductive.wt (Γ , τ) → Fix Constrained.wt (Γ , τ)
-  fromInductive {Γ} {`τ}      (In (∙ , Γ∋ , tt))               =
-    In (∙ , Γ∋ , tt)
-  fromInductive {Γ} {`τ}      (In ((▻ ∙) , τ , (r₁ , r₂)))     =
-    In (▻ ▻ ∙ , τ , fromInductive r₁ , fromInductive r₂)
-  fromInductive {Γ} {σ `→ τ}  (In (∙ , Γ∋ , tt))               =
-    In (∙ , Γ∋ , tt )
-  fromInductive {Γ} {σ `→ τ}  (In ((▻ ∙) , α , r))             =
-    In (▻ ∙ , ((σ , τ) , refl) , α , fromInductive r)
-  fromInductive {Γ} {σ `→ τ}  (In ((▻ (▻ ∙)) , σ' , r₁ , r₂))  =
-    In (▻ ▻ ∙ , σ' , fromInductive r₁ , fromInductive r₂)
-
-  toInductive : ∀ {Γ τ} → Fix Constrained.wt (Γ , τ) → Fix Inductive.wt (Γ , τ)
-  toInductive {Γ} {`τ}       (In (∙ , Γ∋ , tt))                         =
-    In (∙ , Γ∋ , tt)
-  toInductive {Γ} {τ `→ τ₁}  (In (∙ , Γ∋ , tt))                         =
-    In (∙ , Γ∋ , tt)
-  toInductive {Γ} {`τ}       (In ((▻ ∙) , ((τ₁ , τ₂) , ()) , r))
-  toInductive {Γ} {σ `→ τ}   (In ((▻ ∙) , ((.σ , .τ) , refl) , α , r))  =
-    In ((▻ ∙) , α , toInductive r)
-  toInductive {Γ} {`τ}       (In ((▻ (▻ ∙)) , σ' , r₁ , r₂))            =
-    In (▻ ∙ , σ' , toInductive r₁ , toInductive r₂)
-  toInductive {Γ} {σ `→ τ}   (In ((▻ (▻ ∙)) , σ' , r₁ , r₂))            =
-    In (▻ ▻ ∙ , σ' , toInductive r₁ , toInductive r₂)
-
-  wtIso₁ : ∀ {Γ τ} {wt : Fix Inductive.wt (Γ , τ)} → toInductive (fromInductive wt) ≡ wt
-  wtIso₁ {Γ} {`τ}       {In (∙ , _)}                  = refl
-  wtIso₁ {Γ} {`τ}       {In ((▻ ∙) , σ , _ , _)}      =
-    cong₂ (λ x y → In ((▻ ∙) , σ , x , y)) wtIso₁ wtIso₁
-  wtIso₁ {Γ} {τ `→ τ₁}  {In (∙ , _)}                  = refl
-  wtIso₁ {Γ} {τ `→ τ₁}  {In ((▻ ∙) , α , _)}          =
-    cong (λ x → In ((▻ ∙) , α , x)) wtIso₁
-  wtIso₁ {Γ} {τ `→ τ₁}  {In ((▻ (▻ ∙)) , σ , _ , _)}  =
-    cong₂ (λ x y → In (▻ ▻ ∙ , σ , x , y )) wtIso₁ wtIso₁
-
-  wtIso₂ : ∀ {Γ τ} {wt : Fix Constrained.wt (Γ , τ)} → fromInductive (toInductive wt) ≡ wt
-  wtIso₂ {Γ} {`τ} {In (∙ , _ , tt)}                                = refl
-  wtIso₂ {Γ} {`τ} {In ((▻ ∙) , (_ , ()) , _)}
-  wtIso₂ {Γ} {`τ} {In ((▻ (▻ ∙)) , σ , _ , _)}                     =
-    cong₂ (λ x y → In ((▻ ▻ ∙) , σ , x , y)) wtIso₂ wtIso₂
-  wtIso₂ {Γ} {σ `→ τ} {In (∙ , _ , tt)}                            = refl
-  wtIso₂ {Γ} {σ `→ τ} {In ((▻ ∙) , (((.σ , .τ) , refl) , α , _))}  =
-    cong (λ x → In (▻ ∙ , ((σ , τ) , refl) , α , x)) wtIso₂
-  wtIso₂ {Γ} {σ `→ τ} {In ((▻ (▻ ∙)) , σ' , _ , _)}                =
-    cong₂ (λ x y → In (▻ ▻ ∙ , σ' , x , y)) wtIso₂ wtIso₂
-
-\end{code}
-
 %<*desciso>
 \begin{code}
-  desc≃ : ∀ {Γ τ} → Fix Inductive.wt (Γ , τ) ≅ Fix Constrained.wt (Γ , τ)
+  desc≃ : ∀ {Γ τ}  → Fix Inductive.wt (Γ , τ)
+                   ≃ Fix Constrained.wt (Γ , τ)
 \end{code}
-  %</desciso>
-
-\begin{code}
-  desc≃ = record { from = fromInductive ; to = toInductive ; iso₁ = wtIso₁ ; iso₂ = wtIso₂ }
-\end{code}
+%</desciso>
 
 %<*constrainediso>
 \begin{code}
@@ -308,6 +235,7 @@ module E where
 
 \begin{code}
   wt≃ = {!!}
+  desc≃ = {!!}
 \end{code}
 
 %<*idescm>
@@ -332,15 +260,23 @@ data IDescM {I : Set} (P : Set → Set) : IDesc I → Set where
 
 %<*idescmsigma>
 \begin{code}
-  `Σ~ :  ∀ {S : Set} {T : S → IDesc I} → P S → ((s : S) → IDescM P (T s))
-      →  IDescM P (`Σ S T)
+  `Σ~  :  ∀ {S : Set} {T : S → IDesc I} → P S
+       → ((s : S) → IDescM P (T s)) →  IDescM P (`Σ S T)
 \end{code}
 %</idescmsigma>
 
 \begin{code}
-Sl-gen : (n : ℕ) → Genᵢ (Sl n) Sl n
+Sl-gen : (n : ℕ) → Gen (Sl n) Sl n
 Sl-gen zero = empty
-Sl-gen (suc n) = ⦇ ∙ ⦈ ∥ ⦇ ▻ (μᵢ n) ⦈
+Sl-gen (suc n) = ⦇ ∙ ⦈ ∥ ⦇ ▻ (μ n) ⦈
+
+mapm : ∀ {ℓ k} {I : Set k} {δ : IDesc I} {P Q : Set ℓ → Set (sucL ℓ)}
+       → (∀ {s : Set ℓ} → P s → Q s) → IDescM P δ → IDescM Q δ
+mapm f `var~ = `var~
+mapm f `1~ = `1~
+mapm f (dₗ `×~ dᵣ) = (mapm f dₗ) `×~ mapm f dᵣ
+mapm f (`σ~ fd) = `σ~ (mapm f ∘ fd)
+mapm f (`Σ~ s fd) = `Σ~ (f s) (mapm f ∘ fd) 
 
 module C where
 \end{code}
@@ -348,15 +284,17 @@ module C where
 %<*idescgen>
 \begin{code}
   IDesc-gen :  ∀ {I} {i : I} → (δ : IDesc I) → (φ : I → IDesc I)
-            →  Genᵢ (⟦ δ ⟧ (Fix φ)) (λ i → ⟦ φ i ⟧ (Fix φ)) i
+            →  Gen (⟦ δ ⟧ (Fix φ)) (λ i → ⟦ φ i ⟧ (Fix φ)) i
 \end{code} 
 %</idescgen>
 
+%<*idescgentrivial>
 \begin{code}
-  IDesc-gen (`var i)    φ = ⦇ In (μᵢ i) ⦈
-  IDesc-gen `1          φ = pure tt
+  IDesc-gen (`var i)    φ = ⦇ In (μ i) ⦈
+  IDesc-gen `1          φ = ⦇ tt ⦈
   IDesc-gen (δₗ `× δᵣ)  φ = ⦇ (IDesc-gen δₗ φ) , (IDesc-gen δᵣ φ) ⦈
 \end{code}
+%</idescgentrivial>
 
 \begin{code}
   IDesc-gen (`Σ S T) φ = {!!}
@@ -365,7 +303,7 @@ module C where
 %<*idescgencop>
 \begin{code}
   IDesc-gen {i = i} (`σ n T) φ = do
-    sl ← Callᵢ {x = i} n Sl-gen
+    sl ← Call {x = i} n Sl-gen
     t  ← IDesc-gen (T sl) φ
     pure (_,_ {B = λ sl → ⟦ T sl ⟧ (Fix φ)} sl t)
 \end{code}
@@ -374,7 +312,7 @@ module C where
 \begin{code}
 module D where
 
-  IDesc-gen : ∀ {I} {i : I} → (δ : IDesc I) → (φ : I → IDesc I) → IDescM (λ a → Gen a a) δ → Genᵢ (⟦ δ ⟧ (Fix φ)) (λ i → ⟦ φ i ⟧ (Fix φ)) i
+  IDesc-gen : ∀ {I} {i : I} → (δ : IDesc I) → (φ : I → IDesc I) → IDescM (λ a → Gen a (λ { tt → a}) tt) δ → Gen (⟦ δ ⟧ (Fix φ)) (λ i → ⟦ φ i ⟧ (Fix φ)) i
   IDesc-gen (`var i) φ m = {!!}
   IDesc-gen `1 φ m = {!!}
   IDesc-gen (δ `× δ₁) φ m = {!!}
@@ -384,7 +322,7 @@ module D where
 %<*idescgensigma>
 \begin{code}
   IDesc-gen (`Σ S T) φ (`Σ~ S~ T~) = do
-    s ← Call S~
+    s ← Call tt (λ { tt → S~ })
     t ← IDesc-gen (T s) φ (T~ s)
     pure (_,_ {B = λ s → ⟦ T s ⟧ (Fix φ ) } s t)
 \end{code}
@@ -394,33 +332,143 @@ module D where
 \begin{code}
 record Describe {I} (A : I → Set) : Set where
   field φ : I → IDesc I
-  field iso : (i : I) → A i ≅ Fix φ i
+  field iso : (i : I) → A i ≃ Fix φ i
 \end{code}
 %</describe>
 
 %<*completeness>
 \begin{code}
-Complete : ∀ {I} {P : I → Set} → (i : I) → ((i : I) → Genᵢ (P i) P i) → Set
-Complete {I} {P} i gen = ∀ {x : P i} → ∃[ n ] (x ∈ interpretᵢ gen i (gen i) n)
+Complete :  ∀ {I} {P : I → Set} → (i : I)
+            → ((i : I) → Gen (P i) P i) → Set
+Complete {I} {P} i gen =
+  ∀ {x : P i} → ∃[ n ] (x ∈ enumerate gen i (gen i) n)
 \end{code}
 %</completeness>
 
+%<*productivity>
 \begin{code}
-_∣ᵢ_↝_ : ∀ {I} {A : Set} {P : I → Set} {i : I} → Genᵢ A P i → ((i : I) → Genᵢ (P i) P i) → A → Set
+_∣ᵢ_↝_ :  ∀ {I} {A : Set} {P : I → Set} {i : I}
+          → Gen A P i → ((i : I) → Gen (P i) P i) → A → Set
+\end{code}
+%</productivity>
+\begin{code}
 _∣ᵢ_↝_ = {!!}
 \end{code}
 
 %<*bindcomplete>
 \begin{code}
->>=-Complete :  ∀ {I A} {P : A → Set} {T : I → Set} {x y}
-                  {g : Genᵢ A T x} {g' : (v : A) → Genᵢ (P v) T y}
-                  {x : Σ A P} {tg : (i : I) → Genᵢ (T i) T i}
-                → g ∣ᵢ tg ↝ proj₁ x
-                → g' (proj₁ x) ∣ᵢ tg ↝ proj₂ x
-                → (g >>= λ y → ⦇ (λ v → y , v) (g' y) ⦈) ∣ᵢ tg ↝ x 
+>>=-Complete :
+  ∀ {I A} {P : A → Set} {T : I → Set} {x y}
+    {g : Gen A T x} {g' : (v : A) → Gen (P v) T y}
+    {x : Σ A P} {tg : (i : I) → Gen (T i) T i}
+  → g ∣ᵢ tg ↝ proj₁ x
+  → g' (proj₁ x) ∣ᵢ tg ↝ proj₂ x
+  → (g >>= λ y → ⦇ (λ v → y , v) (g' y) ⦈) ∣ᵢ tg ↝ x 
 \end{code}
 %</bindcomplete>
 \begin{code} ∣ 
 >>=-Complete = {!!}
+
+
+module Bar where
+
+  open D
+
+  Sl-gen-Complete : (n : ℕ) → Complete n Sl-gen
+  Sl-gen-Complete = {!!}
+
+  IDesc-gen-Complete : ∀ {I} {δ φ} {x : ⟦ δ ⟧ (Fix φ)} {i}
+                         {m' : (i : I) → IDescM ((λ S → Σ[ g ∈ Gen S (λ _ → S) tt ] Complete tt λ _ → g)) (φ i)} → (m : IDescM {I = I} (λ S → Σ[ g ∈ Gen S (λ _ → S) tt ] Complete tt λ _ → g) δ)
+                     → _∣ᵢ_↝_ {i = i} (IDesc-gen δ φ (mapm proj₁ m)) (λ i → IDesc-gen (φ i) φ (mapm proj₁ (m' i))) x
 \end{code}
 
+\begin{code}
+  IDesc-gen-Complete {δ = `var i} {φ} {x} m = {!!}
+  IDesc-gen-Complete {δ = `1} {φ} {x} m = {!!}
+  IDesc-gen-Complete {δ = δ `× δ₁} {φ} {x} m = {!!}
+  IDesc-gen-Complete {δ = `σ n T} {φ} {fn , x} (`σ~ mT) =
+    >>=-Complete Sl-gen-Complete (IDesc-gen-Complete {δ = T fn} (mT fn))
+  IDesc-gen-Complete {δ = `Σ S T} {φ} {s , x} (`Σ~ (g , prf) mT) =
+    >>=-Complete prf (IDesc-gen-Complete {δ = T s} (mT s))
+\end{code}
+
+\begin{code}
+module Foo where
+
+  open C
+\end{code}
+
+%<*incompletetype>
+\begin{code}
+  In-Complete : ∀ {g g' x}
+    → g ∣ᵢ g' ↝ x → (⦇ In g ⦈) ∣ᵢ g' ↝ In x
+
+  `×-Complete : ∀ {g₁ g₂ g' x y}
+    → g₁ ∣ᵢ g' ↝ x → g₂ ∣ᵢ g' ↝ y
+    → ⦇ g₁ , g₂ ⦈ ∣ᵢ g' ↝ (x , y)
+\end{code}
+%</incompletetype>
+
+\begin{code}
+  In-Complete = {!!}
+\end{code}
+\begin{code}
+  `×-Complete = {!!}
+
+\end{code}
+
+%<*idesccompletetype>
+\begin{code}
+  IDesc-gen-Complete :
+    ∀ {δ φ x} → IDesc-gen δ φ ∣ᵢ (λ i → IDesc-gen (φ i) φ) ↝ x
+\end{code}
+%</idesccompletetype>
+
+%<*idesccompletetrivial>
+\begin{code}
+  IDesc-gen-Complete {`var i} {φ} {In x}
+    with IDesc-gen-Complete {φ i} {φ} {x}
+  ... | prf = In-Complete prf
+  IDesc-gen-Complete {`1} {φ} {tt} = 1 , here
+  IDesc-gen-Complete {δ₁ `× δ₂} {φ} {x , y} =
+    `×-Complete  (IDesc-gen-Complete {δ₁})
+                 (IDesc-gen-Complete {δ₂})
+\end{code}
+%</idesccompletetrivial>
+
+\begin{code}
+  IDesc-gen-Complete {`σ n T} {φ} {x} = {!!}
+  IDesc-gen-Complete {`Σ S T} {φ} {x} = {!!}
+\end{code}
+
+\begin{code}
+open Inductive
+\end{code}
+
+%<*genelem>
+\begin{code}
+gen∋ : (Γ : Ctx) → (τ : Ty) → Gen (Γ ∋ τ) (λ { tt → Γ ∋ τ }) tt
+
+genTy : Gen Ty (λ { tt → Ty }) tt
+\end{code}
+%</genelem>
+
+\begin{code}
+gen∋ _ _ = empty
+genTy = empty
+\end{code}
+
+%<*wtmeta>
+\begin{code}
+wtM  : (i : Ctx × Ty)
+     → IDescM (λ S → Gen S (λ { tt → S }) tt) (wt i)
+wtM (Γ , `τ) =
+  `σ~ λ {  ∙     → `Σ~ (gen∋ Γ `τ) λ _ → `1~
+        ; (▻ ∙)  → `Σ~ genTy λ _ → `var~ `×~ `var~
+        }
+wtM (Γ , (τ₁ `→ τ₂))  =
+  `σ~ λ {  ∙       → `Σ~ (gen∋ Γ (τ₁ `→ τ₂)) (λ s → `1~)
+        ; (▻ ∙)    → `var~
+        ; (▻ ▻ ∙)  → `Σ~ genTy (λ s → `var~ `×~ `var~) }
+\end{code}
+%</wtmeta>

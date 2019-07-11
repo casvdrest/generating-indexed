@@ -178,11 +178,12 @@ module AgdaGen.Properties.Monotonicity where
   constr-monotoneᵢ :
     ∀ {ℓ} {k} {I : Set k} {a b t : I → Set ℓ} {i₁ i₂ : I} {x : a i₁} {g : Gen (a i₁) t i₁}
     → {C : a i₁ → b i₂} {tg : (i : I) → 𝔾 t i} → (∀ {x y : a i₁} → C x ≡ C y → x ≡ y)
-    → Depth-Monotoneᵢ g tg x → Depth-Monotoneᵢ {a = b i₂} {i = i₂} ⦇ C g ⦈ tg (C x)
+    → Depth-Monotoneᵢ g tg x → Depth-Monotoneᵢ {ℓ} {k} {a = b i₂} {i = i₂} ⦇ C g ⦈ tg (C x)
   constr-monotoneᵢ {C = C} inv p (s≤s leq) elem with ap-singleton elem
   constr-monotoneᵢ {C = C} inv p (s≤s leq) elem | val , (loc , eq) =
     list-ap-complete {fs = [ C ]} here (p (s≤s leq) (∈x-rewr loc (inv eq)))
-    
+
+  
   ⊛-monotoneᵢ :
     ∀ {ℓ k} {I : Set k} {a b c t : I → Set ℓ} {i₁ i₂ i₃}
       {x : a i₁} {y : b i₂} {g₁ : Gen (a i₁) t i₁} {g₂ : Gen (b i₂) t i₂}

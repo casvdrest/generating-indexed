@@ -28,6 +28,7 @@ open import Category.Monad
 
 module AgdaGen.Generic.Indexed.Properties where
 
+{-
    -- Function exensionality
   postulate funext : ∀ {ℓ} {a b : Set ℓ} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
 
@@ -55,7 +56,7 @@ module AgdaGen.Generic.Indexed.Properties where
   I-split h = h ∘ In , funext' λ { {In x} → refl }
 
   _∘↝_ : ∀ {a : Set} → 𝔾 a → a → Set
-  g ∘↝ x = g ∣ g ↝ x
+  g ∘↝ x = g ∣ᵢ g ↝ x
 
   open RawMonad ⦃...⦄ using (_⊛_; pure)
 
@@ -321,3 +322,4 @@ module AgdaGen.Generic.Indexed.Properties where
     deriveCogen-Complete {I} {g} i₁ I~ σ = {!!}
     deriveCogen-Complete {K x} {g} i₁ (K~ (_ , snd)) σ {f} with snd {gen = proj₁ σ}
     ... | cp , _ = f , cp , refl
+-}

@@ -5,7 +5,7 @@
 
 module code where
 
-  open import AgdaGen.Base hiding (Gen; 𝔾; Genᵢ ; 𝔾ᵢ)
+  open import AgdaGen.Base hiding (Gen; 𝔾)
   open import AgdaGen.Combinators
 
   open import Data.Empty
@@ -44,7 +44,7 @@ module code where
   open import Relation.Nullary
 
   open import Size
-  open import Codata.Thunk hiding (map)
+  open import Codata.Thunk hiding (map ; _<*>_)
 
   data 𝓤 : Set where
 
@@ -91,7 +91,7 @@ module code where
 
 %<*eqdef>
 \begin{code}
-  _≟_ : ∀ {u : 𝓤} → (x : Fix u) → (y : Fix u) → x ≡ y ⊎ ¬ x ≡ y
+  _≟_ : ∀ {u : 𝓤} → (x : Fix u) → (y : Fix u) → Dec (x ≡ y)
 \end{code}
 %</eqdef>
 \begin{code}
@@ -194,7 +194,122 @@ P ∨ ¬ P
   data Sorted : (xs : List ℕ) → Set where
     nil     :  Sorted []
     single  :  ∀ {n} → Sorted (n ∷ [])
-    step    :  ∀ {n m xs} → n ≤ m → Sorted (m ∷ xs)
-            →  Sorted (n ∷ m ∷ xs)
+    step    :  ∀ {n m xs} → n ≤ m  →  Sorted (m ∷ xs)
+                                   →  Sorted (n ∷ m ∷ xs)
 \end{code}
 %</sorted>
+
+%<*isomorphism>
+\begin{code}
+  record _≃_ (A B : Set) : Set where
+    field 
+      from : A → B
+      to   : B → A
+      iso₁ : ∀ {x : A} → to (from x) ≡ x
+      iso₂ : ∀ {y : B} → from (to y) ≡ y
+\end{code}
+%</isomorphism>
+
+%<*isoequivalence>
+\begin{code}
+  ≃-refl   : ∀ {A} → A ≃ A
+  ≃-sym    : ∀ {A B} → A ≃ B → B ≃ A
+  ≃-trans  : ∀ {A B C} → A ≃ B → B ≃ C → A ≃ C 
+\end{code}
+%</isoequivalence>
+
+\begin{code}
+  open import Function
+
+  ≃-refl = {!!}
+  
+  ≃-sym = {!!}
+
+  ≃-trans = {!!}
+
+  module F where 
+
+    map : ∀ {A B} → (A → B) → (List A → List B)
+    map f [] = []
+    map f (x ∷ xs) = f x ∷ map f xs
+
+    merge : ∀ {A} → List A → List A → List A
+    merge [] ys = ys
+    merge (x ∷ xs) ys = x ∷ merge ys xs
+\end{code}
+
+%<*abstractgen>
+\begin{code}
+    data Gen {I} : (Set) → (I → Set) → I → Set where
+     Pure : ∀ {A T i}      → A → Gen A T i
+     Ap   : ∀ {A B T i j}  → Gen (B → A) T i → Gen B T j
+                           → Gen A T i
+     Bind : ∀ {A B T i j}  → Gen A T j → (A → Gen B T i)
+                           → Gen B T i
+     Or   : ∀ {A T i}      → Gen A T i → Gen A T i
+                           → Gen A T i
+     μ    : ∀ {A}          → (i : I) → Gen (A i) A i
+     None : ∀ {A T i}      → Gen A T i
+     Call : ∀ {J S T i}    → ((j' : J) → Gen (S j') S j')
+                           → (j : J) → Gen (S j) T i
+\end{code}
+%</abstractgen>
+
+%<*enumerate>
+\begin{code}
+    enumerate : ∀ {I A T} → ((i : I) → Gen (T i) T i)
+                          → (i : I) → Gen A T i → ℕ → List A
+    enumerate tg i g                    zero     = []
+    enumerate tg i (Pure x)             (suc n)  = x ∷ []
+    enumerate tg i (Ap {j = j} g₁ g₂)   (suc n)  =
+      concatMap  (λ f → map f (enumerate tg j g₂ (suc n)))
+                 (enumerate tg i g₁ (suc n))
+    enumerate tg i (Bind {j = j} g₁ fg) (suc n)  =
+      concatMap  (λ x → enumerate tg i (fg x) (suc n))
+                 (enumerate tg j g₁ (suc n))
+    enumerate tg i (Or g₁ g₂)           (suc n)  =
+      merge  (enumerate tg i g₁ (suc n))
+             (enumerate tg i g₂ (suc n))
+    enumerate tg i (μ .i)               (suc n)  =
+      enumerate tg i (tg i) n
+    enumerate tg i None                 (suc n)  = []
+    enumerate tg i (Call g j)           (suc n)  =
+      enumerate g j (g j) (suc n)
+\end{code}
+%</enumerate>
+
+\begin{code}
+  open import AgdaGen.Data
+  open import AgdaGen.Base
+  open import AgdaGen.Enumerate
+  open import AgdaGen.Combinators
+
+  open GMonad ⦃...⦄
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
+\end{code}
+
+%<*fingen>
+\begin{code}
+  fin : (n : ℕ) → Gen (Fin n) Fin n
+  fin zero     =  empty
+  fin (suc n)  =  ⦇ zero       ⦈
+               ∥  ⦇ suc (μ n)  ⦈
+\end{code}
+%</fingen>
+
+%<*completeness>
+\begin{code}
+  Complete : ∀ {I} {A : I → Set} → ((i : I) → Gen (A i) A i) → Set
+  Complete {I} {A} gen =
+    ∀ {i : I} {x : A i} → ∃[ n ] (x ∈ enumerate gen i (gen i) n)
+\end{code}
+%</completeness>
+
+%<*natgen>
+\begin{code}
+  nat : Gen ℕ (λ { tt → ℕ }) tt
+  nat  =  ⦇ zero        ⦈
+       ∥  ⦇ suc (μ tt)  ⦈
+\end{code}
+%</natgen>

@@ -7,7 +7,7 @@ open import Data.Nat hiding (_⊔_)
 open import Data.Maybe hiding (map; fromMaybe)
 open import Data.List hiding (map; fromMaybe)
 
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding ([_])
 
 module AgdaGen.Data where
 
@@ -101,6 +101,13 @@ module AgdaGen.Data where
   xs ⊎ ys = interleave (map inl xs) (λ where .force → map inr ys)
 
   data ℚ : Set where
-    Q : ℕ ⊗ ℕ → ℚ  
+    Q : ℕ ⊗ ℕ → ℚ
 
-  
+  data Sorted : List ℕ → Set where
+    nil    : Sorted []
+    single : ∀ {n} → Sorted [ n ]
+    step   : ∀ {n m xs} → n ≤ m → Sorted (m ∷ xs)
+           → Sorted (n ∷ m ∷ xs) 
+
+  toList : ∀ {xs} → Sorted xs → List ℕ
+  toList {xs} _ = xs

@@ -1,14 +1,13 @@
 \begin{code}
 {-# OPTIONS --allow-unsolved-metas #-}
 {-# OPTIONS --type-in-type #-}
-
+  
 open import Data.Empty
 open import Data.Unit hiding (_≤_)
 open import Data.Product
 open import Data.Sum
-open import Data.Nat
 
-open import AgdaGen.Base hiding (Call)
+open import AgdaGen.Base hiding (Call) renaming (Gen to GenBase ; μ to μBase) 
 open import AgdaGen.Combinators
 
 open import Function
@@ -22,11 +21,21 @@ record _≃_ (a : Set) (b : Set) : Set where
     iso₁  : ∀ {x} → to (from x) ≡ x
     iso₂  : ∀ {y} → from (to y) ≡ y
 
+Gen : Set → Set → Set
+Gen A T = GenBase A (λ { tt → T }) tt
+
+μ : ∀ {A} → Gen A A
+μ = μBase tt
+
+open import Data.Nat
+open import Data.List
+
+
 \end{code}
 
 \begin{code}
 Call : ∀ {a t : Set} → Gen a a → Gen a t
-Call = `_
+Call = λ _ → None 
 \end{code}
 
 %<*regular>
@@ -113,7 +122,7 @@ module A where
 %</genericgen>
 
 \begin{code}
-  deriveGen = {!!}
+  deriveGen = λ c → None
 
 module B where
 
@@ -123,7 +132,8 @@ module B where
 
 %<*genericgen2>
 \begin{code}
-  deriveGen : (c c' : Reg) → Gen (⟦ c ⟧ (Fix c')) (⟦ c' ⟧ (Fix c'))
+  deriveGen :  (c c' : Reg)
+            →  Gen (⟦ c ⟧ (Fix c')) (⟦ c' ⟧ (Fix c'))
 \end{code}
  %</genericgen2>
 
@@ -142,8 +152,11 @@ module B where
 
 %<*genericgenPCOP>
 \begin{code}
-  deriveGen (cₗ ⊕ cᵣ) c' = ⦇ inj₁ (deriveGen cₗ c') ⦈ ∥ ⦇ inj₂ (deriveGen cᵣ c') ⦈
-  deriveGen (cₗ ⊗ cᵣ) c' = ⦇ deriveGen cₗ c' , deriveGen cᵣ c' ⦈
+  deriveGen (c₁ ⊕ c₂) c' =
+    ⦇ inj₁ (deriveGen c₁ c') ⦈ ∥ ⦇ inj₂ (deriveGen c₂ c') ⦈
+    
+  deriveGen (c₁ ⊗ c₂) c' =
+    ⦇ deriveGen c₁ c' , deriveGen c₂ c' ⦈
 \end{code}
 %</genericgenPCOP>
 
@@ -168,7 +181,8 @@ module B where
 %<*isogen>
 \begin{code}
   isoGen : ∀ {A} ⦃ p : Regular A ⦄ → Gen A A
-  isoGen ⦃ p = record { code = c ; iso =  iso } ⦄ = ⦇ (_≃_.to iso ∘ In) (Call (deriveGen c c)) ⦈ 
+  isoGen ⦃ p = record { code = c ; iso =  iso } ⦄ =
+    ⦇ (_≃_.to iso ∘ In) (Call (deriveGen c c)) ⦈ 
 \end{code}
 %</isogen>
 
@@ -195,8 +209,10 @@ module C where
   data KInfo (P : Set → Set) : Reg → Set where
     Z~    : KInfo P Z
     U~    : KInfo P U
-    _⊕~_  : ∀ {cₗ cᵣ} → KInfo P cₗ → KInfo P cᵣ → KInfo P (cₗ ⊕ cᵣ)
-    _⊗~_  : ∀ {cₗ cᵣ} → KInfo P cₗ → KInfo P cᵣ → KInfo P (cₗ ⊗ cᵣ)
+    _⊕~_  : ∀ {cₗ cᵣ} → KInfo P cₗ → KInfo P cᵣ
+                      → KInfo P (cₗ ⊕ cᵣ)
+    _⊗~_  : ∀ {cₗ cᵣ} → KInfo P cₗ → KInfo P cᵣ
+                      → KInfo P (cₗ ⊗ cᵣ)
     I~    : KInfo P I
     K~    : ∀ {S} → P S → KInfo P (K S) 
 \end{code}
@@ -204,7 +220,8 @@ module C where
 
 %<*derivegenKTy>
 \begin{code}
-  deriveGen : (c c' : Reg) → KInfo (λ S → Gen S S) c → Gen (⟦ c ⟧ (Fix c')) (⟦ c' ⟧ (Fix c'))
+  deriveGen  : (c c' : Reg) → KInfo (λ S → Gen S S) c
+             → Gen (⟦ c ⟧ (Fix c')) (⟦ c' ⟧ (Fix c'))
 \end{code}
 %</derivegenKTy>
 
@@ -217,11 +234,14 @@ module C where
 
 
 \begin{code}
-  deriveGen c c' info = {!!}
+  deriveGen c c' info = None
 
 open import Data.Sum
 open import AgdaGen.Data using (_∈_; here ; there ; merge)
-open import AgdaGen.Enumerate renaming (interpret to toList)
+open import AgdaGen.Enumerate renaming (enumerate to toList')
+
+toList : ∀ {A T} → Gen A T → Gen T T → ℕ → List A
+toList g tg n = toList' (λ { tt → tg }) tt g n
 
 \end{code}
 \begin{code}
@@ -230,32 +250,35 @@ open import AgdaGen.Data using (_∈_)
 
 %<*isogenproven>
 \begin{code}
-isoGen : ∀ {A} → ⦃ p : Regular A ⦄ → Σ[ g ∈ Gen A A ] ∀ {x} → ∃[ n ] (x ∈ toList g g n)
+isoGen :  ∀ {A}  → ⦃ p : Regular A ⦄
+          → Σ[ g ∈ Gen A A ] ∀ {x} → ∃[ n ] (x ∈ toList g g n)
 \end{code}
 %</isogenproven>
-
 \begin{code}
 
 isoGen = {!!}
 
-open B
+open B using (genericGen)
 \end{code}
 
 %<*genericgencomplete>
 \begin{code}
-genericGen-Complete : ∀ {c x} → ∃[ n ] (x ∈ toList (genericGen c) (genericGen c) n)
+genericGen-Complete :
+  ∀ {c x} → ∃[ n ] (x ∈ toList (genericGen c) (genericGen c) n)
 \end{code}
 %</genericgencomplete>
 
 \begin{code}
 genericGen-Complete = {!!}
 
-module E where 
+module E where
+  open B
 \end{code}
 
 %<*derivegencomplete>
 \begin{code}
-  deriveGen-Complete : ∀ {c c' x} → ∃[ n ] (x ∈ toList (deriveGen c c') (deriveGen c' c') n)
+  deriveGen-Complete : ∀ {c c' x}
+    → ∃[ n ] (x ∈ toList (deriveGen c c') (deriveGen c' c') n)
 \end{code}
 %</derivegencomplete>
 
@@ -269,14 +292,42 @@ module E where
 \begin{code}
   deriveGen-Complete {cₗ ⊕ cᵣ} {c'} {x} = {!!}
   deriveGen-Complete {cₗ ⊗ cᵣ} {c'} {x} = {!!}
-  deriveGen-Complete {I} {c'} {In x} with deriveGen-Complete {c'} {c'} {x}
-  ... | n , elem = {!!} , {!!}
+\end{code}
+
+%<*derivegencompleteI>
+\begin{code}
+  deriveGen-Complete {I} {c'} {In x}
+    with deriveGen-Complete {c'} {c'} {x}
+  ... | prf = {!!}
+\end{code}
+%</derivegencompleteI>
+
+\begin{code}
   deriveGen-Complete {K x₁} {c'} {x} = {!!}
+
+  enumerate : ∀ {A T} →  Gen A T → (Gen T T) → ℕ → List A
+  enumerate = {!!}
+
+  open GApplicative ⦃...⦄
+  open GAlternative ⦃...⦄
 \end{code}
 
 
+%<*derivegencompleteIlemma>
 \begin{code}
+  lemma-In : ∀ {x g g'}
+    → ∃[ n ] (x ∈ enumerate g g' n)
+    → ∃[ n ] (In x ∈ enumerate (⦇ In x ⦈) g' n)
+\end{code}
+%</derivegencompleteIlemma>
+
+
+\begin{code}
+  lemma-In = {!!}
+
 module D where
+  open B
+       
   open import Relation.Binary.HeterogeneousEquality
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
@@ -295,8 +346,11 @@ module D where
 
 %<*mergecomplete>
 \begin{code}
-  merge-complete-left   : ∀ {A} {xsₗ xsᵣ : List A} {x : A} → x ∈ xsₗ → x ∈ merge xsₗ xsᵣ
-  merge-complete-right  : ∀ {A} {xsₗ xsᵣ : List A} {x : A} → x ∈ xsᵣ → x ∈ merge xsₗ xsᵣ 
+  merge-complete-left   : ∀ {A} {xsₗ xsᵣ : List A} {x : A}
+    → x ∈ xsₗ → x ∈ merge xsₗ xsᵣ
+    
+  merge-complete-right  : ∀ {A} {xsₗ xsᵣ : List A} {x : A}
+    → x ∈ xsᵣ → x ∈ merge xsₗ xsᵣ 
 \end{code}
 %</mergecomplete>
 
@@ -313,33 +367,41 @@ pure x = x ∷ []
 _<*>_ : ∀ {A B} → List (A → B) → List A → List B
 fs <*> xs = concatMap (λ f → Data.List.map f xs) fs
 
-eq2 : ∀ {cₗ cᵣ c' n} → 
+module Foo where
+  open B
+
+  eq2 : ∀ {cₗ cᵣ c' n} →
 \end{code}
 
 %<*tolistpeq>
 \begin{code}
-  toList (deriveGen (cₗ ⊗ cᵣ) c') (deriveGen c' c') n
-    ≡ ⦇ (toList (deriveGen cₗ c') (deriveGen c' c') n)
-      , (toList (deriveGen cᵣ c') (deriveGen c' c') n) ⦈
+    toList (deriveGen (cₗ ⊗ cᵣ) c') (deriveGen c' c') n
+      ≡ ⦇ (toList (deriveGen cₗ c') (deriveGen c' c') n)
+        , (toList (deriveGen cᵣ c') (deriveGen c' c') n) ⦈
 \end{code}
 %</tolistpeq>
 
+\begin{code}
+  eq2 = {!!}
+\end{code}
+
 %<*apcomplete>
 \begin{code}
-×-complete : ∀ {A B} {x : A} {y : B} {xs ys} → x ∈ xs → y ∈ ys → (x , y) ∈ ⦇ xs , ys ⦈ 
+×-complete  : ∀ {A B} {x : A} {y : B} {xs ys}
+            → x ∈ xs → y ∈ ys → (x , y) ∈ ⦇ xs , ys ⦈ 
 \end{code}
 %</apcomplete>
 
 \begin{code}
 ×-complete = {!!}
-eq2 = {!!}
 
 open C
 \end{code}
 
 %<*kinfomap>
 \begin{code}
-KInfo-map : ∀ {c P Q} → (∀ {s} → P s → Q s) → KInfo P c → KInfo Q c
+KInfo-map : ∀ {c P Q}  → (∀ {s} → P s → Q s)
+                       → KInfo P c → KInfo Q c
 KInfo-map f (K~ x) = K~ (f x)
 \end{code}
 %</kinfomap>
@@ -361,19 +423,26 @@ module F where
 %<*proofinfotype>
 \begin{code}
   ProofMD : Reg → Set
-  ProofMD c = KInfo (λ S → Σ[ g ∈ Gen S S ] (∀ {x} → ∃[ n ] (x ∈ toList g g n))) c
+  ProofMD c = KInfo  (λ S → Σ[ g ∈ Gen S S ]
+                     (∀ {x} → ∃[ n ] (x ∈ toList g g n))) c
 \end{code}
 %</proofinfotype>
 
+%<*mdtransform>
 \begin{code}
-  ◂_  : ∀ {c : Reg} → KInfo (λ A → Σ[ g ∈ Gen A A ] (∀ {x} → ∃[ n ] (x ∈ toList g g n))) c → KInfo (λ A → Gen A A) c
+  ◂_  : ∀ {c : Reg}  → KInfo (λ A → Σ[ g ∈ Gen A A ]
+                               (∀ {x} → ∃[ n ] (x ∈ toList g g n))) c
+                     → KInfo (λ A → Gen A A) c
   ◂ m = KInfo-map proj₁ m
 \end{code}
+%</mdtransform>
 
 %<*derivegenwithmd>
 \begin{code}
-  deriveGen-Complete : (c c' : Reg) → (i : ProofMD c) → (i' : ProofMD c')
-    → ∀ {x} → ∃[ n ] (x ∈ toList (C.deriveGen c c' (◂ i)) (C.deriveGen c' c' (◂ i')) n)
+  deriveGen-Complete : (c c' : Reg)
+    → (i : ProofMD c) → (i' : ProofMD c')
+    → ∀ {x} → ∃[ n ] (x ∈ toList  (deriveGen c c' (◂ i))
+                                  (deriveGen c' c' (◂ i')) n)
 \end{code}
 %</derivegenwithmd>
 
@@ -387,12 +456,20 @@ monotone : ∀ {n m : ℕ} {c c' : Reg} {x : ⟦ c ⟧ (Fix c')} {i i'} →
 
 %<*derivegenmonotone>
 \begin{code}
-  n ≤ m → x ∈ toList (C.deriveGen c c' (◂ i)) (C.deriveGen c' c' (◂ i')) n
-        → x ∈ toList (C.deriveGen c c' (◂ i)) (C.deriveGen c' c' (◂ i')) m
+  n ≤ m  → x ∈ toList  (C.deriveGen c c' (◂ i))
+                       (C.deriveGen c' c' (◂ i')) n
+         → x ∈ toList  (C.deriveGen c c' (◂ i))
+                       (C.deriveGen c' c' (◂ i')) m
 \end{code}
 %</derivegenmonotone>
 
 \begin{code}
 monotone = {!!}
-\end{code} 
+\end{code}
 
+%<*defrose>
+\begin{code}
+data Rose (A : Set) : Set where
+  node : List (Rose A) → Rose A
+\end{code}
+%</defrose>

@@ -124,7 +124,6 @@ module AgdaGen.Generic.Regular.Properties where
     → ⦇ g₁ , g₂ ⦈ ∣ᵢ (λ _ → tg) ↝ (x , y)
   ⊗gen-complete {g₁ = g₁} {g₂ = g₂} mt₁ mt₂ p1 p2 =
     ⊛-completeᵢ {f = g₁} {g = g₂} p1 p2 mt₁ mt₂
-
   
   In-elem :
     ∀ {f : Reg {0ℓ}} {x : ⟦ f ⟧ (Fix f)} {xs : List (⟦ f ⟧ (Fix f))}

@@ -258,4 +258,6 @@ module Singleton where
   s4 = SSuc2 (SSuc2 (SSuc2 (SSuc2 SZero2)))
   s5 = SSuc2 (SSuc2 (SSuc2 (SSuc2 (SSuc2 SZero2))))
   s6 = SSuc2 (SSuc2 (SSuc2 (SSuc2 (SSuc2 (SSuc2 SZero2)))))
-      
+
+  inc :: SNat n -> SNat (Suc n)
+  inc n = SSuc n

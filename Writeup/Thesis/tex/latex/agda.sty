@@ -115,13 +115,13 @@
 % ----------------------------------------------------------------------
 % Font styles.
 
-\newcommand{\AgdaFontStyle}[1]{\ensuremath{\textrm{#1}}}
+\newcommand{\AgdaFontStyle}[1]{#1}
 \ifthenelse{\equal{\AgdaColourScheme}{bw}}{
     \newcommand{\AgdaKeywordFontStyle}[1]{\underline{#1}}
 }{
-    \newcommand{\AgdaKeywordFontStyle}[1]{\ensuremath{\textrm{#1}}}
+    \newcommand{\AgdaKeywordFontStyle}[1]{\textbf{#1}}
 }
-\newcommand{\AgdaBoldFontStyle}[1]{\ensuremath{\textrm{#1}}}
+\newcommand{\AgdaBoldFontStyle}[1]{#1}
 \newcommand{\AgdaStringFontStyle}[1]{\texttt{#1}}
 \newcommand{\AgdaCommentFontStyle}[1]{\texttt{#1}}
 \newcommand{\AgdaBoundFontStyle}[1]{\textit{#1}}

@@ -1,26 +1,27 @@
 
-  A large class of recursive algebraic data types can be described with the universe 
-  of \emph{regular types}. In this section we lay out this universe, together with its 
-  semantics, and describe how we may define functions over regular types by induction 
-  over their codes. We will then show how this allows us to derive from a code a 
-  generic generator that produces all values of a regular type. We sketch how we can 
-  prove that these generators are indeed complete. 
+  We can desribe a large class of recursive algebraic data types with the universe 
+  of \emph{regular types}. In this section we describe this universe together with its 
+  semantics, and demonstrate how we may define functions over regular types by 
+  induction over their codes. We will then show how we can derive a generator from 
+  codes in this universe, and prove that these derived generators are \emph{complete}. 
 
 \section{The universe of regular types}
 
   Though the exact definition may vary across sources, the universe of regular types 
-  is generally regarded to consist of the \emph{empty type} (or $\mathbb{0}$), the 
-  unit type (or $\mathbb{1}$) and constants types. It is closed under both products 
-  and coproducts \footnote{This roughly corresponds to datatypes in Haskell 98}. We 
-  can define a datatype for this universe in Agda as shown in lising \ref{lst:regular}, 
-  with its associated semantics of type |Reg -> Set -> Set| shown in listing \ref{lst:regsem}.
+  is generally regarded to consist of the \emph{empty type} (containing \emph{no} 
+  inhabitants), the unit type (containing exactly \emph{one} inhabitant) and constants 
+  types (which simply refer to another typ). Regular types are closed under both \emph
+  {products} (representing pairing of types) and \emph{coproducts} (representing a 
+  choice between types).Listing \ref{lst:regular} shows the Agda datatype that we use 
+  to represent codes in this universe, with the associated semantics of type |Reg -> 
+  Set -> Set| being shown in listing \ref{lst:regsem}.
 
 \includeagdalisting{5}{regular}{The universe of regular types}{lst:regular}
 
-  The semantics of the universe of regular types map a code to a functorial representation of the datatype it describes, commonly 
-  known as its \emph{pattern functor}. The datatype that is represented by a code is 
-  isomorphic to the least fixpoint of its pattern functor. We fix pattern functors 
-  using the following fixpoint combinator: 
+  The semantics map a code to a functorial representation of the datatype described by 
+  that code, commonly known as its \emph{pattern functor}. The datatype that is 
+  represented by a code is isomorphic to the least fixpoint of its pattern functor. We 
+  find this fixpoint with the following fixpoint operation:
 
 \includeagda{5}{regularfix}
 
@@ -29,96 +30,138 @@
 
   \begin{example}
 
-    The type of natural numbers (see listing \ref{lst:defnat}) 
-    exposes two constructors: the nullary constructor |zero|, and the unary 
-    constructor |suc| that takes one recursive argument. We may thus view this type as 
-    a coproduct (i.e. choice) of either a \emph{unit type} or a \emph{recursive 
-    subtree}: 
+    Let us consider the type of natural numbers: 
+
+\includeagda{3}{defnat}
+
+    |Nat| exposes two constructors: the nullary constructor |zero|, and the unary 
+    constructor |suc|, that takes one recursive argument. We can view this type then 
+    as a coproduct (or choice) between a unit type (representing |zero|) and a 
+    recursive position, representing the recursive argument of the |suc| constructor. 
 
 \includeagdanv{5}{natregular}
 
-    We convince ourselves that |ℕ'| is indeed equivalent to |ℕ| by defining conversion 
-    functions, and showing their composition is extensionally equal to the identity 
-    function, shown in listing \ref{lst:natiso}. 
-
+    We convince ourselves that |ℕ'| is indeed equivalent to |ℕ| by defining an 
+    isomorphism of type |ℕ ≃ ℕ'|. 
   \end{example}
 
-\includeagdalisting{5}{natiso}{Isomorphism between |ℕ| and |ℕ'|}{lst:natiso}
-
-  We may then say that a type is regular if we can provide a proof that it is 
-  isomorphic to the fixpoint of some |c| of type |Reg|. We use a record to capture 
-  this notion, consisting of a code and an value that witnesses the isomorphism.
+  In general, we say that a type is regular if and only if we can provide a proof that 
+  it is isomorphic to the fixpoint of some |c| of type |Reg|. We use a record to 
+  capture this notion, consisting of a code and an value that witnesses the 
+  isomorphism between the fixpoint of this code, and the type parameter |a|.
 
 \includeagda{5}{regularrecord}
 
-  By instantiating |Regular| for a type, we may use any generic functionality that is defined over regular types. 
+  By instantiating |Regular| for a type, we may use any generic functionality that is 
+  defined over regular types. 
 
 \subsection{Non-regular data types}
 
-  Although there are many algebraic datatypes that can be described in the universe 
-  of regular types, some cannot. Perhaps the most obvious limitation the is lack of 
-  ability to capture data families indexed with values. The regular universe 
-  imposes the implicit restriction that a datatype is uniform in the sense that all 
-  recursive subtrees are of the same type. Indexed families, such as |Vec| and |Fin|, on the other hand allow for 
-  recursive subtrees to have a structure that is different from the structure of the 
-  datatype they are a part of. Furethermore, any family of mutually recursive datatypes cannot be described as a 
-  regular type; again, this is a result of the restriction that recursive positions 
-  allways refer to a datatype with the same structure. 
+  Although we can describe many familiar datatypes with a code in the universe of 
+  regular types, there are some limitations. Most notably, we cannot describe any 
+  family of mutually recursive types. The way the universe is set up includes the 
+  implicit assumption that all occurences of |I| reference the same type. If we 
+  attempt to describe a datatype that is a composite of more than one recursive 
+  algebraic datatype, such as for example the type of \emph{rose trees}: 
+
+\includeagda{5}{defrose}
+
+  The other obvious shortcoming is that this universe only allows us to describe 
+  non-indexed datatypes. Despite these limitations it is still useful to consider how 
+  we might derive generators for types in this universe, as we the overall approach 
+  and design pattern to a large extent also applies to the universes we will consider 
+  in later chapters. 
 
 \section{Generic Generators for regular types}
 
   We can derive generators for all regular types by induction over their associated 
-  codes. Furthermore, we will show in section \cref{regularproof} that, once 
-  interpreted as enumerators, these generators are complete; i.e. any value will 
-  eventually show up in the enumerator.
+  codes. Furthermore, in \cref{regularproof} we will prove that the generators we 
+  derive from codes are complete under the enumerative interpretation we defined in 
+  \cref{sec:generators}. 
 
-\subsection{Defining functions over codes}
+\subsection{Performing induction over codes}
 
-  If we apply the approach described in \cref{sec:tudesignpattern} without care, we 
-  run into problems. Simply put, we cannot work with values of type |Fix c|, since 
-  this implicitly imposes the restriction that any |I| in |c| refers to |Fix c|. 
-  However, as we descend into recursive calls, the code we are working with changes, 
-  and with it the type associated with recursive positions. For example: the |I| in (|
-  U ⊕ I|) refers to values of type |Fix (U ⊕ I)|, not |Fix I|. We need to make a 
-  distinction between the code we are currently working on, and the code that describes the type of recursive positions. 
-  For this reason, we cannot define the generic generator, |deriveGen|, with the following type signature. We observe that |⟦ c ⟧ (Fix c)| is isomorphic to |Fix c|, thus if we define a function |deriveGen| with the following type signature, and supply it with two equal codes, the resulting generator produces elements that are isomorphic to values of type |Fix c|. 
+  While our first approach might be to try to define a generator that produces values 
+  of type |Fix c|, this will not work. By choosing |Fix c| as the type of elements 
+  generated, we implicitly imposes the restriction that any |I| in |c| refers to |Fix 
+  c|. This restriction is problematic in some cases. For example when encountering a 
+  product or coproduct, we destruct |c| into two smaller codes |c₁| and |c₂|. Calling 
+  our deriving function on these codes will yield two generators, one producing values 
+  of type |Fix c₁| and the other producing values of type |Fix c₂|. It is then not 
+  possible to combine these generators into a single generator producing values of 
+  type |Fix c|: the recursive positions in the subgenerators refer to different types!
+
+  To remedy this, we make a distinction between the code we are doing induction over, |
+  c|, and the code which describes the type that recursive positions in |c| refer to, |
+  c'|. Furthermore, we do not produce elements of type |Fix c|, but rather of type |⟦ 
+  c ⟧ (Fix c')| (i.e. values of the type given by the semantics of |c|, but recursive 
+  positions refer to the type described by |c'|). When calling our derivation function 
+  with two equal codes, the values produced will be isomorphic to |Fix c|! Below is 
+  the type signature of our generator deriving function: 
 
 \includeagda{5}{genericgen2}
 
-  This intermediate step allows us to perform induction over the first input code, while still being able to have 
-  recursive positions reference the correct \emph{top-level code}. The 
-  first and second type parameter of |Gen| are different. This is intentional, as we 
-  would otherwise not be able to use the $\mu$ constructor to mark recursive 
-  positions.  
+  This intermediate step allows us to perform induction over the first input code, 
+  while still being able to have recursive positions refer to the correct \emph
+  {top-level code}. The first and second type parameter (respectively describing the 
+  type we are generating, and the type of recursive positions) of |Gen| are different, 
+  with the second type parameter being isomorphic to |Fix c'|.  
 
 \subsection{Composing generic generators}
 
   Now that we have the correct type for |deriveGen| in place, we can start defining 
-  it. Starting with the cases for |Z| and |U|: 
+  it. We do this on a case by case basis, describing how to derive generators for each 
+  of the constructors of the |Reg| datatype. 
+
+\subsubsection{The empty (Z) and unit (U) type}
+
+  We start with the generic generators for the |Z| and |U| constructors. Recall
+  that the generators we derive from these constructors should produce \emph{all}
+  inhabitants of the type given by their semantics. 
 
 \includeagda{5}{genericgenZU}
 
-  Both cases are trivial. In case of the |Z| combinator, we yield a generator that 
-  produces no elements. As for the |U| combinator, |⟦ U ⟧ (Fix c')| equals |⊤|, so we 
-  need to return a generator that produces all inhabitants of |⊤|. This is simply done 
-  by lifting the single value |tt| into the generator type. 
+  The cases for both |Z| and |U| are trivial. For the |Z| combinator, we yield a 
+  generator that produces no elements, since its semantics is the empty type (|⊥|). As 
+  for the |U| combinator, |⟦ U ⟧ (Fix c')| equals the unit type (|⊤|), so we need to 
+  return a generator that produces all inhabitants of |⊤|, which is only the value |tt|
+  . We do this by lifting this value into the generator type. 
 
-  In case of the |I| combinator, we cannot simply use the $\mu$ constructor right 
-  away. In this context, $\mu$ has the type |Gen (⟦ c' ⟧ (Fix c')) ( ⟦ c' ⟧ (Fix c'))|
-  . However, since |⟦ I ⟧ (Fix c)| equals |Fix c|, the types do not align. We need 
-  to map the |In| constructor over $\mu$ to fix this: 
+\subsubsection{Recursive positions (I)}
+
+  We mark a recursive position in a generator with the $\mu$ constructor. However, 
+  given the previously defined type signature for |deriveGen|, $\mu$ is a generator 
+  that produces elements of type |⟦ c' ⟧ (Fix c')|. We require that the generator 
+  derived from the |I| constructor produces elements of type |⟦ I ⟧ (Fix c')|, which 
+  by definition of |⟦_⟧| equals |Fix c'|. This means that we need to apply the 
+  fixpoint wrapper |In| over the elements produced by $\mu$:
 
 \includeagda{5}{genericgenI}
 
-  Moving on to products and coproducts: with the correct type for |deriveGen| in place,
-   we can define their generators quite easily by recursing on the left and right 
-   subcodes, and combining their results using the appropriate generator combinators: 
+\subsubsection{Products (|⊗|) and coproducts (|⊕|)}
+
+  For products and coproducts, we can quite easily define their generators by 
+  recursing on the left and right subcodes now that we have the correct type for |
+  deriveGen| in place. We then only need to combine these generators in an appropriate 
+  way. We do this respectively building a product type out of the elements produced by 
+  the subgenerators and by marking a choice between the generators derived from the 
+  subcodes. 
 
 \includeagda{5}{genericgenPCOP}
 
-  Although defining |deriveGen| constitutes most of the work, we are not quite there 
-  yet. Since the the |Regular| record expects an isomorphism with |Fix c|, we still 
-  need to wrap the resulting generator in the |In| constructor: 
+  Of course, the exact way in which the elements of subgenerators are combined still 
+  depends on how we interpret the abstract generator type. 
+
+\subsubsection{Wrapping up}
+
+  With this, we have defined a function that derives generators from codes in the 
+  universe of regular types (we will deal with constan types in \cref
+  {sec:constanttypes}). We need to take one final step before we can use deriveGen for 
+  all regular types: |Regular A| holds an isomorphism of type |A ≃ Fix c|, so we need 
+  to wrap the resulting generator in the |In| constructor, which we can only do if |
+  deriveGen| is called \emph{with two equal codes}. We use the following function to 
+  perform this initial call to |deriveGen|, and to wrap the values produced by the 
+  resulting generator in the fixpoint operation: 
 
 \includeagda{5}{genericgenFinal}
 
@@ -128,128 +171,102 @@
   \begin{example}
 
     We derive a generator for natural numbers by invoking |genericGen| on the 
-    appropriate code |U ⊕ I|, and applying the isomorphism defined in listing \ref
-    {natiso} to its results: 
+    appropriate code |U ⊕ I|, and applying an isomorphism of type |ℕ ≃ ℕ'| to 
+    the resulting generator:
 
 \includeagdanv{5}{genericgenNat}
 
   \end{example}
 
-  In general, we can derive a generator for any type |A|, as long as there is an 
-  instance argument of the type |Regular A| in scope: 
+  We use the following function to define a generator for any type |A| for which there 
+  is an instance argument |Regular A| in scope:
 
 \includeagda{5}{isogen}
 
-\section{Constant Types}
+\section{Constant Types}\label{sec:constanttypes}
 
-  In some cases, we describe datatypes as a compositions of other datatypes. An 
-  example of this would be lists of numbers, |List ℕ|. Our current universe definition 
-  is not expressive enough to do this. 
-  
-  \begin{example}
+  We have not yet discussed how to derive a generator for constant types. The reason 
+  for this is that a constant type, |K s| can carry any type in |Set|. This means that 
+  we have know nothing about the type |s| whatsoever. Since we have no general 
+  procedure for deriving generators for arbitrary types in |Set|, we need to either 
+  restrict |s| to a set of types for which we can derive generators, or have the user 
+  supply generators for the constant types in a code they aim to derive a generator 
+  for. We choose the latter in order to retain the flexibility that comes with the 
+  ability to refer to arbitrary types in |Set|. 
 
-    Given the code representing natural numbers (|U ⊕ I|) and lists (|U ⊕ (C ⊗ I)|, 
-    where |C| is a code representing the type of elements in the list), we might be 
-    tempted to try and replace |C| with the code for natural numbers in the code for 
-    lists: 
-
-  \includeagdanv{5}{natlist}
-
-    This code does not describe lists of natural numbers. The problem here is that the 
-    two recursive positions refer to the \emph{same} code, which is incorrect. We need 
-    the first |I| to refer to the code of natural numbers, and the second |I| to refer 
-    to the entire code. 
-
-  \end{example}
-
-\subsection{Definition and Semantics}
-
-  In order to be able to refer to other recursive datatypes, the universe of regular 
-  types often includes a constructor marking \emph{constant types}: 
-
-  The |K| constructor takes one parameter of type |Set|, marking the type it 
-  references. The semantics of |K| is simply the type it carries: 
-
-  \begin{example}
-    
-    Given the addition of |K|, we can now define a code that represents lists of 
-    natural numbers: 
-
-\includeagdanv{5}{natlist2}
-
-    With the property that |listℕ ≃ List ℕ|. 
-
-  \end{example}
-
-\subsection{Generic Generators for Constant Typse}\label{sec:genericgenreg}
-
-  When attempting to define |deriveGen| on |K s|, we run into a problem. We need to 
-  return a generator that produces values of type |s|, but we have no information 
-  about |s| whatsoever, apart from knowing that it lies in |Set|. This is a problem, 
-  since we cannot derive generators for arbitrary values in |Set|. This leaves us with 
-  two options: either we restrict the types that |K| may carry to those types for 
-  which we can generically derive a generator, or we require the programmer to supply 
-  a generator for every constant type in a code. We choose the latter, since it has 
-  the advantage of being more flexible. 
+\subsection{Metadata structure}
 
   We have the programmer supply the necessary generators by defining a \emph{metadata} 
   structure, indexed by a code, that carries additional information for every |K| 
   constructor used. We then parameterize |deriveGen| with a metadata structure, 
-  indexed by the code we are inducting over. The definition of the metadata structure 
-  is shown in listing \ref{lst:mdstructure}. 
+  indexed by the code we are inducting over, that carries generators for every 
+  constant type used in said code. The definition of the metadata structure is shown 
+  in listing \ref{lst:mdstructure}. 
 
 \includeagdalisting{5}{mdstructure}{Metadata structure carrying additional information 
 for constant types}{lst:mdstructure}
 
-  We then adapt the type of |deriveGen| to accept a parameter containing the required 
-  metadata structure: 
+  We purposefully keep the type of information stored for constant types abstract, as 
+  we will need to record information beyond generators when proving completeness for 
+  the generators produced by |deriveGen|. 
+
+\subsection{Deriving a generator for constant types}
+
+  Given the definition of the metadata structure, we augment |deriveGen| with an extra 
+  parameter that stores generators for every constant type in a code: 
 
 \includeagda{5}{derivegenKTy} 
 
   We then define |deriveGen| as follows for constant types. All cases for existing 
-  constructors remain the same. 
+  constructors remain the same, except for the fact that the metadata parameter 
+  distributes over recursive calls in case of products and coproducts. 
 
 \includeagda{5}{derivegenKCase}
 
+  With this, we have completed the definition of |deriveGen|. 
+
 \section{Complete Enumerators For Regular Types}
 
-  By applying the |toList| interpretation shown in listing \ref{lst:tolist} to our 
-  generic generator for regular types we obtain a complete enumeration for regular 
-  types. Obviously, this relies on the programmer to supply complete generators for 
-  all constant types referred to by a code. 
+  We set out to prove that by applying the enumerative interpretation to our generic 
+  generator for regular types we obtain a complete enumeration for regular types. 
+  Obviously, this relies on on the programmer to supply complete generators for all 
+  the constant types in a code as well. 
 
-  We formulate the desired completeness property as follows: \textit{for every code c 
-  and value x it holds that there is an n such that x occurs at depth n in the 
-  enumeration derived from c}. In Agda, this amounts to proving the following 
-  statement: 
-
-\includeagda{5}{genericgencomplete}
-
-  Just as was the case with deriving generators for codes, we need to take into the 
-  account the difference between the code we are currently working with, and the top 
-  level code. To this end, we generalize the previous statement slightly. 
+  We start the proof by instantiating the completeness property we formulated in \cref
+  {lst:abstractgen} with |deriveGen|: 
 
 \includeagda{5}{derivegencomplete}
 
-  If we invoke this lemma with two equal codes, we may leverage the fact that |In| is 
+  We explicit distinguish the codes |c| and |c'| to (again) be able to construct the 
+  proof by performing induction over the code |c|. The reasoning behind this is very 
+  much the same as the reasoning behind the definition of |deriveGen| itself. If we 
+  invoke this lemma with two equal codes, we may leverage the fact that |In| is 
   bijective to obtain a proof that |genericGen| is complete too. The key observation 
   here is that mapping a bijective function over a complete generator results in 
-  another complete generator. 
+  another complete generator. We do not show this proof here explicitly, but with this 
+  approach we can prove the following statement, given a proof for |deriveGen-Complete|
+  :
+
+\includeagda{5}{genericgencomplete}
+
+  Which we need to generalize the proof to all types |A| that are regular. 
+
+\subsection{Proof structure}
 
   The completeness proof roughly follows the following steps: 
 
   \begin{itemize}
 
     \item 
-      First, we prove completeness for individual generator combinators 
+      First, we prove completeness for the individual constructors of the |Reg| type. 
 
     \item 
       Next, we assemble a suitable metadata structure to carry the required proofs 
       for constant types in the code. 
 
     \item 
-      Finally, we assemble the individual components into a proof of the statement 
-      above. 
+      Finally, we generalize the proof over our generic generator to a proof that 
+      ranges over all types |A| that are isomorphic to the fixpoint of some code. 
 
   \end{itemize}
 
@@ -257,31 +274,72 @@ for constant types}{lst:mdstructure}
 
   We start our proof by asserting that the used combinators are indeed complete. That 
   is, we show for every constructor of |Reg| that the generator we return in |
-  deriveGen| produces all elements of the interpretation of that constructor. In the 
-  case of |Z| and |U|, this is easy. 
+  deriveGen| produces all elements of the interpretation of that constructor. 
+  
+\subsubsection{Empty (Z) and unit (U) types}
+
+  In the case of |Z| and |U|, completing the completeness proof is relatively easy:
 
 \includeagda{5}{derivegencompleteZU}
 
   The semantics of |Z| is the empty type, so any generator producing values of type |⊥|
-   is trivially complete. Similarly, in the case of |U| we simply need to show that 
-   interpreting |pure tt| returns a list containing |tt|. 
+   is trivially complete: we simply close this branch with an absurd pattern. In the 
+   case of |U| we simply need to show that interpreting |pure tt| returns a list 
+   containing |tt|, which we can do by returning a trivial proof that |tt| is an 
+   element of the singleton list |[ tt ]|. 
 
-  Things become a bit more interesting once we move to products and coproducts. In the 
-  case of coproducts, we know the following equality to hold, by definition of both |
-  toList| and |deriveGen|: 
+\subsubsection{Recursive positions (I)}
+
+  The proof that a recursive position $\mu$ is interpreted to a complete enumeration 
+  is simply the induction hypothesis that |deriveGen c' c'| is complete. A subtlety 
+  here is that we \emph{must} pattern match on |In x|, otherwise Agda's termination 
+  checker will flag the recursive call. 
+
+\includeagda{5}{derivegencompleteI}
+
+  We can complete this definition by proving a lemma that asserts that mapping |In| 
+  over a generator preserves completeness: 
+
+\includeagda{5}{derivegencompleteIlemma}
+
+\subsubsection{Products and coproducts}
+
+  Things become a bit more interesting once we move to products and coproducts, since 
+  in their case we have to prove that the combining of subgenerators is complete under 
+  our enumerative representation. In both cases, the proof follows a very similar 
+  structure: 
+
+  \begin{enumerate}
+    \item 
+      Obtain completeness proofs for the subgenerators with recursive calls to |
+      deriveGen|-|Complete|
+    \item 
+      Construct a lemma that asserts that the enumerative interpretation of generators 
+      preserves completeness
+    \item 
+      Invoke this lemma to complete the definition
+  \end{enumerate}
+  
+  \paragraph{Coproducts} To find out what lemma we need to prove completeness for the 
+  generators derived from coproducts, we observe the following equality by unfolding 
+  the defintion of |toList| and |deriveGen|: 
 
 \includeagda{5}{tolistcopeq}
 
-  Basically, this equality unfolds the |toList| function one step. Notice how the 
-  generators on the left hand side of the equation are \emph{almost} the same as the 
-  recursive calls we make. This means that we can prove completeness for coproducts by 
-  proving the following lemmas, where we obtain the required completeness proofs by 
-  recursing on the left and right subcodes of the coproduct. 
+  The generators on the left hand side of the equation are virtually the same as the 
+  recursive calls we make, modulo the |inj₁| and |inj₂| we map over them to unify 
+  their result types. We can obtain a proof for the right hand side of this equality 
+  by proving the following two lemmas about the |merge| function we use to combine the 
+  results of the subgenerators of a coproduct. 
 
 \includeagda{5}{mergecomplete}
 
-  Similarly, by unfolding the toList function one step in the case of products, we get 
-  the following equality:
+  Proofs for these lemmas can readily be extended to a proof that if the left and 
+  right subgenerator are complete under the enumerative interpretation, then the 
+  interpretation of their coproduct (which is a call to |merge|), is also complete. 
+  
+  \paragraph{Products} Similarly, by unfolding the toList function one step in the 
+  case of products, we get the following equality:
 
 \includeagda{5}{tolistpeq}
 
@@ -290,15 +348,18 @@ for constant types}{lst:mdstructure}
 
 \includeagda{5}{apcomplete}
 
-  Again, the preconditions of this lemma can be obtained by recursing on the left and 
-  right subcodes of the product. 
+  We can again extend this lemma to a proof that the enumerative interpretation of 
+  product types is completeness preserving. 
 
 \subsection{Completeness for Constant Types}
 
-  Since our completeness proof relies on completeness of the generators for constant 
-  types, we need the programmer to supply a proof that the supplied generators are 
-  indeed complete. To this end, we add a metadata parameter to the type of |deriveGen|
-  -|complete|, with the following type: 
+  Since the completeness proof relies on completeness of the generators for constant 
+  types, we need the programmer to supply a completness proof for the generators 
+  stored in the metadata structure provided to |deriveGen|. To this end, we 
+  parameterize the completeness proof over a metadata structure that carries 
+  generators for all constant types in a code, and a proof that these generators are 
+  complete. We express this relation between generator and proof with a dependent 
+  pair. We use the following type synonym to describe this metadata parameter:
 
 \includeagda{5}{proofinfotype}
 
@@ -306,48 +367,60 @@ for constant types}{lst:mdstructure}
   |K| branch of |deriveGen|-|Complete|, we need to be able to express the relationship 
   between the metadata structure used in the proof, and the metadata structure used by 
   |deriveGen|. To do this, we need a way to transform the type of information that is 
-  carried by a value of type |KInfo|: 
+  carried by a value of type |KInfo|, which allows us to map a metadata structure 
+  containing generators and proofs to a metadata structure containing just generators. 
 
 \includeagda{5}{kinfomap}
 
   Given the definition of |KInfo|-|map|, we can take the first projection of the 
   metadata input to |deriveGen|-|Complete|, and use the resulting structure as input 
-  to |deriveGen|: 
+  to |deriveGen|. We define a type synonym to describe this mapping operation:
 
-\includeagda{5}{proofinfotype}
+\includeagda{5}{mdtransform}
 
-  This amounts to the following final type for |deriveGen|-|Complete|, where |◂ m| = |
-  KInfo|-|map proj₁ m|:  
+  Wich results in the following final type for |deriveGen|-|Complete|. 
 
 \includeagda{5}{derivegenwithmd}
 
-  Now, with this explicit relation between the completeness proofs and the generators 
-  given to |deriveGen|, we can simply retrun the proof contained in the metadata of 
-  the |K| branch. 
+  By expressing the relation between the metadata structure supplied to the proof e, 
+  and the metadata structure supplied to |deriveGen| explicit in the proof's type 
+  signature, Agda is able to infer that the completeness proofs range over the 
+  generators that were supplied to |deriveGen|, so we complete the proof for constant 
+  types simply by returning the proof that is stored in the metadata structure. 
   
 \subsection{Generator Monotonicity}
 
-  The lemma |×|-|complete| is not enough to prove completeness in the case of 
-  products. We make two recursive calls, that both return a dependent pair with a 
-  depth value, and a proof that a value occurs in the enumeration at that depth. 
-  However, we need to return just such a dependent pair stating that a pair of both 
-  values does occur in the enumeration at a certain depth. The question is what depth 
-  to use. The logical choice would be to take the maximum of both depths. This comes 
-  with the problem that we can only combine completeness proofs when they have the 
-  same depth value. 
+  There is one crucial detail we ignored when describing how to prove completeness for 
+  generators derived from product types. Since existential quantification is modelled 
+  in type theory as a dependent pair, we have to explicitly supply the depth at which 
+  an element occurs in an enumeration when proving completeness. In the case of unit 
+  and empty types this is trivial. Coproducts represent a choice, so we simply use the 
+  depth returned by the completeness proof of one of the subgenerators, depending on 
+  from which generator the quantified value |x| originated. For recursive positions we 
+  take the successor of the depth of the induction hypothesis and for constant types 
+  we return the depth provided by the completeness proof stored within the supplied 
+  metadata structure. 
 
-  For this reason, we need a way to transform a proof that some value |x| occurs in 
-  the enumeration at depth |n| into a proof that |x| occurs in the enumeration at 
-  depth |m|, given that $n \leq m$. In other words, the set of values that occurs in 
-  an enumeration monotoneously increases with the enumeration depth. To finish our 
-  completeness proof, this means that we require a proof of the following lemma: 
+  A problem, however arises when choosing a depth value for generators derived from 
+  product types. We combine values of both subgenerators in a pair, so at what depth 
+  does this pair occur in the enumeration of the combined generator? Generally, we say 
+  that the recursive depth of a pair is the maximum of the depth of its components. 
+  Suppose the first component occurs at depth $n$, and the second at depth $m$. The 
+  depth of the pair is then |max n m|. However, the second components  of the returned 
+  completeness proofs respectively have the type |x ∈ enumerate ... n| and |x ∈ 
+  enumerate ... m|. In order to unify their types, we need a lemma that transforms a 
+  proof that some value |x| occurs in the enumeration at depth |k| into a proof that |
+  x| occurs in the enumeration at 
+  depth |k'|, given that $k \leq k'$. In other words, the set of values that occurs in 
+  an enumeration monotoneously increases with the enumeration depth. We thus require a 
+  proof of the following lemma in order to finish the completeness proof: 
 
 \includeagda{5}{derivegenmonotone}
 
-  We can complete a proof of this lemma by using the same approach as for the 
-  completeness proof. 
+  We do not show the definition of this proof here, but it can be completed using the 
+  exact same proof structure we used for the completeness proof. 
 
-\subsection{Final Proof Sketch}
+\subsection{Extending completeness to all regular types}
 
   By bringing all these elements together, we can prove that |deriveGen| is complete 
   for any code |c|, given that the programmer is able to provide a suitable 
@@ -364,3 +437,17 @@ for constant types}{lst:mdstructure}
 
   With which we have shown that if a type is regular, we can derive a complete 
   generator producing elements of that type. 
+
+\section*{Conclusion}
+
+  In this chapter, we have shown how generators can be derived from codes in the 
+  universe of regular types. While this is not necessarily a new result (e.g. 
+  SmallCheck does this as well), we have also proven that these generators are 
+  complete under an enumerative interpretation, meaning that they are guaranteed to 
+  produce every inhabitant of the type they range over at some point. 
+
+  Futhermore, the work done to establish this generic generator and the accompanying 
+  proof provides a solid basis for extending this result to generic generators for 
+  more expressive type universes. As we will see in the upcoming chapters, the 
+  approach described in this chapter is to a large extent applicable to other type 
+  universes as well. 

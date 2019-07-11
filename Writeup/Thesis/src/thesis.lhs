@@ -3,8 +3,8 @@
 \usepackage{framed}
 \usepackage{mdframed}
 \usepackage{setspace}
-% \usepackage{extsizes}
-
+\usepackage{fontspec}
+\newfontfamily{\agdafont}{DejaVu Sans Mono}[Scale=MatchLowercase]
 \renewcommand{\figurename}{Listing}
 \renewcommand{\listfigurename}{Code listings}
 
@@ -13,22 +13,21 @@
 {
     \begin{figure}[h]
       \label{#2}
-      \begin{framed}
+      \begin{mdframed}[linecolor=black!50]
         \caption{#1}
 }
 {
-      \end{framed}
+      \end{mdframed}
     \end{figure}
 }
-
 %% Agda snippets 
-\newcommand{\includeagda}[2]{\vspace*{-0.35cm}\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}\vspace*{-0.35cm}}
+\newcommand{\includeagda}[2]{\vspace*{-0.25cm}\begin{center}{\fontsize{12}{14}\agdafont\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}}\end{center}\vspace*{-0.25cm}}
 
 %% Agda snippets, without removed spacing
-\newcommand{\includeagdanv}[2]{\begin{center}\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\end{center}}
+\newcommand{\includeagdanv}[2]{\begin{center}{\fontsize{12}{14}\agdafont\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}}\end{center}}
 
 %% Agda snippets, not centered
-\newcommand{\includeagdanc}[2]{\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}\vspace*{-0.35cm}}
+\newcommand{\includeagdanc}[2]{{\fontsize{12}{14}\agdafont\ExecuteMetaData[../src/chap0#1/latex/code.tex]{#2}}\vspace*{-0.25cm}}
 
 %% Agda listings
 \newcommand{\includeagdalisting}[4]{
@@ -52,7 +51,8 @@
   bottomline=false,
   rightline=false,
   skipabove=\topsep,
-  skipbelow=\topsep
+  skipbelow=\topsep, 
+  linecolor=black!50
 ]{siderules}
 
 \newenvironment{example}[0] 
@@ -103,9 +103,12 @@
 
 \supervisor{Dr. W.S. Swierstra \\ Dr. M.M.T. Chakravarty \\ Dr. A. Serrano Mena }
 
+\setstretch{1.125}
+
 %include lhs2TeX.fmt
 \begin{document}
 \maketitle
+
 
 %% Set up the front matter of our book
 \frontmatter
@@ -128,22 +131,22 @@ The generation of suitable test data is an essential part of \emph{property base
 \chapter{Introduction}
 %include src/chap01/body.lhs
 
-\chapter{Background \& Related Work}
+\chapter{Background \& Prerequisites}
 %include src/chap023/body.lhs 
 
-\chapter{Generic Generators for Regular types}
+\chapter{Regular types}
 %include src/chap05/body.lhs
 
-\chapter{Deriving Generators for Indexed Containers}
+\chapter{Indexed Containers}
 %include src/chap06/body.lhs
 
-\chapter{Deriving Generators for Indexed Descriptions}
+\chapter{Indexed Descriptions}
 %include src/chap07/body.lhs 
 
 %% \chapter{A Combinator Library for Generators}
 %% %include src/chap04/body.lhs
 
-\chapter{Implementation in Haskell}
+\chapter{Haskell Implementation}
 %include src/chap08/body.lhs
 
 \chapter{Discussion}

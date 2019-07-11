@@ -2,7 +2,7 @@
 {-# OPTIONS --type-in-type #-}
 {-# OPTIONS --allow-unsolved-metas #-}
 
-open import AgdaGen.Base hiding (Gen; 𝔾; Genᵢ ; 𝔾ᵢ)
+open import AgdaGen.Base hiding (Gen; 𝔾)
 open import AgdaGen.Combinators
 
 open import Data.Unit
