@@ -1,12 +1,12 @@
-open import AgdaGen.Generic.Indexed.MultisortedSignatures.Signature
-open import AgdaGen.Base
-open import AgdaGen.Combinators
-open import AgdaGen.Generic.Isomorphism 
-open import AgdaGen.Generic.Regular.Universe
-open import AgdaGen.Generic.Indexed.MultisortedSignatures.Signature
-open import AgdaGen.Generic.Indexed.MultisortedSignatures.Generator
-open import AgdaGen.Generic.Regular.Cogen
-open import AgdaGen.Generic.Indexed.PiGen
+open import Model.Generic.Indexed.MultisortedSignatures.Signature
+open import Model.Base
+open import Model.Combinators
+open import Model.Generic.Isomorphism 
+open import Model.Generic.Regular.Universe
+open import Model.Generic.Indexed.MultisortedSignatures.Signature
+open import Model.Generic.Indexed.MultisortedSignatures.Generator
+open import Model.Generic.Regular.Cogen
+open import Model.Generic.Indexed.PiGen
 
 open import Data.Empty
 open import Data.Nat
@@ -22,7 +22,7 @@ open import Level hiding (suc; zero)
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; cong₂)
 
-module AgdaGen.Generic.Indexed.MultisortedSignatures.Instances where
+module Model.Generic.Indexed.MultisortedSignatures.Instances where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

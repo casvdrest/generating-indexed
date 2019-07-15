@@ -15,7 +15,7 @@ open import Data.List
 open import Function
 open import Relation.Binary.PropositionalEquality
 
-module AgdaGen.Generic.Indexed.IDesc.Universe where
+module Model.Generic.Indexed.IDesc.Universe where
 
   infixr 30 _`×_
   infixr 5  ▻_

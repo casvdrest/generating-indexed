@@ -1,38 +1,54 @@
 {-# LANGUAGE DataKinds, GADTs, TypeFamilies, KindSignatures, PolyKinds, TypeOperators, RankNTypes, MultiParamTypeClasses #-}
 
+{-|
+Module      : Expr
+Description : Generation of well typed expressions
+Copyright   : (c) Cas van der Rest, 2019
+Maintainer  : c.r.vanderrest@students.uu.nl
+Stability   : experimental
+
+uses the universe of indexed description to generate well typed expressins
+-}
 module Expr where 
 
   import Data.Proxy
   import Gen
-  import Enumerate
-  import Depth
+  import Interpret
+  import Generic.Depth
   import Singleton
-  import Data
+  import Datatypes
+  import Examples.Misc
   import Control.Applicative
-  import IDesc.Instances
   import Unsafe.Coerce
 
-  import IDesc.IDesc
+  import IDesc.Universe
+  import IDesc.Generator
 
+  -- | The type of expressions
   data Type = Nat | Bool 
 
+  -- | Singleton type for expression types
   data SType :: Type -> * where 
     SNat  :: SType 'Nat 
     SBool :: SType 'Bool
   
+  -- | Singleton instance for expression type
   instance Singleton Type where 
     type Sing = SType 
     dm SNat  = Nat 
     dm SBool = Bool
 
+  -- | 'Promote' instance for expression types
   instance Promote Type where 
     promote Nat = Promoted SNat 
     promote Bool = Promoted SBool 
 
+  -- | Type family desc
   type family Itp (ty :: Type) :: *
   type instance Itp 'Nat  = Nat
   type instance Itp 'Bool = Bool 
 
+  -- | GADT describing well typed expressions
   data Expr :: Type -> * where 
     AddE  :: Expr 'Nat -> Expr 'Nat -> Expr 'Nat 
     MulE  :: Expr 'Nat -> Expr 'Nat -> Expr 'Nat
@@ -40,6 +56,7 @@ module Expr where
     LEQ   :: Expr 'Nat -> Expr 'Nat -> Expr 'Bool
     ValE  :: Itp ty -> Expr ty 
 
+  -- | Untyped expressions
   data Expr' = AddE' Expr' Expr' 
              | MulE' Expr' Expr' 
              | ITE' Expr' Expr' Expr' 
@@ -47,6 +64,7 @@ module Expr where
              | ValN Nat 
              | ValB Bool deriving Show
 
+  -- Checks wether an expression has a given type
   check :: Expr' -> Type -> Bool 
   check (AddE' e1 e2) Nat  = check e1 Nat && check e2 Nat
   check (MulE' e1 e2) Nat  = check e1 Nat && check e2 Nat
@@ -56,9 +74,11 @@ module Expr where
   check (ValB b)      Bool = True  
   check _             _    = False
 
+  -- | Evaluates an expression
   eval :: Expr ty -> Itp ty
   eval expr = undefined
 
+  -- | Type level description of well typed expressions
   type family ExprDesc (ty :: Type) :: IDesc (Expr') Type
   type instance ExprDesc 'Nat = 
     S4 :+> (   Var 'Nat :*: Var 'Nat 
@@ -74,6 +94,7 @@ module Expr where
 
   type instance Desc T_EXPR (Expr') Type ty = ExprDesc ty 
 
+  -- | Term level descriptions of well typed expressions
   exprDesc :: Proxy T_EXPR -> Sing ty -> Sing (ExprDesc ty)
   exprDesc _ SNat  = 
     s4 :+>~ (    SVar Nat :*:~ SVar Nat 
@@ -87,6 +108,7 @@ module Expr where
             :::~ SSigma SOne gen (\_ -> Refl) 
             :::~ SVNil )
 
+  -- | Convert a generic representation back to its corresponding expression
   toExpr :: Proxy T_EXPR -> Sing ty -> Interpret (ExprDesc ty) -> Expr' 
   toExpr _ SNat  (Left (e1 , e2)) = AddE' e1 e2
   toExpr _ SNat  (Right (Left (e1 , e2))) = AddE' e1 e2
@@ -96,11 +118,13 @@ module Expr where
   toExpr _ SBool (Right (Left (e1 , e2))) = LEQ' e1 e2
   toExpr _ SBool (Right (Right (b , ()))) = ValB b
 
+  -- | 'Describe' instance for wel-type expressions
   instance Describe T_EXPR Expr' Type where 
     sdesc = exprDesc 
     to = toExpr
 
-  exprGen :: Type -> G Type Expr' Expr'
+  -- | Generator producing well-typed expressions
+  exprGen :: Type -> G Type Expr'
   exprGen i = 
     case promote i of 
       (Promoted i') -> genDesc (Proxy :: Proxy T_EXPR) i' 

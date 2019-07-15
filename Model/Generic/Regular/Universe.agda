@@ -1,5 +1,5 @@
-open import AgdaGen.Base
-open import AgdaGen.Combinators
+open import Model.Base
+open import Model.Combinators
 
 open import Data.Nat hiding (_⊔_)
 open import Data.Unit
@@ -17,7 +17,7 @@ open import Level
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
-module AgdaGen.Generic.Regular.Universe where
+module Model.Generic.Regular.Universe where
 
   data Reg {ℓ} {k} : Set (Level.suc k ⊔ Level.suc ℓ) where
     Z   : Reg

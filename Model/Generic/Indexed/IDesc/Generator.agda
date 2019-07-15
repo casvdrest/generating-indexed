@@ -1,11 +1,11 @@
 {-# OPTIONS --type-in-type #-}
 
-open import AgdaGen.Base renaming (μ to μBase)
-open import AgdaGen.Combinators
+open import Model.Base renaming (μ to μBase)
+open import Model.Combinators
 
-open import AgdaGen.Generic.Isomorphism
+open import Model.Generic.Isomorphism
 
-open import AgdaGen.Generic.Indexed.IDesc.Universe
+open import Model.Generic.Indexed.IDesc.Universe
 
 open import Data.Unit
 open import Data.Product
@@ -17,7 +17,7 @@ open import Relation.Binary.PropositionalEquality
 
 open import Function
 
-module AgdaGen.Generic.Indexed.IDesc.Generator where
+module Model.Generic.Indexed.IDesc.Generator where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

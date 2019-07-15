@@ -1,6 +1,6 @@
-open import AgdaGen.Base
-open import AgdaGen.Combinators
-open import AgdaGen.Generic.Regular.Universe
+open import Model.Base
+open import Model.Combinators
+open import Model.Generic.Regular.Universe
 
 open import Data.Nat
 open import Data.Product
@@ -17,7 +17,7 @@ open import Level
 
 open import Category.Monad
 
-module AgdaGen.Generic.Regular.Cogen where
+module Model.Generic.Regular.Cogen where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

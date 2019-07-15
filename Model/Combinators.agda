@@ -1,4 +1,4 @@
-open import AgdaGen.Base
+open import Model.Base
 
 open import Data.Unit
 
@@ -11,7 +11,7 @@ open import Level renaming (suc to sucL; zero to zeroL)
 -- existing functionality of the standard library, but we can still
 -- utilize do-notatino and idiom brackets by overloading the
 -- necessary operators. 
-module AgdaGen.Combinators where
+module Model.Combinators where
 
   -- 'map', but for indexed generators
   genMap :

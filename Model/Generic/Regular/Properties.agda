@@ -1,18 +1,18 @@
-open import AgdaGen.Base
-open import AgdaGen.Combinators
-open import AgdaGen.Enumerate
-open import AgdaGen.Data using (_∈_; here; there; Π)
+open import Model.Base
+open import Model.Combinators
+open import Model.Enumerate
+open import Model.Data using (_∈_; here; there; Π)
 
-open import AgdaGen.Properties.Monotonicity
-open import AgdaGen.Properties.General
-open import AgdaGen.Properties.Completeness
+open import Model.Properties.Monotonicity
+open import Model.Properties.General
+open import Model.Properties.Completeness
 
-open import AgdaGen.Generic.Isomorphism
+open import Model.Generic.Isomorphism
 
-open import AgdaGen.Generic.Regular.Universe
-open import AgdaGen.Generic.Regular.Cogen
-open import AgdaGen.Generic.Regular.Instances
-open import AgdaGen.Generic.Regular.Generator
+open import Model.Generic.Regular.Universe
+open import Model.Generic.Regular.Cogen
+open import Model.Generic.Regular.Instances
+open import Model.Generic.Regular.Generator
 
 open import Data.Unit hiding (_≤_)
 open import Data.Product using (proj₁; proj₂; _,_; Σ; Σ-syntax; _×_)
@@ -29,7 +29,7 @@ open import Category.Monad
 open import Relation.Binary.PropositionalEquality
 open Relation.Binary.PropositionalEquality.≡-Reasoning
 
-module AgdaGen.Generic.Regular.Properties where
+module Model.Generic.Regular.Properties where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

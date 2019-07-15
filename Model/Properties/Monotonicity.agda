@@ -1,10 +1,10 @@
-open import AgdaGen.Base
-open import AgdaGen.Combinators
-open import AgdaGen.Enumerate
+open import Model.Base
+open import Model.Combinators
+open import Model.Enumerate
 
-open import AgdaGen.Generic.Isomorphism
-open import AgdaGen.Properties.General
-open import AgdaGen.Data
+open import Model.Generic.Isomorphism
+open import Model.Properties.General
+open import Model.Data
   using (_∈_; here; _⊕_; inl; inr; there; merge)
 
 open import Data.Product
@@ -25,7 +25,7 @@ open import Category.Monad
 
 open import Level renaming (suc to sucL ; zero to zeroL)
 
-module AgdaGen.Properties.Monotonicity where
+module Model.Properties.Monotonicity where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

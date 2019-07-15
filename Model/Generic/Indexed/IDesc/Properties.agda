@@ -1,15 +1,15 @@
-open import AgdaGen.Data using (here ; there ; _∈_)
-open import AgdaGen.Base hiding (μ)
-open import AgdaGen.Combinators
-open import AgdaGen.Properties.General
-open import AgdaGen.Properties.Completeness
-open import AgdaGen.Properties.Monotonicity
+open import Model.Data using (here ; there ; _∈_)
+open import Model.Base hiding (μ)
+open import Model.Combinators
+open import Model.Properties.General
+open import Model.Properties.Completeness
+open import Model.Properties.Monotonicity
 
-open import AgdaGen.Generic.Regular.Properties 
-open import AgdaGen.Generic.Indexed.IDesc.Generator
-open import AgdaGen.Generic.Indexed.IDesc.Universe
+open import Model.Generic.Regular.Properties 
+open import Model.Generic.Indexed.IDesc.Generator
+open import Model.Generic.Indexed.IDesc.Universe
 
-open import AgdaGen.Enumerate hiding (⟨_⟩)
+open import Model.Enumerate hiding (⟨_⟩)
 
 open import Data.Nat
 open import Data.List
@@ -22,7 +22,7 @@ open import Level renaming (zero to zeroL; suc to sucL)
 open import Relation.Binary.PropositionalEquality
 -- open import Relation.Binary.HeterogeneousEquality
 
-module AgdaGen.Generic.Indexed.IDesc.Properties where
+module Model.Generic.Indexed.IDesc.Properties where
 
   open GApplicative ⦃...⦄
   open GMonad ⦃...⦄

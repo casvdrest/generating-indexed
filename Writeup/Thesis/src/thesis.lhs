@@ -23,9 +23,8 @@
 \newenvironment{listing}[2] %% #1 = caption #2 = label
 {
     \begin{figure}[h]
-      \label{#2}
       \begin{mdframed}[linecolor=black!50]
-        \caption{#1}
+        \caption{#1}\label{#2}
 }
 {
       \end{mdframed}
@@ -110,6 +109,7 @@
 %format <$> = "\ {\color{gray}\mathbin{<\hspace{-1.6pt}\mathclap{\raisebox{0.1pt}{\scalebox{.8}{\$}}}\hspace{-1.6pt}>}}\ "
 %format <*> = "\ {\color{gray}\mathbin{<\hspace{-1.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{1.2}{$*$}}}\hspace{-1.1pt}>} }\ "
 %format :*: = "\ {\color{gray}\mathbin{:\hspace{-0.3pt}\mathclap{\raisebox{0.1pt}{\scalebox{1.2}{$*$}}}\hspace{-0.3pt}:}}\ "
+%format :~: = "\ {\color{gray}\mathbin{:\hspace{-0.3pt}\mathclap{\raisebox{0.1pt}{\scalebox{1.2}{$\sim$}}}\hspace{-0.3pt}:}}\ "
 %format :+> = "\ {\color{gray}\mathbin{:\hspace{-0.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{.9}{$+$}}}\hspace{-0.3pt}>}}\ "
 %format :*:$ = "\ {\color{gray}\mathbin{:\hspace{-0.3pt}\mathclap{\raisebox{0.1pt}{\scalebox{1.2}{$*$}}}\hspace{-0.3pt}:}{\scalebox{1}{\$}}}\ "
 %format :+>$ = "\ {\color{gray}\mathbin{:\hspace{-0.1pt}\mathclap{\raisebox{0.1pt}{\scalebox{.9}{$+$}}}\hspace{-0.3pt}>}{\scalebox{1}{\$}}}\ "
@@ -136,9 +136,7 @@
 \tableofcontents
 
 \chapter{Declaration}
-I am very grateful to my advisors Wouter Swierstra and Manuel Chakravarty, without whom this work would not have been what it is today. Their encouragement, guidance and constructive criticism has been invaluable to me, and I am glad to have had the opportunity to conduct my Master's thesis under their supervision. Furthermore, I am thankful to the members of IOHK's Plutus team for finding time in their schedule to discuss the project with me, and for the financial support provided by IOHK. 
-
-Of course I am also very grateful to my peers Joris, Joris, Lars, Ivo and Rik, who shared many long days in the Minnaert building with me, presenting numerous opportunities for some rubber ducking or a friendly chat. Their friendship and company have made the last 7 months a lot more enjoyable than they would have been on my own. \\ \\
+I am very grateful to my advisors Wouter Swierstra and Manuel Chakravarty, without whom this work would not have been what it is today. Their encouragement, guidance and constructive criticism has been invaluable to me, and I am glad to have had the opportunity to conduct my Master's thesis under their supervision. Furthermore, I am thankful to the members of IOHK's Plutus team for finding time in their schedule to discuss the project with me, and for the financial support provided by IOHK. \\ \\
 I declare that this thesis has been composed solely by myself and that it has not been
 submitted, in whole or in part, in any previous application for a degree. Except where
 stated otherwise by reference or acknowledgment, the work presented is entirely my

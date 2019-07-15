@@ -5,8 +5,8 @@
 
 module code where
 
-  open import AgdaGen.Base hiding (Gen; 𝔾)
-  open import AgdaGen.Combinators
+  open import Model.Base hiding (Gen; 𝔾)
+  open import Model.Combinators
 
   open import Data.Empty
 
@@ -279,10 +279,10 @@ P ∨ ¬ P
 %</enumerate>
 
 \begin{code}
-  open import AgdaGen.Data
-  open import AgdaGen.Base
-  open import AgdaGen.Enumerate
-  open import AgdaGen.Combinators
+  open import Model.Data
+  open import Model.Base
+  open import Model.Enumerate
+  open import Model.Combinators
 
   open GMonad ⦃...⦄
   open GApplicative ⦃...⦄

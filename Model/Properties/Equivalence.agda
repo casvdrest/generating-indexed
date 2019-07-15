@@ -4,10 +4,10 @@ open import Data.Unit
 
 open import Function
 
-open import AgdaGen.Base
-open import AgdaGen.Properties.Completeness
+open import Model.Base
+open import Model.Properties.Completeness
 
-module AgdaGen.Properties.Equivalence where
+module Model.Properties.Equivalence where
 
   -- Equivalence between generators: g₁ and g₂ are equivalent if
   -- for every x, if g₁ produces x, then g₂ produces x as well,

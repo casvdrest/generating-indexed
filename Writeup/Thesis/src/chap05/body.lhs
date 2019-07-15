@@ -1,18 +1,18 @@
 
-  We can describe a large class of recursive algebraic data types with the universe 
-  of \emph{regular types}. In this section we describe this universe together with its 
-  semantics, and demonstrate how we may define functions over regular types by 
-  induction over their codes. We will then show how we can derive a generator from 
-  codes in this universe, and prove that these derived generators are \emph{complete}. 
+  We can describe a large class of recursive algebraic data types as a \emph{regular types}. 
+  In this section we describe this universe together with its 
+  semantics, and demonstrate how we may define generators for regular types by 
+  induction over their codes. We will then prove that these derived generators 
+  satisfy our completeness property. 
 
 \section{Universe definition}
 
   Though the exact definition may vary across sources, the universe of regular types 
   is generally regarded to consist of the \emph{empty type} (containing \emph{no} 
   inhabitants), the unit type (containing exactly \emph{one} inhabitant) and constants 
-  types (which simply refer to another typ). Regular types are closed under both \emph
+  types (which simply refer to another type). Regular types are closed under both \emph
   {products} (representing pairing of types) and \emph{coproducts} (representing a 
-  choice between types).Listing \ref{lst:regular} shows the Agda datatype that we use 
+  choice between types). Listing \ref{lst:regular} shows the Agda datatype that we use 
   to represent codes in this universe, with the associated semantics of type \agda{Reg → 
   Set → Set} being shown in listing \ref{lst:regsem}.
 
@@ -35,8 +35,8 @@
 \includeagda{3}{defnat}
 
     \agda{Nat} exposes two constructors: the nullary constructor \agda{zero}, and the unary 
-    constructor \agda{suc}, that takes one recursive argument. We can view this type then 
-    as a coproduct (or choice) between a unit type (representing \agda{zero}) and a 
+    constructor \agda{suc} that takes one recursive argument. We can view this type then 
+    as a coproduct (or choice) between a unit type, representing \agda{zero}, and a 
     recursive position, representing the recursive argument of the \agda{suc} constructor. 
 
 \includeagdanv{5}{natregular}
@@ -46,29 +46,29 @@
   \end{example}
 
   In general, we say that a type is regular if and only if we can provide a proof that 
-  it is isomorphic to the fixpoint of some \agda{c} of type \agda{Reg}. We use a record to 
-  capture this notion, consisting of a code and an value that witnesses the 
-  isomorphism between the fixpoint of this code, and the type parameter \agda{a}.
+  it is isomorphic to the fixpoint of some code \agda{c} of type \agda{Reg}. We use a record to 
+  capture this notion, which holds a code and an value that witnesses the 
+  isomorphism between the fixpoint of this code and the regular type \agda{A}.
 
 \includeagda{5}{regularrecord}
 
-  By instantiating \agda{Regular} for a type, we may use any generic functionality that is 
-  defined over regular types. 
+  By instantiating \agda{Regular} for a type \agda{A}, we may use any generic functionality by leveraging 
+  the isomorphism stored with the record \agda{Regular A}.
 
 \section{Deriving generators}\label{sec:genericgenreg}
 
-  We can derive generators for all regular types by induction over their associated 
-  codes. Furthermore, in \cref{sec:regularproof} we will prove that the generators we 
-  derive from codes are complete under the enumerative interpretation we defined in 
+  We can derive generators for all regular types at once by induction over their associated 
+  codes. In \cref{sec:regularproof} we will prove that the generators we 
+  derive from codes satisfy our completeness property under the enumerative interpretation we defined in 
   \cref{sec:generators}. 
 
 \subsection{Performing induction over codes}
 
-  While our first approach might be to try to define a generator that produces values 
-  of type \agda{Fix c}, this will not work. By choosing \agda{Fix c} as the type of elements 
+  In our initial approach, we might be to try to define a generator that produces values 
+  of type \agda{Fix c}. Unfortunately, this will not work. By choosing \agda{Fix c} as the type of elements 
   generated, we implicitly imposes the restriction that any \agda{I} in \agda{c} refers to \agda{Fix 
-  c}. This restriction is problematic in some cases. For example when encountering a 
-  product or coproduct, we destruct \agda{c} into two smaller codes \agda{c₁} and \agda{c₂}. Calling 
+  c}. This restriction is problematic in some cases, specifically when encountering a 
+  product or coproduct. In that case, we destruct a code \agda{c} into two smaller codes \agda{c₁} and \agda{c₂}. Calling 
   our deriving function on these codes will yield two generators, one producing values 
   of type \agda{Fix c₁} and the other producing values of type \agda{Fix c₂}. It is then not 
   possible to combine these generators into a single generator producing values of 
@@ -79,21 +79,21 @@
   c'}. Furthermore, we do not produce elements of type \agda{Fix c}, but rather of type \agda{⟦ 
   c ⟧ (Fix c')} (i.e. values of the type given by the semantics of \agda{c}, but recursive 
   positions refer to the type described by \agda{c'}). When calling our derivation function 
-  with two equal codes, the values produced will be isomorphic to \agda{Fix c}! Below is 
-  the type signature of our generator deriving function: 
+  with two equal codes, the values produced will be isomorphic to \agda{Fix c}! This results 
+  in the following type signature of our generator deriving function: 
 
 \includeagda{5}{genericgen2}
 
-  This intermediate step allows us to perform induction over the first input code, 
+  This step allows us to perform induction over the first input code, 
   while still being able to have recursive positions refer to the correct \emph
   {top-level code}. The first and second type parameter (respectively describing the 
-  type we are generating, and the type of recursive positions) of \agda{Gen} are different, 
-  with the second type parameter being isomorphic to \agda{Fix c'}.  
+  type we are generating, and the type of recursive positions) of \agda{Gen} are
+  consequently distinct, with the second type parameter being isomorphic to \agda{Fix c'}.  
 
 \subsection{Composing generic generators}
 
-  Now that we have the correct type for \agda{deriveGen} in place, we can start defining 
-  it. We do this on a case by case basis, describing how to derive generators for each 
+  Now that we have the correct type for \agda{deriveGen} in place, we can begin to define it 
+  We do this on a case by case basis, describing how to derive generators for each 
   of the constructors of the \agda{Reg} datatype. 
 
 \subsubsection{The empty (Z) and unit (U) type}
@@ -104,11 +104,11 @@
 
 \includeagda{5}{genericgenZU}
 
-  The cases for both \agda{Z} and \agda{U} are trivial. For the \agda{Z} combinator, we yield a 
+  In case of both \agda{Z} and \agda{U} this requirement is trivially fulfilled. For the \agda{Z} combinator, we yield a 
   generator that produces no elements, since its semantics is the empty type (\agda{⊥}). As 
   for the \agda{U} combinator, \agda{⟦ U ⟧ (Fix c')} equals the unit type (\agda{⊤}), so we need to 
-  return a generator that produces all inhabitants of \agda{⊤}, which is only the value \agda{tt}
-  . We do this by lifting this value into the generator type. 
+  return a generator that produces all inhabitants of \agda{⊤}, which is only the value \agda{tt}. 
+  We get a generator that does this by lifting \agda{tt} into the generator type. 
 
 \subsubsection{Recursive positions (I)}
 
@@ -133,14 +133,15 @@
 \includeagda{5}{genericgenPCOP}
 
   Of course, the exact way in which the elements of subgenerators are combined still 
-  depends on how we interpret the abstract generator type. 
+  depends on how we interpret the abstract generator type; here we only describe these 
+  operations in terms of the functions exposed by |Applicative| and |Alternative|.
 
 \subsubsection{Wrapping up}
 
-  With this, we have defined a function that derives generators from codes in the 
-  universe of regular types (we will deal with constan types in \cref
+  We have defined a function that derives generators from codes in the 
+  universe of regular types (barring constant types, with with we will deal in \cref
   {sec:constanttypes}). We need to take one final step before we can use \agda{deriveGen} for 
-  all regular types: \agda{Regular A} holds an isomorphism of type \agda{A ≃ Fix c}, so we need 
+  all regular types. Any vallue \agda{Regular A} holds an isomorphism \agda{A ≃ Fix c}, so we need 
   to wrap the resulting generator in the \agda{In} constructor, which we can only do if \agda{
   deriveGen} is called \emph{with two equal codes}. We use the following function to 
   perform this initial call to \agda{deriveGen}, and to wrap the values produced by the 
@@ -168,22 +169,20 @@
 
 \section{Constant types}\label{sec:constanttypes}
 
-  We have not yet discussed how to derive a generator for constant types. The reason 
-  for this is that a constant type, \agda{K s} can carry any type in \agda{Set}. This means that 
-  we have know nothing about the type \agda{s} whatsoever. Since we have no general 
+  Constant types present a bit of a challenge, since the code \agda{K s} can carry any type in \agda{Set}. 
+  This means that we know nothing about the type \agda{s} whatsoever. Since we have no general 
   procedure for deriving generators for arbitrary types in \agda{Set}, we need to either 
-  restrict \agda{s} to a set of types for which we can derive generators, or have the user 
-  supply generators for the constant types in a code they aim to derive a generator 
-  for. We choose the latter in order to retain the flexibility that comes with the 
-  ability to refer to arbitrary types in \agda{Set}. 
+  restrict \agda{s} to a set of types for which we \emph{can} derive generators (e.g. regular types), or have the user 
+  supply generators for all constant types in a code. We choose the latter approach in order to retain the flexibility 
+  that comes with the ability to refer to arbitrary types.
 
 \subsection{Metadata structure}
 
   We have the programmer supply the necessary generators by defining a \emph{metadata} 
   structure, indexed by a code, that carries additional information for every \agda{K} 
-  constructor used. We then parameterize \agda{deriveGen} with a metadata structure, 
-  indexed by the code we are inducting over, that carries generators for every 
-  constant type used in said code. The definition of the metadata structure is shown 
+  constructor used. We parameterize \agda{deriveGen} with a metadata structure that is
+  indexed by the code we are inducting over, carrying generators for every 
+  constant type used in said code. The definition of this metadata structure is shown 
   in listing \ref{lst:mdstructure}. 
 
 \includeagdalisting{5}{mdstructure}{Metadata structure carrying additional information 
@@ -200,39 +199,39 @@ for constant types}{lst:mdstructure}
 
 \includeagda{5}{derivegenKTy} 
 
-  We then define \agda{deriveGen} as follows for constant types. All cases for existing 
-  constructors remain the same, except for the fact that the metadata parameter 
-  distributes over recursive calls in case of products and coproducts. 
+  We then define \agda{deriveGen} as follows for constant types:
 
 \includeagda{5}{derivegenKCase}
 
+  All cases for existing constructors remain the same, except for the fact that the metadata parameter 
+  distributes over recursive calls in the case of products and coproducts. 
+  
   With this, we have completed the definition of \agda{deriveGen}. 
 
 \section{Proving completeness}\label{sec:regularproof}
 
-  We set out to prove that by applying the enumerative interpretation to our generic 
-  generator for regular types we obtain a complete enumeration for regular types. 
-  Obviously, this relies on on the programmer to supply complete generators for all 
-  the constant types in a code as well. 
+  We set out to prove that the derived generators satisfy our completeness property.
+  Obviously, this relies on the generators supplied by the programmer being complete 
+  as well. 
 
-  We start the proof by instantiating the completeness property we formulated in \cref
-  {lst:abstractgen} with \agda{deriveGen}: 
+  We start the proof by instantiating the completeness property formulated in listing \ref
+  {lst:abstractgen} with \agda{deriveGen} to obtain the definition of the theorem that 
+  we will prove:
 
 \includeagda{5}{derivegencomplete}
 
-  We explicit distinguish the codes \agda{c} and \agda{c'} to (again) be able to construct the 
-  proof by performing induction over the code \agda{c}. The reasoning behind this is very 
+  We explicitly distinguish the codes \agda{c} and \agda{c'} to (again) be able to construct the 
+  proof by performing induction over the input code \agda{c}. The reasoning behind this is very 
   much the same as the reasoning behind the definition of \agda{deriveGen} itself. If we 
-  invoke this lemma with two equal codes, we may leverage the fact that \agda{In} is 
+  invoke this lemma with two equal codes, we may utilize the fact that \agda{In} is 
   bijective to obtain a proof that \agda{genericGen} is complete too. The key observation 
   here is that mapping a bijective function over a complete generator results in 
-  another complete generator. We do not show this proof here explicitly, but with this 
-  approach we can prove the following statement, given a proof for \agda{deriveGen-Complete}
-  :
+  another complete generator. We do not show this proof here explicitly, but we have constructed
+  a proof of the following statement in the Agda development:
 
 \includeagda{5}{genericgencomplete}
 
-  Which we need to generalize the proof to all types \agda{A} that are regular. 
+  Which we need to generalize the proof to all types which are isomorphic to some code \agda{c : Reg}. 
 
 \subsection{Proof structure}
 
@@ -245,19 +244,20 @@ for constant types}{lst:mdstructure}
 
     \item 
       Next, we assemble a suitable metadata structure to carry the required proofs 
-      for constant types in the code. 
+      for constant types in this code. 
 
     \item 
       Finally, we generalize the proof over our generic generator to a proof that 
-      ranges over all types \agda{A} that are isomorphic to the fixpoint of some code. 
+      ranges over all types \agda{A} that are isomorphic to the fixpoint of some code
+      \agda{c : Reg}. 
 
   \end{itemize}
 
 \subsection{Combinator correctness}
 
-  We start our proof by asserting that the used combinators are indeed complete. That 
-  is, we show for every constructor of \agda{Reg} that the generator we return in \agda{
-  deriveGen} produces all elements of the interpretation of that constructor. 
+  We start our proof by asserting that the generators derived from the individual constructors 
+  of the \agda{Reg} datatype are complete. That is, we show that for every constructor of \agda{Reg} the derived generator 
+  produces all values of the type given by the semantics of that constructor. 
   
 \subsubsection{Empty (Z) and unit (U) types}
 
@@ -274,7 +274,7 @@ for constant types}{lst:mdstructure}
 \subsubsection{Recursive positions (I)}
 
   The proof that a recursive position $\mu$ is interpreted to a complete enumeration 
-  is simply the induction hypothesis that \agda{deriveGen c' c'} is complete. A subtlety 
+  is simply the induction hypothesis, which states that \agda{deriveGen c' c'} is complete. A subtlety 
   here is that we \emph{must} pattern match on \agda{In x}, otherwise Agda's termination 
   checker will flag the recursive call. 
 
@@ -288,8 +288,8 @@ for constant types}{lst:mdstructure}
 \subsubsection{Products and coproducts}
 
   Things become a bit more interesting once we move to products and coproducts, since 
-  in their case we have to prove that the combining of subgenerators is complete under 
-  our enumerative representation. In both cases, the proof follows a very similar 
+  this requires us to prove that the way in which we combine subgenerators satisfies completeness 
+  under our enumerative interpretation. In both cases, this proof follows a similar 
   structure: 
 
   \begin{enumerate}
@@ -305,13 +305,13 @@ for constant types}{lst:mdstructure}
   
   \paragraph{Coproducts} To find out what lemma we need to prove completeness for the 
   generators derived from coproducts, we observe the following equality by unfolding 
-  the defintion of \agda{toList} and \agda{deriveGen}: 
+  the defintions of \agda{enumerate} and \agda{deriveGen}: 
 
 \includeagda{5}{tolistcopeq}
 
-  The generators on the left hand side of the equation are virtually the same as the 
-  recursive calls we make, modulo the \agda{inj₁} and \agda{inj₂} we map over them to unify 
-  their result types. We can obtain a proof for the right hand side of this equality 
+  The generators on the right hand side of the equation are virtually the same as the 
+  recursive calls we make, modulo the \agda{inj₁} and \agda{inj₂} constructors we map over them to unify 
+  their result types. We can obtain a proof of completeness for the right hand side of this equality 
   by proving the following two lemmas about the \agda{merge} function we use to combine the 
   results of the subgenerators of a coproduct. 
 
@@ -319,72 +319,69 @@ for constant types}{lst:mdstructure}
 
   Proofs for these lemmas can readily be extended to a proof that if the left and 
   right subgenerator are complete under the enumerative interpretation, then the 
-  interpretation of their coproduct (which is a call to \agda{merge}), is also complete. 
+  interpretation of their coproduct (which is a call to \agda{merge}), is also complete, 
+  simply by pairing them with the depth value returned by the recursive call. 
   
-  \paragraph{Products} Similarly, by unfolding the toList function one step in the 
+  \paragraph{Products} Similarly, by unfolding \agda{enumerate} one step in the 
   case of products, we get the following equality:
 
-\includeagda{5}{tolistpeq}
+\includeagda{5}{enumeratepeq}
 
-  We can prove the right hand side of this equality by proving the following lemma 
+  We can prove completeness for the right hand side of this equality by proving the following lemma 
   about the applicative instance of lists:
 
 \includeagda{5}{apcomplete}
 
   We can again extend this lemma to a proof that the enumerative interpretation of 
-  product types is completeness preserving. 
+  product types is completeness preserving. In \cref{sec:monotonicity} we describe in 
+  more detail how an appropriate depth value can be obtained. 
 
 \subsection{Completeness for constant types}
 
-  Since the completeness proof relies on completeness of the generators for constant 
+  Since our completeness proof relies on completeness of the supplied generators for constant 
   types, we need the programmer to supply a completness proof for the generators 
-  stored in the metadata structure provided to \agda{deriveGen}. To this end, we 
+  stored in the provided metadata structure. To this end, we 
   parameterize the completeness proof over a metadata structure that carries 
-  generators for all constant types in a code, and a proof that these generators are 
-  complete. We express this relation between generator and proof with a dependent 
-  pair. We use the following type synonym to describe this metadata parameter:
+  both generators for all constant types in a code, and a proof that these generators are 
+  complete. We express the relation between generator and proof with a dependent 
+  pair, using the following type synonym to describe the type of this metadata parameter:
 
 \includeagda{5}{proofinfotype}
 
   In order to be able to use the completeness proof from the metadata structure in the 
   \agda{K} branch of \agda{deriveGen-Complete}, we need to be able to express the relationship 
   between the metadata structure used in the proof, and the metadata structure used by 
-  \agda{deriveGen}. To do this, we need a way to transform the type of information that is 
-  carried by a value of type \agda{KInfo}, which allows us to map a metadata structure 
-  containing generators and proofs to a metadata structure containing just generators. 
+  \agda{deriveGen}. To do this, we need a way to transform the \emph{type} of information that is 
+  carried by a metadata structure. This will allow us to map a metadata structure 
+  containing generators and proofs to a metadata structure containing only generators. 
 
 \includeagda{5}{kinfomap}
 
-  Given the definition of \agda{KInfo-map}, we can take the first projection of the 
-  metadata input to \agda{deriveGen-Complete}, and use the resulting structure as input 
+  We only present the case for constant types; in all other cases we simply distribute the mapping 
+  operation over all recursive positions. Given a definition of \agda{KInfo-map}, we can take the first projection of the 
+  metadata input to \agda{deriveGen-Complete}, and use the resulting metadata structure as input 
   to \agda{deriveGen}. We define a type synonym to describe this mapping operation:
 
 \includeagda{5}{mdtransform}
 
-  Which results in the following final type for \agda{deriveGen-Complete}. 
+  Which results in the following final type of \agda{deriveGen-Complete}. 
 
 \includeagda{5}{derivegenwithmd}
 
-  By expressing the relation between the metadata structure supplied to the proof e, 
-  and the metadata structure supplied to \agda{deriveGen} explicit in the proof's type 
+  By expressing the relation between the metadata structure supplied to the proof 
+  and the metadata structure supplied to \agda{deriveGen} explicitly in the proof's type 
   signature, Agda is able to infer that the completeness proofs range over the 
-  generators that were supplied to \agda{deriveGen}, so we complete the proof for constant 
-  types simply by returning the proof that is stored in the metadata structure. 
+  generators that were supplied to \agda{deriveGen}. This allows us to complete the 
+  proof for constant types simply by returning the proof that is stored in the 
+  metadata structure. 
   
-\subsection{Generator monotonicity}
+\subsection{Generator monotonicity}\label{sec:monotonicity}
 
   There is one crucial detail we ignored when describing how to prove completeness for 
   generators derived from product types. Since existential quantification is modelled 
   in type theory as a dependent pair, we have to explicitly supply the depth at which 
-  an element occurs in an enumeration when proving completeness. In the case of unit 
-  and empty types this is trivial. Coproducts represent a choice, so we simply use the 
-  depth returned by the completeness proof of one of the subgenerators, depending on 
-  from which generator the quantified value \agda{x} originated. For recursive positions we 
-  take the successor of the depth of the induction hypothesis and for constant types 
-  we return the depth provided by the completeness proof stored within the supplied 
-  metadata structure. 
-
-  A problem, however arises when choosing a depth value for generators derived from 
+  an element occurs in an enumeration when proving completeness. A problem, however arises 
+  when choosing a depth value for generators derived from 
   product types. We combine values of both subgenerators in a pair, so at what depth 
   does this pair occur in the enumeration of the combined generator? Generally, we say 
   that the recursive depth of a pair is the maximum of the depth of its components. 

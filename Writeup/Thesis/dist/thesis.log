@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  11 JUL 2019 23:25
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/Arch Linux) (preloaded format=xelatex 2019.5.22)  12 JUL 2019 16:57
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1421,33 +1421,33 @@ LaTeX Warning: Label `lst:idescsem@cref' multiply defined.
 )
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 474.
-LaTeX Font Info:    ... okay on input line 474.
-LaTeX Font Info:    Checking defaults for LS2/stix/m/n on input line 474.
-LaTeX Font Info:    Try loading font information for LS2+stix on input line 474
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 473.
+LaTeX Font Info:    ... okay on input line 473.
+LaTeX Font Info:    Checking defaults for LS2/stix/m/n on input line 473.
+LaTeX Font Info:    Try loading font information for LS2+stix on input line 473
 .
  (/usr/share/texmf-dist/tex/latex/stix/ls2stix.fd
 File: ls2stix.fd 2015/04/17 v1.1.2-latex STIX LS2 font definitions
 )
-LaTeX Font Info:    ... okay on input line 474.
+LaTeX Font Info:    ... okay on input line 473.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1485,15 +1485,15 @@ LaTeX Font Info:    ... okay on input line 474.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 474.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 473.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 474.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 473.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 474.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 473.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 474.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 473.
 \AtBeginShipoutBox=\box57
-Package hyperref Info: Link coloring OFF on input line 474.
+Package hyperref Info: Link coloring OFF on input line 473.
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
@@ -1502,9 +1502,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count308
 )
-LaTeX Info: Redefining \ref on input line 474.
-LaTeX Info: Redefining \pageref on input line 474.
-LaTeX Info: Redefining \nameref on input line 474.
+LaTeX Info: Redefining \ref on input line 473.
+LaTeX Info: Redefining \pageref on input line 473.
+LaTeX Info: Redefining \nameref on input line 473.
 
 (dist/thesis.out) (dist/thesis.out)
 \@outlinefile=\write4
@@ -1556,58 +1556,58 @@ File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
 File: img/logo.pdf Graphic file (type pdf)
 <use img/logo.pdf>
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(1)/m/n' will be
-(Font)              scaled to size 7.44646pt on input line 475.
+(Font)              scaled to size 7.44646pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(1)/m/n' will be
-(Font)              scaled to size 5.53453pt on input line 475.
+(Font)              scaled to size 5.53453pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(2)/m/n' will be
-(Font)              scaled to size 10.06294pt on input line 475.
+(Font)              scaled to size 10.06294pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(2)/m/n' will be
-(Font)              scaled to size 7.44658pt on input line 475.
+(Font)              scaled to size 7.44658pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(2)/m/n' will be
-(Font)              scaled to size 5.53462pt on input line 475.
+(Font)              scaled to size 5.53462pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(3)/m/n' will be
-(Font)              scaled to size 10.06277pt on input line 475.
+(Font)              scaled to size 10.06277pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(3)/m/n' will be
-(Font)              scaled to size 7.44646pt on input line 475.
+(Font)              scaled to size 7.44646pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(3)/m/n' will be
-(Font)              scaled to size 5.53453pt on input line 475.
-LaTeX Font Info:    Try loading font information for U+msa on input line 475.
+(Font)              scaled to size 5.53453pt on input line 474.
+LaTeX Font Info:    Try loading font information for U+msa on input line 474.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 475.
+LaTeX Font Info:    Try loading font information for U+msb on input line 474.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Try loading font information for LS2+stixex on input line 4
-75.
+74.
 
 (/usr/share/texmf-dist/tex/latex/stix/ls2stixex.fd
 File: ls2stixex.fd 2015/04/17 v1.1.2-latex STIX extentions LS2 font definitions
 
 )
-LaTeX Font Info:    Try loading font information for U+stmry on input line 475.
+LaTeX Font Info:    Try loading font information for U+stmry on input line 474.
 
 
 (/usr/share/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/sc' will be
-(Font)              scaled to size 10.06277pt on input line 475.
+(Font)              scaled to size 10.06277pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/sc' will be
-(Font)              scaled to size 19.05956pt on input line 475.
+(Font)              scaled to size 19.05956pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/sc' will be
-(Font)              scaled to size 13.23325pt on input line 475.
+(Font)              scaled to size 13.23325pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/sc' will be
-(Font)              scaled to size 11.02771pt on input line 475.
+(Font)              scaled to size 11.02771pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/n' will be
-(Font)              scaled to size 19.05956pt on input line 475.
+(Font)              scaled to size 19.05956pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/bx/n' will be
-(Font)              scaled to size 19.05956pt on input line 475.
+(Font)              scaled to size 19.05956pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/n' will be
-(Font)              scaled to size 11.02771pt on input line 475.
+(Font)              scaled to size 11.02771pt on input line 474.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/it' will be
-(Font)              scaled to size 9.79541pt on input line 475.
+(Font)              scaled to size 9.79541pt on input line 474.
 
 (/usr/share/texmf-dist/tex/generic/oberdiek/se-ascii-print.def
 File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
@@ -1620,7 +1620,7 @@ File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
 
 ]
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/n' will be
-(Font)              scaled to size 91.89758pt on input line 480.
+(Font)              scaled to size 91.89758pt on input line 479.
 
 (dist/thesis.toc
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/bx/n' will be
@@ -1652,7 +1652,7 @@ LaTeX Font Info:    Font shape `TU/TeXGyrePagellaMath(3)/m/n' will be
 \openout5 = `thesis.toc'.
 
  [2]
-Underfull \hbox (badness 10000) in paragraph at lines 485--490
+Underfull \hbox (badness 10000) in paragraph at lines 482--487
 
  []
 
@@ -1666,47 +1666,43 @@ Underfull \hbox (badness 10000) in paragraph at lines 485--490
 Chapter 1.
 \openout3 = `thesis.ptb'.
 
-\openout3 = `thesis.ptb'.
-
-LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/n' will be
-(Font)              scaled to size 7.44646pt on input line 532.
-LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/n' will be
-(Font)              scaled to size 5.53453pt on input line 532.
-
-Overfull \hbox (42.77228pt too wide) in paragraph at lines 534--535
-[]\TU/TeXGyrePagella(0)/m/n/10.95 However, once we try to test this property by
- simply calling $[][][] [][][]$
- []
-
 [1
 
 ]
-Overfull \hbox (13.02954pt too wide) in paragraph at lines 548--554
+\openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (13.02954pt too wide) in paragraph at lines 547--553
 \TU/TeXGyrePagella(0)/m/n/10.95 tecedent of the implication will return $[][][]
 $ in a very small number of cases. QuickCheck
  []
 
 \openout3 = `thesis.ptb'.
 
+LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/n' will be
+(Font)              scaled to size 7.44646pt on input line 588.
+LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/n' will be
+(Font)              scaled to size 5.53453pt on input line 588.
+[2]
 LaTeX Font Info:    Font shape `TU/DejaVuSansMono(0)/m/n' will be
-(Font)              scaled to size 9.4574pt on input line 603.
-(dist/../src/chap02/latex/code.tex)
+(Font)              scaled to size 9.4574pt on input line 602.
+ (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 LaTeX Font Info:    Font shape `TU/DejaVuSansMono(0)/bx/n' will be
-(Font)              scaled to size 9.4574pt on input line 603.
+(Font)              scaled to size 9.4574pt on input line 602.
 LaTeX Font Info:    Font shape `TU/DejaVuSansMono(0)/m/it' will be
-(Font)              scaled to size 9.4574pt on input line 603.
- [2]
+(Font)              scaled to size 9.4574pt on input line 602.
 LaTeX Font Info:    Font shape `TU/DejaVuSansMono(0)/m/n' will be
-(Font)              scaled to size 8.62987pt on input line 605.
- [3]
+(Font)              scaled to size 8.62987pt on input line 604.
+ [3] [4]
 \openout3 = `thesis.ptb'.
 
- (dist/../src/chap01/latex/code.tex)
+
+(dist/../src/chap01/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-[4] [5] [6
+ [5] [6
 
 ]
 Chapter 2.
@@ -1722,80 +1718,84 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 844.
+Package mdframed Info: mdframed works in twoside mode on input line 841.
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 844.
+ mdframed uses option nobreak mdframed on input line 841.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 844.
+ mdframed uses option nobreak mdframed on input line 841.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 [9] (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  [10]
-Package mdframed Info: mdframed works in twoside mode on input line 863.
+Package mdframed Info: mdframed works in twoside mode on input line 860.
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 863.
+ mdframed uses option nobreak mdframed on input line 860.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 863.
+ mdframed uses option nobreak mdframed on input line 860.
  (dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (0.70926pt too wide) in paragraph at lines 869--869
+Overfull \hbox (0.70926pt too wide) in paragraph at lines 866--866
  [][] 
  []
 
 
-Overfull \hbox (0.70926pt too wide) in paragraph at lines 869--869
+Overfull \hbox (0.70926pt too wide) in paragraph at lines 866--866
  [][][] 
  []
 
-
-Overfull \hbox (0.70926pt too wide) in paragraph at lines 869--869
+[11]
+Overfull \hbox (0.70926pt too wide) in paragraph at lines 866--866
  [][][][][][][] 
  []
 
-[11] (dist/../src/chap02/latex/code.tex)
+(dist/../src/chap02/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  [12]
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/bx/n' will be
-(Font)              scaled to size 22.86412pt on input line 882.
+(Font)              scaled to size 22.86412pt on input line 879.
  [13
 
 ] [14]
 Chapter 3.
-Package mdframed Info: mdframed works in twoside mode on input line 903.
+Package mdframed Info: mdframed works in twoside mode on input line 900.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 903.
+ mdframed uses option nobreak mdframed on input line 900.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 903.
- [15
-
-] (dist/../src/chap05/latex/code.tex)
+ mdframed uses option nobreak mdframed on input line 900.
+ (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 913.
 
-(dist/../src/chap05/latex/code.tex)
+[15
+
+]
+Package mdframed Info: mdframed works in twoside mode on input line 910.
+ (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 913.
+ mdframed uses option nobreak mdframed on input line 910.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 913.
-Package mdframed Info: mdframed works in twoside mode on input line 915.
+ mdframed uses option nobreak mdframed on input line 910.
+Package mdframed Info: mdframed works in twoside mode on input line 912.
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/bx/sc' will be
-(Font)              scaled to size 10.06277pt on input line 915.
+(Font)              scaled to size 10.06277pt on input line 912.
  (dist/../src/chap03/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -1820,18 +1820,18 @@ LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/bx/sc' will be
 
 
 LaTeX Font Warning: Font shape `TU/DejaVuSansMono(0)/m/sc' undefined
-(Font)              using `TU/DejaVuSansMono(0)/m/n' instead on input line 1008
+(Font)              using `TU/DejaVuSansMono(0)/m/n' instead on input line 1005
 .
 
 LaTeX Font Info:    Font shape `TU/DejaVuSansMono(0)/m/sc' will be
-(Font)              scaled to size 8.62987pt on input line 1008.
+(Font)              scaled to size 8.62987pt on input line 1005.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  [18] (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1038.
+Package mdframed Info: mdframed works in twoside mode on input line 1036.
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1841,24 +1841,24 @@ Package mdframed Info: mdframed works in twoside mode on input line 1038.
 
 
 [19]
-Package mdframed Info: mdframed works in twoside mode on input line 1074.
+Package mdframed Info: mdframed works in twoside mode on input line 1070.
  (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (0.56053pt too wide) detected at line 1074
+Overfull \hbox (0.56053pt too wide) detected at line 1070
 ||  
  []
 
 
-Overfull \hbox (0.56053pt too wide) detected at line 1074
+Overfull \hbox (0.56053pt too wide) detected at line 1070
 ||  
  []
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1074.
+ mdframed uses option nobreak mdframed on input line 1070.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1074.
+ mdframed uses option nobreak mdframed on input line 1070.
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -1872,6 +1872,15 @@ Package mdframed Info: mdframed inside a box
  (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
+
+Overfull \hbox (8.73381pt too wide) in paragraph at lines 1113--1113
+ [][][][] 
+ []
+
+
+Overfull \hbox (8.73381pt too wide) in paragraph at lines 1113--1113
+ [][][][][] 
+ []
 
 [21] (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1887,22 +1896,22 @@ Package mdframed Info: mdframed inside a box
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (0.98566pt too wide) in paragraph at lines 1194--1194
+Overfull \hbox (18.06715pt too wide) in paragraph at lines 1191--1191
  [][][][][][] 
  []
 
 
-Overfull \hbox (0.98566pt too wide) in paragraph at lines 1194--1194
+Overfull \hbox (18.06715pt too wide) in paragraph at lines 1191--1191
  [][][][][][][] 
  []
 
 
-Overfull \hbox (1.96185pt too wide) detected at line 1194
+Overfull \hbox (1.96185pt too wide) detected at line 1191
 ||  
  []
 
 
-Overfull \hbox (0.98566pt too wide) in paragraph at lines 1194--1194
+Overfull \hbox (18.06715pt too wide) in paragraph at lines 1191--1191
  [][][][][][][] 
  []
 
@@ -1910,9 +1919,6 @@ Overfull \hbox (0.98566pt too wide) in paragraph at lines 1194--1194
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
 [23] (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
@@ -1927,40 +1933,41 @@ Overfull \hbox (0.98566pt too wide) in paragraph at lines 1194--1194
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (7.32486pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (24.40636pt too wide) in paragraph at lines 1246--1246
  [][][][][][][][][][] 
  []
 
 [24]
-Overfull \hbox (7.32486pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (24.40636pt too wide) in paragraph at lines 1246--1246
  [][][][][] 
  []
 
 
-Overfull \hbox (7.32486pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (24.40636pt too wide) in paragraph at lines 1246--1246
  [][][][][] 
  []
 
 
-Overfull \hbox (7.32486pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (24.40636pt too wide) in paragraph at lines 1246--1246
  [][][][][] 
  []
 
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [25] (dist/../src/chap05/latex/code.tex)
+ (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
+[25] (dist/../src/chap05/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [26]
 (dist/../src/chap05/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [26] (dist/../src/chap05/latex/code.tex)
-\openout3 = `thesis.ptb'.
 
-
-Overfull \hbox (3.36317pt too wide) detected at line 1329
+Overfull \hbox (3.36317pt too wide) detected at line 1323
 ||  
  []
 
@@ -1971,15 +1978,15 @@ Chapter 4.
 [29] (dist/../src/chap03/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1380.
+Package mdframed Info: mdframed works in twoside mode on input line 1373.
  (dist/../src/chap03/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1380.
+ mdframed uses option nobreak mdframed on input line 1373.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1380.
-Package mdframed Info: mdframed works in twoside mode on input line 1392.
+ mdframed uses option nobreak mdframed on input line 1373.
+Package mdframed Info: mdframed works in twoside mode on input line 1385.
 
 (dist/../src/chap03/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -1990,28 +1997,28 @@ Package mdframed Warning: You got a bad break
 (mdframed)                because the last box will be empty
 (mdframed)                you have to change it manually
 (mdframed)                by changing the text, the space
-(mdframed)                or something else on input line 1404.
+(mdframed)                or something else on input line 1397.
 
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
-(mdframed)              on input line 1404.
+(mdframed)              on input line 1397.
 [30]
-Package mdframed Info: mdframed works in twoside mode on input line 1414.
+Package mdframed Info: mdframed works in twoside mode on input line 1407.
  (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1414.
+ mdframed uses option nobreak mdframed on input line 1407.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1414.
-Package mdframed Info: mdframed works in twoside mode on input line 1425.
+ mdframed uses option nobreak mdframed on input line 1407.
+Package mdframed Info: mdframed works in twoside mode on input line 1418.
  (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1425.
+ mdframed uses option nobreak mdframed on input line 1418.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1425.
+ mdframed uses option nobreak mdframed on input line 1418.
 
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
@@ -2051,217 +2058,225 @@ Package mdframed Info: mdframed inside a box
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1544.
+Package mdframed Info: mdframed works in twoside mode on input line 1537.
  (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1544.
+ mdframed uses option nobreak mdframed on input line 1537.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1544.
+ mdframed uses option nobreak mdframed on input line 1537.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[34]
-Package mdframed Info: mdframed works in twoside mode on input line 1548.
- (dist/../src/chap06/latex/code.tex)
+Package mdframed Info: mdframed works in twoside mode on input line 1539.
+(dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][][][] 
  []
 
 
-Overfull \hbox (2.4217pt too wide) in paragraph at lines 1553--1553
+Overfull \hbox (2.4217pt too wide) in paragraph at lines 1544--1544
  [][][][][][][][][] 
  []
 
-Package mdframed Info: Box was splittet wrong
- starting loop to iterate the splitting point
-(mdframed)              on input line 1559.
-[35] (dist/../src/chap06/latex/code.tex)
+[34]
+Package mdframed Info: Not enough space on this page on input line 1550.
+ [35] (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1575.
- (dist/../src/chap06/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1575.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1575.
+Package mdframed Info: mdframed works in twoside mode on input line 1566.
 
 (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [36] (dist/../src/chap06/latex/code.tex)
+Package mdframed Info: mdframed inside float 
+ mdframed uses option nobreak mdframed on input line 1566.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1566.
+ (dist/../src/chap06/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
-[37] [38
+[36] (dist/../src/chap06/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap06/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+[37] (dist/../src/chap06/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [38]
+Chapter 5.
+[39
 
 ]
-Chapter 5.
-Package mdframed Info: mdframed works in twoside mode on input line 1661.
+Package mdframed Info: mdframed works in twoside mode on input line 1676.
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed inside float 
+ mdframed uses option nobreak mdframed on input line 1676.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1676.
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed works in twoside mode on input line 1693.
+
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1661.
+ mdframed uses option nobreak mdframed on input line 1693.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1661.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[39] (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-Package mdframed Info: mdframed works in twoside mode on input line 1678.
+ mdframed uses option nobreak mdframed on input line 1693.
  (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1678.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1678.
+
+[40]
+Package mdframed Info: mdframed works in twoside mode on input line 1700.
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed works in twoside mode on input line 1723.
 
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [40]
-Package mdframed Info: mdframed works in twoside mode on input line 1688.
- (dist/../src/chap07/latex/code.tex)
+ [41] (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
+Package mdframed Info: mdframed works in twoside mode on input line 1765.
 
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-[41]
-Package mdframed Info: mdframed works in twoside mode on input line 1735.
- (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1735.
+ mdframed uses option nobreak mdframed on input line 1765.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1735.
-Package mdframed Info: mdframed works in twoside mode on input line 1752.
- (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1752.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1752.
+ mdframed uses option nobreak mdframed on input line 1765.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [42]
-Package mdframed Info: mdframed works in twoside mode on input line 1775.
+Package mdframed Info: mdframed works in twoside mode on input line 1782.
  (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1775.
+ mdframed uses option nobreak mdframed on input line 1782.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1775.
- (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
+ mdframed uses option nobreak mdframed on input line 1782.
+ [43]
+Package mdframed Info: mdframed works in twoside mode on input line 1805.
 
-
-[43]
-Package mdframed Info: mdframed works in twoside mode on input line 1797.
- (dist/../src/chap07/latex/code.tex)
+(dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1797.
+ mdframed uses option nobreak mdframed on input line 1805.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1797.
-Package mdframed Info: mdframed works in twoside mode on input line 1806.
+ mdframed uses option nobreak mdframed on input line 1805.
  (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
+Package mdframed Info: mdframed works in twoside mode on input line 1827.
+
+(dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1806.
+ mdframed uses option nobreak mdframed on input line 1827.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1806.
+ mdframed uses option nobreak mdframed on input line 1827.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1814.
-(dist/../src/chap07/latex/code.tex)
+[44]
+Package mdframed Info: mdframed works in twoside mode on input line 1836.
+ (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1814.
+ mdframed uses option nobreak mdframed on input line 1836.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1814.
+ mdframed uses option nobreak mdframed on input line 1836.
+Package mdframed Info: mdframed works in twoside mode on input line 1844.
+ (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed inside float 
+ mdframed uses option nobreak mdframed on input line 1844.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1844.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -2269,18 +2284,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-[44] [45] (dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
-
-(dist/../src/chap07/latex/code.tex)
-\openout3 = `thesis.ptb'.
-
- (dist/../src/chap07/latex/code.tex)
+ [45] (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
@@ -2291,28 +2295,35 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout3 = `thesis.ptb'.
 
 
-[47] (dist/../src/chap07/latex/code.tex)
+(dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 1945.
- (dist/../src/chap07/latex/code.tex)
+ [47] (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+
+(dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+ [48] (dist/../src/chap07/latex/code.tex)
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed works in twoside mode on input line 1974.
+
+(dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1945.
+ mdframed uses option nobreak mdframed on input line 1974.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1945.
+ mdframed uses option nobreak mdframed on input line 1974.
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-Overfull \hbox (0.17157pt too wide) in paragraph at lines 1947--1953
+Overfull \hbox (0.17157pt too wide) in paragraph at lines 1976--1981
 \TU/TeXGyrePagella(0)/m/n/10.95 which a little help from the programmer is requ
 ired. Furthermore, after creating this separa-
  []
 
-[48] (dist/../src/chap07/latex/code.tex)
+[49] (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
  (dist/../src/chap07/latex/code.tex)
@@ -2322,70 +2333,60 @@ ired. Furthermore, after creating this separa-
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
- [49] (dist/../src/chap07/latex/code.tex)
+ [50] (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 
 (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 2004.
+Package mdframed Info: mdframed works in twoside mode on input line 2032.
  (dist/../src/chap07/latex/code.tex)
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2004.
+ mdframed uses option nobreak mdframed on input line 2032.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2004.
+ mdframed uses option nobreak mdframed on input line 2032.
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[50] [51] [52] [53
+[51] [52] [53
 
 ] [54]
 Chapter 6.
 [55
 
 ]
-Package mdframed Info: mdframed works in twoside mode on input line 2108.
+Package mdframed Info: mdframed works in twoside mode on input line 2136.
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2139.
+ mdframed uses option nobreak mdframed on input line 2167.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2139.
+ mdframed uses option nobreak mdframed on input line 2167.
 \openout3 = `thesis.ptb'.
 
  [56]
-Package mdframed Info: mdframed works in twoside mode on input line 2212.
+Package mdframed Info: mdframed works in twoside mode on input line 2239.
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2256.
+ mdframed uses option nobreak mdframed on input line 2283.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2256.
+ mdframed uses option nobreak mdframed on input line 2283.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 \openout3 = `thesis.ptb'.
-
-
-Overfull \hbox (42.6529pt too wide) in paragraph at lines 2269--2278
-\TU/TeXGyrePagella(0)/m/n/10.95 example, we would map a vector $[][][][] [][][]
-[][] [][][] [][][][][] [][]$ to the type $[][][] [][][][][][] [][][][][][] [][]
-[][][][] [][][][][][]$.
- []
 
 [57]
-Package mdframed Info: mdframed works in twoside mode on input line 2293.
+Package mdframed Info: mdframed works in twoside mode on input line 2320.
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2339.
+ mdframed uses option nobreak mdframed on input line 2366.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2339.
+ mdframed uses option nobreak mdframed on input line 2366.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -2393,65 +2394,71 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (11.4594pt too wide) in paragraph at lines 2358--2361
+Overfull \hbox (11.4594pt too wide) in paragraph at lines 2385--2388
 \TU/TeXGyrePagella(0)/m/n/10.95 Since our goal is eventually to define a functi
 on $[][][][] [][][][] [][] []\OT1/cmr/m/it/10.95 d[][] [][][] [][] []i[] []a[] 
 [][][][][][] []d[][][][]$\TU/TeXGyrePagella(0)/m/n/10.95 ,
  []
 
+Package mdframed Info: mdframed works in twoside mode on input line 2389.
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed inside float 
+ mdframed uses option nobreak mdframed on input line 2416.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 2416.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 [58]
-Package mdframed Info: mdframed works in twoside mode on input line 2362.
+\openout3 = `thesis.ptb'.
+
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed works in twoside mode on input line 2444.
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2389.
+ mdframed uses option nobreak mdframed on input line 2459.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2389.
-\openout3 = `thesis.ptb'.
-
-\openout3 = `thesis.ptb'.
-
-Package mdframed Info: mdframed works in twoside mode on input line 2417.
-\openout3 = `thesis.ptb'.
-
-Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2432.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2432.
+ mdframed uses option nobreak mdframed on input line 2459.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 2436.
+Package mdframed Info: mdframed works in twoside mode on input line 2463.
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2475.
+ mdframed uses option nobreak mdframed on input line 2502.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2475.
+ mdframed uses option nobreak mdframed on input line 2502.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 [59]
-Package mdframed Info: mdframed works in twoside mode on input line 2489.
+Package mdframed Info: mdframed works in twoside mode on input line 2519.
 \openout3 = `thesis.ptb'.
 
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2542.
+ mdframed uses option nobreak mdframed on input line 2572.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2542.
+ mdframed uses option nobreak mdframed on input line 2572.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 2547.
+Package mdframed Info: mdframed works in twoside mode on input line 2577.
 \openout3 = `thesis.ptb'.
 
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2589.
+ mdframed uses option nobreak mdframed on input line 2619.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2589.
+ mdframed uses option nobreak mdframed on input line 2619.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -2465,154 +2472,102 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout3 = `thesis.ptb'.
 
  [61]
-Overfull \hbox (9.80399pt too wide) in paragraph at lines 2696--2698
+Overfull \hbox (9.80399pt too wide) in paragraph at lines 2726--2728
 []\TU/TeXGyrePagella(0)/m/n/10.95 With the definition of $[][][]$ complete, we 
 can define a function $[][][][] [][][][] [][] [][][][]\OT1/cmr/m/it/10.95 d[][]
  [][]
  []
 
 [62]
+Package mdframed Info: mdframed works in twoside mode on input line 2747.
+\openout3 = `thesis.ptb'.
 
-LaTeX Warning: Reference `' on page 63 undefined on input line 2709.
-
+Package mdframed Info: mdframed inside float 
+ mdframed uses option nobreak mdframed on input line 2764.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 2764.
 \openout3 = `thesis.ptb'.
 
 \openout3 = `thesis.ptb'.
 
 
-Overfull \hbox (8.26805pt too wide) in paragraph at lines 2758--2761
+Overfull \hbox (8.26805pt too wide) in paragraph at lines 2807--2810
 []\TU/TeXGyrePagella(0)/m/n/10.95 In this case, the definition of $[][][]$ is c
 ompletely dictated by our definition of $[][][]$.
  []
 
 \openout3 = `thesis.ptb'.
 
-\openout3 = `thesis.ptb'.
-
 [63]
-Missing character: There is no λ in font [lmmono10-regular]:!
-Missing character: There is no λ in font [lmmono10-regular]:!
 \openout3 = `thesis.ptb'.
+
+
+Overfull \hbox (2.25233pt too wide) in paragraph at lines 2853--2856
+\TU/TeXGyrePagella(0)/m/n/10.95 beit slightly more involved due to the complexi
+ty of the datatype describing well-formedness
+ []
 
 \openout3 = `thesis.ptb'.
 
 \openout3 = `thesis.ptb'.
 
-Package mdframed Info: mdframed works in twoside mode on input line 2860.
+\openout3 = `thesis.ptb'.
+
+Package mdframed Info: mdframed works in twoside mode on input line 2906.
 \openout3 = `thesis.ptb'.
 
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2886.
+ mdframed uses option nobreak mdframed on input line 2932.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2886.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-Package mdframed Info: mdframed works in twoside mode on input line 2894.
-\openout3 = `thesis.ptb'.
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][] 
- []
-
-
-Overfull \hbox (1.96231pt too wide) in paragraph at lines 2895--2944
- [][][][][][] 
- []
-
-Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 2945.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 2945.
+ mdframed uses option nobreak mdframed on input line 2932.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [64]
+Package mdframed Info: mdframed works in twoside mode on input line 2940.
 \openout3 = `thesis.ptb'.
 
+Package mdframed Info: mdframed inside float 
+ mdframed uses option nobreak mdframed on input line 2991.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 2991.
+\openout3 = `thesis.ptb'.
+
+ [65]
 \openout3 = `thesis.ptb'.
 
 
 Missing character: There is no λ in font [lmmono10-regular]:!
 Missing character: There is no λ in font [lmmono10-regular]:!
-[65]
-Overfull \hbox (7.36084pt too wide) in paragraph at lines 3006--3016
+
+Overfull \hbox (7.36084pt too wide) in paragraph at lines 3052--3062
 \TU/TeXGyrePagella(0)/m/n/10.95 We have given an implementation of the generic 
 generator for indexed descriptions in Haskell,
  []
 
-[66]
+[66] [67] [68
+
+]
 Chapter 7.
-[67
 
-] [68] [69]
+Overfull \hbox (1.69281pt too wide) in paragraph at lines 3095--3105
+[]\TU/TeXGyrePagella(0)/m/n/10.95 We then looked at two more expressive type un
+iverses, which are able to describe (some)
+ []
+
+[69] [70] [71]
 LaTeX Font Info:    Font shape `TU/TeXGyrePagella(0)/m/it' will be
-(Font)              scaled to size 8.93831pt on input line 3175.
- [70] [71] [72] [73]
-
-LaTeX Warning: Citation `miraldo2018sums ' on page 74 undefined on input line 3
-350.
-
-[74] [75] [76
+(Font)              scaled to size 8.93831pt on input line 3222.
+ [72] [73] [74] [75] [76] [77] [78
 
 ] (dist/thesis.lof)
 \tf@lof=\write6
 \openout6 = `thesis.lof'.
 
- (dist/thesis.bbl [77
 
-] [78
+(dist/thesis.bbl [79
+
+] [80
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 4--8
@@ -2621,25 +2576,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--8
 eXGyrePagella(0)/m/n/10.95 .
  []
 
-[79]
-Underfull \hbox (badness 10000) in paragraph at lines 101--105
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--17
+[]\TU/TeXGyrePagella(0)/m/n/10.95 Cardano - home of the ada cryptocurrency and 
+technological platform
+ []
+
+
+Underfull \hbox (badness 4096) in paragraph at lines 39--43
+[]$[][][][][] [] [] [] [][][][] [] [][] [] [][][][][][][][] [] [][][][][][] [] 
+[] [] [][][][][] [] [][][][][][][][][][] [] [][][][][][][][]$[]\TU/TeXGyrePagel
+la(0)/m/n/10.95 .  Ac-
+ []
+
+[81]
+Underfull \hbox (badness 10000) in paragraph at lines 111--115
 []\TU/TeXGyrePagella(0)/m/sc/10.95 Input-Output-Hk\TU/TeXGyrePagella(0)/m/n/10.
 95 .  Plutus specification (https://github.com/input-output-
  []
 
-[80]
-Underfull \hbox (badness 10000) in paragraph at lines 200--204
+[82]
+Underfull \hbox (badness 10000) in paragraph at lines 205--209
 []\TU/TeXGyrePagella(0)/m/sc/10.95 Stanley, J.  \TU/TeXGyrePagella(0)/m/n/10.95
  hedgehog: Hedgehog will eat all your bugs.
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3425.
- [81]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 3425.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3465.
+ [83]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 3465.
  (dist/thesis.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 3425.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3425.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 3465.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3465.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: .
@@ -2648,20 +2616,17 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3425.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3465.
  ) 
 Here is how much of TeX's memory you used:
- 31994 strings out of 492933
- 583002 string characters out of 6138667
- 911449 words of memory out of 5000000
- 35442 multiletter control sequences out of 15000+600000
+ 32033 strings out of 492933
+ 583782 string characters out of 6138667
+ 919327 words of memory out of 5000000
+ 35475 multiletter control sequences out of 15000+600000
  549488 words of font info for 139 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 56i,15n,120p,1123b,1112s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,15n,120p,1123b,1096s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on dist/thesis.pdf (89 pages).
+Output written on dist/thesis.pdf (91 pages).

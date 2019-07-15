@@ -1,4 +1,4 @@
-open import AgdaGen.Data
+open import Model.Data
 open import Level renaming (suc to sucL ; zero to zeroL)
 
 open import Data.Nat hiding (_⊔_)
@@ -13,7 +13,7 @@ open import Function
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-module AgdaGen.Base where
+module Model.Base where
 
   data Gen {ℓ k} {i : Set k} : 
     Set ℓ → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where

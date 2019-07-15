@@ -10,3 +10,4 @@ cd latex/
 perl ../../../postprocess-latex.pl code.tex > code.processed 
 mv code.processed code.tex 
 
+sed -i 's/\\AgdaSymbol{\\{!!\\}}/\\AgdaHole{\\{\\ \\ \\}?}/g' code.tex

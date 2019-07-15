@@ -2,11 +2,11 @@
 {-# OPTIONS --type-in-type #-}
 {-# OPTIONS --allow-unsolved-metas #-}
 
-open import AgdaGen.Base
-open import AgdaGen.Combinators
-open import AgdaGen.Enumerate
-open import AgdaGen.Generic.Isomorphism renaming (_≅_ to _≃_)
-open import AgdaGen.Data using (_∈_ ; here ; there)
+open import Model.Base
+open import Model.Combinators
+open import Model.Enumerate
+open import Model.Generic.Isomorphism renaming (_≅_ to _≃_)
+open import Model.Data using (_∈_ ; here ; there)
 open import Level renaming (zero to zeroL ; suc to sucL)
 
 open import Data.Product
@@ -14,7 +14,7 @@ open import Data.Nat
 open import Data.Sum
 open import Data.Unit
 open import Data.Empty
-open import Data.Fin
+open import Data.Fin hiding (_+_)
 
 open import Function hiding (_∋_)
 
@@ -147,12 +147,18 @@ data _⊢_ : Ctx → Ty → Set where
 
 %<*toterm>
 \begin{code}
+toVar : ∀ {Γ τ} → Γ ∋ τ → ℕ
+toVar [Pop]        = zero
+toVar ([Top] Γ∋τ)  = suc (toVar Γ∋τ)
+
 toTerm : ∀ {Γ τ} → Γ ⊢ τ → RT
+toTerm ([Var] Γ∋τ)    = tvar (toVar Γ∋τ)
+toTerm ([Abs] t)      = tlam (toTerm t)
+toTerm ([App] tₗ tᵣ)  = tapp (toTerm tₗ) (toTerm tᵣ)
 \end{code}
 %</toterm>
 
 \begin{code}
-toTerm = λ _ → tvar zero
 
 module Inductive where 
 \end{code}
@@ -222,8 +228,8 @@ module E where
 
 %<*desciso>
 \begin{code}
-  desc≃ : ∀ {Γ τ}  → Fix Inductive.wt (Γ , τ)
-                   ≃ Fix Constrained.wt (Γ , τ)
+  desc≃ : ∀ {Γ τ}  →  Fix Inductive.wt (Γ , τ)
+                   ≃  Fix Constrained.wt (Γ , τ)
 \end{code}
 %</desciso>
 
@@ -472,3 +478,21 @@ wtM (Γ , (τ₁ `→ τ₂))  =
         ; (▻ ▻ ∙)  → `Σ~ genTy (λ s → `var~ `×~ `var~) }
 \end{code}
 %</wtmeta>
+
+\begin{code}
+data STree (A : Set) : ℕ → Set where
+  leaf : STree A 0
+  node : ∀ {n m} → STree A n → STree A m → STree A (suc (n + m))
+\end{code}
+
+%<*streedesc>
+\begin{code}
+STreeD : Set → ℕ → IDesc ℕ
+STreeD A zero     = `1
+STreeD A (suc n)  =
+  `Σ (Σ (ℕ × ℕ) λ { ( m , k ) → m + k ≡ n })
+    λ { ((m , k) , _) →
+      (`var m `× `Σ A λ _ → `1) `× `var k }
+\end{code}
+%</streedesc>
+

@@ -13,6 +13,7 @@ to a quickcheck generator
 module QC where
 
   import qualified Gen
+  import Datatypes
 
   import Test.QuickCheck
   import Test.QuickCheck.Gen
@@ -21,8 +22,9 @@ module QC where
 
   import Debug.Trace 
 
+  -- | Build a QuickCheck generatr from our abstract generator type 
   -- TODO: return value as maybe in case sampling fails
-  toQcGen' :: Gen.Gen i a t -> (i -> Gen.Gen i t t) -> Gen a
+  toQcGen' :: Gen.Gen i t a -> (i -> Gen.G i t) -> Gen a
   toQcGen' (Gen.Pure x) tg = pure x
   toQcGen' (Gen.Or g1 g2) tg = oneof [toQcGen' g1 tg, toQcGen' g2 tg]
   toQcGen' (Gen.Ap g1 g2) tg = toQcGen' g1 tg <*> toQcGen' g2 tg
@@ -30,20 +32,16 @@ module QC where
   toQcGen' (Gen.Mu i) tg = toQcGen' (tg i) tg
   toQcGen' (Gen.Call g x) tg = toQcGen' (g x) g
 
-  
-  toQcGen :: (i -> Gen.G i a a) -> i -> Gen a
-  toQcGen g x = toQcGen' (Gen.unG $ g x) (Gen.unG . g)
+  -- | Build a QuickCheck generator from a function from index to generator
+  toQcGen :: (i -> Gen.G i a ) -> i -> Gen a
+  toQcGen g x = toQcGen' (g x) g
 
-  bool :: Gen.G () Bool Bool
-  bool = pure True <|> pure False
+  -- | Representation for generators that are build from a sum of products
+  type SOPGen i a = [(Int , Gen.G i a)]
 
-  nat :: Gen.G () Gen.Nat Gen.Nat
-  nat  =  pure Gen.Zero
-      <|> Gen.Suc <$> Gen.mu ()
-
-  type SOPGen i a = [(Int , Gen.G i a a)]
-
-  toSizedQcGen' :: Int -> Gen.Gen i a t -> (i -> SOPGen i t) -> Int -> Gen a
+  -- | Build a sized QuickCheck generator from an abstract generator that is 
+  --   in a sum of product representation
+  toSizedQcGen' :: Int -> Gen.Gen i t a -> (i -> SOPGen i t) -> Int -> Gen a
   toSizedQcGen' n (Gen.Pure x) tg size = pure x
   toSizedQcGen' n (Gen.Ap g1 g2) tg size =
     toSizedQcGen' n g1 tg size <*> toSizedQcGen' n g2 tg size
@@ -54,31 +52,14 @@ module QC where
 
   toSizedQcGen :: (i -> SOPGen i a) -> i -> Int -> Gen a
   toSizedQcGen gs i size = 
-    frequency (map (\(n , Gen.G gen) -> (if n > 0 then size else 1 , toSizedQcGen' n gen gs size)) (gs i))
+    frequency (map (\(n , gen) -> (if n > 0 then size else 1 , toSizedQcGen' n gen gs size)) (gs i))
 
-  nat' :: SOPGen () Gen.Nat
+  -- | Sum of product generator for natural numbers
+  nat' :: SOPGen () Nat
   nat' =
-    [ (0 , pure Gen.Zero)
-    , (1 , Gen.Suc <$> Gen.mu ())
+    [ (0 , pure Zero)
+    , (1 , Suc <$> Gen.mu ())
     ]
-
-  data Tree = Leaf | Node Tree Tree deriving (Show)
-
-  data Term = Var Gen.Nat | Abs Gen.Nat Term | App Term Term deriving (Show)
-
-  tree :: SOPGen () Tree
-  tree =
-    [ (0, pure Leaf)
-    , (2 , Node <$> Gen.mu () <*> Gen.mu ())
-    ]
-
-  term :: SOPGen () Term
-  term =
-    [ (0 , Var <$> (Gen.G (Gen.Call (Gen.unG . Gen.triv nat) ())))
-    , (1 , Abs <$>  (Gen.G (Gen.Call (Gen.unG . Gen.triv nat) ())) <*> (Gen.mu ()))
-    , (2 , App <$> (Gen.mu ()) <*> (Gen.mu ()))
-    ]
-  
 
   
 

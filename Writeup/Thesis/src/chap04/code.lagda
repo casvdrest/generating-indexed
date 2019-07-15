@@ -2,8 +2,8 @@
 {-# OPTIONS --type-in-type #-}
 {-# OPTIONS --allow-unsolved-metas #-}
 
-open import AgdaGen.Base hiding (Gen; 𝔾)
-open import AgdaGen.Combinators
+open import Model.Base hiding (Gen; 𝔾)
+open import Model.Combinators
 
 open import Data.Unit
 open import Data.Product hiding (map)

@@ -34,7 +34,3 @@ cd ./src/chap09/
 ./agda_precom.sh 
 cd ../../
 
-cd ./src/appA/
-./agda_precom.sh 
-cd ../../
-

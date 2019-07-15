@@ -1,11 +1,11 @@
 {-# OPTIONS --type-in-type #-}
 
-open import AgdaGen.Base hiding (μ)
-open import AgdaGen.Combinators
-open import AgdaGen.Enumerate hiding (⟨_⟩)
-open import AgdaGen.Generic.Isomorphism
-open import AgdaGen.Generic.Indexed.IDesc.Universe
-open import AgdaGen.Generic.Indexed.IDesc.Generator
+open import Model.Base hiding (μ)
+open import Model.Combinators
+open import Model.Enumerate hiding (⟨_⟩)
+open import Model.Generic.Isomorphism
+open import Model.Generic.Indexed.IDesc.Universe
+open import Model.Generic.Indexed.IDesc.Generator
 
 open import Data.Product
 open import Data.Sum
@@ -22,7 +22,7 @@ open import Level
 
 open import Relation.Binary.PropositionalEquality
 
-module AgdaGen.Generic.Indexed.IDesc.STree where
+module Model.Generic.Indexed.IDesc.STree where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

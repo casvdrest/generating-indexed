@@ -1,8 +1,8 @@
-open import AgdaGen.Base
-open import AgdaGen.Combinators
+open import Model.Base
+open import Model.Combinators
 
-open import AgdaGen.Generic.Regular.Cogen
-open import AgdaGen.Generic.Regular.Universe
+open import Model.Generic.Regular.Cogen
+open import Model.Generic.Regular.Universe
 
 open import Data.Unit
 open import Data.Sum
@@ -11,7 +11,7 @@ open import Data.Product
 open import Function
 open import Level renaming (zero to zeroL ; suc to sucL)
 
-module AgdaGen.Generic.Indexed.PiGen where
+module Model.Generic.Indexed.PiGen where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

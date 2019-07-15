@@ -1,6 +1,6 @@
-open import AgdaGen.Base
-open import AgdaGen.Data hiding (_∈_; Σ)
-open import AgdaGen.Combinators
+open import Model.Base
+open import Model.Data hiding (_∈_; Σ)
+open import Model.Combinators
 
 open import Data.Nat hiding (_≟_)
 open import Data.List
@@ -19,7 +19,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Function hiding (_∋_)
 open import Level hiding (suc; zero)
 
-module AgdaGen.Examples.Lambda where
+module Model.Examples.Lambda where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

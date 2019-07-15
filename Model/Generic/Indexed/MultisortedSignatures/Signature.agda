@@ -12,11 +12,11 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 open import Function
 import Level as L
 
-open import AgdaGen.Base
-open import AgdaGen.Generic.Isomorphism using (_≅_)
-open import AgdaGen.Generic.Regular.Universe
+open import Model.Base
+open import Model.Generic.Isomorphism using (_≅_)
+open import Model.Generic.Regular.Universe
 
-module AgdaGen.Generic.Indexed.MultisortedSignatures.Signature where
+module Model.Generic.Indexed.MultisortedSignatures.Signature where
 
   ------ Syntax for Π Types ------
   

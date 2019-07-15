@@ -11,10 +11,10 @@ open import Data.Maybe
 open import Function
 open import Level hiding (zero; suc)
 
-open import AgdaGen.Base
-open import AgdaGen.Combinators
+open import Model.Base
+open import Model.Combinators
 
-module AgdaGen.Generic.Isomorphism where
+module Model.Generic.Isomorphism where
 
   -- Captures an isomorphism/bijection between type a and b
   record _≅_ {ℓ ℓ'} (a : Set ℓ) (b : Set ℓ') : Set (ℓ ⊔ ℓ') where

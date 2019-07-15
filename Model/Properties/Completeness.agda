@@ -1,11 +1,11 @@
-open import AgdaGen.Base
-open import AgdaGen.Combinators
-open import AgdaGen.Enumerate
-open import AgdaGen.Generic.Isomorphism
-open import AgdaGen.Data using (_∈_; here; _⊕_; inl; inr; there; merge)
+open import Model.Base
+open import Model.Combinators
+open import Model.Enumerate
+open import Model.Generic.Isomorphism
+open import Model.Data using (_∈_; here; _⊕_; inl; inr; there; merge)
 
-open import AgdaGen.Properties.General
-open import AgdaGen.Properties.Monotonicity
+open import Model.Properties.General
+open import Model.Properties.Monotonicity
 
 open import Data.Product using (Σ; Σ-syntax; ∃; ∃-syntax; _×_; _,_; proj₁; proj₂)
 open import Data.Sum hiding (map)
@@ -23,7 +23,7 @@ open import Category.Monad
 
 open import Level renaming (zero to zeroL ; suc to sucL)
 
-module AgdaGen.Properties.Completeness where
+module Model.Properties.Completeness where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

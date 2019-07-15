@@ -1,14 +1,14 @@
-open import AgdaGen.Base
-open import AgdaGen.Data using (_∈_; here; there; Π)
-open import AgdaGen.Enumerate
+open import Model.Base
+open import Model.Data using (_∈_; here; there; Π)
+open import Model.Enumerate
 
-open import AgdaGen.Properties.General
-open import AgdaGen.Properties.Monotonicity
-open import AgdaGen.Properties.Completeness
+open import Model.Properties.General
+open import Model.Properties.Monotonicity
+open import Model.Properties.Completeness
 
-open import AgdaGen.Generic.Regular.Cogen
-open import AgdaGen.Generic.Regular.Properties
-open import AgdaGen.Generic.Regular.Universe
+open import Model.Generic.Regular.Cogen
+open import Model.Generic.Regular.Properties
+open import Model.Generic.Regular.Universe
 
 open import Relation.Binary.PropositionalEquality
 
@@ -26,7 +26,7 @@ open import Level hiding (suc ;zero)
 
 open import Category.Monad
 
-module AgdaGen.Generic.Indexed.Properties where
+module Model.Generic.Indexed.Properties where
 
 {-
    -- Function exensionality

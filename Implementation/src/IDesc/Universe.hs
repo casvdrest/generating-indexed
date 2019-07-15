@@ -127,6 +127,7 @@ module IDesc.Universe where
   demoteIDesc (SK p p')                   = K p p'
   demoteIDesc (SSigma desc gen eq)        = Sigma Proxy (dm desc)
 
+  -- | Singleton instance for indexed descriptions
   instance Singleton (IDesc a i) where 
     type Sing = SingIDesc
     dm = demoteIDesc

@@ -1,6 +1,6 @@
-open import AgdaGen.Base
-open import AgdaGen.Data
-open import AgdaGen.Combinators
+open import Model.Base
+open import Model.Data
+open import Model.Combinators
 
 open import Data.Nat hiding (_⊔_)
 open import Data.List
@@ -8,7 +8,7 @@ open import Data.List
 open import Function
 open import Level renaming (zero to zeroL ; suc to sucL)
 
-module AgdaGen.Enumerate where
+module Model.Enumerate where
     
     -- Interpret a generator as a function from recursive depth to List of elements
   enumerate :

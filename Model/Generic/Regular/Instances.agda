@@ -1,7 +1,7 @@
-open import AgdaGen.Base
+open import Model.Base
 
-open import AgdaGen.Generic.Isomorphism
-open import AgdaGen.Generic.Regular.Universe
+open import Model.Generic.Isomorphism
+open import Model.Generic.Regular.Universe
 
 open import Data.Sum
 open import Data.Product
@@ -16,7 +16,7 @@ open import Function
 
 open import Relation.Binary.PropositionalEquality
 
-module AgdaGen.Generic.Regular.Instances where
+module Model.Generic.Regular.Instances where
 
   record Regular (a : Set) : Set₁ where
     field

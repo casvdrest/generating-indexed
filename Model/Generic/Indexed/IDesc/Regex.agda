@@ -1,13 +1,13 @@
 {-# OPTIONS --type-in-type #-}
 
-open import AgdaGen.Base renaming (μ to μB)
-open import AgdaGen.Combinators
-open import AgdaGen.Enumerate hiding (⟨_⟩)
-open import AgdaGen.Examples.Regex
+open import Model.Base renaming (μ to μB)
+open import Model.Combinators
+open import Model.Enumerate hiding (⟨_⟩)
+open import Model.Examples.Regex
 
-open import AgdaGen.Generic.Isomorphism
-open import AgdaGen.Generic.Indexed.IDesc.Universe
-open import AgdaGen.Generic.Indexed.IDesc.Generator
+open import Model.Generic.Isomorphism
+open import Model.Generic.Indexed.IDesc.Universe
+open import Model.Generic.Indexed.IDesc.Generator
 
 open import Data.Unit
 open import Data.Product
@@ -17,7 +17,7 @@ open import Relation.Binary.PropositionalEquality
 
 open import Level renaming (suc to sucL ; zero to zeroL)
 
-module AgdaGen.Generic.Indexed.IDesc.Regex where
+module Model.Generic.Indexed.IDesc.Regex where
 
   -- Descibes regular rexpressions as an
   -- indexed description

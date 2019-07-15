@@ -1,11 +1,11 @@
-open import AgdaGen.Base
-open import AgdaGen.Combinators
+open import Model.Base
+open import Model.Combinators
 
-open import AgdaGen.Generic.Isomorphism
+open import Model.Generic.Isomorphism
 
-open import AgdaGen.Generic.Regular.Instances
-open import AgdaGen.Generic.Regular.Universe
-open import AgdaGen.Generic.Regular.Cogen
+open import Model.Generic.Regular.Instances
+open import Model.Generic.Regular.Universe
+open import Model.Generic.Regular.Cogen
 
 open import Data.Unit
 open import Data.Sum
@@ -15,7 +15,7 @@ import Level
 
 open import Function
 
-module AgdaGen.Generic.Regular.Generator where
+module Model.Generic.Regular.Generator where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

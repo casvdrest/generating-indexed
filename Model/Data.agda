@@ -9,7 +9,7 @@ open import Data.List hiding (map; fromMaybe)
 
 open import Relation.Binary.PropositionalEquality hiding ([_])
 
-module AgdaGen.Data where
+module Model.Data where
 
   module Sigma where
 

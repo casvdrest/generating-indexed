@@ -19,7 +19,7 @@ module Examples.Lambda where
   import Singleton
   import Datatypes
   import Control.Applicative
-  import Examples.Instances
+  import Examples.Misc
 
   import Data.List
 

@@ -1,13 +1,13 @@
 {-# OPTIONS --type-in-type #-}
 
-open import AgdaGen.Generic.Indexed.MultisortedSignatures.Signature
-open import AgdaGen.Generic.Regular.Universe
-open import AgdaGen.Generic.Isomorphism
-open import AgdaGen.Generic.Regular.Generator
-open import AgdaGen.Base
-open import AgdaGen.Combinators
-open import AgdaGen.Generic.Regular.Cogen
-open import AgdaGen.Generic.Indexed.PiGen
+open import Model.Generic.Indexed.MultisortedSignatures.Signature
+open import Model.Generic.Regular.Universe
+open import Model.Generic.Isomorphism
+open import Model.Generic.Regular.Generator
+open import Model.Base
+open import Model.Combinators
+open import Model.Generic.Regular.Cogen
+open import Model.Generic.Indexed.PiGen
 
 open import Data.Unit
 open import Data.Empty
@@ -23,7 +23,7 @@ open import Data.Fin hiding (toℕ)
 open import Function
 open import Level
 
-module AgdaGen.Generic.Indexed.MultisortedSignatures.Generator where
+module Model.Generic.Indexed.MultisortedSignatures.Generator where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄

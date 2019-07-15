@@ -2,7 +2,7 @@
 
 {-|
 Module      : Datatypes
-Description : Various datatypes used acrooss the library
+Description : Various datatypes used across the library
 Copyright   : (c) Cas van der Rest, 2019
 Maintainer  : c.r.vanderrest@students.uu.nl
 Stability   : experimental

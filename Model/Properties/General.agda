@@ -3,12 +3,12 @@ open import Data.List
 open import Relation.Binary.PropositionalEquality hiding ([_])
 open Relation.Binary.PropositionalEquality.≡-Reasoning
 
-open import AgdaGen.Data hiding (_⊎_)
-open import AgdaGen.Base
+open import Model.Data hiding (_⊎_)
+open import Model.Base
 
 open import Data.Sum using (inj₁; inj₂; _⊎_)
 
-module AgdaGen.Properties.General where 
+module Model.Properties.General where 
 
   ------ List Merge ------
 
