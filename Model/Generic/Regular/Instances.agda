@@ -16,11 +16,12 @@ open import Function
 
 open import Relation.Binary.PropositionalEquality
 
+-- Contains many examples of regular types
 module Model.Generic.Regular.Instances where
 
   record Regular (a : Set) : Set₁ where
     field
-      W : Σ[ f ∈ Reg ] (a ≅ Fix f)
+      W : Σ[ f ∈ Reg ] (a ≃ Fix f)
 
   getPf : ∀ {a : Set} → Regular a → Reg
   getPf record { W = W } = proj₁ W
@@ -46,8 +47,8 @@ module Model.Generic.Regular.Instances where
   isoℕF {In (inj₁ tt)} = refl
   isoℕF {In (inj₂ y)}  = cong (In ∘ inj₂) isoℕF
   
-  ℕ≅ℕF : ℕ ≅ Fix ℕF
-  ℕ≅ℕF =
+  ℕ≃ℕF : ℕ ≃ Fix ℕF
+  ℕ≃ℕF =
     record { from = ℕ→ℕF
            ; to   = ℕF→ℕ
            ; iso₁ = isoℕ
@@ -56,7 +57,7 @@ module Model.Generic.Regular.Instances where
 
   instance 
     ℕ-Regular : Regular ℕ
-    ℕ-Regular = record { W = ℕF , ℕ≅ℕF }
+    ℕ-Regular = record { W = ℕF , ℕ≃ℕF }
 
   BoolF : Reg {0ℓ} {0ℓ}
   BoolF = U ⊕ U
@@ -81,8 +82,8 @@ module Model.Generic.Regular.Instances where
   isoBoolF {In (inj₁ x)} = refl
   isoBoolF {In (inj₂ y)} = refl
 
-  Bool≅BoolF : Bool ≅ Fix BoolF
-  Bool≅BoolF =
+  Bool≃BoolF : Bool ≃ Fix BoolF
+  Bool≃BoolF =
     record { from = Bool→BoolF
            ; to   = BoolF→Bool
            ; iso₁ = isoBool
@@ -92,7 +93,7 @@ module Model.Generic.Regular.Instances where
   instance 
     Bool-Regular : Regular Bool
     Bool-Regular =
-      record { W = BoolF , Bool≅BoolF }
+      record { W = BoolF , Bool≃BoolF }
 
   ListF : Set → Reg {0ℓ} {0ℓ}
   ListF a = U ⊕ (K a ⊗ I)
@@ -118,8 +119,8 @@ module Model.Generic.Regular.Instances where
   isoListF {xs = In (inj₂ (fst , snd))} =
     cong (In ∘ inj₂ ∘ _,_ fst) isoListF
 
-  List≅ListF : ∀ {a : Set} → List a ≅ Fix (ListF a)
-  List≅ListF =
+  List≃ListF : ∀ {a : Set} → List a ≃ Fix (ListF a)
+  List≃ListF =
     record { from = List→ListF
            ; to = ListF→List
            ; iso₁ = isoList
@@ -130,7 +131,7 @@ module Model.Generic.Regular.Instances where
   instance
     List-Regular : ∀ {a : Set} → Regular (List a)
     List-Regular {a} =
-      record { W = ListF a , List≅ListF }
+      record { W = ListF a , List≃ListF }
   
   _⊎F_ : Set → Set → Reg {0ℓ} {0ℓ}
   a ⊎F b = K a ⊕ K b
@@ -155,8 +156,8 @@ module Model.Generic.Regular.Instances where
   iso⊎F {y = In (inj₁ x)} = refl
   iso⊎F {y = In (inj₂ y)} = refl
 
-  ⊎≅⊎F : ∀ {a b : Set} → (a ⊎ b) ≅ (Fix (a ⊎F b))
-  ⊎≅⊎F =
+  ⊎≃⊎F : ∀ {a b : Set} → (a ⊎ b) ≃ (Fix (a ⊎F b))
+  ⊎≃⊎F =
     record { from = ⊎→⊎F
            ; to   = ⊎F→⊎
            ; iso₁ = iso⊎
@@ -165,7 +166,7 @@ module Model.Generic.Regular.Instances where
   
   instance
     ⊎-Regular : ∀ {a b : Set} → Regular (a ⊎ b)
-    ⊎-Regular {a} {b} = record { W = a ⊎F b , ⊎≅⊎F }
+    ⊎-Regular {a} {b} = record { W = a ⊎F b , ⊎≃⊎F }
 
   
   _×F_ : Set → Set → Reg {0ℓ} {0ℓ}
@@ -187,8 +188,8 @@ module Model.Generic.Regular.Instances where
     → ×→×F (×F→× y) ≡ y
   iso×F {y = In x} = refl
 
-  ×≅×F : ∀ {a b : Set} → (a × b) ≅ (Fix (a ×F b))
-  ×≅×F  =
+  ×≃×F : ∀ {a b : Set} → (a × b) ≃ (Fix (a ×F b))
+  ×≃×F  =
     record { from = ×→×F
            ; to   = ×F→×
            ; iso₁ = iso× 
@@ -198,7 +199,7 @@ module Model.Generic.Regular.Instances where
   instance
     ×-Regular : ∀ {a b : Set} → Regular (a × b)
     ×-Regular {a} {b} =
-      record { W = a ×F b , ×≅×F }
+      record { W = a ×F b , ×≃×F }
 
   
   MaybeF : Set → Reg {0ℓ} {0ℓ}
@@ -224,8 +225,8 @@ module Model.Generic.Regular.Instances where
   isoMaybeF {m = In (inj₁ x)} = refl
   isoMaybeF {m = In (inj₂ y)} = refl
 
-  Maybe≅MaybeF : ∀ {a : Set} → Maybe a ≅ Fix (MaybeF a)
-  Maybe≅MaybeF =
+  Maybe≃MaybeF : ∀ {a : Set} → Maybe a ≃ Fix (MaybeF a)
+  Maybe≃MaybeF =
     record { from = Maybe→MaybeF
            ; to   = MaybeF→Maybe 
            ; iso₁ = isoMaybe
@@ -235,4 +236,4 @@ module Model.Generic.Regular.Instances where
   instance
     Maybe-Regular : ∀ {a : Set} → Regular (Maybe a)
     Maybe-Regular {a} =
-      record { W = MaybeF a , Maybe≅MaybeF }
+      record { W = MaybeF a , Maybe≃MaybeF }

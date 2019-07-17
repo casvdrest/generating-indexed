@@ -13,10 +13,9 @@ open import Function
 import Level as L
 
 open import Model.Base
-open import Model.Generic.Isomorphism using (_≅_)
 open import Model.Generic.Regular.Universe
 
-module Model.Generic.Indexed.MultisortedSignatures.Signature where
+module Model.Generic.IndexedContainers.Universe where
 
   ------ Syntax for Π Types ------
   
@@ -39,10 +38,12 @@ module Model.Generic.Indexed.MultisortedSignatures.Signature where
       Ar : ∀ {x} → Fix (Op x) → Reg {ℓ}
       Ty : ∀ {x} {op : Fix (Op x)} → Fix (Ar op) → i 
 
+  -- Semantics for signatures
   ⟦_⟧ₛ : ∀ {i : Set} → Sig i → (x : i → Set) → (i → Set)
   ⟦ Op ◃ Ar ∣ Ty ⟧ₛ x =
     λ i → Σ[ op ∈ Fix (Op i) ] Π[ Fix (Ar op) ] x ∘ Ty 
 
+  -- Fixpoint operation
   data Fixₛ {i : Set} (Σ : Sig i) (x : i) : Set where
     Inₛ : ⟦ Σ ⟧ₛ (Fixₛ Σ) x → Fixₛ Σ x
 
@@ -58,6 +59,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Signature where
   Ty-vec zero (In tt) (In ())
   Ty-vec (suc n) (In x) (In tt) = n
 
+  Σ-vec : Set → Sig ℕ
+  Σ-vec A = Op-vec {A} ◃ (λ {i} → Ar-vec i) ∣ λ {i} {op} ar → Ty-vec i op ar
 
   ------ Lists ------
 
@@ -111,6 +114,7 @@ module Model.Generic.Indexed.MultisortedSignatures.Signature where
   Σ-fin : Sig ℕ
   Σ-fin = Op-fin ◃ (λ {n} → Ar-fin n) ∣ λ {n} {op} → Ty-fin n op
 
+  ------ inequality proofs ------
 
   data _≤ : ℕ × ℕ → Set where
     base : ∀ {n : ℕ} → (0 , n) ≤
@@ -134,6 +138,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Signature where
   
   Σ-≤ : Sig (ℕ × ℕ)
   Σ-≤ = Op-≤ ◃ (λ { {idx} op → Ar-≤ {idx} op }) ∣ λ {idx} {op} → Ty-≤ {idx} op 
+
+  ------ Sortedness of lists ------
   
   data Sorted : List ℕ → Set where
     nil    : Sorted []
@@ -158,6 +164,7 @@ module Model.Generic.Indexed.MultisortedSignatures.Signature where
   Σ-Sorted : Sig (List ℕ)
   Σ-Sorted = Op-Sorted ◃ (λ {xs} → Ar-Sorted {xs}) ∣ λ {xs} {ar} → Ty-Sorted {xs} ar
 
+  ------ Well-scoped lambda terms ------
 
   data Term : ℕ → Set where
     Abs : ∀ {n : ℕ} → Term (suc n) → Term n

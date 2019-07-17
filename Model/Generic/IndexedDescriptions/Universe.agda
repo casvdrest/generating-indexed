@@ -15,7 +15,7 @@ open import Data.List
 open import Function
 open import Relation.Binary.PropositionalEquality
 
-module Model.Generic.Indexed.IDesc.Universe where
+module Model.Generic.IndexedDescriptions.Universe where
 
   infixr 30 _`×_
   infixr 5  ▻_
@@ -84,9 +84,7 @@ module Model.Generic.Indexed.IDesc.Universe where
   data μ {ℓ k} {I : Set k} (φ : func ℓ I I) (i : I) : Set (ℓ ⊔ k) where
     ⟨_⟩ : ⟦ φ ⟧func (μ φ) i → μ φ i
 
-  data Fix {ℓ k} {I : Set k} (φ : I → IDesc ℓ I) (i : I) : Set (ℓ ⊔ k) where
-    In : ⟦ φ i ⟧ (Fix φ) → Fix φ i
-
+  -- Mapping operation for metadata structures
   mapm : ∀ {ℓ k} {I : Set k} {δ : IDesc ℓ I} {P Q : Set ℓ → Set (sucL ℓ)}
        → (∀ {s : Set ℓ} → P s → Q s) → IDescM P δ → IDescM Q δ
   mapm f `var~ = `var~

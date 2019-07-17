@@ -62,29 +62,29 @@ module Model.Combinators where
   ------ Indexed generators ------
 
   instance
-    Genᵢ-Functor :
+    Gen-Functor :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
       → GFunctor (λ a x → Gen a t x)
-    Genᵢ-Functor =
+    Gen-Functor =
       record { _<$>_ = genMap } 
 
   instance
-    Genᵢ-Applicative :
+    Gen-Applicative :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
       → GApplicative λ a x → Gen a t x
-    Genᵢ-Applicative =
+    Gen-Applicative =
       record { pure = Pure ; _<*>_ = Ap }
 
   instance
-    Genᵢ-Monad :
+    Gen-Monad :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
       → GMonad λ a x → Gen a t x
-    Genᵢ-Monad =
+    Gen-Monad =
       record { _>>=_  = Bind }
 
   instance
-    Genᵢ-Alternative :
+    Gen-Alternative :
       ∀ {ℓ k} {i : Set k} {t : i → Set ℓ}
       → GAlternative λ a x → Gen a t x
-    Genᵢ-Alternative =
+    Gen-Alternative =
       record { _∥_ = Or ; empty = None }

@@ -4,9 +4,8 @@ open import Model.Base hiding (μ)
 open import Model.Combinators
 open import Model.Enumerate hiding (⟨_⟩)
 open import Model.Generic.Isomorphism
-open import Model.Generic.Indexed.IDesc.Universe
-open import Model.Generic.Indexed.IDesc.Generator
-open import Model.Examples.Regex
+open import Model.Generic.IndexedDescriptions.Universe
+open import Model.Generic.IndexedDescriptions.Generator
 
 open import Data.Product
 open import Data.Sum
@@ -23,7 +22,7 @@ open import Level
 
 open import Relation.Binary.PropositionalEquality
 
-module Model.Generic.Indexed.IDesc.Instances where
+module Model.Generic.IndexedDescriptions.Instances where
   
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
@@ -38,12 +37,6 @@ module Model.Generic.Indexed.IDesc.Instances where
 
   Bool' : Set 
   Bool' = μ BoolD tt
-
-  boolGen : 𝔾 Bool'
-  boolGen = ⦇ ⟨_⟩ (`
-             ( ⦇ (∙   , lift tt) ⦈
-             ∥ ⦇ (▻ ∙ , lift tt) ⦈ )
-            )⦈
   
   fromBool : Bool → Bool'
   fromBool false = ⟨ (∙   , (lift tt)) ⟩
@@ -166,6 +159,7 @@ module Model.Generic.Indexed.IDesc.Instances where
   Fin'-iso₂ {suc n} {⟨ ▻ ∙ , rec     ⟩} =
     cong (λ x → ⟨ (▻ ∙ , x) ⟩) Fin'-iso₂
 
+  ------ List membership (Contexts) ------
 
   data _∈_ {a : Set} (x : a) : List a →  Set where
     here  : ∀ {xs : List a} → x ∈ (x ∷ xs)
@@ -199,6 +193,8 @@ module Model.Generic.Indexed.IDesc.Instances where
   ∈-iso₂ {xs = x ∷ xs} {⟨ ∙   , refl , lift tt ⟩} = refl
   ∈-iso₂ {xs = x ∷ xs} {⟨ ▻ ∙        , _       ⟩} =
     cong (λ v → ⟨ ((▻ ∙) , v) ⟩) ∈-iso₂
+
+  ------ Simply typed lambda calculus (well-typedness)  ------
 
   data Ty : Set where
     `τ   : Ty

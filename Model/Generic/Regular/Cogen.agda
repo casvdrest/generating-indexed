@@ -17,16 +17,19 @@ open import Level
 
 open import Category.Monad
 
+-- Contains cogenerators for regular types
 module Model.Generic.Regular.Cogen where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
 
+  -- Cogenerator for the U constructor
   U-Cogen :
     ∀ {ℓ k} {f : Reg {ℓ}} {a : Lift k ⊤ → Set ℓ}
     → Gen (a (lift tt)) a (lift tt) → 𝔾 (λ { _ → ⟦_⟧ {ℓ} U (Fix f) → a (lift tt)}) (lift tt)
   U-Cogen gen = ⦇ (λ x → λ { tt → x }) (Call' λ { _ → gen }) ⦈
 
+  -- Lift to functions to a function on coproducts
   ⊎lift :
     ∀ {ℓ} {a b c : Set ℓ}
     → (a → c) → (b → c)
@@ -34,13 +37,17 @@ module Model.Generic.Regular.Cogen where
   ⊎lift fx fy (inj₁ x) = fx x
   ⊎lift fx fy (inj₂ y) = fy y
 
+  -- Cogenerator for coproduct types
   ⊕-Cogen :
     ∀ {ℓ} {f₁ f₂ g : Reg {ℓ}} {a : ⊤ → Set}
     → (𝔾 a (tt) → 𝔾 {0ℓ} {0ℓ} (λ _ → ⟦ f₁ ⟧ (Fix g) → a (tt)) (lift tt) )
     → (𝔾 a (tt) → 𝔾 (λ _ → ⟦ f₂ ⟧ (Fix g) → a (tt)) (lift tt))
     → 𝔾 a ( tt) → 𝔾 (λ _ → ⟦ f₁ ⊕ f₂ ⟧ (Fix g) → a (tt)) (lift tt)
-  ⊕-Cogen cg₁ cg₂ gₐ = ⦇ (λ { fx fy (inj₁ x) → fx x ; fx fy (inj₂ y) → fy y }) (Call (lift tt) λ _ → cg₁ gₐ) (Call (lift tt) λ _ → cg₂ gₐ) ⦈
+  ⊕-Cogen cg₁ cg₂ gₐ =
+    ⦇ (λ { fx fy (inj₁ x) → fx x ; fx fy (inj₂ y) → fy y })
+      (Call (lift tt) λ _ → cg₁ gₐ) (Call (lift tt) λ _ → cg₂ gₐ) ⦈
 
+  -- Cogenerator for product types
   ⊗-Cogen :
     ∀ {ℓ} {f₁ f₂ g : Reg {ℓ}} {a : ⊤ → Set ℓ}
     → (∀ {a : ⊤ → Set ℓ} → 𝔾 {ℓ} {0ℓ} a tt → 𝔾 {ℓ} {0ℓ} (λ _ → ⟦ f₁ ⟧ (Fix g) → a tt) tt)
@@ -48,6 +55,7 @@ module Model.Generic.Regular.Cogen where
     → 𝔾 a tt → 𝔾 (λ _ → ⟦ f₁ ⊗ f₂ ⟧ (Fix g) → a tt) tt
   ⊗-Cogen cg₁ cg₂ gₐ = ⦇ uncurry (Call tt λ _ → cg₁ (cg₂ gₐ)) ⦈ 
 
+  -- Derive a cogenerator for regular types
   deriveCogen :
     ∀ {f g : Reg}
     → RegInfo (λ s → co𝔾 (λ _ → s) tt) f → co𝔾 (λ _ → ⟦_⟧ f (Fix g)) (lift tt) 

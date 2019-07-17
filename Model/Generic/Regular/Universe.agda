@@ -19,6 +19,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 module Model.Generic.Regular.Universe where
 
+  -- The universe of regular types
   data Reg {ℓ} {k} : Set (Level.suc k ⊔ Level.suc ℓ) where
     Z   : Reg
     U   : Reg 
@@ -27,6 +28,8 @@ module Model.Generic.Regular.Universe where
     I   : Reg
     K   : Set k → Reg
 
+  -- Metadata structure containing extra information about the constant types in
+  -- a code of type Reg
   data RegInfo {ℓ} (P : Set ℓ → Set (Level.suc ℓ)) : Reg {ℓ} → Set (Level.suc ℓ) where
     Z~   : RegInfo P Z
     U~   : RegInfo P U
@@ -43,6 +46,7 @@ module Model.Generic.Regular.Universe where
     
     K~   : ∀ {a : Set ℓ} → P a → RegInfo P (K a)
 
+  -- Transform the type of data stored in a metadata structure
   map-reginfo :
     ∀ {ℓ} {f : Reg {ℓ}} {P Q : Set ℓ → Set (Level.suc ℓ)}
     → (∀ {a : Set ℓ} → P a → Q a)
@@ -55,7 +59,8 @@ module Model.Generic.Regular.Universe where
   map-reginfo f I~ = I~
   map-reginfo f (K~ x) = K~ (f x)
   map-reginfo f (Z~)   = Z~
-  
+
+  -- Semantics of regular types
   ⟦_⟧ : ∀ {ℓ} → Reg {ℓ} → Set → Set
   ⟦ U           ⟧ r = ⊤
   ⟦ reg₁ ⊕ reg₂ ⟧ r = ⟦ reg₁ ⟧ r ⊎ ⟦ reg₂ ⟧ r
@@ -66,7 +71,8 @@ module Model.Generic.Regular.Universe where
   
   data Fix {ℓ} (f : Reg {ℓ}) : Set where
     In : ⟦ f ⟧ (Fix f) → Fix f
-  
+
+  -- Mapping operation for pattern functors
   mapᵣ :
     ∀ {ℓ} {a b : Set}
     → (f : Reg {ℓ}) → (a → b)

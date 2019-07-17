@@ -1,7 +1,7 @@
 open import Model.Base
 open import Model.Combinators
 open import Model.Enumerate
-open import Model.Data using (_∈_; here; there; Π)
+open import Model.Data using (_∈_; here; there)
 
 open import Model.Properties.Monotonicity
 open import Model.Properties.General
@@ -38,13 +38,13 @@ module Model.Generic.Regular.Properties where
 
   ugen-monotone :
     ∀ {g : Reg} {x : ⟦_⟧ {0ℓ} U (Fix g)} {gi : RegInfo (λ S → 𝔾 (λ _ → S) tt) g}
-    → Depth-Monotoneᵢ (deriveGen {g = g} U~) (λ { tt → deriveGen gi }) tt
+    → Depth-Monotone (deriveGen {g = g} U~) (λ { tt → deriveGen gi }) tt
   ugen-monotone z≤n ()
   ugen-monotone (s≤s leq) elem = elem 
 
   ugen-complete :
     ∀ {g : Reg} {gi : RegInfo (λ S → 𝔾 (λ _ → S) tt) g}
-    → Completeᵢ (deriveGen {g = g} U~) (λ { tt → deriveGen gi })
+    → Complete (deriveGen {g = g} U~) (λ { tt → deriveGen gi })
   ugen-complete = 1 , here
   
   
@@ -55,20 +55,20 @@ module Model.Generic.Regular.Properties where
       {x : ⟦ f₁ ⟧ (Fix g)}
       {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
-    → Depth-Monotoneᵢ g₁ (λ _ → tg) x
-    → Depth-Monotoneᵢ (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (λ _ → tg) (inj₁ x)
+    → Depth-Monotone g₁ (λ _ → tg) x
+    → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (λ _ → tg) (inj₁ x)
   ⊕gen-monotone-left {g₁ = g₁} {g₂ = g₂} =
-    ∥-inj₁-monotone-leftᵢ {g₁ = g₁} {g₂ = g₂}
+    ∥-inj₁-monotone-left {g₁ = g₁} {g₂ = g₂}
 
   ⊕gen-monotone-right :
     ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {y : ⟦ f₂ ⟧ (Fix g)}
       {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
-    → Depth-Monotoneᵢ g₂ (λ _ → tg) y
-    → Depth-Monotoneᵢ (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (λ _ → tg) (inj₂ y)
+    → Depth-Monotone g₂ (λ _ → tg) y
+    → Depth-Monotone (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) (λ _ → tg) (inj₂ y)
   ⊕gen-monotone-right {g₁ = g₁} {g₂ = g₂} =
-    ∥-inj₁-monotone-rightᵢ {g₁ = g₁} {g₂ = g₂}
+    ∥-inj₁-monotone-right {g₁ = g₁} {g₂ = g₂}
   
  
   -- If 'x' is produced by a generator, 'inj₁ x' is produced by generator derived
@@ -77,11 +77,11 @@ module Model.Generic.Regular.Properties where
     ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
-      {x : ⟦ f₁ ⟧ (Fix g)} → g₁ ∣ᵢ (λ _ → tg)  ↝ x
-    → (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) ∣ᵢ (λ _ → tg) ↝ inj₁ x
+      {x : ⟦ f₁ ⟧ (Fix g)} → g₁ ∣ (λ _ → tg)  ↝ x
+    → (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) ∣ (λ _ → tg) ↝ inj₁ x
   ⊕gen-complete-left {g₁ = g₁} {g₂ = g₂} p =
-    ∥ᵢ-complete-left {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
-      (constrᵢ-preserves-elem {g = g₁} p)
+    ∥-complete-left {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
+      (constr-preserves-elem {g = g₁} p)
 
   -- If 'y' is produced by a generator, 'inj₂ y' is produced by the generator
   -- derived from the coproduct of any generator with that generator. 
@@ -89,11 +89,11 @@ module Model.Generic.Regular.Properties where
     ∀ {f₁ f₂ g : Reg {0ℓ}} {tg : 𝔾 (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
-    → {y : ⟦ f₂ ⟧ (Fix g)} → g₂ ∣ᵢ (λ _ → tg) ↝ y
-    → (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) ∣ᵢ (λ _ → tg) ↝ inj₂ y
+    → {y : ⟦ f₂ ⟧ (Fix g)} → g₂ ∣ (λ _ → tg) ↝ y
+    → (⦇ inj₁ g₁ ⦈ ∥ ⦇ inj₂ g₂ ⦈) ∣ (λ _ → tg) ↝ inj₂ y
   ⊕gen-complete-right {g₁ = g₁} {g₂ = g₂} p =
-    ∥ᵢ-complete-right {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
-      (constrᵢ-preserves-elem {g = g₂} p)
+    ∥-complete-right {f = ⦇ inj₁ g₁ ⦈} {g = ⦇ inj₂ g₂ ⦈}
+      (constr-preserves-elem {g = g₂} p)
    
   ------ ⊗ combinator (Product) ------
 
@@ -107,10 +107,10 @@ module Model.Generic.Regular.Properties where
       {y : ⟦ f₂ ⟧ (Fix g)} {tg : 𝔾 (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
-    → Depth-Monotoneᵢ g₁ (λ _ → tg) x → Depth-Monotoneᵢ g₂ (λ _ → tg) y
-    → Depth-Monotoneᵢ ⦇ g₁ , g₂ ⦈ (λ _ → tg) (x , y)
+    → Depth-Monotone g₁ (λ _ → tg) x → Depth-Monotone g₂ (λ _ → tg) y
+    → Depth-Monotone ⦇ g₁ , g₂ ⦈ (λ _ → tg) (x , y)
   ⊗gen-monotone {g₁ = g₁} {g₂} mt₁ mt₂ =
-    ⊛-monotoneᵢ {g₁ = g₁} {g₂ = g₂} ,-inv mt₁ mt₂
+    ⊛-monotone {g₁ = g₁} {g₂ = g₂} ,-inv mt₁ mt₂
 
   -- If both operands are complete, the generator derived from a product
   -- is complete as well. 
@@ -119,11 +119,11 @@ module Model.Generic.Regular.Properties where
       {g₁ : Gen (⟦ f₁ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {g₂ : Gen (⟦ f₂ ⟧ (Fix g)) (λ _ → ⟦ g ⟧ (Fix g)) tt}
       {x : ⟦ f₁ ⟧ (Fix g)} {y : ⟦ f₂ ⟧ (Fix g)}
-    → Depth-Monotoneᵢ g₁ (λ _ → tg) x → Depth-Monotoneᵢ g₂ (λ _ → tg) y
-    → (p₁ : g₁ ∣ᵢ (λ _ → tg) ↝ x) → (p₂ : g₂ ∣ᵢ (λ _ → tg) ↝ y)
-    → ⦇ g₁ , g₂ ⦈ ∣ᵢ (λ _ → tg) ↝ (x , y)
+    → Depth-Monotone g₁ (λ _ → tg) x → Depth-Monotone g₂ (λ _ → tg) y
+    → (p₁ : g₁ ∣ (λ _ → tg) ↝ x) → (p₂ : g₂ ∣ (λ _ → tg) ↝ y)
+    → ⦇ g₁ , g₂ ⦈ ∣ (λ _ → tg) ↝ (x , y)
   ⊗gen-complete {g₁ = g₁} {g₂ = g₂} mt₁ mt₂ p1 p2 =
-    ⊛-completeᵢ {f = g₁} {g = g₂} p1 p2 mt₁ mt₂
+    ⊛-complete {f = g₁} {g = g₂} p1 p2 mt₁ mt₂
   
   In-elem :
     ∀ {f : Reg {0ℓ}} {x : ⟦ f ⟧ (Fix f)} {xs : List (⟦ f ⟧ (Fix f))}
@@ -141,10 +141,10 @@ module Model.Generic.Regular.Properties where
   deriveGen-monotone :
     ∀ {f g : Reg} {x : ⟦ f ⟧ (Fix g)}
     → (info₁ : RegInfo (λ a → Σ[ gen ∈ 𝔾 (λ _ → a) tt ]
-        (Completeᵢ gen (λ _ → gen)) × (∀ {x : a} → Depth-Monotoneᵢ gen (λ _ → gen) x)) f)
+        (Complete gen (λ _ → gen)) × (∀ {x : a} → Depth-Monotone gen (λ _ → gen) x)) f)
     → (info₂ : RegInfo (λ a → Σ[ gen ∈ 𝔾 (λ _ → a) tt ]
-        Completeᵢ gen (λ _ → gen) × (∀ {x : a} → Depth-Monotoneᵢ (gen) (λ _ → gen) x)) g)
-    → Depth-Monotoneᵢ (deriveGen {g = g} (map-reginfo proj₁ info₁))
+        Complete gen (λ _ → gen) × (∀ {x : a} → Depth-Monotone (gen) (λ _ → gen) x)) g)
+    → Depth-Monotone (deriveGen {g = g} (map-reginfo proj₁ info₁))
                       (λ _ → deriveGen (map-reginfo proj₁ info₂)) x
   deriveGen-monotone {U} {g} info₁ info₂                                               = -- (U-combinator)
     ugen-monotone {gi = map-reginfo proj₁ info₂}
@@ -175,12 +175,12 @@ module Model.Generic.Regular.Properties where
   deriveGen-complete :
     ∀ {f g : Reg} {x : ⟦ f ⟧ (Fix g)}
     → (info₁ : RegInfo (λ a → Σ[ gen ∈ 𝔾 (λ _ → a) tt ]
-        Completeᵢ gen (λ _ → gen) × (∀ {x : a} → Depth-Monotoneᵢ gen (λ _ → gen) x)) f
+        Complete gen (λ _ → gen) × (∀ {x : a} → Depth-Monotone gen (λ _ → gen) x)) f
       )
     → (info₂ : RegInfo (λ a → Σ[ gen ∈ 𝔾 (λ _ → a) tt  ]
-        Completeᵢ gen (λ _ → gen) × (∀ {x : a} → Depth-Monotoneᵢ gen (λ _ → gen) x)) g
+        Complete gen (λ _ → gen) × (∀ {x : a} → Depth-Monotone gen (λ _ → gen) x)) g
       )
-    → deriveGen (map-reginfo proj₁ info₁) ∣ᵢ (λ _ → deriveGen (map-reginfo proj₁ info₂)) ↝ x
+    → deriveGen (map-reginfo proj₁ info₁) ∣ (λ _ → deriveGen (map-reginfo proj₁ info₂)) ↝ x
   deriveGen-complete {U} {g} _ info₂                              = -- (U-combinator)
     ugen-complete {gi = map-reginfo proj₁ info₂}
   deriveGen-complete {f₁ ⊕ f₂} {g} {inj₁ x} (iₗ ⊕~ iᵣ) info₂      =  -- (⊕-combinator)
@@ -202,8 +202,8 @@ module Model.Generic.Regular.Properties where
   deriveGen-Complete :
     ∀ {f : Reg}
     → (info : RegInfo (λ a → Σ[ gen ∈ 𝔾 (λ _ → a) tt ]
-        Completeᵢ gen (λ _ → gen) × (∀ {x : a} → Depth-Monotoneᵢ gen (λ _ → gen) x) ) f)
-    → Completeᵢ (deriveGen (map-reginfo proj₁ info))
+        Complete gen (λ _ → gen) × (∀ {x : a} → Depth-Monotone gen (λ _ → gen) x) ) f)
+    → Complete (deriveGen (map-reginfo proj₁ info))
                (λ _ → deriveGen (map-reginfo proj₁ info))
   deriveGen-Complete {f} info {x}
     with deriveGen-complete {f = f} {g = f} {x = x} (info) info
@@ -221,30 +221,29 @@ module Model.Generic.Regular.Properties where
   μ-iso₂ {y = In x} = refl
 
   -- Establish that `μ is bijective
-  μ-iso : ∀ {f : Reg} → ⟦ f ⟧ (Fix f) ≅ Fix f
+  μ-iso : ∀ {f : Reg} → ⟦ f ⟧ (Fix f) ≃ Fix f
   μ-iso = record { from = In ; to = In⁻¹ ; iso₁ = refl ; iso₂ = μ-iso₂ }
 
   -- applying a bijective function to a complete generator yields another complete generator
-  lemma-≅-derive :
+  lemma-≃-derive :
     ∀ {a : Set} {f : Reg} {gen : Gen (⟦ f ⟧ (Fix f)) (λ _ → ⟦ f ⟧ (Fix f)) tt }
-    → (iso : a ≅ Fix f) → Completeᵢ gen (λ _ → gen)
-    → Completeᵢ {I = ⊤} (⦇ (_≅_.to iso ∘ In) (Call tt λ { tt → gen }) ⦈)
-               (λ { tt_ → ⦇ (_≅_.to iso ∘ In) (Call tt λ { tt → gen }) ⦈ })
-  lemma-≅-derive {a} {f} {gen} iso p {x}
-    with p {In⁻¹ (_≅_.from iso x)}
+    → (iso : a ≃ Fix f) → Complete gen (λ _ → gen)
+    → Complete {I = ⊤} (⦇ (_≃_.to iso ∘ In) (Call tt λ { tt → gen }) ⦈)
+               (λ { tt_ → ⦇ (_≃_.to iso ∘ In) (Call tt λ { tt → gen }) ⦈ })
+  lemma-≃-derive {a} {f} {gen} iso p {x}
+    with p {In⁻¹ (_≃_.from iso x)}
   ... | suc n , elem
-    rewrite ap-pure-is-map {xs = ⟨ (λ _ → gen) ⟩ tt (suc n)} {C = _≅_.to iso ∘ In} =
-    suc n , ++-elem-left {xs = map (_≅_.to iso ∘ In) (⟨ (λ _ → gen) ⟩ tt (suc n))}
-      (∈-rewr' (_≅_.iso₁ (≅-transitive iso (≅-symmetric μ-iso)))
+    rewrite ap-pure-is-map {xs = ⟨ (λ _ → gen) ⟩ tt (suc n)} {C = _≃_.to iso ∘ In} =
+    suc n , ++-elem-left {xs = map (_≃_.to iso ∘ In) (⟨ (λ _ → gen) ⟩ tt (suc n))}
+      (∈-rewr' (_≃_.iso₁ (≃-transitive iso (≃-symmetric μ-iso)))
         (map-preserves-elem elem))
 
   isoGen-Complete :
     ∀ {a : Set} ⦃ p : Regular a ⦄
     → (info : RegInfo (λ a → Σ[ gen ∈ 𝔾 (λ _ → a) tt ]
-        Completeᵢ gen (λ _ → gen) × (∀ {x : a} → Depth-Monotoneᵢ gen (λ _ → gen) x)) (getPf p))
-    → Completeᵢ (isoGen (λ _ → a) (map-reginfo proj₁ info))
+        Complete gen (λ _ → gen) × (∀ {x : a} → Depth-Monotone gen (λ _ → gen) x)) (getPf p))
+    → Complete (isoGen (λ _ → a) (map-reginfo proj₁ info))
                (λ _ → isoGen (λ _ → a) (map-reginfo proj₁ info))
   isoGen-Complete ⦃ p ⦄ info =
-    lemma-≅-derive {gen = deriveGen (map-reginfo proj₁ info)}
+    lemma-≃-derive {gen = deriveGen (map-reginfo proj₁ info)}
       (proj₂ (Regular.W p)) (deriveGen-Complete info)
-

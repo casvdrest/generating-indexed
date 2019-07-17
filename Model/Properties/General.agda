@@ -3,7 +3,7 @@ open import Data.List
 open import Relation.Binary.PropositionalEquality hiding ([_])
 open Relation.Binary.PropositionalEquality.≡-Reasoning
 
-open import Model.Data hiding (_⊎_)
+open import Model.Data
 open import Model.Base
 
 open import Data.Sum using (inj₁; inj₂; _⊎_)
@@ -12,6 +12,7 @@ module Model.Properties.General where
 
   ------ List Merge ------
 
+  -- definition of 'ap' for lists
   list-ap :
     ∀ {ℓ} {a b : Set ℓ} → List (a → b) → List a → List b
   list-ap fs xs = concatMap (λ f → map f xs) fs
@@ -22,6 +23,7 @@ module Model.Properties.General where
     → xs ≡ ys → x ∈ xs → x ∈ ys
   ∈-rewr refl x = x
 
+  -- If two values are equal, and one occurs in a list, then so does the other
   ∈-rewr' :
     ∀ {ℓ} {a : Set ℓ} {x y : a} {xs : List a}
     → x ≡ y → x ∈ xs → y ∈ xs
@@ -149,8 +151,7 @@ module Model.Properties.General where
   list-ap-complete here p2 =
     ++-elem-left (map-preserves-elem p2)
   list-ap-complete (there p1) p2 =
-    ++-elem-right (list-ap-complete p1 p2)
-
+    ++-elem-right (list-ap-complete p1 p2) 
   -- pure f <*> xs ≡ map f xs
   ap-pure-is-map :
     ∀ {ℓ} {a b : Set ℓ} {xs : List a} {C : a → b}
@@ -162,7 +163,7 @@ module Model.Properties.General where
       map C xs ++ foldr _++_ (map C []) []
     ≡⟨⟩
       concatMap (λ f → map f xs) [ C ]
-    ∎
+    ∎ 
 
   -- Applying a constructor of arity 2 over two lists yields all
   -- possible combination of elements applied to that constructor

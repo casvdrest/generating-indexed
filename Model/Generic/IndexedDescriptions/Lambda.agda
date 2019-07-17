@@ -4,8 +4,8 @@ open import Model.Base renaming (μ to gμ)
 open import Model.Combinators
 open import Model.Enumerate hiding (⟨_⟩)
 open import Model.Generic.Isomorphism
-open import Model.Generic.Indexed.IDesc.Universe
-open import Model.Generic.Indexed.IDesc.Generator
+open import Model.Generic.IndexedDescriptions.Universe
+open import Model.Generic.IndexedDescriptions.Generator
 
 open import Data.Product
 open import Data.Sum
@@ -22,7 +22,9 @@ open import Level
 
 open import Relation.Binary.PropositionalEquality
 
-module Model.Generic.Indexed.IDesc.Lambda where
+-- Contains an alternative model of the simply typed lambda calculus
+-- using De Bruijn indices
+module Model.Generic.IndexedDescriptions.Lambda where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
@@ -150,65 +152,62 @@ module Model.Generic.Indexed.IDesc.Lambda where
     cong₂ (λ r₁ r₂ → ⟨ ((▻ ▻ ∙) , σ , (r₁ , r₂)) ⟩) ⊢-iso₂ ⊢-iso₂
 
   instance
-    ∋-≅IDesc : ≅IDesc (uncurry _∋_)
-    ∋-≅IDesc =
+    ∋-≃IDesc : ≃IDesc (uncurry _∋_)
+    ∋-≃IDesc =
       record { W = ∋D
-             , ≅-transitive (≅-symmetric ≅lift) (
+             , λ _ → ≃-transitive (≃-symmetric ≃lift) (
                  record { from = from∋
                         ; to   = to∋
                         ; iso₁ = ∋-iso₁
                         ; iso₂ = ∋-iso₂
-                        })
+                        } ) 
              }
 
   gen∋ :
-    ((ix : Ctx × Ty) → IDescM 𝔾 (func.out ∋D ix))
+    ((ix : Ctx × Ty) → IDescM (λ S → 𝔾 (λ _ → S) tt) (func.out ∋D ix))
     → (Γ : Ctx) → (τ : Ty)
-    → 𝔾ᵢ (λ { ( Γ , τ ) → Lift 0ℓ (Γ ∋ τ) }) (Γ , τ)
+    → 𝔾 (λ { ( Γ , τ ) → Lift 0ℓ (Γ ∋ τ) }) (Γ , τ)
   gen∋ m Γ τ = IDesc-isoGen (Γ , τ) m
 
-  Ty≡ : (σ τ : Ty) → 𝔾 (σ ≡ τ)
+  Ty≡ : (σ τ : Ty) → 𝔾 (λ _ → σ ≡ τ) tt
   Ty≡ `τ `τ = pure refl
   Ty≡ `τ (τ `→ τ₁) = empty
   Ty≡ (σ `→ σ₁) `τ = empty
   Ty≡ (σ₁ `→ σ₂) (τ₁ `→ τ₂) =
-    ⦇ (cong₂ _`→_) (` Ty≡ σ₁ τ₁) (` Ty≡ σ₂ τ₂) ⦈
+    ⦇ (cong₂ _`→_) (Call tt (λ _ →  Ty≡ σ₁ τ₁)) (Call tt (λ _ → Ty≡ σ₂ τ₂)) ⦈
 
-  ∋M : (ix : Ctx × Ty) → IDescM 𝔾 (func.out ∋D ix)
+  ∋M : (ix : Ctx × Ty) → IDescM (λ S → 𝔾 (λ _ → S) tt) (func.out ∋D ix)
   ∋M (∅ , τ) = `σ~ λ()
   ∋M ((Γ , α ∶ σ) , τ) =
     `σ~ λ { ∙ → `Σ~ (Ty≡ τ σ) λ { refl → `1~ } ; (▻ ∙) → `var~ }
 
-  test : ⟨ uncurry (gen∋ ∋M) ⟩ᵢ ((∅ , 0 ∶ `τ) , 1 ∶ `τ , `τ) 10 ≡ lift ([Pop] [Top]) ∷ lift [Top]  ∷ []
-  test = refl
-
   instance
-    ⊢-≅IDesc : ≅IDesc (uncurry _⊢_)
-    ⊢-≅IDesc =
+    ⊢-≃IDesc : ≃IDesc (uncurry _⊢_)
+    ⊢-≃IDesc =
       record { W = ⊢D
-             , ≅-transitive (≅-symmetric ≅lift) (
+             , λ _ → ≃-transitive (≃-symmetric ≃lift) (
                record { from = from⊢
                       ; to   = to⊢
                       ; iso₁ = ⊢-iso₁
                       ; iso₂ = ⊢-iso₂
                       }
-            )}
+            ) }
 
-  genTy : 𝔾 Ty
-  genTy = ⦇ `τ ⦈ ∥ ⦇ gμ `→ gμ ⦈
+  genTy :  𝔾 (λ _ → Ty) tt
+  genTy = ⦇ `τ ⦈ ∥ ⦇ (gμ tt) `→ (gμ tt) ⦈
 
-  genId : 𝔾 Id
-  genId = ⦇ 0 ⦈ ∥ ⦇ suc gμ ⦈
+  genId : 𝔾 (λ _ → Id) tt
+  genId = ⦇ 0 ⦈ ∥ ⦇ suc (gμ tt) ⦈
 
   gen⊢ :
-    ((ix : Ctx × Ty) → IDescM 𝔾 (func.out ⊢D ix)) → (Γ : Ctx) → (τ : Ty)
-    → 𝔾ᵢ (λ { ( Γ , τ ) → Lift 0ℓ (Γ ⊢ τ) }) (Γ , τ)
+    ((ix : Ctx × Ty) → IDescM (λ S → 𝔾 (λ _ → S) tt)(func.out ⊢D ix)) → (Γ : Ctx) → (τ : Ty)
+    → 𝔾 (λ { ( Γ , τ ) → Lift 0ℓ (Γ ⊢ τ) }) (Γ , τ)
   gen⊢ m Γ τ = IDesc-isoGen (Γ , τ) m
 
-  gen∋' : (Γ : Ctx) → (τ : Ty) → 𝔾 (Γ ∋ τ)
-  gen∋' Γ τ = ⦇ lower ⟨ Γ , τ ` (uncurry (gen∋ ∋M)) ⟩ ⦈
+  gen∋' : (Γ : Ctx) → (τ : Ty) → 𝔾 (λ _ → Γ ∋ τ) tt
+  gen∋' Γ τ = ⦇ lower (Call (Γ , τ) (uncurry (gen∋ ∋M))) ⦈
 
-  ⊢M : (ix : Ctx × Ty) → IDescM 𝔾 (func.out ⊢D ix)
+  ⊢M : (ix : Ctx × Ty) → IDescM (λ S → 𝔾 (λ _ → S) tt) (func.out ⊢D ix)
   ⊢M (Γ , `τ) =
     `σ~ (λ {  ∙    → `Σ~ (gen∋' Γ `τ)  λ s → `1~
            ; (▻ ∙) → `Σ~ genTy (λ s → `var~ `×~ `var~)
@@ -227,13 +226,3 @@ module Model.Generic.Indexed.IDesc.Lambda where
   ⊢-toTerm ([Var] x) = Var (∋-toId x)
   ⊢-toTerm ([Abs] tm) = Abs (ident tm) (⊢-toTerm tm)
   ⊢-toTerm ([App] tm₁ tm₂) = App (⊢-toTerm tm₁) (⊢-toTerm tm₂)
-
-  open import Function
-
-  test' : Data.List.map (⊢-toTerm ∘ lower) (⟨ uncurry (gen⊢ ⊢M) ⟩ᵢ (∅ , `τ `→ `τ) 3) ≡
-    App (Abs 0 (Var 0)) (Abs 0 (Var 0)) ∷
-    App (Abs 0 (Var 0)) (Abs 1 (Var 1)) ∷
-    App (Abs 1 (Var 1)) (Abs 0 (Var 0)) ∷
-    App (Abs 1 (Var 1)) (Abs 1 (Var 1)) ∷
-    Abs 0 (Var 0) ∷ Abs 1 (Var 1) ∷ Abs 2 (Var 2) ∷ []
-  test' = refl

@@ -20,6 +20,7 @@ module Model.Generic.Regular.Generator where
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
 
+  -- Derive a generator for regular types
   deriveGen :
     ∀ {f g : Reg}
     → RegInfo (λ S → 𝔾 (λ _ → S) tt) f
@@ -33,15 +34,19 @@ module Model.Generic.Regular.Generator where
   deriveGen {K a} {g} (K~ gₖ) = Call tt λ _ → gₖ
   deriveGen {Z} Z~ = None
 
+  -- Derive a generator for any type, given that it is isomorphic to some
+  -- regular type
   isoGen :
     ∀ (a : ⊤ → Set) → ⦃ p : Regular (a tt) ⦄
     → RegInfo (λ S → 𝔾 (λ _ → S) tt) (getPf p) → 𝔾 a tt
   isoGen a ⦃ record { W = f , iso } ⦄ reginfo =
-    ⦇ (_≅_.to iso ∘ In) (Call tt λ _ → deriveGen reginfo) ⦈
+    ⦇ (_≃_.to iso ∘ In) (Call tt λ _ → deriveGen reginfo) ⦈
 
+  -- Derive a cogenerator for any type, given that it is isomorphic to
+  -- a regular type
   isoCogen :
     ∀ (a : ⊤ → Set) → ⦃ p : Regular (a tt) ⦄
     → RegInfo (λ S → co𝔾 (λ _ → S) tt) (getPf p) → co𝔾 a tt
   isoCogen a ⦃ record { W = f , iso } ⦄ reginfo {b} gₐ =
-    ⦇ (λ f → f ∘ (λ { (In x) → x }) ∘ _≅_.from iso)
+    ⦇ (λ f → f ∘ (λ { (In x) → x }) ∘ _≃_.from iso)
       (Call (Level.lift tt) (λ _ → deriveCogen {g = f} reginfo gₐ)) ⦈

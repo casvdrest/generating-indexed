@@ -1,12 +1,13 @@
-open import Model.Generic.Indexed.MultisortedSignatures.Signature
+{-# OPTIONS --type-in-type #-}
+
 open import Model.Base
 open import Model.Combinators
 open import Model.Generic.Isomorphism 
 open import Model.Generic.Regular.Universe
-open import Model.Generic.Indexed.MultisortedSignatures.Signature
-open import Model.Generic.Indexed.MultisortedSignatures.Generator
+open import Model.Generic.IndexedContainers.Universe
+open import Model.Generic.IndexedContainers.Generator
 open import Model.Generic.Regular.Cogen
-open import Model.Generic.Indexed.PiGen
+open import Model.Generic.IndexedContainers.PiGen
 
 open import Data.Empty
 open import Data.Nat
@@ -22,7 +23,7 @@ open import Level hiding (suc; zero)
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; cong₂)
 
-module Model.Generic.Indexed.MultisortedSignatures.Instances where
+module Model.Generic.IndexedContainers.Instances where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
@@ -30,19 +31,19 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
   triv : (a : Set) → ⊤ → Set
   triv a tt = a
 
-  record MultiSorted {i : Set} (a : i → Set) : Set₁ where
+  record IndexedContainer {i : Set} (a : i → Set) : Set₁ where
     field
-      Wᵢ : Σ[ Σ ∈ Sig i ] (∀ {x : i} → a x ≅ Fixₛ Σ x)
+      W : Σ[ Σ ∈ Sig i ] (∀ {x : i} → a x ≃ Fixₛ Σ x)
 
-  getΣ : ∀ {i : Set} {a : i → Set} → MultiSorted a → Sig i
-  getΣ (record { Wᵢ = Σ , _ }) = Σ
+  getΣ : ∀ {i : Set} {a : i → Set} → IndexedContainer a → Sig i
+  getΣ (record { W = Σ , _ }) = Σ
 
-  isoGenᵢ : ∀ {i : Set} {a : i → Set} → ⦃ p : MultiSorted a ⦄
-           → ((x : i) → RegInfo (λ op → 𝔾 op × Π𝔾 op) (Sig.Op (getΣ p) x))
+  isoGen : ∀ {i : Set} {a : i → Set} → ⦃ p : IndexedContainer a ⦄
+           → ((x : i) → RegInfo (λ op → 𝔾 (λ { tt → op }) tt × Π𝔾 op) (Sig.Op (getΣ p) x))
            → ((x : i) → (op : Fix (Sig.Op (getΣ p) x))
-                 → RegInfo (λ op → 𝔾 op × Π𝔾 op) (Sig.Ar (getΣ p) op)) → (x : i) → 𝔾ᵢ a x
-  isoGenᵢ ⦃ p = record { Wᵢ = Σ , iso } ⦄ sig₁ sig₂ x =
-    ⦇ (_≅_.to iso ∘ Inₛ) (Call {x = x} (deriveGenᵢ sig₁ sig₂ x)) ⦈ 
+                 → RegInfo (λ op → 𝔾 (λ { tt → op }) tt × Π𝔾 op) (Sig.Ar (getΣ p) op)) → (x : i) → 𝔾 a x
+  isoGen ⦃ p = record { W = Σ , iso } ⦄ sig₁ sig₂ x =
+    ⦇ (_≃_.to iso ∘ Inₛ) (Call {x = x} x (λ y → ic-deriveGen sig₁ sig₂ y)) ⦈ 
       
    -- Function exensionality
   postulate funext : ∀ {ℓ} {a b : Set ℓ} {f g : a → b} → (∀ {x} → f x ≡ g x) → f ≡ g
@@ -82,8 +83,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
   ℕ-iso₂ {Inₛ (In (inj₂ tt) , snd)} =
     cong (λ x → Inₛ ((In (inj₂ tt)) , x)) (funext λ { {In tt} → ℕ-iso₂ })
 
-  ℕ≅Σ-nat : ℕ ≅ Fixₛ Σ-nat tt
-  ℕ≅Σ-nat =
+  ℕ≃Σ-nat : ℕ ≃ Fixₛ Σ-nat tt
+  ℕ≃Σ-nat =
     record { from = fromℕ
            ; to   = toℕ
            ; iso₁ = ℕ-iso₁
@@ -91,8 +92,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    ℕ-MultiSorted : MultiSorted (triv ℕ)
-    ℕ-MultiSorted = record { Wᵢ = Σ-nat , ℕ≅Σ-nat }
+    ℕ-IndexedContainer : IndexedContainer (triv ℕ)
+    ℕ-IndexedContainer = record { W = Σ-nat , ℕ≃Σ-nat }
   
   ------ Finite Sets ------
 
@@ -122,8 +123,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
     cong (λ x → Inₛ (In (inj₂ tt) , x)) (funext' λ { {In tt} → Fin-iso₂ })
 
   
-  Fin≅Σ-fin : ∀ {n : ℕ} → Fin n ≅ Fixₛ Σ-fin n
-  Fin≅Σ-fin =
+  Fin≃Σ-fin : ∀ {n : ℕ} → Fin n ≃ Fixₛ Σ-fin n
+  Fin≃Σ-fin =
     record { from = fromFin
            ; to   = toFin
            ; iso₁ = Fin-iso₁
@@ -131,8 +132,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    Fin-MultiSorted : MultiSorted Fin
-    Fin-MultiSorted = record { Wᵢ = Σ-fin , Fin≅Σ-fin }
+    Fin-IndexedContainer : IndexedContainer Fin
+    Fin-IndexedContainer = record { W = Σ-fin , Fin≃Σ-fin }
 
   ------ Well-Scoped Lambda Terms ------
   
@@ -197,8 +198,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
     cong (λ x → Inₛ (In (inj₂ (inj₂ y)) , x)) (funext' λ { {In ()} })
 
   
-  Term≅Σ-Term : ∀ {n : ℕ} → Term n ≅ Fixₛ Σ-Term n
-  Term≅Σ-Term =
+  Term≃Σ-Term : ∀ {n : ℕ} → Term n ≃ Fixₛ Σ-Term n
+  Term≃Σ-Term =
     record { from = fromTerm
            ; to   = toTerm
            ; iso₁ = Term-iso₁
@@ -206,8 +207,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    Term-MultiSorted : MultiSorted Term
-    Term-MultiSorted = record { Wᵢ = Σ-Term , Term≅Σ-Term }
+    Term-IndexedContainer : IndexedContainer Term
+    Term-IndexedContainer = record { W = Σ-Term , Term≃Σ-Term }
 
   ------ Lists ------
 
@@ -233,8 +234,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
   List-iso₂ {a} {Inₛ (In (inj₂ y) , snd)} =
     cong (λ x → Inₛ ((In (inj₂ y)) , x)) (funext λ { {In tt} → List-iso₂} )
 
-  List≅Σ-list : ∀ {a : Set} → List a ≅ Fixₛ (Σ-list a) tt
-  List≅Σ-list =
+  List≃Σ-list : ∀ {a : Set} → List a ≃ Fixₛ (Σ-list a) tt
+  List≃Σ-list =
     record { from = fromList
            ; to   = toList
            ; iso₁ = List-iso₁
@@ -242,8 +243,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    List-MultiSorted : ∀ {a : Set} → MultiSorted (triv (List a))
-    List-MultiSorted {a} = record { Wᵢ = Σ-list a , List≅Σ-list }
+    List-IndexedContainer : ∀ {a : Set} → IndexedContainer (triv (List a))
+    List-IndexedContainer {a} = record { W = Σ-list a , List≃Σ-list }
 
   ------ Vectors ------
 
@@ -270,8 +271,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
   Vec-iso₂ {n = suc n} {Inₛ (In y , snd)} =
     cong (λ x → Inₛ ((In y) , x)) (funext' λ { {In tt} → Vec-iso₂})
 
-  Vec≅Σ-vec : ∀ {a : Set} {n : ℕ} → Vec a n ≅ Fixₛ (Σ-vec a) n
-  Vec≅Σ-vec =
+  Vec≃Σ-vec : ∀ {a : Set} {n : ℕ} → Vec a n ≃ Fixₛ (Σ-vec a) n
+  Vec≃Σ-vec =
     record { from = fromVec
            ; to   = toVec
            ; iso₁ = Vec-iso₁
@@ -279,8 +280,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    Vec-MultiSorted : ∀ {a : Set} → MultiSorted (Vec a)
-    Vec-MultiSorted {a} = record { Wᵢ = Σ-vec a , Vec≅Σ-vec }
+    Vec-IndexedContainer : ∀ {a : Set} → IndexedContainer (Vec a)
+    Vec-IndexedContainer {a} = record { W = Σ-vec a , Vec≃Σ-vec }
 
   ------ LEQ ------
   
@@ -305,8 +306,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
   ≤-iso₂ {suc n , zero} {Inₛ (In () , snd)}
   ≤-iso₂ {suc n , suc m} {Inₛ (In tt , snd)} = cong (λ x → Inₛ (In tt , x)) (funext' λ { {In tt} → ≤-iso₂ })
 
-  ≤≅Σ-≤ : ∀ {idx : ℕ × ℕ} → (proj₁ idx ≤ proj₂ idx) ≅ Fixₛ Σ-≤ idx
-  ≤≅Σ-≤ =
+  ≤≃Σ-≤ : ∀ {idx : ℕ × ℕ} → (proj₁ idx ≤ proj₂ idx) ≃ Fixₛ Σ-≤ idx
+  ≤≃Σ-≤ =
     record { from = from≤
            ; to   = to≤
            ; iso₁ = ≤-iso₁
@@ -314,8 +315,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    ≤-MultiSorted : MultiSorted (uncurry _≤_)
-    ≤-MultiSorted = record { Wᵢ = Σ-≤ , ≤≅Σ-≤ }
+    ≤-IndexedContainer : IndexedContainer (uncurry _≤_)
+    ≤-IndexedContainer = record { W = Σ-≤ , ≤≃Σ-≤ }
 
   ------ Sorted ------
 
@@ -348,8 +349,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
   Sorted-iso₂ {x ∷ x₁ ∷ xs} {Inₛ (In prf , snd)} =
     cong (λ x → Inₛ ((In prf) , x)) (funext' λ { {In tt} → Sorted-iso₂ })
 
-  Sorted≅Σ-Sorted : ∀ {xs : List ℕ} → Sorted xs ≅ Fixₛ Σ-Sorted xs
-  Sorted≅Σ-Sorted =
+  Sorted≃Σ-Sorted : ∀ {xs : List ℕ} → Sorted xs ≃ Fixₛ Σ-Sorted xs
+  Sorted≃Σ-Sorted =
     record { from = fromSorted
            ; to   = toSorted
            ; iso₁ = Sorted-iso₁
@@ -357,8 +358,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    Sorted-MultiSorted : MultiSorted Sorted
-    Sorted-MultiSorted = record { Wᵢ = Σ-Sorted , Sorted≅Σ-Sorted }
+    Sorted-IndexedContainer : IndexedContainer Sorted
+    Sorted-IndexedContainer = record { W = Σ-Sorted , Sorted≃Σ-Sorted }
                            
   ------ Perfect Trees -----
 
@@ -389,8 +390,8 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
       ; {In (inj₂ tt)} → Perfect-iso₂
       })
 
-  Perfect≅Σ-Perfect : ∀ {a : Set} {n : ℕ} → Perfect a n ≅ Fixₛ (Σ-Perfect {a}) n
-  Perfect≅Σ-Perfect =
+  Perfect≃Σ-Perfect : ∀ {a : Set} {n : ℕ} → Perfect a n ≃ Fixₛ (Σ-Perfect {a}) n
+  Perfect≃Σ-Perfect =
     record { from = fromPerfect
            ; to   = toPerfect
            ; iso₁ = Perfect-iso₁
@@ -398,5 +399,5 @@ module Model.Generic.Indexed.MultisortedSignatures.Instances where
            }
 
   instance
-    Perfect-MultiSorted : ∀ {a : Set} → MultiSorted (Perfect a)
-    Perfect-MultiSorted {a} = record { Wᵢ = Σ-Perfect {a} , Perfect≅Σ-Perfect }
+    Perfect-IndexedContainer : ∀ {a : Set} → IndexedContainer (Perfect a)
+    Perfect-IndexedContainer {a} = record { W = Σ-Perfect {a} , Perfect≃Σ-Perfect }

@@ -5,7 +5,7 @@ open import Model.Combinators
 
 open import Model.Generic.Isomorphism
 
-open import Model.Generic.Indexed.IDesc.Universe
+open import Model.Generic.IndexedDescriptions.Universe
 
 open import Data.Unit
 open import Data.Product
@@ -17,7 +17,7 @@ open import Relation.Binary.PropositionalEquality
 
 open import Function
 
-module Model.Generic.Indexed.IDesc.Generator where
+module Model.Generic.IndexedDescriptions.Generator where
 
   open GApplicative ⦃...⦄
   open GAlternative ⦃...⦄
@@ -71,22 +71,22 @@ module Model.Generic.Indexed.IDesc.Generator where
   S ⇑ ℓ = Lift ℓ S
 
   -- Captures those datatypes that may be described as the fixed point of some φ ∈ func
-  record ≅IDesc {ℓ k} {I : Set k} (P : I → Set ℓ) : Set (sucL ℓ ⊔ sucL k) where
+  record ≃IDesc {ℓ k} {I : Set k} (P : I → Set ℓ) : Set (sucL ℓ ⊔ sucL k) where
     field
-      W : Σ[ φ ∈ func ℓ I I ] ((ix : I) → P ix ⇑ (ℓ ⊔ k) ≅ μ φ ix)
+      W : Σ[ φ ∈ func ℓ I I ] ((ix : I) → P ix ⇑ (ℓ ⊔ k) ≃ μ φ ix)
 
   -- Extract the description from an isomorphism
-  getφ : ∀ {ℓ} {I : Set} {P : I → Set ℓ} → ≅IDesc P → func ℓ I I
+  getφ : ∀ {ℓ} {I : Set} {P : I → Set ℓ} → ≃IDesc P → func ℓ I I
   getφ record { W = φ , iso } = φ
 
   -- Derive a generator for indexed datatypes based on an isomorphism with some description
   IDesc-isoGen :
-    ∀ {ℓ} {I : Set} {P : I → Set ℓ} ⦃ p : ≅IDesc P ⦄
+    ∀ {ℓ} {I : Set} {P : I → Set ℓ} ⦃ p : ≃IDesc P ⦄
     → (ix : I)
     → ((y : I) → IDescM (λ S → 𝔾 (λ _ → S) tt) (func.out (getφ p) y))
     → 𝔾 {ℓ} {0ℓ} (λ x → P x ⇑ ℓ) ix
   IDesc-isoGen {I = I} {δ} ⦃ p = record { W = φ , iso } ⦄ ix m
     = _>>=_ {y = ix}
       (Call ix (λ y → IDesc-gen {δ = func.out φ y} {φ = φ} y (m y)))
-      (λ r → pure (_≅_.to (iso ix) ⟨ r ⟩))
+      (λ r → pure (_≃_.to (iso ix) ⟨ r ⟩))
   

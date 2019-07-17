@@ -13,8 +13,10 @@ open import Function
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
+-- Contains the basic generator types necessary to define generators
 module Model.Base where
 
+  -- The type of abstract generators 
   data Gen {ℓ k} {i : Set k} : 
     Set ℓ → (i → Set ℓ) → i → Set (sucL k ⊔ sucL ℓ) where
 
@@ -46,29 +48,17 @@ module Model.Base where
   𝔾 : ∀ {ℓ k} {i : Set k} → (i → Set ℓ) → i → Set (sucL k ⊔ (sucL ℓ))
   𝔾 f x = Gen (f x) f x
 
+  -- Marks a call to a non-indexed generator
   Call' : ∀ {ℓ k} {I : Set k} {A : I → Set ℓ} {B : (Lift k ⊤) → Set ℓ} {i : I}
         → ((Lift k ⊤) → Gen {ℓ} {k} (B (lift tt)) B (lift tt))
         → Gen (B (lift tt)) A i
   Call' g = Call (lift tt) g
 
+  -- Marks a recursive position in a non-indexed generator
   μ' : ∀ {ℓ k} {T : Lift k ⊤ → Set ℓ} → Gen (T (lift tt)) T (lift tt)
   μ' = μ (lift tt)
 
   -- Indexed functions
   co𝔾 : ∀ {ℓ k} {i : Set k} → (i → Set ℓ) → i →  Set (sucL k ⊔ (sucL ℓ))
   co𝔾 {ℓ} {k} f x = ∀ {b : ⊤ → Set ℓ} → 𝔾 b tt → 𝔾 (λ x → f x → b tt) x
-
-
-  -- Generator interpretations. Map generators to any type, parameterized with
-  -- the type of values that are generated
-  record ⟦Generator⟧ {ℓ k} (T : Set ℓ → Set ℓ) : Set (sucL k ⊔ sucL ℓ) where
-    field
-      ⟦_⟧gen : ∀ {I : Set k} {P : I → Set ℓ} → ((i : I) → 𝔾 P i) → (i : I) → T (P i)
-
-  -- Apply a mapping to an indexed generator
-  run :
-    ∀ {ℓ k} {I : Set k} {T : Set ℓ → Set ℓ}
-      ⦃ it : ⟦Generator⟧ {ℓ} {k} T ⦄ {P : I → Set ℓ}
-    → ((i : I) → 𝔾 P i) → (i : I) → T (P i)
-  run ⦃ it = record { ⟦_⟧gen = ⟦_⟧gen } ⦄ g = ⟦ g ⟧gen
 

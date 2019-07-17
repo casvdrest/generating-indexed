@@ -8,6 +8,7 @@ open import Data.List
 open import Function
 open import Level renaming (zero to zeroL ; suc to sucL)
 
+-- Contains an enumerative interpretation of the abstract generator type
 module Model.Enumerate where
     
     -- Interpret a generator as a function from recursive depth to List of elements
@@ -26,15 +27,6 @@ module Model.Enumerate where
   enumerate tg x None (suc n) = []
   enumerate tg x (Call y g) (suc n) = enumerate g y (g y) (suc n)
 
-  -- Interpretation of closed indexed generators
+  -- Interpretation of closed generators
   ⟨_⟩ : ∀ {ℓ k} {i : Set k} {f : i → Set ℓ} → ((x : i) → 𝔾 f x) → (x : i) → ℕ → List (f x)
   ⟨ g ⟩ x = enumerate g x (g x)
-
-  -- Type of eneumerations
-  Enumeration : ∀ {ℓ} → Set ℓ → Set ℓ
-  Enumeration a = ℕ → List a
-
-  -- Generator interpration as enumerations
-  instance
-    ⟦⟧≡Enum : ∀ {ℓ k} → ⟦Generator⟧ {ℓ} {k} Enumeration
-    ⟦⟧≡Enum = record { ⟦_⟧gen = ⟨_⟩ }
