@@ -1,0 +1,198 @@
+# Indexed containers
+
+## Indexed containers - Introduction
+
+Regular types only concern non-indexed types. What if we want generic programming for indexed types?
+
+. . . 
+
+*Indexed Containers* describe those indexed families that can be defined by induction over the index type
+
+. . . 
+
+They are an extension of *W-types*
+
+## Indexed containers - W-types 
+
+*W-types* describe a type in terms of its *Shape* and *Position*
+
+. . . 
+
+The shape of a type is the set of its constructors, and its position a mapping from shape to arity. 
+
+. . . 
+
+```agda 
+  record W : Set where
+    field S : Set
+    field P : S → Set
+
+  ⟦_⟧w : W → Set → Set
+  ⟦ record { S = S ; P = P } ⟧w r = Σ[ s ∈ S ] (P s → r)
+
+  data FixW (w : W) : Set where 
+    InW : ⟦ w ⟧w (FixW w) → FixW w
+```
+
+## Indexed containers - W-types 
+
+For example, we can describe natural numbers as a W-type: 
+
+```agda 
+ℕW : W
+ℕW = record {
+  S = ⊤ ⊎ ⊤ ;
+  P = λ { (inj₁ tt) → ⊥
+        ; (inj₂ tt) → ⊤
+        } }
+```
+
+. . . 
+
+We can show that `FixW ℕW` is isomorphic to `ℕ`
+
+## Indexed containers - Universe definition 
+
+Indexed containers extend the notion of W-types to indexed types: 
+
+1. The shape and position are parameterized over the index type 
+
+2. A *typing* discipline is added that describes what happens at the indices of recursive subtrees
+
+. . . 
+
+```agda 
+  record Sig (I : Set) : Set where
+    field 
+      Op : I → Set
+      Ar : ∀ {i} → Op i → Set
+      Ty : ∀ {i} {op : Op i} → Ar op → I
+```
+
+## Indexed containers - Semantics and Fixpoint 
+
+The semantics are similar to the semantics of W-types 
+
+```agda 
+⟦_⟧ : ∀ {I} → Sig I → (I → Set) → I → Set
+⟦ Op ◃ Ar ∣ Ty ⟧ r i = 
+  Σ[ op ∈ Op i ] ((ar : Ar op) → r (Ty ar))
+```
+
+. . . 
+
+And so is the fixpoint operation: 
+
+```agda 
+data FixS {I : Set} (S : Sig I) (i : I) : Set where
+  InS : ⟦ S ⟧S (FixS S) i → FixS S i
+```
+
+## Indexed containers - Example 
+
+Let's look at an example: the `Fin` type. 
+
+. . . 
+
+```agda 
+Op-Fin : ℕ → Set
+Op-Fin zero    = ⊥
+Op-Fin (suc n) = ⊤ ⊎ ⊤
+
+Ar-Fin : (n : ℕ) → Op-Fin n → Set
+Ar-Fin (suc n) (inj₁ tt) = ⊥
+Ar-Fin (suc n) (inj₂ tt) = ⊤
+
+Ty-Fin : (n : ℕ) → (op : Op-Fin n) → Ar-Fin n op → ℕ
+Ty-Fin (suc n) (inj₂ tt) tt = n
+```
+
+. . . 
+
+`Fin n` is isomorphic to `FixS (Op-Fin ◃ Ar-Fin ∣ Ty-Fin) n`
+
+## Indexed containers - Deriving a generator
+
+Before we can derive generators from signatures, we need to do the following: 
+
+1. Restrict operations and arities to regular types 
+
+2. Generation of *function types* for regular types 
+
+## Indexed containers - Restricting operations and arities 
+
+We let `Op` and `Ar` return a value of type `Reg`. This changes the semantics slightly: 
+
+. . . 
+
+```agda 
+record Sig (I : Set) : Set where
+  constructor _◃_∣_
+  field 
+    Op : I → Reg
+    Ar : ∀ {i} → Fix (Op i) → Reg
+    Ty : ∀ {i} {op : Fix (Op i)} → Fix (Ar op) → I
+
+⟦_⟧ : ∀ {I} → Sig I → (I → Set) → I → Set
+⟦ Op ◃ Ar ∣ Ty ⟧ r i = 
+  Σ[ op ∈ Fix (Op i) ] ((ar : Fix (Ar op)) → r (Ty ar))
+```
+
+## Indexed Containers - Generating function types 
+
+Next, we need a mechanism to generate function types from codes: 
+
+. . . 
+
+```agda 
+deriveCogen : 
+  ∀ {A} → Gen (A tt) A tt → (c c' : Reg) 
+        → Gen (⟦ c ⟧ (Fix c') → A) (⟦ c' ⟧ (Fix c') → A)
+```
+
+. . . 
+
+The definition of `deriveCogen` is similar to that of `deriveGen`
+
+##  Indexed Containers - deriving a generator
+
+With this, we have everything we need to derive generators for indexed containers 
+
+. . . 
+
+```agda
+generateSig : ∀ {I} → (S : Sig I) → (i : I) 
+              → Gen (Fix S i) (Fix S) i
+generateSig (Op ◃ Ar ∣ Ty) i = do
+  op ← Call (deriveGen (Op i))
+  ar ← Call (deriveCogen (Ar op) (Ar op) λ ar → μ (Ty ar)) 
+  pure (In (op , λ { (In x) → ar x }))
+```
+
+. . . 
+
+We express the dependency between operation and arity with the monadic structure of generators.
+
+## Indexed Containers - proving completeness
+
+Proving completeness for indexed turned out to be very difficult 
+
+. . . 
+
+* Part of the semantics of a signature is a function type
+
+. . . 
+
+* Recall our completeness property: `∀ {x} → ∃[ n ] x ∈ ...`. We need induction over `x` to convince the termination checker that our proof terminates
+
+. . . 
+
+The above two requirements bite each other -- how do we perform induction over function types? 
+
+## Indexed Containers 
+
+Due to this limitation, we have no clear way to assemble a completeness proof for our co-generator 
+
+. . . 
+
+Consequently, we cannot complete the proof that `generateSig` is complete while keeping the termination checker happy. 

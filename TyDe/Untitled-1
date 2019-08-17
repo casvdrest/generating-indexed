@@ -1,0 +1,13 @@
+DEFENSE STRUCTURE: 
+
+  * Introduction & problem statement 
+  * Contents
+  * A short introduction to generic programming
+  * Regular types 
+    - Universe description 
+    - Examples 
+    - Deriving generators 
+    - Proving Completeness
+  * Indexed Containers 
+  * Indexed Descriptions 
+  * Implementation in Haskell

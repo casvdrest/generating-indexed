@@ -28,8 +28,8 @@ monofontoptions: Scale=0.8
 Suppose we have the following QuickCheck property
 
 ```haskell 
-prop :: [Int] -> [Int] -> Property
-prop xs ys = sorted xs && sorted ys ==> sorted (merge xs ys)
+prop1 :: [Int] -> [Int] -> Property
+prop1 xs ys = sorted xs && sorted ys ==> sorted (merge xs ys)
 ```
 
 ## Problem Statement 

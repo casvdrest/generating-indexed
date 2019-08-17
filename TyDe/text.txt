@@ -1,0 +1,130 @@
+CATEGORY THEORY: 
+
+- wat are categories (definition)
+
+  Categories are collections of objects, and arrows or morphisms between those objects. 
+
+  Arrows have a notion of composition. 
+
+  Furthermore, every object has an identity arrow that points to itself, and an opposite category that is obtained by simply reversing all the arrows in the category 
+
+- Characteristics of arrow composition
+
+  If we have an arrow from a to b and an arrow from b to c, the composition of those arrows is an arrow from a to c. 
+
+  Composition with identy yields the original arrow
+
+  Composition is associative, so (f . g) . h == f . (g . h)
+
+- Functors definition
+
+  A functor in category theory is a map between categories. A functor is allways defined in two parts, telling how to map objects, and telling how to map arrows
+
+  We say that a functor is a map between a source category and a target category
+
+  A functor F associates an object a in C to an object F(a) that is in D 
+
+  Every arrow f from a to b in the source category is associated with an arrow going from F(a) to F(b) in the target category. 
+
+- Functor properties (fullness, faithfullness)
+
+  There are some special properties functors can have. 
+
+  We say that a functor is full if we don't gain any morphisms by mapping to the target category. That is, we can associate every arrow in the target category with a unique arrow in the source category. 
+
+  A functor is faithful if no morphisms are lost when mapping to the target category. We can associate every arrow in the source category when mapping to the target category. 
+
+  A functor is fully faithful if it's both of the above, meaning that there is a bijection between the morphisms of it's source and target category (sort off). 
+
+  This definition obviously ignores any morphisms between objects that are not targeted by the functor. 
+
+- Natural transformations (definition)
+
+  Natural transformations transform one functor into another, given that both functors have the same source and target category. 
+
+  They are defined as a function from objects in the source category to an arrow in the target category, mapping F(a) to G(b). 
+
+  They should satisfy the naturality condition, meaning that if you have an arrow from a to b in the source category, you can go from F(a) to G(b) by first applying F to the arrow, and then the natural transformation, or applying the natural transformation first, and then applying G to the arrow. 
+
+- Functor categories
+
+  If the domains match up, natural transformations can be composed. 
+
+  This notion of composition means that we can have categories of functors, where functors are objects, and natural transformations are arrows. 
+
+  We denote this with the square brackets
+
+- Hask category (List is a functor)
+- Natural transformations as polymorphic functions
+
+YONEDA LEMMA 
+
+- Homsets and Homfunctors
+
+  We can derive a functor from the morphisms in a category. This is called the homfunctor 
+
+  First we define the homset of two objects a and b as the set of arrows between them. 
+
+  From the homset we derive a function that takes an object to a homset. This is the action on objects of the homfunctor 
+
+  This means that the action on arrows takes an arrow from b to c, and yields a function from Hom(a, b) to Hom(a, c)
+
+  any arrow in Hom(a, b) goes from a to b, so by composing with the input arrow, we get a way to go from a to c
+
+- Opposite Homfunctor 
+
+  There is an opposite homfunctor that operates on the opposite category. 
+
+  Objects are still mapped to their respective homsets. 
+
+  Arrows are mapped by precomposition instead of composition
+
+- Yoneda embedding (action on objects)
+
+  The yoneda embedding of a category is a functor between the opposite category and the category of functors from the category to Set. 
+
+  The homfunctor has type C to Set, so we can use this as an action on objects!
+
+- Yoneda embedding (action on arrows)
+
+  We map any arrow in the opposite category to a natural transformations between homfunctors 
+
+  If the input arrow goes from c to b, this natural transformation goes from objects in C to the homfunctor of c to the homfunctor of b
+
+  Incidently, this is exactly what the contravariant homfunctor does! So we say that the action on arrows of the Yoneda embedding is equal to precomposition with the arrow in the original category. 
+
+- Yoneda embedding is full and faithful
+
+  This embedding turns out to be full and faithful, so we have a bijection between the natural transformations between homfunctors, and an arrow in the original category. 
+
+  Furthermore, we know that this arrow is an element of the homset of a and b!
+
+- Yoneda Lemma definition 
+
+  The yoneda lemma generalizes this to natural transformations between homfunctors and any arbitrary functor. 
+
+  Such a natural transformation maps objects to arrows in set, i.e. a function from Hom(a, b) to F(b)
+
+  
+
+Profunctor Optics
+
+- General idea
+- Example: lenses and prisms
+- Adapters
+- Adapter example 
+- Profunctors (Categorical definition)
+- Profunctors (Haskell definition)
+- Profunctor (Example)
+- Adapters as profunctors
+
+Profunctor optics & the yoneda lemma
+
+- What is the goal
+- TODO: outline proof structure 
+- Adapter type as a category
+- AdapterP type as a category
+- Introduction of 'application functor'
+- Apply Yoneda lemma
+- TODO: double Yoneda Embedding 
+- Conclusion
