@@ -1,5 +1,5 @@
 ---
-author: Cas van der Rest
+author: Cas van der Rest, Wouter Swierstra, Manuel Chakravarty
 title: Generic Enumerators
 subtitle: 
 institute: Utrecht University
@@ -12,19 +12,11 @@ monofont: DejaVu Sans Mono
 monofontoptions: Scale=0.8
 ---
 
-## Contents
-
-* **Introduction**
-* **Regular types**
-* **Indexed containers**
-* **Indexed descriptions**
-* **Conclusion**
-
 # Introduction
 
 ## Problem Statement
 
-Test data may have constraints
+Conditional properties are common in property based testing
 
 . . . 
 
@@ -33,37 +25,29 @@ prop :: [Int] -> [Int] -> Property
 prop xs ys = sorted xs && sorted ys ==> sorted (merge xs ys)
 ```
 
-## Problem Statement 
-
-What happens when we test this property?
-
-```haskell 
-sorted xs && sorted ys ==> sorted (merge xs ys)
-```
-
 . . . 
 
-```
-*** Gave up! Passed only 22 tests; 1000 discarded tests.
-```
+However, testing this property outright is problematic: 
 
-The vast majority of generated `xs` and `ys` fail the precondition!
+```bash 
+*> smallCheck 4 prop
+Completed 21904 tests without failure.
+But 18768 did not meet ==> condition.
+```
 
 ## Problem Statement
 
-We could try our luck with a custom generator: 
-
-```haskell
-gen_sorted :: Gen [Int]
-gen_sorted = arbitrary >>= return . diff
-  where diff :: [Int] -> [Int]
-        diff [] = []
-        diff (x:xs) = x:map (+x) (diff xs)
-```
+We could try our luck with a custom `Series` instance. However:
 
 . . . 
 
-For more complex data, defining these generators is hard
+* This can be very difficult depending on the specific constraints used
+
+* We require a new instance everytime constraints change 
+
+. . . 
+
+Is there a generic recipe for enumerators producing constrained test data?
 
 ## Approach
 
@@ -80,11 +64,11 @@ data Sorted : List ℕ → Set where
 ```
 . . . 
 
-If we can generate values of type `Sorted xs`, we can generate sorted lists!
+If we can enumerate values of type `Sorted xs`, we can enumerate sorted lists!
 
 ## Approach 
 
-We try to answer the following question: *how can we generically generate values of arbitrary indexed families?*
+We try to answer the following question: *how can we generically enumerate values of arbitrary indexed families?*
 
 . . . 
 
@@ -106,21 +90,18 @@ Each type universe consists of the following elements:
 
 Our goal is then to define a function `enumerate : (u : U) → ℕ → List ⟦ u ⟧`
 
-. . . 
-
-
 ## Enumerator completeness 
 
 We formulate the following completeness property for our enumerators: 
 
 ```agda 
-Complete : ∀ {T} → Gen T T → Set
-Complete gen = ∀ {x} → ∃[ n ] x ∈ enumerate gen gen n
+Complete : ∀ {T} → (ℕ → List A) → Set
+Complete enum = ∀ {x} → ∃[ n ] x ∈ enum n
 ```
 
 . . . 
 
-A generator is complete if *all values of the type it produces at some point occur in the enumeration*
+Although this property is relatively weak, it is a good sanity check. 
 
 # Regular types
 
@@ -145,7 +126,7 @@ Regular types are closed under product and coproduct:
 
 ## Regular types - Semantics 
 
-The semantics,  `⟦_⟧ : Reg → Set → Set` , map a value of type `Reg` to a value in `Set → Set`
+The semantics,  `⟦_⟧ : Reg → Set → Set` , maps a value of type `Reg` to a value in `Set → Set`
 
 . . . 
 
@@ -159,8 +140,6 @@ The semantics,  `⟦_⟧ : Reg → Set → Set` , map a value of type `Reg` to a
 ⟦ c₁ ⊕ c₂ ⟧ r = ⟦ c₁ ⟧ r ⊎ ⟦ c₂ ⟧ r  
 ```
 
-`r` is the type of recursive positions!
-
 ## Regular types - Fixpoint operation
 
 We use the following fixpoint operation:
@@ -170,106 +149,42 @@ data Fix (c : Reg) : Set where
   In : ⟦ c ⟧ (Fix c) → Fix c
 ```
 
-## Regular types - Deriving a generator 
+## Regular types - Deriving an enumerator 
 
 We now aim to define an enumerator for all types that can be described by a code in `Reg`
 
 ```agda 
-enumerate : (c c' : Reg) 
-          → Gen (⟦ c ⟧ (Fix c')) (⟦ c' ⟧ (Fix c')) 
+enumerate : (c c' : Reg) → ℕ → List (⟦ c ⟧ (Fix c'))
 ```
 
 . . . 
 
-Notice the difference between the type parameters of `Gen`!
+We use *do-notation* and *idiom* brackets to assemble enumerators, lifting the canonical `Monad` and `Applicative` instances for 
+`List` to the function space `ℕ → List a`.
 
-## Regular types - Deriving a generator
+## Regular types - Deriving an enumerator
 
 ```agda 
 enumerate Z         c' =  empty
 enumerate U         c' =  ⦇ tt   ⦈
-enumerate I         c' =  ⦇ In μ ⦈
+enumerate I         c' =  ⦇ In (enumerate c' c') ⦈
 enumerate (c₁ ⊗ c₂) c' =  ⦇ (enumerate c₁ c') 
                           , (enumerate c₂ c') ⦈
 enumerate (c₁ ⊕ c₂) c' =  ⦇ inj₁ (enumerate c₁ c') ⦈
-                       || ⦇ inj₂ (enumerate c₂ c') ⦈
+                      || ⦇ inj₂ (enumerate c₂ c') ⦈
 ```
 
 . . . 
 
-What about `K` (constant types)? 
-
-## Regular types - Deriving an enumerator
-
-The semantics of `K` is the type it carries. 
-
-. . . 
-
-This means that we need the programmer to somehow supply an enumerator for this type. 
-
-. . . 
-
-We will come back to this later when considering indexed descriptions
+The programmer somehow needs to provide an enumerator for constant types. 
 
 ## Regular types - Proving completeness
 
-We prove the completeness of `deriveGen` by induction over the input code: 
+Basically, we do the following steps: 
 
-```agda 
-complete-thm : ∀ {c c' x} → 
-  ∃[ n ] (x ∈ enumerate (deriveGen c c') (deriveGen c' c') n)
-```
-
-. . . 
-
-The cases for `U` and `Z` are trivial 
-
-```agda
-complete-thm {U} = 1 , here
-complete-thm {Z} {c'} {()}
-```
-
-## Regular types - Proving completeness
-
-For product and coproduct, we prove that we combine the derived generators in a completeness preserving manner 
-
-. . . 
-
-This amounts to proving the following lemmas (in pseudocode): 
-
-```agda 
-Complete g₁ → Complete g₂ 
-  → Complete (⦇ inj₁ g₁ ⦈ || ⦇ inj₂ g₂ ⦈)
-
-Complete g₁ → Complete g₂ → Complete ⦇ g₁ , g₂ ⦈
-```
-
-. . . 
-
-Proofs for these lemma's follow readily from chosen instances of `Applicative` and `Alternative`
-
-## Regular types - Proving completeness
-
-Recursive positions (`I`) are slightly more tricky 
-
-```agda 
-complete-thm {I} {c'} {In x} with complete-thm {c'} {c'} {x}
-... | prf = {!!}
-``` 
-
-. . . 
-
-We complete this case by proving a lemma of the form: 
-
-```agda
-Complete μ → Complete ⦇ In μ ⦈
-```
-
-. . . 
-
-We then simply feed the induction hypothesis (`prf`) to this lemma to complete the proof. 
-
-## Regular types - Proving completeness
+1. Prove the easy cases (unit types and empty types)
+2. Prove that we combine products and coproducts in a completeness preserving way
+3. Use the induction hypothesis to close the proof for recursive positions. 
 
 # Indexed containers
 
@@ -289,8 +204,8 @@ record WType : Set where
 ⟦_⟧ : WType → Set → Set
 ⟦ S ∼ P ⟧ r = Σ[ s ∈ S ] (P s → r)
 
-data Fix (w : WType) : Set where
-  In : ⟦ w ⟧sup (Fix w) → Fix w
+data Fix (w : WType) : Set 
+  In : ⟦ w ⟧ (Fix w) → Fix w
 ```
 
 ## Indexed containers - Universe definition 
@@ -308,14 +223,17 @@ record Sig (I : Set) : Set where
 ⟦_⟧ : ∀ {I} → Sig I → (I → Set) → I → Set
 ⟦ Op ◁ Ar ∣ Ty ⟧ r i =
   Σ[ op ∈ Op i ] ((ar : Ar op) → r (Ty ar))
-
-data Fix {I : Set} ( S : Sig I) (i : I) : Set where
-  In : ⟦ S ⟧ (Fix S ) i → Fix S i
 ```
 
 ## Indexed containers - Example 
 
 Let's consider vectors as an example
+
+```agda 
+data Vec (A : Set) : ℕ → Set where 
+  nil  : Vec A 0 
+  cons : A → Vec A n → Vec A (suc n) 
+```
 
 . . . 
 
@@ -330,16 +248,17 @@ Let's consider vectors as an example
 ## Indexed containers - Generic enumerator 
 
 ```agda 
-deriveGen : ∀ {I : Set} → (S : Sig I)
-          → (i : I) → Gen (Fix S i) (Fix S i)
-deriveGen (Op ◁ Ar ∣ Ty) i = do
-  op ← Call (genericGen (Op i))
-  ar ← Call (coenumerate (Ar op) (Ar op) 
-    (λ ar → deriveGen (Op ◁ Ar ∣ Ty) (Ty ar)))
+enumerate : ∀ {I : Set} → (S : Sig I)
+          → (i : I) → ℕ → List (Fix S i)
+enumerate (Op ◁ Ar ∣ Ty) i = do
+  op ← enumerate (Op i)
+  ar ← coenumerate (Ar op) (Ar op) 
+    (λ ar → enumerate (Op ◁ Ar ∣ Ty) (Ty ar))
   pure (In (op , ar x))
+```
 . . . 
 
-`coenumerate` enumeretes all functions from arity to recursive generator. 
+`coenumerate` enumerates function types
 
 . . . 
 
@@ -357,6 +276,18 @@ We need to pattern match on the value `x` quantified over in the completeness pr
 
 In the case of indexed containers, part of this value `x` is a function, so we cannot perform this pattern match. 
 
+## Indexed containers - Limitations
+
+Not all indexed families can be described as an indexed container
+
+. . . 
+
+```agda 
+data STree (A : Set) : N → Set where
+  leaf : STree A 0
+  node : ∀ {n m} → STree A n → A → STree A m
+       → STree A (suc (n + m))
+```
 
 # Indexed descriptions
 
@@ -397,7 +328,7 @@ We denote the empty type with `'σ 0 λ()`
 
 ## Indexed descriptions - Semantics 
 
-The semantic of `'1`, `'var`, and `_'×_` are taken (almost) direrectly from the semantics of regular types
+The semantic of `'1`, `'var`, and `_'×_` are straightforward
 
 ```agda
 ⟦_⟧ : ∀ {I} → IDesc I → (I → Set) → Set
@@ -421,20 +352,20 @@ We describe indexed families with a function `I → IDesc I`.
 
 . . . 
 
-The fixpoint operation associated with this universe is: 
+We associate the following fixpoint operation with this universe;
 
 ```agda
 data Fix {I} (φ : I → IDesc I) (i : I) : Set where
   In : ⟦ φ i ⟧ (Fix φ) → Fix φ i
 ```
 
-## Indexed descriptions - Deriving a Generator 
+## Indexed descriptions - Deriving an enumerator 
 
-The generator type has the same structure as for regular types
+The enumerator type has the same structure as for regular types
 
 ```agda
-deriveGen : ∀ {I i} → (δ : IDesc I) → (φ : I → IDesc I) 
-          → Gen (⟦ δ ⟧I (Fix φ)) (λ i → ⟦ φ i ⟧I (Fix φ)) i
+enumerate : ∀ {I i φ} → (δ : IDesc I)
+          → ℕ → List ⟦ δ ⟧ (Fix φ)
 ```
 
 . . . 
@@ -442,37 +373,23 @@ deriveGen : ∀ {I i} → (δ : IDesc I) → (φ : I → IDesc I)
 The cases for `'1`, `'var` and `'×` are also (almost) the same
 
 ```agda
-deriveGen `1         φ = ⦇ tt ⦈
-deriveGen (`var x)   φ = ⦇ In (μ x) ⦈
-deriveGen (δ₁ `× δ₂) φ = ⦇ (deriveGen δ₁ φ) 
-                         , (deriveGen δ₂ φ) ⦈
+enumerate `1         φ = ⦇ tt ⦈
+enumerate (`var x)   φ = ⦇ In (enumerate (φ x) φ) ⦈
+enumerate (δ₁ `× δ₂)  φ = ⦇ (enumerate δ₁ φ) 
+                         , (enumerate δ₂ φ) ⦈
 ```
 
-## Indexed descriptions - Deriving a Generator
 
-For the generalized coproduct, we utilize monadic structure of generators
+## Indexed descriptions - Deriving an enumerator
+
+The generalized coproduct is an instantiation of the dependent pair, so we adapt the previous definition 
 
 . . . 
 
 ```agda
-deriveGen (`σ n T) φ = do
-  fn ← Call n genFin
-  x  ← deriveGen (T fn) φ 
-  pure (fn , x)
-```
-
-`genFin n` generates values of type `Fin n` 
-
-## Indexed descriptions - Deriving a Generator
-
-The generalized coproduct is an instantiation of the dependent pair, so we reuse the definition 
-
-. . . 
-
-```agda
-deriveGen (`Σ S T) φ = do
+enumerate (`Σ S T) φ = do
   s ← {!!}
-  x ← deriveGen (T s) φ (fm s)
+  x ← enumerate (T s) φ (fm s)
   pure (s , x)
 ```
 
@@ -480,22 +397,26 @@ deriveGen (`Σ S T) φ = do
 
 How do we get `s`?
 
-## Indexed descriptions - Deriving a Generator
+. . . 
+
+We have the programmer supply an enumerator!
+
+## Indexed descriptions - Deriving an enumerator
 
 We define a metadata structure: 
 
 . . . 
 
 ```agda
-data IDescM (P : Set ℓ → Set) : IDesc I → Set where
+data IDescM (P : Set → Set) : IDesc I → Set where
     `var~ : ∀ {i : I} → IDescM P (`var i)
     `1~ : IDescM P `1
-    _`×~_ : ∀ {d₁ d₂ : IDesc ℓ I} → IDescM P d₁
+    _`×~_ : ∀ {d₁ d₂ : IDesc I} → IDescM P d₁
           → IDescM P d₂ → IDescM P (d₁ `× d₂)
-    `σ~ : ∀ {n : ℕ} {T : Sl (lift n) → IDesc ℓ I}
-        → ((fn : Sl (lift n)) → IDescM P (T fn))
+    `σ~ : ∀ {n : ℕ} {T : Fin n → IDesc I}
+        → ((fn : Fin n) → IDescM P (T fn))
         → IDescM P (`σ n T)
-    `Σ~ : ∀ {S : Set ℓ} {T : S → IDesc ℓ I} → P S
+    `Σ~ : ∀ {S : Set} {T : S → IDesc I} → P S
         → ((s : S) → IDescM P (T s))
         → IDescM P (`Σ S T)
 ```
@@ -504,89 +425,43 @@ data IDescM (P : Set ℓ → Set) : IDesc I → Set where
 
 Essentially, this is a *singleton type* for descriptions, carrying extra information for the first components of dependent pairs. 
 
-## Indexed descriptions - Deriving a Generator
+## Indexed descriptions - Deriving an enumerator
 
-We parameterize `deriveGen` over a metadata structure containing generators
+We parameterize `enumerate` over a metadata structure containing enumerators
 
 . . . 
 
 ```agda
-deriveGen (`Σ S T) φ (`Σ~ g mT) = do
-  s ← Call g
-  x ← deriveGen (T s) φ (mT s)
+enumerate (`Σ S T) φ (`Σ~ g mT) = do
+  s ← g
+  x ← enumerate (T s) φ (mT s)
   pure (s , x)
 ```
 
-## Indexed descriptions - Deriving a Generator
+## Indexed descriptions - Deriving an enumerator
 
-In the case of `STree`, this means that we have to supply a generator that generates pairs of numbers and proofs that their sum is particular number 
+In the case of `STree`, this means that we have to supply an enumerator that enumerates pairs of numbers and proofs that their sum is particular number 
 
 ```agda 
-+-inv : (n : ℕ) → Gen (Σ (ℕ × ℕ) λ { (k , m) → n ≡ k + m }) 
++-inv : (n : ℕ) → ℕ → 
+  List (Σ (ℕ × ℕ) λ { (k , m) → n ≡ k + m })
 ```
 
 . . . 
 
-By using a metadata structure to generate for dependent pairs, we separate the hard parts of generation from the easy parts
+By using a metadata structure to enumerate for dependent pairs, we separate the hard parts of enumeration from the easy parts
 
 . . . 
 
-A programmer can influence the generation process by supplying different generators
+The user decides where the enumerator comes from
 
 ## Indexed descriptions - Proving completeness
 
-We use the same proof structure as with regular types
-
-```agda 
-complete-thm : ∀ {δ φ x i} → 
-  ∃[ n ] (x ∈ enumerate (deriveGen δ φ) 
-                        (λ y → deriveGen (φ y) φ) i n)
-```
+The completeness proof is roughly the same as the completeness proof for regular types
 
 . . . 
 
-`enumerate` is slightly altered here to accommodate indexed generators
-
-## Indexed descriptions - Proving completeness 
-
-The proof is mostly the same as for regular types, however the generator for dependent pairs is constructed using a monadic bind
-
-. . . 
-
-Hence, we need to prove an additional lemma about this operation 
-
-```agda
-bind-thm : 
-  ∀ {g₁ g₂ A B} → Complete g₁ → ((x : A) → Complete (g₂ x))
-  → Complete (g₁ >>= (λ x → g₂ x >>= λ y → pure x , y)) 
-```
-
-## Indexed descriptions - Proving completeness 
-
-To prove completeness for dependent pairs, we can simply invoke this lemma 
-
-```agda 
-complete-thm {`Σ S T} {φ} = 
-  bind-thm {!!} (λ x → deriveGen (T x) φ)
-```
-
-. . . 
-
-The first argument of `bind-thm` is a completeness proof for the user-supplied generator
-
-So we have the user supply this proof using a metadata structure. 
-
-```agda
-IDescM (λ S → Σ[ g ∈ Gen S S ] Complete g
-```
-
-## Indexed descriptions - Proving completeness 
-
-The generalized coproduct is just an instantiation of the dependent pair 
-
-. . . 
-
-So we can reuse the proof structure for dependent pairs to prove its completeness
+Additionally, we need to prove that our useage of monadic bind is also completeness preserving. 
 
 # Conclusion
 
@@ -594,34 +469,11 @@ So we can reuse the proof structure for dependent pairs to prove its completenes
 
 To summarize, we did the following: 
 
-1. Describe three type universes in Agda, and derive generators from codes in these universes (only two of these discussed here)
+1. Describe three type universes in Agda, and derive enumerators from codes in these universes 
 
-2. For two of these universes, prove that the generators derived from them are complete 
+2. For two of these universes, prove that the enumerators derived from them are complete 
 
-3. Implement our development for indexed descriptions in Haskell
-
-
-## Conclusion 
-
-We have shown, as a proof of concept, that we can generate arbitrary indexed families
-
-. . . 
-
-Of course, this requires that the programmer inputs suitable generators
-
-. . . 
-
-With this technique, it is (at least) possible to generate relatively simple well-formed data, such as typed expressions or lambda terms
-
-## Future work 
-
-Possible avenues for future work include: 
-
-1. Considering more involved examples, such as polymorphic lambda terms 
-
-2. Integration with existing testing frameworks 
-
-3. Applying memoization techniques to the derived generators 
+Additionally, we have constructed a Haskell library that implements the generic enumerator for indexed descriptions
 
 ## {.standout}
 
